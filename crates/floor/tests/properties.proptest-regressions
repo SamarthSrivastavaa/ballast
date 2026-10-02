@@ -1,7 +1,0 @@
-# Seeds for failure cases proptest has generated in the past. It is
-# automatically read and these particular cases re-run before any
-# novel cases are generated.
-#
-# It is recommended to check this file in to source control so that
-# everyone who runs the test benefits from these saved cases.
-cc 17195f8908fa57ae2b6d5a03600f46e3db7d3700f8f45adfd6526320206b4107 # shrinks to i = FloorInputs { v: 18446744073709551615, s: 1, l: 0, s_max: 79226673521066979257578248091 }, bump = 1

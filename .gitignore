@@ -42,3 +42,8 @@ npm-debug.log*
 yarn-error.log*
 
 # NOTE: evidence/ is deliberately NOT ignored. It is the judging record.
+
+# proptest regression seeds: failure_persistence is off (proptest cannot locate the source
+# directory from an integration-test target). Counterexamples that matter are pinned in named
+# tests instead -- see ceiling_step_can_lower_f.
+*.proptest-regressions
