@@ -3,7 +3,11 @@ name = "ballast-floor"
 description = "The only implementation of the Ballast floor F (BUILD_SPEC.md §4, §11)."
 version.workspace = true
 edition.workspace = true
-rust-version.workspace = true
+# NOT the host pin. This crate is compiled for SBF by platform-tools rustc (1.79.0 in
+# platform-tools v1.43), so its MSRV must be low enough for that compiler -- otherwise
+# cargo build-sbf refuses before it even starts (D-002 condition 3). The host toolchain
+# pin lives in rust-toolchain.toml and is deliberately higher.
+rust-version = "1.79"
 license.workspace = true
 
 [dependencies]

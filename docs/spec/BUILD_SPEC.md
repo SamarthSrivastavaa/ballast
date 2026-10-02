@@ -160,7 +160,7 @@ A s^2 - B s - C = 0,\quad A = S + \lceil L / s_{\max} \rceil,\; B = L,\; C = V \
 
 ### Bounds
 
-Assert at entry: S ≤ 2⁵⁰, V ≤ 2⁶⁴ − 1, L < 2¹²⁰, s\_max < 2⁹⁷. Then B² < 2²⁴⁰, 4AC < 2²⁴⁵, A·s² < 2²⁴⁵ — all inside U256. Out-of-range inputs return an error, never a value.
+Assert at entry: S ≤ 2⁵⁰, V ≤ 2⁶⁴ − 1, **L ≤ 2¹²⁰** `[D-003: was L < 2¹²⁰; made inclusive so §27's "L = 2¹²⁰" boundary vector is computable]`, s\_max < 2⁹⁷. Then B² ≤ 2²⁴⁰, D = B² + 4AC < 2²⁴⁶, A·s² < 2²⁴⁵ — all inside U256. Out-of-range inputs return an error, never a value.
 
 ### Rounding
 
@@ -603,7 +603,7 @@ F = 1.6755e-8 SOL/token = 25.8% of graduation price; vault 3.75 SOL; DAMM v2 21.
 | Layer | Tooling | What it proves | Gate |
 | --- | --- | --- | --- |
 | Unit | `cargo test` in `ballast-floor` | isqrt, U256 mul/div, root correctness against the Python reference, bounds errors | All pass |
-| Property | `proptest` | For random valid inputs: P(s) ≤ 0 < P(s + 1); monotone in V; antitone in S; monotone in L; payout ≤ exact | 100k cases |
+| Property | `proptest` | For random valid inputs: P(s) ≤ 0 < P(s + 1); monotone in V; antitone in S; **monotone in L within one ⌈L/s\_max⌉ step, with the drop at a step bounded by one base unit** `[D-004: unconditional monotonicity in L is false for §4's ceiling rounding; L is immutable after open, so no mechanism impact]`; payout ≤ exact | 100k cases |
 | Stateful fuzz (model) | Rust model of V, S, L, bid, pool reserves | Random sequences of trade, sell, fill, settle, redeem, harvest, deposit, refresh: **F never falls**, **V/F + L(1/√F − 1/√P\_max) ≥ S** at every step, no negative balances, conservation of SOL and tokens | 1M steps, zero failures |
 | Differential | Rust vs WASM vs Python on `vectors.json` + 10k random | Identical `s` | Exact match |
 | Program integration | `solana-test-validator` with DBC, DAMM v2, DLMM `.so` files dumped from mainnet and required config accounts cloned; Anchor TS tests | Every instruction, every error path, every substitution attack | All pass |

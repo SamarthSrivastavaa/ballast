@@ -1,12 +1,12 @@
 # Ballast — Status
 
-**Updated:** 2 Oct 2026 (STEP 1A/1B) · **Deadline:** 13 Oct 2026 06:59 UTC (plan to submit 12 Oct)
+**Updated:** 2 Oct 2026 (STEP 1A — environment moved, toolchain pinned) · **Deadline:** 13 Oct 2026 06:59 UTC (plan to submit 12 Oct)
 
 ## Current state
 
 | | |
 |---|---|
-| Phase | STEP 1B done — floor crate + Python reference + vectors complete |
+| Phase | STEP 1B done. STEP 1A **blocked** on one platform-tools decision |
 | Last passed gate | **none** — §18 gate 1 not yet attempted |
 | P0 gate (Q1–Q5) | **BLOCKING.** All five UNKNOWN. Nothing beyond test harnesses may be built. |
 | Open UNKNOWNs | 12 of 20 Top-20 questions (see `DECISIONS.md`) |
@@ -14,19 +14,24 @@
 | Floor engine | **§4/§11 implemented; all 10 §27 vectors exact; 25 tests + 100k property gate green** |
 | Devnet SOL | not yet requested |
 | Mainnet | untouched |
+| Environment | **moved to `/home/hp/ballast`** in WSL Ubuntu 26.04.1 (D-005); every §16 pin installed and proven on Linux |
+| Blocked on | **your decision**: platform-tools v1.43 (cargo 1.79) cannot build the Anchor tree — `DECISIONS.md` § OPEN DECISION |
 
-### Schedule risk — read this first
+### Read this first
 
-**The §28 plan starts 1 Oct; today is 2 Oct and Day 1 is not done.** We are one day behind before the
-first line of code. Day 1 and Day 2 work (two full devnet phases plus the floor crate) must either be
-compressed into 2 Oct or the buffer days (7 Oct, 11 Oct) must absorb the slip. The floor crate needs no
-network, so it proceeds in parallel with devnet funding to recover part of the day.
+**Blocked, needing one decision.** `anchor build` / `anchor test` cannot run: platform-tools v1.43
+(bundled with Agave 2.1.21) ships cargo 1.79.0, which cannot parse the `edition = "2024"` manifests
+the Anchor 0.31.1 + Solana 2.1.21 tree now resolves. The offending link is unpinnable. Options and a
+recommendation are in `DECISIONS.md` § OPEN DECISION; D-002 condition 4 means I may not change the
+toolchain without asking. **This blocks STEP 1C and 1D.**
 
-**The installed toolchain does not match the §16 pins** (Rust nightly 1.95 vs 1.84 stable; Solana CLI
-1.18.26 vs Agave 2.1.x; Anchor 0.32.1 vs 0.31.1; Node 24 vs 20 LTS; pnpm and wasm-pack absent) and this
-is a Windows host, where `anchor test` against a local validator with dumped Meteora programs is
-unproven. Both are recorded in `DECISIONS.md` § Toolchain and § Environment and must be resolved in
-STEP 1A before any gate can be trusted.
+**Resolved since the last update:** the Windows/OneDrive and local-validator risks are gone — the
+repo now lives at `/home/hp/ballast` on ext4 in WSL Ubuntu (D-005), and every §16 pin is installed
+and proven there (Agave 2.1.21, Anchor 0.31.1, Node 20.20.2, pnpm 9.15.4, wasm-pack 0.13.1).
+
+**Schedule:** §28's plan starts 1 Oct; it is 2 Oct and Day 1 is not finished. The floor crate (1B)
+is complete and is the critical-path item, but 1C and 1D have not started. Buffer days 7 and 11 are
+the slack.
 
 ## STEP 0 — Guardrails
 
@@ -47,11 +52,21 @@ STEP 1A before any gate can be trusted.
 Deliverable: Q1–Q4, Q6, Q7, Q11–Q14 answered. Acceptance: §18 gates 1–3.
 Blocker → fallback: Q1/Q7 fail → creator-PDA default; Q4 fail → disclosed hot-wallet claimer.
 
-- [~] **A.** Scaffold + toolchain. **Partly done.** §15 skeleton created; Cargo workspace;
-      `.gitattributes` (LF, for bit-for-bit `vectors.json`); CI with fmt, clippy `-D warnings`, unit
-      tests, the 100k property gate, a `vectors.json` reproducibility check and a §21 wording grep.
-      **Rust pin proven at 1.85.0** (not §16's 1.84 — see `DECISIONS.md` § Toolchain for why).
-      **Still open:** Agave 2.1.x, Anchor 0.31.1, Node 20, pnpm 9, wasm-pack; `cargo build-sbf` unconfirmed
+- [~] **A.** Scaffold + toolchain. **Mostly done; one blocker.**
+      §15 skeleton, Cargo workspace, `.gitattributes` (LF for bit-for-bit `vectors.json`), CI with
+      fmt, clippy `-D warnings`, tests, the 100k property gate, a `vectors.json` reproducibility
+      check and a §21 wording grep.
+      **Repo moved to `/home/hp/ballast`** (WSL Ubuntu, ext4) per D-005 — clone, clean, LF intact.
+      **All §16 pins installed and proven on Linux:** rustc 1.85.0, Agave 2.1.21, Anchor 0.31.1
+      (avm 0.31.1), Node 20.20.2, pnpm 9.15.4, wasm-pack 0.13.1, Python 3.14.4.
+      **`cargo build-sbf` proves D-002 condition 3** — `crates/floor` + `ruint` compile for SBF
+      under platform-tools rustc 1.79.0 (46,784-byte eBPF ELF). Condition 4 not triggered.
+      **Finding T1:** a crate's MSRV is not the host pin; `crates/floor` now declares
+      `rust-version = "1.79"` because platform-tools compiles it. `programs/ballast` will need the
+      same.
+      **BLOCKED:** `anchor build` / `anchor test` — see Read this first. CI's Rust legs pass
+      locally; the probe legs cannot run.
+
 - [x] **B.** `crates/floor` — **DONE.** §4 + §11 implemented exactly: U256 via `ruint` (no_std,
       no alloc), exact integer `isqrt` by Newton descent, floor-of-root with the two-directional
       correction loop, `⌈L/s_max⌉` in A, floored payouts, integer bin check, bounds-before-arithmetic
@@ -153,20 +168,31 @@ to Meteora, redemption-only fallback.
 
 | Risk | Impact | Status |
 |---|---|---|
+| **platform-tools v1.43 (cargo 1.79) cannot build the Anchor tree** | Blocks `anchor build`/`test`, STEP 1C, STEP 1D | **Open — needs your decision** |
 | One day behind before any code (§28 starts 1 Oct) | Compresses the two P0 devnet days | Open — buffer days 7 + 11 absorb |
-| Toolchain mismatch on every §16 pin; pnpm + wasm-pack absent | Gates untrustworthy until fixed | Open — STEP 1A |
-| Windows host; `anchor test` + local validator with dumped Meteora `.so` unproven; only WSL distro is docker-desktop | §14/§17 integration layer may not run | Open — decide in STEP 1A |
+| Caret requirements silently drift off the §16 pins | `anchor-lang` had drifted to 0.31.2, `solana-program` to 2.3.0 | Fixed with exact pins in the probe; **apply the same to `programs/ballast`** |
+| `sudo` needs a password in WSL; `clang`/`unzip` absent | A build needing them will stop | Open — one `apt-get install` from you if it comes up |
+| ~~Toolchain mismatch on every §16 pin~~ | — | **Resolved** — all pins installed and proven in WSL |
+| ~~Windows host; OneDrive; no Linux distro~~ | — | **Resolved** by D-005 (repo on ext4 in WSL Ubuntu) |
 | Q5 (PDA DLMM limit orders via CPI) | Kills the entire DLMM/bid layer | UNKNOWN — gate 5, due 2 Oct |
 | Q1/Q7 (permanent lock atomicity / splittable creator position) | L could be stalled or under-counted | UNKNOWN — gate 3, due 1 Oct (overdue) |
 | Q18 (atomic redeem CU) | Forces two-step redeem | UNKNOWN — due 4 Oct |
 | Mainnet Proof deviation | Never submit a mismatched claim | Not reached |
-| Stray `C:\Users\HP\package.json` above the repo | pnpm/corepack may resolve the wrong package manager | Open — pin `packageManager` in repo root |
+| ~~Stray `C:\Users\HP\package.json` above the repo~~ | — | **Resolved** — `packageManager` pinned; `~/.ballast-env` strips `/mnt/*` from PATH |
 
 ## Next task
 
-**Finish STEP 1A's toolchain legs**, which block every gate: install Agave 2.1.x and Anchor 0.31.1,
-confirm `cargo build-sbf` on Rust 1.85.0, install Node 20 + pnpm 9 (pinning `packageManager` in the
-repo root to defeat the parent `yarn` declaration). Then **1C** (`pnpm fixtures:dump`, §17) and
-**1D** (devnet P0 harness for Q1–Q4, Q6, Q7, Q11, Q12, Q14), which needs devnet SOL from you.
+**Awaiting one decision**: how to get the Anchor program tree building for SBF
+(`DECISIONS.md` § OPEN DECISION — recommendation is option A, `--tools-version`, which keeps every
+§16 pin intact). Nothing past this can be trusted until `anchor build` and `anchor test` work.
 
-Decide first: findings **F1** and **F2** in `DECISIONS.md`, and whether to accept the Rust 1.85.0 pin.
+Once decided, in order:
+1. Finish STEP 1A (b) and (c): `anchor build`, `anchor test` on the probe workspace, CI locally.
+2. **STEP 1C** per D-001: `pnpm fixtures:dump` + `pnpm fixtures:check`, mainnet sha256 **and slot**
+   pins in `evidence/fixtures/mainnet-pins.json`; local validator booting with the **mainnet**
+   binaries plus every mainnet account they read — that account list discovered by **simulating** a
+   DBC config creation, a migration and a DLMM pair creation against mainnet, not guessed.
+3. **STEP 1D**: the P0 harness, on the mainnet-binary local validator. No devnet SOL needed yet.
+
+Also confirm: the **D-001 wording in `DECISIONS.md` is my reconstruction** — its text was never
+given to me.

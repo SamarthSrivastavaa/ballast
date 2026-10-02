@@ -6,6 +6,9 @@ resolver = "2"
 # meaningful and green in the meantime. crates/floor needs no network and no Anchor, so it
 # is first (§33: "the floor crate needs no network, do it first").
 members = ["crates/floor"]
+# The toolchain probe is its own workspace: it pulls the whole Anchor/Solana tree, which
+# should not be resolved here while the P0 gate is closed.
+exclude = ["tests/toolchain-probe"]
 
 [workspace.package]
 version = "0.1.0"

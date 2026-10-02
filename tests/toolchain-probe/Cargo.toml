@@ -1,0 +1,11 @@
+# Separate workspace from the repo root: the probe pulls in the whole Anchor/Solana dependency
+# tree, which should not be resolved into the root workspace while the P0 gate is still closed.
+# The root Cargo.toml excludes this directory.
+[workspace]
+resolver = "2"
+members = ["programs/*"]
+
+[profile.release]
+overflow-checks = true
+lto = "fat"
+codegen-units = 1

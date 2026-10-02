@@ -1,0 +1,28 @@
+[package]
+name = "probe"
+description = "Toolchain probe: proves crates/floor builds for SBF and is exact on-chain (D-002 cond. 3)."
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "probe"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build"]
+
+[dependencies]
+# Exact pins. A caret here let anchor-lang drift to 0.31.2 and solana-program to
+# 2.3.0, whose blake3 -> digest 0.11 -> block-buffer 0.12.1 needs the edition2024
+# manifest parser that platform-tools cargo (1.79.0) does not have.
+anchor-lang = "=0.31.1"
+# Declared directly so the §16 Agave 2.1.x line is what actually gets built: anchor-lang
+# only asks for `solana-program = "^2"`, which resolves to 2.3.0 on its own.
+solana-program = "=2.1.21"
+# The whole point of the probe: this must compile for SBF under platform-tools rustc.
+ballast-floor = { path = "../../../../crates/floor" }

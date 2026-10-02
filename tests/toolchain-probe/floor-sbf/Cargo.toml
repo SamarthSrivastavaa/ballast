@@ -1,0 +1,24 @@
+# Its own workspace, deliberately: the point is a dependency tree containing ONLY ballast-floor
+# and ruint, so that an SBF build failure can be attributed to this crate rather than to Anchor's
+# transitive tree. This is what D-002 condition 3 actually asks about.
+[workspace]
+resolver = "2"
+members = ["."]
+
+[package]
+name = "floor-sbf-probe"
+description = "D-002 condition 3, isolated: crates/floor must build for SBF under platform-tools."
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+ballast-floor = { path = "../../../crates/floor" }
+
+[profile.release]
+overflow-checks = true
+lto = "fat"
+codegen-units = 1
+panic = "abort"
