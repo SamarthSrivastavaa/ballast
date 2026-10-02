@@ -1,0 +1,12 @@
+[toolchain]
+# §16's starting pin was 1.84 stable ("Anchor 0.31 compatible"). §16 also says the pins are a
+# starting set to confirm on day 1 — that check failed: on cargo 1.84, proptest (required by §14
+# for the property layer) pulls getrandom 0.4.x, which needs the edition2024 manifest parser that
+# only lands in 1.85. getrandom could not be pinned down because the requirement is a caret on a
+# major version inside proptest's tree.
+#
+# 1.85.0 is the first edition-2024 stable compiler and is still within Anchor 0.31's supported
+# range. Recorded in DECISIONS.md § Toolchain with this evidence.
+channel = "1.85.0"
+components = ["rustfmt", "clippy", "rust-analyzer"]
+profile = "minimal"

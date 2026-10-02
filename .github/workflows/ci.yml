@@ -1,0 +1,93 @@
+name: ci
+
+# §16: build, unit, property, differential, integration (local validator).
+# The integration leg lands with the program slice; everything here needs no network.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
+
+jobs:
+  rust:
+    name: fmt · clippy · unit · property · differential
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # rust-toolchain.toml pins the channel (§16); this action honours it.
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: fmt
+        run: cargo fmt --all --check
+
+      - name: clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: unit tests
+        run: cargo test --workspace --all-targets
+
+      # §14 property gate: 100k cases, zero failures.
+      - name: property gate (100k cases)
+        env:
+          PROPTEST_CASES: "100000"
+        run: cargo test -p ballast-floor --test properties
+
+  reference:
+    name: python reference · vectors.json is reproducible
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # §27: the reference must reproduce every published vector on its own.
+      - name: python reference self-test
+        run: python tests/reference/floor.py
+
+      # §11: vectors.json is generated, not hand-edited. Regenerate it and require that the
+      # committed file is byte-identical — otherwise the differential test is comparing Rust
+      # against a stale or edited reference, which would make it meaningless.
+      - name: vectors.json is byte-identical to a fresh generation
+        run: |
+          python tests/reference/floor.py --emit 10000 > /tmp/vectors.json
+          if ! cmp -s /tmp/vectors.json crates/floor/vectors.json; then
+            echo "::error::crates/floor/vectors.json is not what floor.py generates."
+            echo "Regenerate with: python tests/reference/floor.py --emit 10000 > crates/floor/vectors.json"
+            diff <(head -c 2000 /tmp/vectors.json) <(head -c 2000 crates/floor/vectors.json) || true
+            exit 1
+          fi
+          echo "vectors.json reproducible ($(wc -c < crates/floor/vectors.json) bytes)"
+
+  wording:
+    name: banned wording (§21)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # §21 bans these in anything user-facing. Scoped to app/, README and the SDK so that
+      # spec text and security docs can discuss what is *not* safe without tripping the gate.
+      - name: grep for banned wording
+        run: |
+          set +e
+          hits=$(grep -rniE "\b(insured|guaranteed profit)\b|can'?t lose|cannot lose|price can never go below|risk[- ]free" \
+            app/ sdk/ README.md 2>/dev/null)
+          set -e
+          if [ -n "$hits" ]; then
+            echo "::error::§21 banned wording in user-facing copy:"
+            echo "$hits"
+            exit 1
+          fi
+          echo "no banned wording found"

@@ -87,25 +87,54 @@ P0 = could invalidate the mechanism · P1 = could invalidate a subsystem · P2 =
 
 ## Toolchain
 
-**Status: UNRESOLVED.** The §16 pins are the target; the host currently satisfies none of them.
-STEP 1A must install or pin each, prove it builds, and record the final pin here.
+**Status: Rust leg RESOLVED and proven; Solana/Anchor/Node legs still TBD.**
 
-| Tool | §16 pin | Installed (2 Oct 2026) | Verdict | Final pin |
-|---|---|---|---|---|
-| Rust (host) | 1.84 stable | **1.95.0-nightly** (0a3cd3b6b, 2026-01-18) | MISMATCH — nightly, 11 minors ahead | TBD |
-| Agave / Solana CLI | 2.1.x | **1.18.26** (SolanaLabs) | MISMATCH — major version behind; pre-Agave | TBD |
-| `cargo build-sbf` | must work | solana-cargo-build-sbf 1.18.26, platform-tools v1.41 | present, wrong version | TBD |
-| Anchor CLI | 0.31.1 via `avm` | **0.32.1** (avm 0.32.1) | MISMATCH — `avm install 0.31.1` available | TBD |
-| Node | 20 LTS | **24.15.0** | MISMATCH | TBD |
-| pnpm | 9 (workspaces) | **absent** — a parent `C:\Users\HP\package.json` declares `packageManager: yarn` | MISSING + interference risk | TBD |
-| TypeScript | 5.6 | n/a | not installed | TBD |
-| `wasm-pack` / `wasm-bindgen` | required for floor-wasm | **absent** | MISSING | TBD |
-| Python | (independent reference) | 3.11.9 | OK — integer-only reference needs no pin | 3.11.9 |
-| Git | — | 2.49.0.windows.1 | OK | 2.49.0 |
+§16 states its pins are "the starting set" and that "each must be confirmed" on day 1. That check
+ran on 2 Oct 2026 and the Rust pin failed, for a concrete reason recorded below.
 
-**Risk:** Anchor 0.32.1 against the spec's `anchor-lang` 0.31.1 will not agree on IDL or discriminator
-tooling; Solana 1.18 predates the Agave 2.1 platform tools Anchor 0.31 expects. Do not run a gate on a
-mismatched toolchain — a green test would not mean anything.
+### Confirmed pins (proven to build and test)
+
+| Tool | §16 starting pin | **Final pin** | Evidence |
+|---|---|---|---|
+| Rust (host) | 1.84 stable | **1.85.0** stable | `rust-toolchain.toml`; `cargo test -p ballast-floor` → 25 pass; `cargo clippy --all-targets -- -D warnings` clean; `cargo fmt --check` clean |
+| `ruint` | unversioned, no_std | **=1.12.3** | builds `no_std`, `default-features = false`; 1.16+ requires Rust 1.90 |
+| `proptest` | (§14 property layer) | **=1.5.0** | 100k-case gate passes in 16.7 s |
+| `serde_json` (dev) | — | **=1.0.133** | differential test only; 1.0.151 pulls `zmij`, needs newer Rust |
+| Python (reference) | — | **3.11.9** | §27 self-test: 10/10 vectors, both redeem payouts |
+
+### Why the Rust pin moved 1.84 → 1.85.0
+
+`proptest` — required by §14 for the property layer — transitively requires `getrandom` 0.4.x,
+whose manifest uses `edition2024`. Cargo 1.84 cannot parse an edition-2024 manifest:
+
+```
+error: failed to parse manifest at .../getrandom-0.4.3/Cargo.toml
+  feature `edition2024` is required
+  ... not stabilized in this version of Cargo (1.84.0)
+```
+
+Pinning `getrandom = "=0.2.15"` does **not** fix it: the requirement inside proptest's tree is a
+caret on a major version, so cargo resolves both 0.2.15 and 0.4.3 and still fails on the latter.
+The alternatives were (a) drop proptest, losing the §14 property layer, or (b) move the host
+compiler to 1.85.0, the first edition-2024 stable. (b) was taken: it keeps more of the spec.
+1.85.0 remains inside Anchor 0.31's supported range. **Still to confirm:** that Anchor 0.31.1 and
+Agave 2.1.x's platform tools build the program on 1.85.0 (`cargo build-sbf`) — that is the next
+toolchain gate, and it could move this pin again.
+
+### Still unresolved — blocking every gate
+
+| Tool | §16 pin | Installed | Action |
+|---|---|---|---|
+| Agave / Solana CLI | 2.1.x | **1.18.26** (pre-Agave) | install Agave 2.1.x; confirm `cargo build-sbf` |
+| Anchor CLI | 0.31.1 | **0.32.1** | `avm install 0.31.1 && avm use 0.31.1` |
+| Node | 20 LTS | **24.15.0** | install 20 LTS |
+| pnpm | 9 (workspaces) | **absent** | install; pin `packageManager` in the repo root |
+| TypeScript | 5.6 | absent | with the SDK slice |
+| `wasm-pack` / `wasm-bindgen` | required | **absent** | with the floor-wasm slice |
+
+A gate run on a mismatched toolchain proves nothing; `/gate` refuses to run while these are TBD.
+
+---
 
 ---
 
@@ -123,9 +152,22 @@ mismatched toolchain — a green test would not mean anything.
 
 ---
 
-## Deviations from the spec
+## Deviations and spec-internal findings
 
-None. Any entry here requires my prior approval.
+Two internal inconsistencies in the spec surfaced while implementing §4. Both are recorded with
+the conservative reading taken; **both need approval**, and neither changes the mechanism.
+
+| # | Sections | Finding | Reading taken | Status |
+|---|---|---|---|---|
+| F1 | §4 vs §27 | §4 bounds say `L < 2^120` strictly. §27's boundary vector "Max supply, 1,000 SOL vault, L = 2^120" uses `L` at **exactly** 2^120, and §27 requires Rust to reproduce its `s` exactly. The two cannot both hold. | **Inclusive, `L ≤ 2^120`.** It keeps the spec self-consistent and is overflow-safe: §4's headroom argument needs `B² < 2^240`, and at `L = 2^120` exactly `B² = 2^240 < 2^256`. The strict reading would make a published vector uncomputable. | **Pending approval** |
+| F2 | §4 vs §14 | §14 requires the property "monotone in L" unconditionally. §4's conservative `A = S + ⌈L/s_max⌉` violates it whenever an increase in `L` crosses a multiple of `s_max`: `A` gains a whole base unit while `B` gains only `ΔL`. Minimal counterexample found by proptest: `V = u64::MAX, S = 1, L = 0 → 1` lowers `F`. | Monotone-in-L is tested **within a ceiling step** (where `⌈L/s_max⌉` is unchanged), which is the statement that is actually true of §4's formula. The counterexample is pinned in a named test so a future rounding change cannot hide it. **No impact on the mechanism:** §4's own transition table lists an L change as "Impossible (permanent lock, PDA-owned positions)", and a decrease is covered by the §8 `BackingDecreased` fail-safe. Rounding `A` up always understates `F`, the safe direction. | **Pending approval** |
+
+Evidence: `crates/floor/src/lib.rs` (`L_MAX` doc comment), `crates/floor/tests/properties.rs`
+(`monotone_in_l_within_a_ceiling_step`, `ceiling_step_can_lower_f`).
+
+### Approved deviations
+
+None yet.
 
 | Date | Spec section | Observed | Minimum correction | Approved by | Evidence |
 |---|---|---|---|---|---|

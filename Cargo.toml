@@ -1,0 +1,25 @@
+[workspace]
+resolver = "2"
+
+# §15 lists programs/ballast, crates/meteora-types, crates/verifier-core and verifier/ as
+# workspace members too. They are added as their slices land, so that `cargo test` stays
+# meaningful and green in the meantime. crates/floor needs no network and no Anchor, so it
+# is first (§33: "the floor crate needs no network, do it first").
+members = ["crates/floor"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+ruint = { version = "=1.12.3", default-features = false }
+
+[profile.release]
+overflow-checks = true    # §12: an arithmetic bug must panic, never wrap silently
+lto = "fat"
+codegen-units = 1
+
+[profile.test]
+overflow-checks = true

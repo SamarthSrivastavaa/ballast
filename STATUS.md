@@ -1,16 +1,17 @@
 # Ballast — Status
 
-**Updated:** 2 Oct 2026 · **Deadline:** 13 Oct 2026 06:59 UTC (plan to submit 12 Oct)
+**Updated:** 2 Oct 2026 (STEP 1A/1B) · **Deadline:** 13 Oct 2026 06:59 UTC (plan to submit 12 Oct)
 
 ## Current state
 
 | | |
 |---|---|
-| Phase | STEP 0 — guardrails (no product code) |
+| Phase | STEP 1B done — floor crate + Python reference + vectors complete |
 | Last passed gate | **none** — §18 gate 1 not yet attempted |
 | P0 gate (Q1–Q5) | **BLOCKING.** All five UNKNOWN. Nothing beyond test harnesses may be built. |
 | Open UNKNOWNs | 12 of 20 Top-20 questions (see `DECISIONS.md`) |
-| Program code | none (correct — gated) |
+| Program code | none (correct — gated). `crates/floor` is exempt: pure math, no network |
+| Floor engine | **§4/§11 implemented; all 10 §27 vectors exact; 25 tests + 100k property gate green** |
 | Devnet SOL | not yet requested |
 | Mainnet | untouched |
 
@@ -39,19 +40,26 @@ STEP 1A before any gate can be trusted.
 - [x] `.claude/commands/` — `slice`, `gate`, `audit`, `handoff`
 - [x] `.claude/agents/` — `spec-auditor`, `security-reviewer`, `meteora-researcher`
 - [x] `.claude/settings.json` + `/permissions` verified
-- [ ] **Awaiting approval to begin STEP 1**
+- [x] Approved; committed as `a727dc1`
 
 ## Day 1 — 1 Oct (§33) · NOT STARTED, overdue
 
 Deliverable: Q1–Q4, Q6, Q7, Q11–Q14 answered. Acceptance: §18 gates 1–3.
 Blocker → fallback: Q1/Q7 fail → creator-PDA default; Q4 fail → disclosed hot-wallet claimer.
 
-- [ ] **A.** Scaffold repo per §15; pin toolchain per §16, prove each pin builds, record final pins in
-      `DECISIONS.md`; confirm `cargo build-sbf`; CI with fmt, clippy `-D warnings`, unit tests
-- [ ] **B.** `crates/floor`: implement §4 + §11 exactly (U256 via `ruint`; floor-of-root with correction
-      loop; `⌈L/s_max⌉` in A; payouts floored; bin check). Independent `tests/reference/floor.py`.
-      Generate `crates/floor/vectors.json` — every §27 vector + 10k random. **Rust = Python bit for bit.**
-      *No network needed — do this first.*
+- [~] **A.** Scaffold + toolchain. **Partly done.** §15 skeleton created; Cargo workspace;
+      `.gitattributes` (LF, for bit-for-bit `vectors.json`); CI with fmt, clippy `-D warnings`, unit
+      tests, the 100k property gate, a `vectors.json` reproducibility check and a §21 wording grep.
+      **Rust pin proven at 1.85.0** (not §16's 1.84 — see `DECISIONS.md` § Toolchain for why).
+      **Still open:** Agave 2.1.x, Anchor 0.31.1, Node 20, pnpm 9, wasm-pack; `cargo build-sbf` unconfirmed
+- [x] **B.** `crates/floor` — **DONE.** §4 + §11 implemented exactly: U256 via `ruint` (no_std,
+      no alloc), exact integer `isqrt` by Newton descent, floor-of-root with the two-directional
+      correction loop, `⌈L/s_max⌉` in A, floored payouts, integer bin check, bounds-before-arithmetic
+      returning errors not values. `tests/reference/floor.py` written from the §4 derivation
+      independently; reproduces all 10 §27 vectors and both §27 redeem payouts. `vectors.json` =
+      10,010 cases (10 from §27 + 10,000 random); **Rust matches Python on every one**.
+      25 tests green; §14 100k property gate green (16.7 s); fmt + clippy `-D warnings` clean.
+      Surfaced two spec-internal findings (F1, F2 in `DECISIONS.md`) — both need your approval.
 - [ ] **C.** Fixtures: `pnpm fixtures:dump` per §17 (DBC, DAMM v2, DLMM, Metaplex Token Metadata, locker
       `.so` + migration config key + DLMM preset accounts); local validator boots with them; hashes committed
 - [ ] **D.** Devnet P0 harness (`tests/devnet/p0`): minimal Anchor program + TS scripts answering
@@ -156,5 +164,9 @@ to Meteora, redemption-only fallback.
 
 ## Next task
 
-Await approval of STEP 0, then begin **STEP 1A** (scaffold + toolchain pins) in plan mode, with
-**1B (floor crate)** started in parallel because it needs no network — and request devnet SOL for 1D.
+**Finish STEP 1A's toolchain legs**, which block every gate: install Agave 2.1.x and Anchor 0.31.1,
+confirm `cargo build-sbf` on Rust 1.85.0, install Node 20 + pnpm 9 (pinning `packageManager` in the
+repo root to defeat the parent `yarn` declaration). Then **1C** (`pnpm fixtures:dump`, §17) and
+**1D** (devnet P0 harness for Q1–Q4, Q6, Q7, Q11, Q12, Q14), which needs devnet SOL from you.
+
+Decide first: findings **F1** and **F2** in `DECISIONS.md`, and whether to accept the Rust 1.85.0 pin.

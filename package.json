@@ -1,0 +1,20 @@
+{
+  "name": "ballast",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A Meteora DBC launch class with an on-chain, executable buyback floor.",
+  "//packageManager": "Pinned explicitly because C:\\Users\\HP\\package.json, above this repo, declares packageManager=yarn. Without this, corepack resolves the wrong manager for every command run here.",
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=20 <21",
+    "pnpm": ">=9 <10"
+  },
+  "scripts": {
+    "fixtures:dump": "tsx scripts/fixtures/dump.ts",
+    "reference": "python tests/reference/floor.py",
+    "reference:emit": "python tests/reference/floor.py --emit 10000 > crates/floor/vectors.json",
+    "test:rust": "cargo test --workspace --all-targets",
+    "test:property": "cross-env PROPTEST_CASES=100000 cargo test -p ballast-floor --test properties",
+    "lint:rust": "cargo fmt --all --check && cargo clippy --all-targets -- -D warnings"
+  }
+}

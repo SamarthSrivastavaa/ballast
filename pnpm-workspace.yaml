@@ -1,0 +1,6 @@
+# §15 TypeScript workspaces. Each package lands with its own slice.
+packages:
+  - "sdk/typescript"
+  - "compiler"
+  - "keeper"
+  - "app"

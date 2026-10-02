@@ -1,0 +1,17 @@
+# LF everywhere. The floor crate's vectors.json is hashed and compared bit for bit across
+# Rust, WASM and Python (§11, §27); a CRLF rewrite on checkout would break that comparison
+# and would change every committed fixture hash.
+* text=auto eol=lf
+
+*.json   text eol=lf
+*.rs     text eol=lf
+*.py     text eol=lf
+*.toml   text eol=lf
+*.md     text eol=lf
+*.ts     text eol=lf
+*.yml    text eol=lf
+
+# Binary fixtures and dumps
+*.so     binary
+*.png    binary
+*.jpg    binary
