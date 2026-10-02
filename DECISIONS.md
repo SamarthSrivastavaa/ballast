@@ -155,7 +155,27 @@ condition 4 forbids changing the toolchain again without asking:
 | B | Move Agave to a newer line (2.3.x; its platform-tools v2.3.3 is already cached here) | Changes the §16 Agave pin outright and pulls a new `solana-program` into the program, with knock-on effects for `meteora-types` offset tests. |
 | C | Keep pinning transitive crates | Dead end, demonstrated above. |
 
-Recommendation: **A**.
+### Probe result (2 Oct 2026) — option A may be closed
+
+`cargo build-sbf --tools-version v1.54` was probed (probe only; nothing adopted). Two findings,
+written up in `evidence/step-1a/tools-version-probe.md`:
+
+1. **A newer platform-tools does fix the edition-2024 problem** — `toml_datetime 1.1.1` compiled
+   cleanly, which cargo 1.79.0 could not even parse.
+2. **But it fails on the target triple instead:** `error[E0463]: can't find crate for core — the
+   sbf-solana-solana target may not be installed`. Agave 2.1.21's `build-sbf` requests
+   `sbf-solana-solana`; v1.54 ships the renamed `sbpf-solana-solana`.
+
+So option A needs a platform-tools version that *both* carries cargo ≥ 1.85 *and* still provides
+`sbf-solana-solana`. The rename landed in roughly the same generation as the cargo bump, so that gap
+may be empty. `v1.51` was still downloading when this was written — **re-run the probe to settle
+it** (candidates, newest-first in the pre-rename generation: v1.51, v1.50, v1.49, v1.48, v1.47,
+v1.46.1, v1.42.1).
+
+If no version sits in the gap, the choice is **B** (move Agave to a newer line; platform-tools
+v2.3.3 is already cached here) or a deliberate split of the CLI pin from the build pin.
+
+Recommendation: probe `v1.51` and below first, since A preserves every §16 pin; fall back to B.
 
 ---
 

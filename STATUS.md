@@ -180,6 +180,16 @@ to Meteora, redemption-only fallback.
 | Mainnet Proof deviation | Never submit a mismatched claim | Not reached |
 | ~~Stray `C:\Users\HP\package.json` above the repo~~ | — | **Resolved** — `packageManager` pinned; `~/.ballast-env` strips `/mnt/*` from PATH |
 
+## In progress
+
+| What | Where | Next concrete action |
+|---|---|---|
+| platform-tools probe | `evidence/step-1a/tools-version-probe.md` | `cargo build-sbf --tools-version v1.51` in `tests/toolchain-probe` (v1.54 already ruled out: target renamed to `sbpf-solana-solana`). Then v1.50, v1.49, v1.48, v1.47, v1.46.1, v1.42.1. |
+| Anchor probe workspace | `tests/toolchain-probe/` | Builds are blocked. `anchor keys sync` already ran (program id `C6vEPX5hU7uK6VXzJLBoZYM1nwnmbcbpEEJ83ghV4aPq`); `pnpm install --ignore-workspace` done; `tests/probe.ts` written and unrun. |
+| `floor-sbf` probe | `tests/toolchain-probe/floor-sbf/` | **Complete** — D-002 condition 3 proven. Leave as the regression check for the floor crate's SBF-cleanliness. |
+
+Nothing else is half-built. `crates/floor` is complete and fully tested.
+
 ## Next task
 
 **Awaiting one decision**: how to get the Anchor program tree building for SBF
