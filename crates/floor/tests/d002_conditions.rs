@@ -11,6 +11,10 @@
 //! Condition 4 (if 3 fails, pin an older `ruint` rather than touching the toolchain) is a
 //! procedural instruction recorded in DECISIONS.md.
 
+// Test arithmetic is not protocol arithmetic: an overflow here is a test failure, which is
+// exactly what should happen. The lint stays on for `src/` (see lib.rs).
+#![allow(clippy::arithmetic_side_effects)]
+
 const CRATE_MANIFEST: &str = include_str!("../Cargo.toml");
 const ROOT_MANIFEST: &str = include_str!("../../../Cargo.toml");
 
