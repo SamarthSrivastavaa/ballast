@@ -1,12 +1,20 @@
 # Probe: can `--tools-version` unblock the Anchor SBF build?
 
+> **CLOSED 2 Oct 2026 — superseded by STEP 2 (`step2-decision.md`).** This route was not needed.
+> The edition-2024 blocker was fixed in the **lockfile**, not the toolchain: MSRV-aware resolution
+> (`rust-version = "1.79"`) plus `--precise` pins for `blake3`, `solana-program` and `anchor-*`.
+> `anchor build` and `anchor test` pass under the bundled platform-tools v1.43. v1.52 and v1.53
+> were never needed and were not probed. The analysis below is kept as history; its claim that
+> the `toml_datetime` chain was "unpinnable" was wrong. MSRV-aware resolution moved
+> `proc-macro-crate` to 3.4.0, which uses the edition-2021 `toml_edit 0.23` / `toml_datetime 0.7`.
+
 **Probe only — nothing here was adopted.** No change was written into `Anchor.toml`, CI or any
 committed config. The purpose was to make the platform-tools decision in `DECISIONS.md`
 § OPEN DECISION evidence-based rather than a guess.
 
 Ran 2 Oct 2026, `~/ballast/tests/toolchain-probe`, Agave CLI 2.1.21.
 
-## Result so far: option A is **not** a drop-in fix
+## Result: option A is **not** a drop-in fix, and may be closed entirely
 
 ### platform-tools v1.54 — FAILED, but for a *different* reason
 
@@ -41,19 +49,49 @@ is between:
 - a variant of B: keep Agave 2.1.21 as the *CLI* for cluster operations, but build the program with
   a newer Anchor/Agave pair. That splits one pin into two and should only be done deliberately.
 
-### platform-tools v1.51 — in flight
+### platform-tools v1.51 — FAILED, cargo too old
 
-The probe was still downloading v1.51 when this was written. If v1.51 (Aug 2025) predates the target
-rename *and* carries a cargo new enough for edition 2024, option A survives. Re-run to find out:
+```
+error: failed to parse manifest at .../toml_datetime-1.1.1+spec-1.1.0/Cargo.toml
+  feature `edition2024` is required
+  ... not stabilized in this version of Cargo (1.84.0 (12fe57a9d 2025-04-07))
+build-sbf --tools-version v1.51 exit: 1
+```
+
+v1.51 carries **cargo 1.84.0** — one minor short of what edition-2024 manifests need.
+
+## The squeeze, stated precisely
+
+A viable platform-tools version must satisfy **both**:
+
+1. cargo ≥ 1.85, to parse the edition-2024 manifests in the Anchor/Solana tree; and
+2. still provide the `sbf-solana-solana` target that Agave 2.1.21's `build-sbf` requests.
+
+Measured so far:
+
+| platform-tools | cargo | target name | Verdict |
+|---|---|---|---|
+| v1.43 (bundled with Agave 2.1.21) | 1.79.0 | `sbf-solana-solana` | fails (1) |
+| v1.51 | **1.84.0** | — (never got that far) | fails (1) |
+| v1.52 | ? | ? | probing |
+| v1.53 | ? | ? | probing |
+| v1.54 | ≥ 1.85 (compiled the manifest) | **renamed** `sbpf-solana-solana` | fails (2) |
+
+The boundary therefore lies in **v1.52–v1.53**. If neither sits in the gap, **option A is closed**
+and the decision is option B (move Agave to a newer line; platform-tools v2.3.3 is already cached
+on this machine) or a deliberate split of the CLI pin from the build pin.
+
+Re-run to settle it:
 
 ```bash
 wsl -d Ubuntu
 . ~/.ballast-env && cd ~/ballast/tests/toolchain-probe
-cargo build-sbf --tools-version v1.51
+cargo build-sbf --tools-version v1.52    # then v1.53
 ```
 
-Candidates worth trying in order, newest-first within the pre-rename generation:
-`v1.51`, `v1.50`, `v1.49`, `v1.48`, `v1.47`, `v1.46.1`, `v1.42.1`.
+Reading the failure mode: a complaint about `edition2024` means cargo is too old (constraint 1); a
+complaint that `the sbf-solana-solana target may not be installed` means the target was renamed
+(constraint 2).
 
 ## What is *not* in question
 

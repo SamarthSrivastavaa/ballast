@@ -1,0 +1,6 @@
+warning: unused config key `resolver.incompatible-rust-versions` in `/home/hp/ballast/tests/toolchain-probe/.cargo/config.toml`
+    Finished `release` profile [optimized] target(s) in 0.10s
+
+real	0m0.230s
+user	0m0.126s
+sys	0m0.086s

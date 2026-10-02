@@ -1,0 +1,29 @@
+[
+  {
+    "program": "token_metadata",
+    "programId": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+    "instruction": "CreateMetadataAccountV3",
+    "kind": "success",
+    "signature": "3tLDU7JrcsioezAG8nNLcjfirNZR792LXU2mc68R8g2CpPfNV17QbMSQ9kRXf3gsH4rMi3xnHKqEdTsG4u6KfVZo",
+    "slot": 735,
+    "err": null,
+    "computeUnitsConsumed": 39423,
+    "executed": true,
+    "instructionPresent": null,
+    "passed": true,
+    "logs": [
+      "Program metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s invoke [1]",
+      "Program log: IX: Create Metadata Accounts v3",
+      "Program 11111111111111111111111111111111 invoke [2]",
+      "Program 11111111111111111111111111111111 success",
+      "Program log: Allocate space for the account",
+      "Program 11111111111111111111111111111111 invoke [2]",
+      "Program 11111111111111111111111111111111 success",
+      "Program log: Assign the account to the owning program",
+      "Program 11111111111111111111111111111111 invoke [2]",
+      "Program 11111111111111111111111111111111 success",
+      "Program metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s consumed 39423 of 200000 compute units",
+      "Program metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s success"
+    ]
+  }
+]

@@ -1,0 +1,103 @@
+warning: unused config key `resolver.incompatible-rust-versions` in `/home/hp/ballast/tests/toolchain-probe/.cargo/config.toml`
+   Compiling typenum v1.20.1
+   Compiling cfg-if v1.0.5
+   Compiling serde_core v1.0.229
+   Compiling serde v1.0.229
+   Compiling generic-array v0.14.7
+   Compiling zerocopy v0.8.59
+   Compiling subtle v2.6.1
+   Compiling ahash v0.8.12
+   Compiling borsh v1.8.1
+   Compiling once_cell v1.21.4
+   Compiling solana-define-syscall v2.1.21
+   Compiling num-traits v0.2.19
+   Compiling bytemuck v1.25.2
+   Compiling solana-atomic-u64 v2.1.21
+   Compiling bs58 v0.5.1
+   Compiling solana-sanitize v2.1.21
+   Compiling five8_core v0.1.2
+   Compiling solana-msg v2.1.21
+   Compiling anchor-syn v0.31.1
+   Compiling bv v0.11.1
+   Compiling thiserror v1.0.69
+   Compiling memoffset v0.9.1
+   Compiling five8_const v0.1.4
+   Compiling blake3 v1.5.5
+   Compiling arrayref v0.3.9
+   Compiling log v0.4.34
+   Compiling arrayvec v0.7.8
+   Compiling constant_time_eq v0.3.1
+   Compiling keccak v0.1.6
+   Compiling solana-secp256k1-recover v2.1.21
+   Compiling getrandom v0.2.17
+   Compiling lazy_static v1.5.1
+   Compiling solana-program-option v2.1.21
+   Compiling solana-native-token v2.1.21
+   Compiling ruint v1.12.3
+   Compiling anchor-derive-space v0.31.1
+   Compiling base64 v0.21.7
+   Compiling solana-decode-error v2.1.21
+   Compiling solana-program-memory v2.1.21
+   Compiling ballast-floor v0.1.0 (/home/hp/ballast/crates/floor)
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling sha3 v0.10.9
+   Compiling anchor-derive-serde v0.31.1
+   Compiling anchor-attribute-error v0.31.1
+   Compiling anchor-attribute-access-control v0.31.1
+   Compiling anchor-derive-accounts v0.31.1
+   Compiling anchor-attribute-account v0.31.1
+   Compiling anchor-attribute-event v0.31.1
+   Compiling anchor-attribute-constant v0.31.1
+   Compiling anchor-attribute-program v0.31.1
+   Compiling serde_bytes v0.11.19
+   Compiling solana-hash v2.1.21
+   Compiling bincode v1.3.3
+   Compiling solana-short-vec v2.1.21
+   Compiling solana-serde-varint v2.1.21
+   Compiling solana-fee-calculator v2.1.21
+   Compiling solana-sha256-hasher v2.1.21
+   Compiling hashbrown v0.13.2
+   Compiling borsh v0.10.4
+   Compiling solana-pubkey v2.1.21
+   Compiling solana-borsh v2.1.21
+   Compiling solana-instruction v2.1.21
+   Compiling solana-sysvar-id v2.1.21
+   Compiling solana-rent v2.1.21
+   Compiling solana-last-restart-slot v2.1.21
+   Compiling solana-epoch-schedule v2.1.21
+   Compiling solana-slot-hashes v2.1.21
+   Compiling solana-clock v2.1.21
+   Compiling solana-slot-history v2.1.21
+   Compiling solana-program-error v2.1.21
+   Compiling solana-stable-layout v2.1.21
+   Compiling solana-bincode v2.1.21
+   Compiling solana-serialize-utils v2.1.21
+   Compiling solana-account-info v2.1.21
+   Compiling solana-program-pack v2.1.21
+   Compiling solana-cpi v2.1.21
+   Compiling solana-program-entrypoint v2.1.21
+   Compiling solana-program v2.1.21
+   Compiling anchor-lang v0.31.1
+   Compiling probe v0.1.0 (/home/hp/ballast/tests/toolchain-probe/programs/probe)
+    Finished `release` profile [optimized] target(s) in 17.79s
+   Compiling anchor-syn v0.31.1
+   Compiling anchor-derive-space v0.31.1
+   Compiling anchor-attribute-event v0.31.1
+   Compiling anchor-derive-serde v0.31.1
+   Compiling anchor-attribute-error v0.31.1
+   Compiling anchor-derive-accounts v0.31.1
+   Compiling anchor-attribute-account v0.31.1
+   Compiling anchor-attribute-access-control v0.31.1
+   Compiling anchor-attribute-constant v0.31.1
+   Compiling anchor-attribute-program v0.31.1
+   Compiling anchor-lang v0.31.1
+   Compiling probe v0.1.0 (/home/hp/ballast/tests/toolchain-probe/programs/probe)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.07s
+     Running unittests src/lib.rs (/home/hp/ballast/tests/toolchain-probe/target/debug/build/probe/34f150395bd8e22d/out/probe-34f150395bd8e22d)
+
+real	0m22.123s
+user	1m5.771s
+sys	0m11.846s

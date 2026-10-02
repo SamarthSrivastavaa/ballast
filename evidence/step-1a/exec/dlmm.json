@@ -1,0 +1,163 @@
+[
+  {
+    "program": "dlmm",
+    "programId": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+    "instruction": "place_limit_order",
+    "kind": "dispatch",
+    "signature": "5KKroFvnTdM8oUAxAS7z7tu9b3gFDDenE1WLeqAvbz9XrmbhPo5mZsbXjuhE8kY8j2ZoqeTtv2kKeuwE7NL7FcG2",
+    "slot": 752,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1985,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo invoke [1]",
+      "Program log: Instruction: PlaceLimitOrder",
+      "Program log: AnchorError occurred. Error Code: InstructionDidNotDeserialize. Error Number: 102. Error Message: The program could not deserialize the given instruction.",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo consumed 1985 of 200000 compute units",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo failed: custom program error: 0x66"
+    ]
+  },
+  {
+    "program": "dlmm",
+    "programId": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+    "instruction": "cancel_limit_order",
+    "kind": "dispatch",
+    "signature": "5DwckiDyt4D4FiwuzCbpyUeDYYShXp43qC3VqqWMQivFbZ9r9vhY7RRpimFKZxd6ozLSk1hZDTvSfy5e8ZzVR5gA",
+    "slot": 753,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1969,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo invoke [1]",
+      "Program log: Instruction: CancelLimitOrder",
+      "Program log: AnchorError occurred. Error Code: InstructionDidNotDeserialize. Error Number: 102. Error Message: The program could not deserialize the given instruction.",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo consumed 1969 of 200000 compute units",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo failed: custom program error: 0x66"
+    ]
+  },
+  {
+    "program": "dlmm",
+    "programId": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+    "instruction": "close_limit_order_if_empty",
+    "kind": "dispatch",
+    "signature": "5JxPFG92fUZuJjoHpPAFqUCALJQXuXApcmrpo3A3iAj1upCitYVooGpReog2KChnqb7EhyTQjjAZQfsvrxp4FG4y",
+    "slot": 754,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3005
+        }
+      ]
+    },
+    "computeUnitsConsumed": 2017,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo invoke [1]",
+      "Program log: Instruction: CloseLimitOrderIfEmpty",
+      "Program log: AnchorError caused by account: limit_order. Error Code: AccountNotEnoughKeys. Error Number: 3005. Error Message: Not enough account keys given to the instruction.",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo consumed 2017 of 200000 compute units",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo failed: custom program error: 0xbbd"
+    ]
+  },
+  {
+    "program": "dlmm",
+    "programId": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+    "instruction": "initialize_customizable_permissionless_lb_pair2",
+    "kind": "dispatch",
+    "signature": "5cV7M6u3rbtxRVi3YSTDPLF53NmkE5KjrQPuo4aJqb6VWRq1UVCA7SZCbKT2WSCvH1nYRCMp2ETyycTdLvDLx43",
+    "slot": 755,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1925,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo invoke [1]",
+      "Program log: Instruction: InitializeCustomizablePermissionlessLbPair2",
+      "Program log: AnchorError occurred. Error Code: InstructionDidNotDeserialize. Error Number: 102. Error Message: The program could not deserialize the given instruction.",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo consumed 1925 of 200000 compute units",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo failed: custom program error: 0x66"
+    ]
+  },
+  {
+    "program": "dlmm",
+    "programId": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+    "instruction": "swap2",
+    "kind": "dispatch",
+    "signature": "LipuwYJitWS2ZdZao5mKjgMfEHM76sJ72mkgPvJbXFEgwLgnmDk4E2uT7ALeehkA93G8qfZnMNeTPNKLAiWEHM7",
+    "slot": 756,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1930,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo invoke [1]",
+      "Program log: Instruction: Swap2",
+      "Program log: AnchorError occurred. Error Code: InstructionDidNotDeserialize. Error Number: 102. Error Message: The program could not deserialize the given instruction.",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo consumed 1930 of 200000 compute units",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo failed: custom program error: 0x66"
+    ]
+  },
+  {
+    "program": "dlmm",
+    "programId": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+    "instruction": "ballast_no_such_instruction",
+    "kind": "control",
+    "signature": "57qqo4XhEc97rwXwPqsj25wRnebN6WFQJCEZkqsyMG825tY3MyFzHEfgxCMm1oTcYa1LCDK7tMeGhXrtB3VcgWp9",
+    "slot": 757,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1567,
+    "executed": true,
+    "instructionPresent": false,
+    "passed": true,
+    "logs": [
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo invoke [1]",
+      "Program log: AnchorError occurred. Error Code: InstructionFallbackNotFound. Error Number: 101. Error Message: Fallback functions are not supported.",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo consumed 1567 of 200000 compute units",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo failed: custom program error: 0x65"
+    ]
+  }
+]

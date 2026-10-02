@@ -1,0 +1,295 @@
+[
+  {
+    "program": "dbc",
+    "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+    "instruction": "create_partner_metadata",
+    "kind": "success",
+    "signature": "4Tz5Fj9i6P8bnVSYYJ1mzzXzBrmLjJBZMvmtZGYPYqnYzyeUcU6cM8ykDskrBdQauY8ZWTLKJrkuAFZQuz94Z6XV",
+    "slot": 733,
+    "err": null,
+    "computeUnitsConsumed": 14860,
+    "executed": true,
+    "instructionPresent": null,
+    "passed": true,
+    "logs": [
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [1]",
+      "Program log: Instruction: CreatePartnerMetadata",
+      "Program 11111111111111111111111111111111 invoke [2]",
+      "Program 11111111111111111111111111111111 success",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [2]",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 643 of 186812 compute units",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN success",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 14860 of 200000 compute units",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN success"
+    ]
+  },
+  {
+    "program": "dbc",
+    "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+    "instruction": "create_config",
+    "kind": "dispatch",
+    "signature": "5EpaqJhKKpSTKNi99rJHHV8xhoQrKwBt3zuRg1FCBMXgdC4oM5qwXDjdeYpf9Vi9V7p9KuYawh4qxTsj9c5RCZqr",
+    "slot": 736,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1797,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [1]",
+      "Program log: Instruction: CreateConfig",
+      "Program log: AnchorError occurred. Error Code: InstructionDidNotDeserialize. Error Number: 102. Error Message: The program could not deserialize the given instruction.",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 1797 of 200000 compute units",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN failed: custom program error: 0x66"
+    ]
+  },
+  {
+    "program": "dbc",
+    "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+    "instruction": "initialize_virtual_pool_with_spl_token",
+    "kind": "dispatch",
+    "signature": "3zjsJBGicJ83QxoLzx4YADPtTJdCGQPnYg7d3Vyv1C5qKpzPjkjeQVQRHnb3wjYqhgqEcbQWZLb2WnagMgrETcXE",
+    "slot": 737,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1817,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [1]",
+      "Program log: Instruction: InitializeVirtualPoolWithSplToken",
+      "Program log: AnchorError occurred. Error Code: InstructionDidNotDeserialize. Error Number: 102. Error Message: The program could not deserialize the given instruction.",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 1817 of 200000 compute units",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN failed: custom program error: 0x66"
+    ]
+  },
+  {
+    "program": "dbc",
+    "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+    "instruction": "swap2",
+    "kind": "dispatch",
+    "signature": "3b8731SfbemmkUuN2kLXbXmjiKDPAUnjcE6TgDhXd6dLKAe7Da5o5VfXcwUJgSwnEhjecEaVYiJVpsttBkCtANuN",
+    "slot": 738,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1822,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [1]",
+      "Program log: Instruction: Swap2",
+      "Program log: AnchorError occurred. Error Code: InstructionDidNotDeserialize. Error Number: 102. Error Message: The program could not deserialize the given instruction.",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 1822 of 200000 compute units",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN failed: custom program error: 0x66"
+    ]
+  },
+  {
+    "program": "dbc",
+    "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+    "instruction": "migration_damm_v2",
+    "kind": "dispatch",
+    "signature": "3cjjAYi1qfRkC6C15UctRV4kGhmNa1BH7NETTTku2HMQoLXxXP5Kkv7nvmcGpt67CDpoG9RppnP93KMWbJipoD2Z",
+    "slot": 739,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3005
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1903,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [1]",
+      "Program log: Instruction: MigrationDammV2",
+      "Program log: AnchorError caused by account: virtual_pool. Error Code: AccountNotEnoughKeys. Error Number: 3005. Error Message: Not enough account keys given to the instruction.",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 1903 of 200000 compute units",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN failed: custom program error: 0xbbd"
+    ]
+  },
+  {
+    "program": "dbc",
+    "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+    "instruction": "withdraw_migration_fee",
+    "kind": "dispatch",
+    "signature": "5Bna7BrXnH9maPe2LGwTb92RanZHJt7Qim23GY38rSMGdeXJRejMxbfgJkhhUUk7VLMLAo619nLkzxL5Vi3iH73e",
+    "slot": 740,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1817,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [1]",
+      "Program log: Instruction: WithdrawMigrationFee",
+      "Program log: AnchorError occurred. Error Code: InstructionDidNotDeserialize. Error Number: 102. Error Message: The program could not deserialize the given instruction.",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 1817 of 200000 compute units",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN failed: custom program error: 0x66"
+    ]
+  },
+  {
+    "program": "dbc",
+    "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+    "instruction": "claim_trading_fee",
+    "kind": "dispatch",
+    "signature": "2M6VNh4dVbAtoToQ2Gx639mHvVMotrFVo7yev6ct9b9gzK1YRnWdYcieDaWM9Q4rdugWDzTboYLmaoAiMez3BoNw",
+    "slot": 741,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1780,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [1]",
+      "Program log: Instruction: ClaimTradingFee",
+      "Program log: AnchorError occurred. Error Code: InstructionDidNotDeserialize. Error Number: 102. Error Message: The program could not deserialize the given instruction.",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 1780 of 200000 compute units",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN failed: custom program error: 0x66"
+    ]
+  },
+  {
+    "program": "dbc",
+    "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+    "instruction": "partner_withdraw_surplus",
+    "kind": "dispatch",
+    "signature": "2qPKK5GGYTdUmRv9FQxXgAzW6AmQN26Df2YeBqfpucMTbeSywHUbjX8Eee6DttkTwJvxM7vnzJX51YzmZfkXt3aL",
+    "slot": 742,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3005
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1827,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [1]",
+      "Program log: Instruction: PartnerWithdrawSurplus",
+      "Program log: AnchorError caused by account: pool_authority. Error Code: AccountNotEnoughKeys. Error Number: 3005. Error Message: Not enough account keys given to the instruction.",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 1827 of 200000 compute units",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN failed: custom program error: 0xbbd"
+    ]
+  },
+  {
+    "program": "dbc",
+    "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+    "instruction": "withdraw_leftover",
+    "kind": "dispatch",
+    "signature": "223UDEjnt4sSaN7Zp7iE3rX3E8C6oMya41rnAwc4Q2EpzxnXxRk9vD4MRupw4xsj5K4pykKetqkabi6afSMMreYh",
+    "slot": 743,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3005
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1869,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [1]",
+      "Program log: Instruction: WithdrawLeftover",
+      "Program log: AnchorError caused by account: pool_authority. Error Code: AccountNotEnoughKeys. Error Number: 3005. Error Message: Not enough account keys given to the instruction.",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 1869 of 200000 compute units",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN failed: custom program error: 0xbbd"
+    ]
+  },
+  {
+    "program": "dbc",
+    "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+    "instruction": "transfer_pool_creator",
+    "kind": "dispatch",
+    "signature": "h2bqUqKV9ezSjppJfFSZSy5GR5PCei4siEHxV5jzXTrz8a3LYgDzYFFMqeUYbAEPKRPW44c6LX5oJZJ3c4fdehk",
+    "slot": 744,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3005
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1848,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [1]",
+      "Program log: Instruction: TransferPoolCreator",
+      "Program log: AnchorError caused by account: virtual_pool. Error Code: AccountNotEnoughKeys. Error Number: 3005. Error Message: Not enough account keys given to the instruction.",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 1848 of 200000 compute units",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN failed: custom program error: 0xbbd"
+    ]
+  },
+  {
+    "program": "dbc",
+    "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+    "instruction": "ballast_no_such_instruction",
+    "kind": "control",
+    "signature": "3aBFfEzGEjTqEJrVM4LSi5dKobJugYSMCVr7hgtivS5XPWhhPYB5zgscPBFbqyUALZsEASuorj5JPntckvXYwrw8",
+    "slot": 745,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1438,
+    "executed": true,
+    "instructionPresent": false,
+    "passed": true,
+    "logs": [
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [1]",
+      "Program log: AnchorError occurred. Error Code: InstructionFallbackNotFound. Error Number: 101. Error Message: Fallback functions are not supported.",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 1438 of 200000 compute units",
+      "Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN failed: custom program error: 0x65"
+    ]
+  }
+]

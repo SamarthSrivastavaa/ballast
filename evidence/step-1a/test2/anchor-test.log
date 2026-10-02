@@ -1,0 +1,22 @@
+
+Found a 'test' script in the Anchor.toml. Running it as a test suite!
+
+Running test suite: "/home/hp/ballast/tests/toolchain-probe/Anchor.toml"
+
+
+
+  toolchain probe
+    signature: 2SqDBb5VTzntZGm72qobEaKZbctMAK3NHqzbezr7Dn5u396WZsJuiX3wcvhVJRY7CwU38A6kKLsNQvLLKrfNSy59
+    Program log: floor_sqrt_q64 -> s = 75507360421341854
+    Program log: redeem_payout(1e12, s, 50bps) -> 16671021 lamports
+    Program log: probe: OK — §27 Public vector reproduced on-chain
+    Program C6vEPX5hU7uK6VXzJLBoZYM1nwnmbcbpEEJ83ghV4aPq consumed 19572 of 200000 compute units
+    ✔ reproduces the §27 Public vector on-chain (460ms)
+
+
+  1 passing (463ms)
+
+
+real	0m4.594s
+user	0m1.306s
+sys	0m0.743s

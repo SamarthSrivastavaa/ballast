@@ -81,12 +81,13 @@ jobs:
       # spec text and security docs can discuss what is *not* safe without tripping the gate.
       # D-006: app/ and README.md carry the full list, including bare "safe" and "protected".
       # sdk/ keeps the narrower list because `protected` is a TypeScript keyword.
+      # ('|’) rather than a bracket class: the curly apostrophe is 3 bytes, and this matches in any locale.
       - name: grep for banned wording
         run: |
           set +e
-          hits=$(grep -rniE "\b(safe|insured|protected|guaranteed profit)\b|can'?t lose|cannot lose|price can never go below|risk[- ]free" \
+          hits=$(grep -rniE "\b(safe|insured|protected|guaranteed profit)\b|can('|’)?t lose|cannot lose|price can never go below|risk[- ]free" \
             app/ README.md 2>/dev/null)
-          sdk_hits=$(grep -rniE "\b(insured|guaranteed profit)\b|can'?t lose|cannot lose|price can never go below|risk[- ]free" \
+          sdk_hits=$(grep -rniE "\b(insured|guaranteed profit)\b|can('|’)?t lose|cannot lose|price can never go below|risk[- ]free" \
             sdk/ 2>/dev/null)
           hits=$(printf '%s\n%s\n' "$hits" "$sdk_hits" | sed '/^$/d')
           set -e
@@ -96,3 +97,19 @@ jobs:
             exit 1
           fi
           echo "no banned wording found"
+
+  sbf-lock:
+    name: SBF lockfile guard (STEP 2)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.85.0"
+
+      # platform-tools v1.43 (cargo/rustc 1.79) builds every SBF program. Its lockfile must hold no
+      # edition-2024 crate, no MSRV above 1.79, and Anchor 0.31.1 / solana-program 2.1.21 exactly
+      # (DECISIONS.md § STEP 2 decision). programs/ballast joins this list when it lands.
+      - name: check_lock.py
+        run: python3 scripts/toolchain/check_lock.py tests/toolchain-probe tests/toolchain-probe/floor-sbf

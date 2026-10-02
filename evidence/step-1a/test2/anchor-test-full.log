@@ -1,0 +1,26 @@
+warning: unused config key `resolver.incompatible-rust-versions` in `/home/hp/ballast/tests/toolchain-probe/.cargo/config.toml`
+    Finished `release` profile [optimized] target(s) in 0.16s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.11s
+     Running unittests src/lib.rs (/home/hp/ballast/tests/toolchain-probe/target/debug/build/probe/34f150395bd8e22d/out/probe-34f150395bd8e22d)
+
+Found a 'test' script in the Anchor.toml. Running it as a test suite!
+
+Running test suite: "/home/hp/ballast/tests/toolchain-probe/Anchor.toml"
+
+
+
+  toolchain probe
+    signature: 2SiC9m7NmFGUfaZbBy2x5NvLat7tL3LfXhGrJKLNgvWKrruFZ7hFCxD4Lm8NVkHXAcJLauHJANVKE4Yb1LnRG6MH
+    Program log: floor_sqrt_q64 -> s = 75507360421341854
+    Program log: redeem_payout(1e12, s, 50bps) -> 16671021 lamports
+    Program log: probe: OK — §27 Public vector reproduced on-chain
+    Program C6vEPX5hU7uK6VXzJLBoZYM1nwnmbcbpEEJ83ghV4aPq consumed 19572 of 200000 compute units
+    ✔ reproduces the §27 Public vector on-chain (363ms)
+
+
+  1 passing (365ms)
+
+
+real	0m3.840s
+user	0m1.329s
+sys	0m0.461s

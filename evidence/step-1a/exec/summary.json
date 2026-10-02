@@ -1,0 +1,58 @@
+{
+  "test": "STEP 2 TEST 1 — mainnet Meteora binaries execute on solana-test-validator",
+  "validator": {
+    "feature-set": 1416569292,
+    "solana-core": "2.1.21"
+  },
+  "validatorGenesis": "59wMCRK6YGs7wUL1VPzMMwjnnFQoZooU5bMqt8mZNSrN",
+  "rpcHost": "127.0.0.1:8899",
+  "ranAt": "2026-10-02T09:11:20.779Z",
+  "verdict": "PASS",
+  "programs": [
+    {
+      "program": "dbc",
+      "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+      "pinnedSha256": "4c26a8a5da99f8ce932fa0300c46675b527090021fbb74214c9486bedda9f23b",
+      "loadedSha256": "4c26a8a5da99f8ce932fa0300c46675b527090021fbb74214c9486bedda9f23b",
+      "executes": true,
+      "probesPassed": 11,
+      "probes": 11
+    },
+    {
+      "program": "damm_v2",
+      "programId": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+      "pinnedSha256": "4d5b920baebc090f89b2e8796a3452ed067c9667a143058c96a312f2c1e6848b",
+      "loadedSha256": "4d5b920baebc090f89b2e8796a3452ed067c9667a143058c96a312f2c1e6848b",
+      "executes": true,
+      "probesPassed": 6,
+      "probes": 6
+    },
+    {
+      "program": "dlmm",
+      "programId": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+      "pinnedSha256": "d296c6771cec945601027613ca637c1be6721044c5859009d41c453477844c1f",
+      "loadedSha256": "d296c6771cec945601027613ca637c1be6721044c5859009d41c453477844c1f",
+      "executes": true,
+      "probesPassed": 6,
+      "probes": 6
+    },
+    {
+      "program": "token_metadata",
+      "programId": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+      "pinnedSha256": "31f0a627dba051a938de650464e55cc5397a4be0fd496929c1f9cf02fe5e9011",
+      "loadedSha256": "31f0a627dba051a938de650464e55cc5397a4be0fd496929c1f9cf02fe5e9011",
+      "executes": true,
+      "probesPassed": 1,
+      "probes": 1
+    },
+    {
+      "program": "jup_locker",
+      "programId": "LocpQgucEQHbqNABEYvBvwoxCPsSbG91A1QaQhQQqjn",
+      "pinnedSha256": "e0ace82e092741fe0dfe9e5c8ec45dfdbc642bfc510bb9e126f1fb8a6142ab92",
+      "loadedSha256": "e0ace82e092741fe0dfe9e5c8ec45dfdbc642bfc510bb9e126f1fb8a6142ab92",
+      "executes": true,
+      "probesPassed": 3,
+      "probes": 3
+    }
+  ]
+}

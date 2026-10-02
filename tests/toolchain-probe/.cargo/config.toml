@@ -1,0 +1,7 @@
+# STEP 2 TEST 2: MSRV-aware dependency resolution (cargo >= 1.84 reads this; older cargo ignores
+# it). With every workspace member declaring rust-version = "1.79" (the platform-tools v1.43
+# rustc/cargo that cargo-build-sbf uses), host cargo 1.85 generates a Cargo.lock that prefers
+# versions whose declared MSRV is <= 1.79. platform-tools cargo then only reads that lockfile.
+# `resolver = "3"` in Cargo.toml would do the same, but cargo 1.79 rejects it at parse time.
+[resolver]
+incompatible-rust-versions = "fallback"

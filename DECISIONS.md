@@ -9,6 +9,10 @@ The record of every Top-20 answer, every toolchain pin, and every deviation from
   divergence the mainnet-binary result governs and the divergence is recorded. Docs, SDK source, and
   the `meteora-researcher` agent produce **LEADS**, never verifications.
   *(Amended 2 Oct 2026 by D-001; was "a devnet (or mainnet) transaction signature".)*
+- **Q10 exception** (Jupiter routing, mainnet-only, no transaction of ours to sign): VERIFIED by Jupiter
+  quote-API responses for the live pool and pair, saved as timestamped JSON in `evidence/`, that name
+  the DLMM pair or DAMM v2 pool in the route. Plus a mainnet swap signature if the owner approves one
+  (D-007). *(Added 2 Oct 2026 after the STEP 2 audit.)*
 - Status values: `UNKNOWN` · `LEAD` (doc/source evidence only) · `VERIFIED` · `FAILED → fallback taken`.
 - If observed on-chain behaviour contradicts `docs/spec/BUILD_SPEC.md`: record the evidence here, propose
   the minimum correction, **stop and wait for approval**. Never silently adopt a fallback.
@@ -93,8 +97,58 @@ evidence, secondary). The heading was "§18 Devnet gates" until 2 Oct 2026.
 
 ## Toolchain
 
-**Status: every §16 pin satisfied and proven on Linux, except one open decision on platform-tools.**
-Verified 2 Oct 2026 in WSL Ubuntu (D-005). Full evidence: `evidence/step-1a/result.md`.
+**Status: DECIDED 2 Oct 2026 (STEP 2): the §16 pins stay.** Both STEP 2 tests passed. TEST 1: the
+mainnet Meteora binaries execute on Agave 2.1.21. TEST 2: lockfile pins → `anchor build`,
+`anchor test` and `cargo build-sbf` under platform-tools v1.43. Evidence:
+`evidence/step-1a/step2-decision.md`; earlier pin evidence: `evidence/step-1a/result.md`.
+
+### STEP 2 decision — keep §16; fix the edition-2024 blocker in the lockfile
+
+The owner authorised applying this rule: *both tests pass → keep the §16 pins; either fails → the
+oldest Agave + platform-tools + Anchor combination that executes the mainnet Meteora binaries,
+passes anchor build/test, and builds `crates/floor` for SBF.* Both passed, so nothing moved.
+
+| Test | Result | Key evidence |
+|---|---|---|
+| TEST 1 — mainnet binaries execute | **PASS 27/27** | `fixtures:dump` → `evidence/fixtures/mainnet-pins.json`; `solana program dump` byte-identical; DBC `create_partner_metadata` ✓ (`4Tz5Fj9i6P8bnVSYYJ1mzzXzBrmLjJBZMvmtZGYPYqnYzyeUcU6cM8ykDskrBdQauY8ZWTLKJrkuAFZQuz94Z6XV`) and Token Metadata `CreateMetadataAccountV3` ✓ (`3tLDU7JrcsioezAG8nNLcjfirNZR792LXU2mc68R8g2CpPfNV17QbMSQ9kRXf3gsH4rMi3xnHKqEdTsG4u6KfVZo`); served bytes measured = pins; 21 dispatch probes present; 4 negative controls absent |
+| TEST 2 — lockfile pins | **PASS** | lock: 185 packages, 0 edition-2024, 0 MSRV > 1.79; `anchor build` ✓ (218,568 B); `anchor test` ✓ (§27 Public vector on-chain, 19,572 CU); `floor-sbf` `cargo build-sbf` ✓ (46,784 B) |
+
+**The lockfile method, required for every SBF workspace, `programs/ballast` included:**
+
+1. Each SBF crate declares `rust-version = "1.79"` (Finding T1).
+2. `.cargo/config.toml`: `[resolver] incompatible-rust-versions = "fallback"`. Host cargo 1.85
+   uses it; cargo 1.79 ignores it. Do **not** use `resolver = "3"`: cargo 1.79 rejects it.
+3. Generate `Cargo.lock` with host cargo 1.85, then `cargo update --precise`: `solana-program
+   2.1.21`, `blake3 1.5.5` (1.8.7 is edition 2024 with no declared MSRV), and every `anchor-*` to
+   `0.31.1` (`anchor-lang`'s internal carets drift 10 sub-crates to 0.31.2).
+4. `python3 scripts/toolchain/check_lock.py <workspace>` must report 0 problems. CI runs it.
+
+Findings logged by STEP 2:
+
+- **T2:** the "unpinnable" `toml_datetime` chain was wrong. MSRV-aware resolution selects
+  `proc-macro-crate 3.4.0 → toml_edit 0.23.10 → toml_datetime 0.7.5`, all edition 2021.
+- **T3:** `anchor-lang = "=0.31.1"` does not pin Anchor. Its sub-crates resolved to 0.31.2.
+  Only the lockfile pins them.
+- **T4:** DAMM v2 `swap` takes a pre-Anchor fast path (45 CU, no log). Input to Q18.
+- **T5 (risk):** the Anchor baseline is about 210 KB of D-007's 300 KB target. The probe is
+  211,312 B even at `opt-level = "z"`, which saves only 3%.
+- **T6 (risk):** local CU figures come from Agave 2.1.21's cost model with its own feature set.
+  Mainnet runs a newer Agave. Cross-check Q18 CU against mainnet `simulateTransaction` or devnet.
+- **T7:** the DLMM SDK's `LBCLMM_PROGRAM_IDS.localhost` is `LbVRzDTvBDEcrthxfZ4RL6yiq3uZw8bS6MwtdY6UhFQ`,
+  **not** mainnet DLMM. On the mainnet-binary validator, always pass the mainnet ID explicitly.
+- **T8:** `solana-test-validator` writes `--upgradeable-program … none` as `Some(Pubkey::default())`,
+  not `None` (Token Metadata). Still non-upgradeable, but not byte-identical to mainnet's header.
+
+**Audit of STEP 2 (`/audit`, 2 Oct): 0 critical, 1 high, 10 medium, 1 wording. All fixed. A
+re-audit confirmed the fixes and raised 9 more mediums (2 code gaps, 7 doc/evidence), also fixed.
+Every guard has a negative test in `scripts/fixtures/negative-tests.sh` (14/14 refused,
+`evidence/step-1a/hardening.txt`).**
+`fixtures:exec` measures the bytes the validator serves and refuses non-loopback or mainnet RPCs.
+`pnpm localnet` checks online and accepts only harmless flags. `fixtures:dump` refuses drift
+without `--accept-drift` and asserts the mainnet genesis. `fixtures:check` cross-checks IDs
+against the SDK constants and every account field. Evidence logs are no longer gitignored. The
+RPC host only is recorded. The CI wording gate catches the curly apostrophe. The Q10 carve-out
+and the `L ≤ 2^120` fix in `CLAUDE.md` are in.
 
 | Tool | §16 pin | **Final pin, proven** | Evidence |
 |---|---|---|---|
@@ -108,7 +162,13 @@ Verified 2 Oct 2026 in WSL Ubuntu (D-005). Full evidence: `evidence/step-1a/resu
 | Python (reference) | — | **`3.14.4`** (Linux) / 3.11.9 (Windows) | `vectors.json` **byte-identical** on both — strong reproducibility result |
 | `ruint` | — | **`=1.12.3`** (declares MSRV 1.65) | compiles under platform-tools rustc 1.79.0 |
 | `proptest` | §14 | **`=1.5.0`**, dev-only | enforced by `d002_conditions.rs` |
-| platform-tools | not pinned by §16 | **v1.43, rustc 1.79.0** (bundled with Agave 2.1.21) | **see the open decision below** |
+| platform-tools | not pinned by §16 | **v1.43, rustc 1.79.0, cargo 1.79.0** (bundled with Agave 2.1.21) | **kept (STEP 2)**: `anchor build`/`test` pass with the lockfile method above |
+| `anchor-lang` + all `anchor-*` sub-crates | 0.31.1 | **`0.31.1`, every sub-crate, pinned in `Cargo.lock`** | `check_lock.py`: 0 problems |
+| `solana-program` (in SBF programs) | Agave 2.1.x | **`2.1.21`**, pinned in `Cargo.lock` | `check_lock.py` |
+| `@meteora-ag/dynamic-bonding-curve-sdk` | ≥ 1.5.11 | **`1.5.13`** (IDL: DBC 0.2.1) | root `package.json` |
+| `@meteora-ag/cp-amm-sdk` | 1.4.8 | **`1.4.8`** (IDL: cp-amm 0.2.4) | root `package.json` |
+| `@meteora-ag/dlmm` | 1.9.10 | **`1.9.10`** (IDL: lb_clmm 0.12.0) | root `package.json` |
+| `@solana/web3.js` / `@solana/spl-token` / `@coral-xyz/anchor` | 1.98.x / 0.4.x / 0.31.1 | **`1.98.4` / `0.4.13` / `0.31.1`** | root `package.json` |
 
 ### Finding T1 — a crate's MSRV is not the host toolchain pin
 
@@ -134,7 +194,10 @@ ELF 64-bit LSB shared object, eBPF, version 1 (SYSV)
 
 **Condition 4 was not triggered.** `ruint` needs no downgrade.
 
-### OPEN DECISION — platform-tools cannot build the Anchor program tree
+### ~~OPEN DECISION~~ — platform-tools cannot build the Anchor program tree
+
+*RESOLVED 2 Oct 2026 by STEP 2 (above):* neither option A nor B was needed. The blocker was fixed
+in the lockfile; see Finding T2. The text below is kept as history.
 
 **This blocks `anchor build`, `anchor test` and therefore all of STEP 1C and 1D.**
 
@@ -198,6 +261,27 @@ Recommendation: probe `v1.51` and below first, since A preserves every §16 pin;
 | Build env file | `~/.ballast-env` (not in the repo; it encodes machine-specific paths) |
 | Spec path | `docs/spec/BUILD_SPEC.md` (export arrived as `Build Spec.md`, renamed) |
 | `docs/spec/SUBMISSION.md` | Not present — optional, demo/README copy only |
+| `git remote origin` | **The stale OneDrive copy above, not GitHub.** Nothing has been pushed anywhere public. Do not push to it (environment rule). A public GitHub remote is the owner's action (D-006) |
+| Commit identity | **`Samarth <samarthsrivastava897@gmail.com>` only**, author and committer, no co-author trailer (owner's instruction, 2 Oct 2026). Set in the repo-local git config |
+| npm in WSL | pnpm's parallel registry fetches time out (ETIMEDOUT) while curl succeeds. Repo `.npmrc` sets `network-concurrency=2`, longer timeouts and more retries |
+
+### History rewrite — commit identity (2 Oct 2026)
+
+On the owner's instruction, every commit was re-authored to `samarthsrivastava897@gmail.com` with
+`git filter-branch --env-filter`. Author dates and trees are unchanged; the final tree is
+byte-identical. The pre-rewrite history is kept in branch `backup/pre-identity-rewrite` until the
+owner deletes it. Nothing was force-pushed: `origin` is the OneDrive archive, which the environment
+rule forbids writing to. Older documents cite the old hashes:
+
+| Old | New | Commit |
+|---|---|---|
+| `a727dc1` | `842a773` | STEP 0 guardrails |
+| `27ab5a6` | `d3e3fc9` | `ballast-floor` crate, Python reference, `vectors.json` |
+| `02cd402` | `dfc5a1f` | drop dead proptest regressions file |
+| `79f053e` | `9435abd` | move to WSL Linux, pin the §16 toolchain, D-001..D-005 |
+| `a1fa353` | `b9f76c1` | clippy fix in `d002_conditions` |
+| `b85ab3e` | `7f00673` | platform-tools probe result |
+| `3e5cf68` / `cdf73de` | `c246a6d` | STEP 1: D-001 wording, D-006/7/8, calendar |
 
 ### Correction to an earlier premise
 
@@ -205,6 +289,10 @@ There have been **no Meteora local-validator runs** at any point. No validator h
 `anchor build` or `anchor test` has succeeded, and no Meteora `.so` has been fetched. The "10/10"
 figure refers to the Python reference reproducing the ten §27 **numerical** vectors — pure integer
 arithmetic, no network. **The integration layer is entirely unproven.**
+
+*Superseded 2 Oct 2026 by STEP 2:* the five mainnet Meteora binaries now run on a local validator
+and execute (27/27 probes, two full instructions), and `anchor build` / `anchor test` pass. The
+integration layer **beyond those probes** is still unproven: STEP 3.
 
 ---
 
@@ -309,7 +397,7 @@ fail-safe. Rounding `A` up always understates `F`, which is the safe direction.
 |---|---|
 | Was | `C:\Users\HP\OneDrive\Desktop\meteora` (Windows NTFS, inside OneDrive) |
 | Now | `/home/hp/ballast` in WSL distro `Ubuntu` (Ubuntu 26.04.1 LTS, kernel 6.6.87.2) |
-| Method | `git clone` from the Windows path, so history is preserved: 3 commits, `02cd402` at HEAD, `git status` clean |
+| Method | `git clone` from the Windows path, so history is preserved: 3 commits, `02cd402` (now `dfc5a1f`, see § History rewrite) at HEAD, `git status` clean |
 | Verified | LF line endings intact (`.gitattributes` honoured, 0 CR bytes in `crates/floor/src/lib.rs`); `cargo test -p ballast-floor` green on Linux |
 
 Reasons: OneDrive sync locking corrupts `target/` and slows cargo; `/mnt/c` 9p I/O is far slower
@@ -392,9 +480,12 @@ STEP 3 check (c).
 
 | Constant | Value | Source | Status |
 |---|---|---|---|
-| DBC program ID | `dbcij3…MaqN` (spec §2, abbreviated — expand and verify) | Meteora docs | LEAD |
-| DAMM v2 program ID | `cpamdp…sGG` (abbreviated — expand and verify) | Meteora docs | LEAD |
-| DLMM program ID | `LBUZKh…wxo` (abbreviated — expand and verify) | Meteora docs | LEAD |
+| DBC program ID | `dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN` | DBC SDK 1.5.13 constant = manifest (asserted by `fixtures:check`); mainnet upgradeable program, ProgramData `HUfnSSiJ…CXCYh` (`mainnet-pins.json`) | **VERIFIED (mainnet)** 2 Oct. Devnet ID read open (before 6 Oct) |
+| DAMM v2 program ID | `cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG` | cp-amm SDK 1.4.8 + DBC SDK constants = manifest (asserted); mainnet ProgramData `AUh8bm2X…nyPH` | **VERIFIED (mainnet)** 2 Oct. Devnet ID read open |
+| DLMM program ID | `LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo` | dlmm SDK 1.9.10 `LBCLMM_PROGRAM_IDS["mainnet-beta"]` = manifest (asserted); mainnet ProgramData `HZcJwcJ2…bEhu`. **The SDK's `localhost` entry is a different program (`LbVRzDTv…UhFQ`): pass the mainnet ID explicitly on localnet** | **VERIFIED (mainnet)** 2 Oct. Devnet ID read open |
+| Metaplex Token Metadata | `metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s` | DBC SDK `METAPLEX_PROGRAM_ID` = manifest (asserted); mainnet ProgramData `PwDiXFxQ…fdYT`, immutable | **VERIFIED (mainnet)** 2 Oct |
+| Jupiter locker | `LocpQgucEQHbqNABEYvBvwoxCPsSbG91A1QaQhQQqjn` | DBC SDK `LOCKER_PROGRAM_ID` = manifest (asserted); mainnet ProgramData `7yXf8ZG1…J6Yy` | **VERIFIED (mainnet)** 2 Oct |
+| Meteora program upgrade authority (DBC, DAMM v2, DLMM) | `JADaUV8kvDpDbJr55wxXJHVaBS3VCj8thZZHjfeuCVLd` | mainnet ProgramData (`mainnet-pins.json`) | Observed 2 Oct; input to Q19 (admin powers) |
 | SPL WSOL mint | `So11111111111111111111111111111111111111112` | §7 | LEAD |
 | DAMM v2 max sqrt price (`s_max`) | `79226673521066979257578248091` | §2, §27 | LEAD — re-read from the pool at runtime, never hard-code into the engine |
 | Ballast program ID | — | — | not deployed |
@@ -402,9 +493,13 @@ STEP 3 check (c).
 | Public `dbc_config` | — | — | not created |
 | Multisig (admin + upgrade authority) | — | — | not created |
 
-**Note:** the three Meteora program IDs appear abbreviated in the spec. Expand them from Meteora docs
-and byte-verify on devnet before compiling any of them into the program (`meteora-researcher` produces
-the lead; a devnet account read confirms it).
+**Note:** the three Meteora program IDs appear abbreviated in the spec. *Done 2 Oct 2026:* expanded
+from the SDK constants, matched against the spec's abbreviations, and read on mainnet as
+upgradeable programs. The ID evidence is the **SDK constant plus the mainnet ProgramData read**.
+Local execution is not ID evidence, because the local validator loads whatever ID the manifest
+gives it; that is why `fixtures:check` asserts manifest ID = SDK constant. **Still open (before
+the 6 Oct devnet deploy):** a devnet `getAccountInfo` of the three Meteora IDs, since §2 assumes
+they are identical on devnet. Evidence: `evidence/step-1a/step2-decision.md`.
 
 ---
 

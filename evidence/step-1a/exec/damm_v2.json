@@ -1,0 +1,161 @@
+[
+  {
+    "program": "damm_v2",
+    "programId": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+    "instruction": "initialize_customizable_pool",
+    "kind": "dispatch",
+    "signature": "22pbmLWNp1oGTqPAYgN9VvCjThZifr58t5Y81pjsrfg2xkrLpjgWG1SswzZD7YGBzQE7C5hLhy5NMNLVWFbcJCnp",
+    "slot": 746,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1890,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG invoke [1]",
+      "Program log: Instruction: InitializeCustomizablePool",
+      "Program log: AnchorError occurred. Error Code: InstructionDidNotDeserialize. Error Number: 102. Error Message: The program could not deserialize the given instruction.",
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG consumed 1890 of 200000 compute units",
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG failed: custom program error: 0x66"
+    ]
+  },
+  {
+    "program": "damm_v2",
+    "programId": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+    "instruction": "claim_position_fee",
+    "kind": "dispatch",
+    "signature": "SV8umvHMhqopKFJ73hUCoFo1juEHtxi7bMCwVb6K59mPwTkn49MCHg2SiAzzG6cCT8ddzS4D4R4hS3APm6uGoHy",
+    "slot": 747,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3005
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1938,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG invoke [1]",
+      "Program log: Instruction: ClaimPositionFee",
+      "Program log: AnchorError caused by account: pool_authority. Error Code: AccountNotEnoughKeys. Error Number: 3005. Error Message: Not enough account keys given to the instruction.",
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG consumed 1938 of 200000 compute units",
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG failed: custom program error: 0xbbd"
+    ]
+  },
+  {
+    "program": "damm_v2",
+    "programId": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+    "instruction": "split_position",
+    "kind": "dispatch",
+    "signature": "2hmvvR5r3MKWNn3jn7CZELHLviuPAhWAcFQRnYKF8DEbJRzD3TggHehd9gJDx1Do3MKAMSB7E5CzrzqZEkavb45y",
+    "slot": 748,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1898,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG invoke [1]",
+      "Program log: Instruction: SplitPosition",
+      "Program log: AnchorError occurred. Error Code: InstructionDidNotDeserialize. Error Number: 102. Error Message: The program could not deserialize the given instruction.",
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG consumed 1898 of 200000 compute units",
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG failed: custom program error: 0x66"
+    ]
+  },
+  {
+    "program": "damm_v2",
+    "programId": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+    "instruction": "permanent_lock_position",
+    "kind": "dispatch",
+    "signature": "4y9ihhcvBjbh3iw11TetZakSoUgoBCn3o9hoWsvJ5r9tS2rqrQBpdTwxR7PpifnRpBBftXNuyearuVXYZvs3QRid",
+    "slot": 749,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1894,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG invoke [1]",
+      "Program log: Instruction: PermanentLockPosition",
+      "Program log: AnchorError occurred. Error Code: InstructionDidNotDeserialize. Error Number: 102. Error Message: The program could not deserialize the given instruction.",
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG consumed 1894 of 200000 compute units",
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG failed: custom program error: 0x66"
+    ]
+  },
+  {
+    "program": "damm_v2",
+    "programId": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+    "instruction": "swap",
+    "kind": "dispatch",
+    "signature": "447rMHwWdu7vvNuQgzds6bMcn4jf5wYLi3qDEiDzES13YBWwZZRKBqHGEfCakYPyAZKg1KCpcfrLALY3DZYPGj9y",
+    "slot": 750,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3005
+        }
+      ]
+    },
+    "computeUnitsConsumed": 45,
+    "executed": true,
+    "instructionPresent": true,
+    "passed": true,
+    "logs": [
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG invoke [1]",
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG consumed 45 of 200000 compute units",
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG failed: custom program error: 0xbbd"
+    ]
+  },
+  {
+    "program": "damm_v2",
+    "programId": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+    "instruction": "ballast_no_such_instruction",
+    "kind": "control",
+    "signature": "5mJXK5mKHFgoQAybrhMFmUprBXtezEVM9i2PXszJ6wF8YPX8vhXduinbXCTAqn6AevYCgMNASfCywZB9eTSeVWCb",
+    "slot": 751,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "computeUnitsConsumed": 1497,
+    "executed": true,
+    "instructionPresent": false,
+    "passed": true,
+    "logs": [
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG invoke [1]",
+      "Program log: AnchorError occurred. Error Code: InstructionFallbackNotFound. Error Number: 101. Error Message: Fallback functions are not supported.",
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG consumed 1497 of 200000 compute units",
+      "Program cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG failed: custom program error: 0x65"
+    ]
+  }
+]

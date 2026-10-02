@@ -1,0 +1,75 @@
+# Negative tests — scripts/fixtures guards (2026-10-02T09:09:53Z)
+
+## a. fixtures:dump refuses mainnet drift and writes nothing
+MAINNET DRIFT against evidence/fixtures/mainnet-pins.json — nothing written:
+  - dlmm: lastDeploySlot pinned=1 mainnet=423977638
+  -> refused (exit 1): OK
+  pins file untouched: yes
+  dlmm.so untouched: yes
+
+## b. fixtures:dump refuses a non-mainnet RPC (devnet genesis)
+genesis EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG, not mainnet-beta (5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d); refusing
+  -> refused (exit 1): OK
+
+## c. fixtures:check rejects a manifest ID that differs from the SDK constant
+local   ok  dbc             sha256 4c26a8a5da99f8ce…  id = SDK constant
+local   ok  damm_v2         sha256 4d5b920baebc090f…  id = SDK constant
+local   ok  dlmm            sha256 d296c6771cec9456…  id = SDK constant
+local   ok  token_metadata  sha256 31f0a627dba051a9…  id = SDK constant
+local   ok  jup_locker      sha256 e0ace82e092741fe…  id = SDK constant
+  - dlmm: manifest id LbVRzDTvBDEcrthxfZ4RL6yiq3uZw8bS6MwtdY6UhFQ ≠ SDK constant(s) LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo
+  -> refused (exit 1): OK
+
+## d. account path: dump pins an account; check catches a tampered owner
+negtest_wsol_mint So11111111111111111111111111111111111111112  82 B  owner TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
+pins → evidence/fixtures/mainnet-pins.json
+local   ok  negtest_wsol_mint So11111111111111111111111111111111111111112
+fixtures check PASSED (offline: local integrity only)
+  - negtest_wsol_mint: local fixtures/accounts/negtest_wsol_mint.json differs from its pin: owner 11111111111111111111111111111111
+  -> refused (exit 1): OK
+
+## e. pnpm localnet refuses flags that could load other bytes (before any check or boot)
+pnpm localnet: refusing "--bpf-program" — only --quiet, -q, --log, --rpc-port may be passed; anything else could load bytes other than the pinned fixtures (D-001).
+  -> refused (exit 1): OK
+pnpm localnet: refusing "--clone" — only --quiet, -q, --log, --rpc-port may be passed; anything else could load bytes other than the pinned fixtures (D-001).
+  -> refused (exit 1): OK
+pnpm localnet: refusing "--rpc-port=8899" — only --quiet, -q, --log, --rpc-port may be passed; anything else could load bytes other than the pinned fixtures (D-001).
+  -> refused (exit 1): OK
+
+## f. fixtures:exec refuses a non-loopback RPC (it signs and sends)
+refusing non-loopback RPC api.devnet.solana.com
+  -> refused (exit 1): OK
+
+## f2. fixtures:exec refuses a loopback RPC whose genesis is mainnet's (e.g. a forwarding proxy)
+refusing: RPC genesis is mainnet-beta
+  -> refused (exit 1): OK
+
+## f3. fixtures:exec refuses a loopback RPC that returns no result (fail closed, not 'not mainnet')
+getGenesisHash: reply has no result
+  -> refused (exit 1): OK
+
+## g. fixtures:exec refuses when the served bytes differ from a pin (jup_locker sha256 edited)
+loaded  dbc             sha256 4c26a8a5da99f8ce… = pin
+loaded  damm_v2         sha256 4d5b920baebc090f… = pin
+loaded  dlmm            sha256 d296c6771cec9456… = pin
+loaded  token_metadata  sha256 31f0a627dba051a9… = pin
+Error: jup_locker: validator does not serve the pinned program — boot it with pnpm localnet
+  served sha256    e0ace82e092741fe0dfe9e5c8ec45dfdbc642bfc510bb9e126f1fb8a6142ab92
+  pinned sha256    0000000000000000000000000000000000000000000000000000000000000000
+  served authority CvQZZ23qYDWF2RUpxYJ8y9K4skmuvYEEjH7fK58jtipQ
+  pinned authority CvQZZ23qYDWF2RUpxYJ8y9K4skmuvYEEjH7fK58jtipQ
+  -> refused (exit 1): OK
+
+## g2. fixtures:exec refuses when the served authority differs from a pin (dbc authority edited)
+Error: dbc: validator does not serve the pinned program — boot it with pnpm localnet
+  served sha256    4c26a8a5da99f8ce932fa0300c46675b527090021fbb74214c9486bedda9f23b
+  pinned sha256    4c26a8a5da99f8ce932fa0300c46675b527090021fbb74214c9486bedda9f23b
+  served authority JADaUV8kvDpDbJr55wxXJHVaBS3VCj8thZZHjfeuCVLd
+  pinned authority CvQZZ23qYDWF2RUpxYJ8y9K4skmuvYEEjH7fK58jtipQ
+  -> refused (exit 1): OK
+
+## h. fixtures:exec refuses when the pinned ID differs from the manifest ID (dlmm pin id → DBC id)
+Error: dlmm: pinned id dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN ≠ manifest id LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo
+  -> refused (exit 1): OK
+
+negative tests: 0 not refused

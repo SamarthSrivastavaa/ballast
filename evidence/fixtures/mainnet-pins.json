@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "cluster": "mainnet-beta",
+  "genesisHash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "rpcHost": "api.mainnet-beta.solana.com",
+  "dumpedAt": "2026-10-02T08:51:40.670Z",
+  "programs": {
+    "dbc": {
+      "label": "Meteora Dynamic Bonding Curve",
+      "soFile": "fixtures/programs/dbc.so",
+      "id": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+      "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "programdataAddress": "HUfnSSiJxgspQm6C1rkqv6L3XgVtn7AESApgCQpCXCYh",
+      "upgradeAuthority": "JADaUV8kvDpDbJr55wxXJHVaBS3VCj8thZZHjfeuCVLd",
+      "lastDeploySlot": 445503633,
+      "readAtSlot": 452554169,
+      "soBytes": 2326577,
+      "sha256": "4c26a8a5da99f8ce932fa0300c46675b527090021fbb74214c9486bedda9f23b",
+      "executableSha256": "b3f7b765e1b9a2e87e45c4663165974819d248f00c1beefe678af60e9dfe6c44"
+    },
+    "damm_v2": {
+      "label": "Meteora DAMM v2 (cp-amm)",
+      "soFile": "fixtures/programs/damm_v2.so",
+      "id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+      "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "programdataAddress": "AUh8bm2XsMfex3KjYGcM3G4uBqUNSDw6HEhWaWMYnyPH",
+      "upgradeAuthority": "JADaUV8kvDpDbJr55wxXJHVaBS3VCj8thZZHjfeuCVLd",
+      "lastDeploySlot": 445230614,
+      "readAtSlot": 452554178,
+      "soBytes": 2174352,
+      "sha256": "4d5b920baebc090f89b2e8796a3452ed067c9667a143058c96a312f2c1e6848b",
+      "executableSha256": "7c479dd7de729ada87d141e9d422a572d42df79f4cc8947a751b5f15719d94e0"
+    },
+    "dlmm": {
+      "label": "Meteora DLMM",
+      "soFile": "fixtures/programs/dlmm.so",
+      "id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+      "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "programdataAddress": "HZcJwcJ2njPDxZtpPoKnF8v2w9QAx2rS7TdJPSRkbEhu",
+      "upgradeAuthority": "JADaUV8kvDpDbJr55wxXJHVaBS3VCj8thZZHjfeuCVLd",
+      "lastDeploySlot": 423977638,
+      "readAtSlot": 452554181,
+      "soBytes": 2229776,
+      "sha256": "d296c6771cec945601027613ca637c1be6721044c5859009d41c453477844c1f",
+      "executableSha256": "cc25380fd0736b57d051f28cada432b35b01d9e24dc1d3e1b5d81773279eb772"
+    },
+    "token_metadata": {
+      "label": "Metaplex Token Metadata",
+      "soFile": "fixtures/programs/token_metadata.so",
+      "id": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+      "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "programdataAddress": "PwDiXFxQsGra4sFFTT8r1QWRMd4vfumiWC1jfWNfdYT",
+      "upgradeAuthority": "none",
+      "lastDeploySlot": 380725176,
+      "readAtSlot": 452554184,
+      "soBytes": 793991,
+      "sha256": "31f0a627dba051a938de650464e55cc5397a4be0fd496929c1f9cf02fe5e9011",
+      "executableSha256": "8fdb14984e4756f3157881754fdc9444646b15cad27a5c78fa249dc5f507e3a7"
+    },
+    "jup_locker": {
+      "label": "Jupiter locker",
+      "soFile": "fixtures/programs/jup_locker.so",
+      "id": "LocpQgucEQHbqNABEYvBvwoxCPsSbG91A1QaQhQQqjn",
+      "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "programdataAddress": "7yXf8ZG1qdc6GdRUc6LxmwUJuUDUAqta84oPU7fsJ6Yy",
+      "upgradeAuthority": "CvQZZ23qYDWF2RUpxYJ8y9K4skmuvYEEjH7fK58jtipQ",
+      "lastDeploySlot": 368684289,
+      "readAtSlot": 452554188,
+      "soBytes": 664736,
+      "sha256": "e0ace82e092741fe0dfe9e5c8ec45dfdbc642bfc510bb9e126f1fb8a6142ab92",
+      "executableSha256": "c0c7851d48c05abbd74e129e349e83f9343e52ef789cf9ea451575c07515b160"
+    }
+  },
+  "accounts": {}
+}

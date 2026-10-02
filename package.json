@@ -11,10 +11,25 @@
   },
   "scripts": {
     "fixtures:dump": "tsx scripts/fixtures/dump.ts",
+    "fixtures:check": "tsx scripts/fixtures/check.ts",
+    "fixtures:exec": "tsx scripts/fixtures/exec.ts",
+    "localnet": "tsx scripts/fixtures/localnet.ts",
     "reference": "python tests/reference/floor.py",
     "reference:emit": "python tests/reference/floor.py --emit 10000 > crates/floor/vectors.json",
     "test:rust": "cargo test --workspace --all-targets",
     "test:property": "cross-env PROPTEST_CASES=100000 cargo test -p ballast-floor --test properties",
     "lint:rust": "cargo fmt --all --check && cargo clippy --all-targets -- -D warnings"
+  },
+  "devDependencies": {
+    "@coral-xyz/anchor": "0.31.1",
+    "@meteora-ag/cp-amm-sdk": "1.4.8",
+    "@meteora-ag/dlmm": "1.9.10",
+    "@meteora-ag/dynamic-bonding-curve-sdk": "1.5.13",
+    "@solana/spl-token": "0.4.13",
+    "@solana/web3.js": "1.98.4",
+    "@types/node": "20",
+    "bn.js": "5.2.1",
+    "tsx": "4.19.2",
+    "typescript": "5.6.3"
   }
 }

@@ -1,0 +1,36 @@
+{
+  "//": "D-001: the mainnet programs the local validator runs, and every mainnet account they read. Program IDs come from Meteora's SDK constants (source column); accounts are added only when a simulation shows a program reading them, never guessed. pnpm fixtures:dump reads this file; evidence/fixtures/mainnet-pins.json records what was dumped.",
+  "programs": [
+    {
+      "name": "dbc",
+      "label": "Meteora Dynamic Bonding Curve",
+      "id": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+      "source": "@meteora-ag/dynamic-bonding-curve-sdk@1.5.13 DYNAMIC_BONDING_CURVE_PROGRAM_ID"
+    },
+    {
+      "name": "damm_v2",
+      "label": "Meteora DAMM v2 (cp-amm)",
+      "id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+      "source": "@meteora-ag/cp-amm-sdk@1.4.8 CP_AMM_PROGRAM_ID; @meteora-ag/dynamic-bonding-curve-sdk@1.5.13 DAMM_V2_PROGRAM_ID"
+    },
+    {
+      "name": "dlmm",
+      "label": "Meteora DLMM",
+      "id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+      "source": "@meteora-ag/dlmm@1.9.10 LBCLMM_PROGRAM_IDS[mainnet-beta]"
+    },
+    {
+      "name": "token_metadata",
+      "label": "Metaplex Token Metadata",
+      "id": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+      "source": "@meteora-ag/dynamic-bonding-curve-sdk@1.5.13 METAPLEX_PROGRAM_ID"
+    },
+    {
+      "name": "jup_locker",
+      "label": "Jupiter locker",
+      "id": "LocpQgucEQHbqNABEYvBvwoxCPsSbG91A1QaQhQQqjn",
+      "source": "@meteora-ag/dynamic-bonding-curve-sdk@1.5.13 LOCKER_PROGRAM_ID"
+    }
+  ],
+  "accounts": []
+}

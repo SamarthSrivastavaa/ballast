@@ -29,10 +29,18 @@ Accounts, via `solana account -u m --output json`:
 `Anchor.toml` loads these with `[[test.genesis]]` (programs) and `[[test.validator.account]]`
 (accounts). Pure-logic tests that need no Meteora use LiteSVM instead, for speed.
 
-## Status
+## Status (2 Oct 2026)
 
-Not yet dumped — this is STEP 1C, and it is blocked on the Solana CLI pin (the installed 1.18.26 is
-not the Agave 2.1.x §16 asks for). See `DECISIONS.md` § Toolchain.
+**Programs dumped and pinned (D-001).** `scripts/fixtures/manifest.json` lists the five programs.
+`pnpm fixtures:dump` writes `fixtures/programs/<name>.so` and
+`evidence/fixtures/mainnet-pins.json`, recording sha256, last-deployed slot and upgrade authority.
+`pnpm fixtures:check` re-verifies the local files and live mainnet. `pnpm localnet` boots
+`solana-test-validator` 2.1.21 with them at their real IDs; `pnpm fixtures:exec` proves each one
+executes (STEP 2 TEST 1: 27/27).
 
-**Note for this host:** `solana-test-validator` with `[[test.genesis]]` is unproven on Windows. The
-route for the integration layer is still open — see `DECISIONS.md` § Environment.
+**Accounts: none yet.** The migration config key and DLMM presets in the table above are added to
+the manifest only when a STEP 3 simulation shows a program reading them (D-001: found by
+simulation, not guessed).
+
+The local validator boots through `pnpm localnet`, not `[[test.genesis]]`. When `programs/ballast`
+gets an `Anchor.toml`, its `[[test.genesis]]` entries must point at these same pinned files.
