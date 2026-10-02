@@ -261,7 +261,7 @@ Recommendation: probe `v1.51` and below first, since A preserves every §16 pin;
 | Build env file | `~/.ballast-env` (not in the repo; it encodes machine-specific paths) |
 | Spec path | `docs/spec/BUILD_SPEC.md` (export arrived as `Build Spec.md`, renamed) |
 | `docs/spec/SUBMISSION.md` | Not present — optional, demo/README copy only |
-| `git remote origin` | **The stale OneDrive copy above, not GitHub.** Nothing has been pushed anywhere public. Do not push to it (environment rule). A public GitHub remote is the owner's action (D-006) |
+| `git remote origin` | **`https://github.com/SamarthSrivastavaa/ballast.git`** (public; created by the owner 2 Oct 2026, D-006). It replaced the OneDrive-archive remote, which was removed; the archive itself is untouched. History scanned before the first push: no key files or secrets ever committed. Push `main` and gate tags only, never `backup/*` |
 | Commit identity | **`Samarth <samarthsrivastava897@gmail.com>` only**, author and committer, no co-author trailer (owner's instruction, 2 Oct 2026). Set in the repo-local git config |
 | npm in WSL | pnpm's parallel registry fetches time out (ETIMEDOUT) while curl succeeds. Repo `.npmrc` sets `network-concurrency=2`, longer timeouts and more retries |
 

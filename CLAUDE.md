@@ -120,8 +120,8 @@ pnpm -F sdk test; pnpm -F compiler test; pnpm -F keeper test; pnpm -F app build;
   suite → `/audit` (spec-auditor + security-reviewer) → update `STATUS.md` and `DECISIONS.md` → commit
   citing spec sections → one-paragraph report: what changed → evidence → next → risks.
 - One commit per slice, citing the spec section. Tag every passed gate (`gate-1-pass`, …).
-- **Every commit: `Samarth <samarthsrivastava897@gmail.com>` only** (author + committer; no other email, no
-  Co-Authored-By trailer; never copy an identity from `git log`). Never push to `origin` (stale OneDrive archive).
+- **Every commit: `Samarth <samarthsrivastava897@gmail.com>` only** (author + committer; no trailer; never copy
+  `git log`). `origin` = github.com/SamarthSrivastavaa/ballast (public): push `main` + gate tags, never `backup/*`.
 - **Update `STATUS.md` and `DECISIONS.md` at the end of every task.** Evidence goes in `evidence/`.
 - A Top-20 question is VERIFIED only with a transaction signature on the mainnet-binary local validator
   (D-001) recorded in `DECISIONS.md` with a JSON dump in `evidence/`. Devnet signatures are secondary.

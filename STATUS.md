@@ -90,7 +90,7 @@ First moves: `pnpm fixtures:check` → `pnpm localnet` → DBC `create_config` v
 | Pinned bytes are only re-fetchable while mainnet still serves them | A Meteora upgrade makes old pins unreproducible from a fresh clone | Accepted; `fixtures:dump` refuses drift; consider archiving the `.so` files as a release asset before submission |
 | `sudo` needs a password in WSL; `clang`/`unzip` absent | A build needing them stops | Ask the owner if it comes up |
 | This Claude Code session opens in the stale OneDrive copy | Edits could land in the wrong tree | All work by absolute path in `/home/hp/ballast`; launch future sessions from `~/ballast` |
-| `origin` is the OneDrive archive; no public remote exists | D-006 needs a public Apache-2.0 GitHub repo; history was rewritten (commit identity), so a GitHub repo must be created fresh from this one, not from the archive | **Owner action:** create the GitHub repo, add it as a remote |
+| ~~No public remote~~ | — | **Resolved 2 Oct:** `origin` = github.com/SamarthSrivastavaa/ballast (DECISIONS § Environment). Pushing needs GitHub auth in WSL (no `gh`, no credential helper yet) |
 | Identity-rewrite leftovers: branch `backup/pre-identity-rewrite`, `refs/original/refs/heads/main` | Old-email commits remain reachable locally (never pushed) | Delete both once the owner confirms (`git branch -D backup/pre-identity-rewrite; git update-ref -d refs/original/refs/heads/main`) |
 | Test validator writes a `None` upgrade authority as the all-zero key (T8) | ProgramData header not byte-identical to mainnet for Token Metadata | Accepted and documented; bytes identical; `fixtures:exec` allows exactly this one encoding |
 
