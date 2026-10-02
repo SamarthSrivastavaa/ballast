@@ -1,6 +1,6 @@
 # Ballast — Status
 
-**Updated:** 2 Oct 2026 (STEP 1 and STEP 2 done; STEP 3 P0 harness next) · **Deadline:** 13 Oct 2026 06:59 UTC · **We submit 11 Oct.**
+**Updated:** 2 Oct 2026, end of session (STEP 1 and STEP 2 done and committed; STEP 3 P0 harness next) · **Deadline:** 13 Oct 2026 06:59 UTC · **We submit 11 Oct.**
 
 ## Current state
 
@@ -9,6 +9,8 @@
 | Phase | STEP 1 (decisions) **done**. STEP 2 (toolchain) **done: §16 pins kept**. Next: STEP 3 P0 harness (3 Oct) |
 | Last passed gate | **none** — no §18 gate attempted |
 | P0 gate (Q1–Q5) | **BLOCKING.** All five UNKNOWN. Answered on the mainnet-binary local validator (D-001) |
+| Open UNKNOWNs | **20 of 20** Top-20 questions. STEP 2 produced leads only (instructions present in the deployed binaries), no answers |
+| Last commit | `35e7530` (STEP 2), on top of `c246a6d` (STEP 1). Tree clean |
 | Program code | none (correct — gated). `crates/floor` is exempt: pure math, no network |
 | Floor engine | **done and proven:** 31 tests, 100k-case property gate, 10,010 differential matches (Rust = Python); builds for SBF under platform-tools rustc 1.79 |
 | Meteora | **The five mainnet binaries execute** on Agave 2.1.21 at their real IDs (27/27 probes; DBC `create_partner_metadata` and Token Metadata `CreateMetadataAccountV3` ran to completion). Nothing deeper yet. `anchor build`/`anchor test` **pass** (lockfile method) |
@@ -57,6 +59,15 @@ Evidence: `evidence/step-1a/step2-decision.md`.
 
 ## Next — STEP 3 (3 Oct): P0 harness on the mainnet-binary validator
 
+**Next task (one action):** in a new `tests/integration/p0/` harness (TS, run against `pnpm localnet`),
+create a Proof-shaped DBC config with `create_config` via DBC SDK 1.5.13. Then **simulate**
+`initialize_virtual_pool_with_spl_token` → swaps to the threshold → `migration_damm_v2` to discover
+every mainnet account they read: migration config key, DAMM v2 config, and so on. Add those
+accounts to `scripts/fixtures/manifest.json`, `pnpm fixtures:dump`, and restart localnet. Q1–Q3
+reads then follow on a real migrated pool. **Spec sections:** Top-20 table (BUILD_SPEC.md lines
+5–31), §2 (truth audit), §7 (DBC integration), §8 (DAMM v2), §9 (DLMM), §10 (vault), §18
+phases 1–5, §27 (vectors).
+
 Q1–Q9, Q11–Q16, Q18 exactly as the Top-20 table describes, plus (a) the lowest `migration_quote_threshold` DBC accepts, (b) manual migration at that size, (c) a Lite config migrating with 100% permanent lock. Every answer → `DECISIONS.md` with signatures + JSON in `evidence/p0/`. **Any Q1–Q5 failure: STOP, present the spec's fallback.**
 
 Gotchas carried in: pass the **mainnet** DLMM ID explicitly to the DLMM SDK (its `localhost` entry is a different program, T7); measure CU locally but cross-check against mainnet `simulateTransaction` before deciding Q18 (T6).
@@ -79,7 +90,13 @@ First moves: `pnpm fixtures:check` → `pnpm localnet` → DBC `create_config` v
 | Pinned bytes are only re-fetchable while mainnet still serves them | A Meteora upgrade makes old pins unreproducible from a fresh clone | Accepted; `fixtures:dump` refuses drift; consider archiving the `.so` files as a release asset before submission |
 | `sudo` needs a password in WSL; `clang`/`unzip` absent | A build needing them stops | Ask the owner if it comes up |
 | This Claude Code session opens in the stale OneDrive copy | Edits could land in the wrong tree | All work by absolute path in `/home/hp/ballast`; launch future sessions from `~/ballast` |
+| `origin` is the OneDrive archive; no public remote exists | D-006 needs a public Apache-2.0 GitHub repo; history was rewritten (commit identity), so a GitHub repo must be created fresh from this one, not from the archive | **Owner action:** create the GitHub repo, add it as a remote |
+| Identity-rewrite leftovers: branch `backup/pre-identity-rewrite`, `refs/original/refs/heads/main` | Old-email commits remain reachable locally (never pushed) | Delete both once the owner confirms (`git branch -D backup/pre-identity-rewrite; git update-ref -d refs/original/refs/heads/main`) |
+| Test validator writes a `None` upgrade authority as the all-zero key (T8) | ProgramData header not byte-identical to mainnet for Token Metadata | Accepted and documented; bytes identical; `fixtures:exec` allows exactly this one encoding |
 
 ## In progress
 
-Nothing half-built. STEP 2 is committed. The local validator is stopped. `pnpm localnet` restarts it from the pinned fixtures.
+Nothing half-built and nothing uncommitted. The local validator is stopped; `pnpm localnet --quiet`
+restarts it from the pinned fixtures (online check first). Session-start routine: `source ~/.ballast-env
+&& cd ~/ballast && pnpm fixtures:check`. Root `node_modules` is installed. If a reinstall times out, the
+repo `.npmrc` already carries the WSL network settings.
