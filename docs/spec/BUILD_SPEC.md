@@ -93,6 +93,8 @@ Oct 1, 2026 · @Samarth
 
 ## 3. Canonical Architecture
 
+`[D-008: two tiers, one mechanism — Lite = DBC config only (flat 1% fee, 100% permanently locked LP split partner/creator, migration fee 0, no Ballast program, V = 0); Full = everything below]`
+
 **One Anchor program, three Meteora programs it composes but never migrates through, one floor crate shared by every consumer, and four off-chain tools.**
 
 | Layer | Component | Responsibility | Trust |
@@ -676,6 +678,8 @@ Jupiter is not a dependency of the program; the app uses it only to show quotes.
 
 ## 17. Local Development
 
+`[D-001: fixtures are the MAINNET programs (DBC, DAMM v2, DLMM, Token Metadata, Jupiter locker) plus every mainnet account they read, found by simulation; pinned by sha256 + last-deployed slot in evidence/fixtures/mainnet-pins.json; pnpm fixtures:check at session start and before any mainnet action]`
+
 **A new engineer runs seven commands to get from clone to a passing integration suite against real Meteora binaries.**
 
 ```bash
@@ -704,6 +708,8 @@ anchor test                                     # local validator with real DBC 
 
 ## 18. Devnet Plan
 
+`[D-001: every gate runs first on the mainnet-binary local validator, which is authoritative; devnet is secondary — keeper behaviour (Q17) and cross-checks; any divergence is recorded and the mainnet result governs]`
+
 **Ten phases, each with a hard pass/fail gate; a failed P0 gate stops the plan until a fallback passes.** Jupiter does not route on devnet, so routing (Q10) is tested on mainnet with the Proof launch.
 
 | Phase | Work | Pass gate |
@@ -720,6 +726,8 @@ anchor test                                     # local validator with real DBC 
 | 10. Failure injection | Keeper off for an hour; stale order; substituted accounts; dust redeems | All fail safe as in section 26 |
 
 ## 19. Mainnet Deployment
+
+`[D-007: mainnet deployment of the full program happens only if funding arrives; every mainnet transaction needs the owner's approval; this runbook is kept ready]`
 
 **After deployment, exactly two authorities exist — the program upgrade authority and the global admin, both a 2-of-3 multisig — and neither can move any launch's backing except by upgrading the program.**
 
@@ -818,6 +826,8 @@ Prediction:        realised >= predicted: PASS
 5. One transaction: DBC pool creation + `transfer_pool_creator` + DLMM pair + `register_launch`. On success, the proof page opens with the prediction transaction.
 
 ## 22. Proof Launch
+
+`[D-007: the primary proof is pnpm proof:local — this whole sequence on the mainnet-binary local validator, deterministic and rerunnable — then devnet (public evidence); the mainnet Proof launch only if funded]`
 
 **A controlled, fully disclosed 10 SOL launch whose only purpose is to make a prediction on-chain and then destroy the market to test it.**
 
@@ -949,6 +959,8 @@ The Proof and Public classes differ only in threshold, start price and curve liq
 | Pool only (V = 0) | 0 | 10¹⁴ | 10³⁰ | 9,999,999,999,998,700 | 2.939e-7 (= (L/2⁶⁴/S)²) |
 
 ## 28. Daily Build Plan
+
+`[2 Oct 2026: this table is superseded by the calendar in STATUS.md (submit 11 Oct)]`
 
 **Irreversible proof first: P0 answers on days 1–2, mainnet Proof launch on day 6, two buffer days.** M = mechanism, S = security, U = user, J = judging proof.
 

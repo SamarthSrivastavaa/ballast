@@ -79,11 +79,16 @@ jobs:
 
       # §21 bans these in anything user-facing. Scoped to app/, README and the SDK so that
       # spec text and security docs can discuss what is *not* safe without tripping the gate.
+      # D-006: app/ and README.md carry the full list, including bare "safe" and "protected".
+      # sdk/ keeps the narrower list because `protected` is a TypeScript keyword.
       - name: grep for banned wording
         run: |
           set +e
-          hits=$(grep -rniE "\b(insured|guaranteed profit)\b|can'?t lose|cannot lose|price can never go below|risk[- ]free" \
-            app/ sdk/ README.md 2>/dev/null)
+          hits=$(grep -rniE "\b(safe|insured|protected|guaranteed profit)\b|can'?t lose|cannot lose|price can never go below|risk[- ]free" \
+            app/ README.md 2>/dev/null)
+          sdk_hits=$(grep -rniE "\b(insured|guaranteed profit)\b|can'?t lose|cannot lose|price can never go below|risk[- ]free" \
+            sdk/ 2>/dev/null)
+          hits=$(printf '%s\n%s\n' "$hits" "$sdk_hits" | sed '/^$/d')
           set -e
           if [ -n "$hits" ]; then
             echo "::error::§21 banned wording in user-facing copy:"

@@ -1,208 +1,73 @@
 # Ballast — Status
 
-**Updated:** 2 Oct 2026 (STEP 1A — environment moved, toolchain pinned) · **Deadline:** 13 Oct 2026 06:59 UTC (plan to submit 12 Oct)
+**Updated:** 2 Oct 2026 (STEP 1 done; STEP 2 toolchain decision in progress) · **Deadline:** 13 Oct 2026 06:59 UTC · **We submit 11 Oct.**
 
 ## Current state
 
 | | |
 |---|---|
-| Phase | STEP 1B done. STEP 1A **blocked** on one platform-tools decision |
-| Last passed gate | **none** — §18 gate 1 not yet attempted |
-| P0 gate (Q1–Q5) | **BLOCKING.** All five UNKNOWN. Nothing beyond test harnesses may be built. |
-| Open UNKNOWNs | 12 of 20 Top-20 questions (see `DECISIONS.md`) |
+| Phase | STEP 1 (decisions D-001, D-006, D-007, D-008) **done**. STEP 2 (toolchain decision) **in progress** |
+| Last passed gate | **none** — no §18 gate attempted |
+| P0 gate (Q1–Q5) | **BLOCKING.** All five UNKNOWN. Answered on the mainnet-binary local validator (D-001) |
 | Program code | none (correct — gated). `crates/floor` is exempt: pure math, no network |
-| Floor engine | **§4/§11 implemented; all 10 §27 vectors exact; 25 tests + 100k property gate green** |
-| Devnet SOL | not yet requested |
-| Mainnet | untouched |
-| Environment | **moved to `/home/hp/ballast`** in WSL Ubuntu 26.04.1 (D-005); every §16 pin installed and proven on Linux |
-| Blocked on | **your decision**: platform-tools v1.43 (cargo 1.79) cannot build the Anchor tree — `DECISIONS.md` § OPEN DECISION |
+| Floor engine | **done and proven:** 31 tests, 100k-case property gate, 10,010 differential matches (Rust = Python); builds for SBF under platform-tools rustc 1.79 |
+| Meteora | **No validator has ever run; no Meteora program has executed.** `anchor build` fails (edition-2024 transitive deps vs cargo 1.79) |
+| Devnet SOL | not requested (STEP 3 runs locally; devnet comes 6 Oct) |
+| Mainnet | untouched. D-007: no spend without per-transaction approval |
+| Environment | `/home/hp/ballast` on ext4 in WSL Ubuntu (D-005). `source ~/.ballast-env` before every command |
 
-### Read this first
+## Calendar (replaces §28)
 
-**Blocked, needing one decision.** `anchor build` / `anchor test` cannot run: platform-tools v1.43
-(bundled with Agave 2.1.21) ships cargo 1.79.0, which cannot parse the `edition = "2024"` manifests
-the Anchor 0.31.1 + Solana 2.1.21 tree now resolves. The offending link is unpinnable. Options and a
-recommendation are in `DECISIONS.md` § OPEN DECISION; D-002 condition 4 means I may not change the
-toolchain without asking. **This blocks STEP 1C and 1D.**
+| Date | Work | Done when |
+|---|---|---|
+| **2 Oct** | Session check; STEP 1 decisions; **STEP 2 toolchain decision** (TEST 1 mainnet binaries execute on the local validator; TEST 2 lockfile pins → anchor build/test) | Decision recorded with evidence in `evidence/step-1a/` + `DECISIONS.md`; committed |
+| **3 Oct** | **STEP 3 — P0 harness** on the mainnet-binary local validator: Q1–Q9, Q11–Q16, Q18; plus (a) lowest `migration_quote_threshold` DBC accepts, (b) manual migration at that size, (c) Lite config migrates with 100% permanent lock | Every answer in `DECISIONS.md` with signatures + JSON in `evidence/p0/`. **P0 go/no-go** |
+| **4 Oct** | Program part 1: `initialize_global`, `create_class` (every §7 rule + a negative test per rule), `register_launch`, `settle_graduation`, `burn_leftover`. **Separate worktree:** Floor Scanner (read-only, free RPC tier, paginated + cached, never touches `programs/ballast`) | Tests green; `.so` size reported (≤ 300 KB target, D-007) |
+| **5 Oct** | Program part 2: `open`, `refresh_floor`, `redeem` (atomic, CU measured), `harvest`, `deposit`, `floor` view + 1M-step model fuzz. Scanner live on mainnet. Lite config scripts with `--dry-run` | Fuzz clean; CU within §26 budgets |
+| **6 Oct** | `pnpm proof:local` complete → `evidence/proof-local/`; devnet deploy + devnet proof → `evidence/proof-devnet/` | Verifier PASS on both |
+| **7 Oct** | Draft the funding message (Meteora / Superteam: ~4–5 SOL deploy rent, refundable, with proof links); Lite outreach materials | Drafts ready for the owner |
+| **8–9 Oct** | Minimal app (token page: floor, max loss if buying now, floor composition, redeem; Lite launch form); live stats page from on-chain data; `JUDGES.md`; README in §34 order. If funded: mainnet Full deploy via §19, owner signs every step | App builds; wording gate green |
+| **10 Oct** | Feature freeze; demo checklist mapping each §35 step to evidence | Checklist complete |
+| **11 Oct** | **Submit.** Afterwards only stats updates and fixes | Submitted |
 
-**Resolved since the last update:** the Windows/OneDrive and local-validator risks are gone — the
-repo now lives at `/home/hp/ballast` on ext4 in WSL Ubuntu (D-005), and every §16 pin is installed
-and proven there (Agave 2.1.21, Anchor 0.31.1, Node 20.20.2, pnpm 9.15.4, wasm-pack 0.13.1).
+Optional, with owner approval (~0.3 SOL): a tiny mainnet Lite proof if STEP 3 (a) shows a low threshold works.
+Open challenge (no bounty): "make F go down" on devnet and Lite launches, rules per §24.
 
-**Schedule:** §28's plan starts 1 Oct; it is 2 Oct and Day 1 is not finished. The floor crate (1B)
-is complete and is the critical-path item, but 1C and 1D have not started. Buffer days 7 and 11 are
-the slack.
+**Cut order if behind:** compiler CLI flags → stats polish → challenge page → Lite launch form (scripts instead).
+**Never cut:** verifier, fuzz suite, `proof:local`, devnet proof, Floor Scanner CLI, `JUDGES.md`.
 
-## STEP 0 — Guardrails
+## Done
 
-- [x] Read `docs/spec/BUILD_SPEC.md` in full (1159 lines, 35 sections + Top-20 table)
-- [x] Normalise spec path (`Build Spec.md` → `docs/spec/BUILD_SPEC.md`); `git init` on `main`
-- [x] `CLAUDE.md` (134 lines) — mission, §4 equation + code rules, §1 six corrections, banned wording,
-      P0 gate rule, §15 layout, §16 pins, commands, context and bookkeeping rules
-- [x] `STATUS.md` — this file
-- [x] `DECISIONS.md` — Top-20 table, all Status = UNKNOWN, Evidence empty
-- [x] `evidence/README.md`
-- [x] `.claude/commands/` — `slice`, `gate`, `audit`, `handoff`
-- [x] `.claude/agents/` — `spec-auditor`, `security-reviewer`, `meteora-researcher`
-- [x] `.claude/settings.json` + `/permissions` verified
-- [x] Approved; committed as `a727dc1`
+- [x] **STEP 0** guardrails — `CLAUDE.md`, `STATUS.md`, `DECISIONS.md`, `evidence/`, `.claude/` commands + agents (`a727dc1`)
+- [x] **Floor crate** — §4/§11 exact; 31 tests; 100k property gate; 10,010 differential matches; D-003, D-004 (`27ab5a6`, `a1fa353`)
+- [x] **Environment** — WSL Ubuntu ext4 (D-005); Agave 2.1.21, Anchor 0.31.1, Node 20.20.2, pnpm 9.15.4, rustc 1.85.0 (`79f053e`)
+- [x] **D-002 condition 3** — `crates/floor` + `ruint` build for SBF under platform-tools v1.43 (rustc 1.79), 46,784-byte ELF
+- [x] **STEP 1** (2 Oct) — D-001 exact wording; D-006, D-007, D-008 recorded; environment rule; CI wording gate extended to D-006's full list; spec markers on §3, §17, §18, §19, §22, §28
 
-## Day 1 — 1 Oct (§33) · NOT STARTED, overdue
+## STEP 2 — toolchain decision (2 Oct, in progress)
 
-Deliverable: Q1–Q4, Q6, Q7, Q11–Q14 answered. Acceptance: §18 gates 1–3.
-Blocker → fallback: Q1/Q7 fail → creator-PDA default; Q4 fail → disclosed hot-wallet claimer.
-
-- [~] **A.** Scaffold + toolchain. **Mostly done; one blocker.**
-      §15 skeleton, Cargo workspace, `.gitattributes` (LF for bit-for-bit `vectors.json`), CI with
-      fmt, clippy `-D warnings`, tests, the 100k property gate, a `vectors.json` reproducibility
-      check and a §21 wording grep.
-      **Repo moved to `/home/hp/ballast`** (WSL Ubuntu, ext4) per D-005 — clone, clean, LF intact.
-      **All §16 pins installed and proven on Linux:** rustc 1.85.0, Agave 2.1.21, Anchor 0.31.1
-      (avm 0.31.1), Node 20.20.2, pnpm 9.15.4, wasm-pack 0.13.1, Python 3.14.4.
-      **`cargo build-sbf` proves D-002 condition 3** — `crates/floor` + `ruint` compile for SBF
-      under platform-tools rustc 1.79.0 (46,784-byte eBPF ELF). Condition 4 not triggered.
-      **Finding T1:** a crate's MSRV is not the host pin; `crates/floor` now declares
-      `rust-version = "1.79"` because platform-tools compiles it. `programs/ballast` will need the
-      same.
-      **BLOCKED:** `anchor build` / `anchor test` — see Read this first. CI's Rust legs pass
-      locally; the probe legs cannot run.
-
-- [x] **B.** `crates/floor` — **DONE.** §4 + §11 implemented exactly: U256 via `ruint` (no_std,
-      no alloc), exact integer `isqrt` by Newton descent, floor-of-root with the two-directional
-      correction loop, `⌈L/s_max⌉` in A, floored payouts, integer bin check, bounds-before-arithmetic
-      returning errors not values. `tests/reference/floor.py` written from the §4 derivation
-      independently; reproduces all 10 §27 vectors and both §27 redeem payouts. `vectors.json` =
-      10,010 cases (10 from §27 + 10,000 random); **Rust matches Python on every one**.
-      25 tests green; §14 100k property gate green (16.7 s); fmt + clippy `-D warnings` clean.
-      Surfaced two spec-internal findings (F1, F2 in `DECISIONS.md`) — both need your approval.
-- [ ] **C.** Fixtures: `pnpm fixtures:dump` per §17 (DBC, DAMM v2, DLMM, Metaplex Token Metadata, locker
-      `.so` + migration config key + DLMM preset accounts); local validator boots with them; hashes committed
-- [ ] **D.** Devnet P0 harness (`tests/devnet/p0`): minimal Anchor program + TS scripts answering
-      **Q1, Q2, Q3, Q4, Q6, Q7, Q11, Q12, Q14** exactly as the Top-20 table prescribes.
-      *Needs devnet SOL — will ask.* Every answer → `DECISIONS.md` with signatures + JSON in `evidence/`
-- [ ] §18 gate 1 — config validation (byte-identical decode; class created; every single-field mutation rejected)
-- [ ] §18 gate 2 — graduation and migration (states advance; migration fee lands in vault to the lamport)
-- [ ] §18 gate 3 — **P0** permanent lock (both positions fully permanent + PDA-owned; L mapping ≤2 units;
-      L unchanged after 20 swaps + 2 claims)
-- [ ] Day-1 report: every question with signatures; fallbacks decided
-
-## Day 2 — 2 Oct (today)
-
-Deliverable: bid placed and cancelled by PDA on devnet. Acceptance: gate 5. Blocker: Q5 fail → escalate
-to Meteora, redemption-only fallback.
-
-- [ ] DLMM: Q5, Q8, Q9, Q15–Q17
-- [ ] `floor-wasm` (§11 cross-language: Rust = WASM = Python on `vectors.json`)
-- [ ] Compiler (§7 canonical configs — Proof and Public — plus predicted s; output must match `vectors.json`)
-- [ ] §18 gate 4 — vault funding (`burn_leftover`; §10 ledger reconciles; exact SOL + token conservation)
-- [ ] §18 gate 5 — **P0** DLMM bid (place via PDA, swap through, cancel, burn; fills persist; cancel
-      returns unfilled + filled + fees)
-
-## Day 3 — 3 Oct · Program part 1
-
-- [ ] `initialize_global`, `create_class` (every §7 validator rule + one negative test per rule),
-      `register_launch`, `settle_graduation`, `burn_leftover`
-- [ ] Local-validator tests against real Meteora programs; all §14 negative tests present
-- [ ] All tests green
-
-## Day 4 — 4 Oct · Program part 2
-
-- [ ] `open`, `refresh_floor`, `redeem` (atomic; measure CU for Q18), `harvest`, `deposit`, `floor` view
-- [ ] Model fuzzer: 1M steps asserting **F never falls** and **V/F + L(1/√F − 1/√P_max) ≥ S** at every step,
-      no negative balances, SOL + token conservation
-- [ ] CU within §26 budgets (`open` ≤600k, `redeem` ≤1.2M, `refresh_floor` ≤800k)
-- [ ] Blocker: Q18 fail → two-step redeem
-
-## Day 5 — 5 Oct · Devnet end-to-end + verifier
-
-- [ ] §18 gate 6 — F (`floor()` vs Rust, WASM, Python identical; realised ≥ predicted)
-- [ ] §18 gate 7 — redemption (exact payout; F rises; CU within limit)
-- [ ] §18 gate 8 — full sell-out (lowest execution ≥ 0.99·F; vault ≈ 0; F not lower)
-- [ ] §18 gate 9 — invariant run (200 random txs, several wallets; no monotone failure; verifier PASS)
-- [ ] §18 gate 10 — failure injection (keeper off 1h; stale order; substituted accounts; dust redeems)
-- [ ] `verifier-core` + `ballast` CLI per §20 — PASS on the devnet launch from a clean checkout with only an RPC URL
-- [ ] Any gate fail → fix before mainnet
-
-## Day 6 — 6 Oct · Mainnet Proof launch (§19, §22) — I execute every transaction
-
-- [ ] Dry-run everything first (`simulateTransaction` → `evidence/mainnet-dryrun/`); runbook written
-- [ ] Deploy from buffer → upgrade authority to multisig → `solana-verify` against tagged commit
-- [ ] `initialize_global` → Proof config (`fee_claimer = leftover_receiver = partner_auth`) → `create_class`
-- [ ] Fund `partner_auth` ~0.1 SOL; keeper started
-- [ ] Register (prediction recorded before trade 1) → buys to 10 SOL → settle → migrate → `burn_leftover` → `open`
-- [ ] Team sell-out → `refresh_floor` → `ballast verify --sellout`
-- [ ] Acceptance: realised ≥ predicted; lowest exec ≥ 0.99·F. Deviation → **stop**, diagnose 7 Oct
-
-## Day 7 — 7 Oct · Buffer + Public launch (§23)
-
-- [ ] Public class + launch; keeper running; challenge rules published (§24)
-- [ ] Verifier PASS
-
-## Day 8 — 8 Oct · App (§21)
-
-- [ ] Token page (six prices kept distinct; floor composition; bid wall; redeem; proof links; plain-language limits)
-- [ ] 5-step launch form; creator outreach
-- [ ] Every number from the floor crate and matching `ballast verify`
-
-## Day 9 — 9 Oct · Outside interactions
-
-- [ ] External creator launch; challenge promotion; README draft
-- [ ] Target: ≥1 non-team bid fill or redemption. None → report honestly
-
-## Day 10 — 10 Oct · Demo
-
-- [ ] Recording; docs; video edit. Every on-screen tx linked; sped-up segments labelled
-- [ ] `/audit` + verifier run immediately before recording
-
-## Day 11 — 11 Oct · Submission prep
-
-- [ ] README in §34 order with real addresses and signatures from `evidence/`
-- [ ] Final verifier runs; §29 Definition of Done checklist complete
-- [ ] `/audit` + grep for banned wording across `app/` and `README.md`
-
-## Day 12 — 12 Oct · Submit
-
-- [ ] Submit (deadline 13 Oct 06:59 UTC)
+- [ ] TEST 1: `pnpm fixtures:dump` from mainnet → `evidence/fixtures/mainnet-pins.json` (sha256 + last-deployed slot); `solana-test-validator` 2.1.21 with the five mainnet `.so` at their real IDs; each program **executes** (logs)
+- [ ] TEST 2: lockfile pins (MSRV-aware resolution to 1.79, generated by host cargo 1.85) → `anchor build` + `anchor test` on `tests/toolchain-probe/`; `cargo build-sbf` on a program linking `crates/floor`
+- [ ] RULE applied; outcome in `evidence/step-1a/` + `DECISIONS.md`; committed
 
 ## Open risks
 
 | Risk | Impact | Status |
 |---|---|---|
-| **platform-tools v1.43 (cargo 1.79) cannot build the Anchor tree** | Blocks `anchor build`/`test`, STEP 1C, STEP 1D | **Open — needs your decision** |
-| One day behind before any code (§28 starts 1 Oct) | Compresses the two P0 devnet days | Open — buffer days 7 + 11 absorb |
-| Caret requirements silently drift off the §16 pins | `anchor-lang` had drifted to 0.31.2, `solana-program` to 2.3.0 | Fixed with exact pins in the probe; **apply the same to `programs/ballast`** |
-| `sudo` needs a password in WSL; `clang`/`unzip` absent | A build needing them will stop | Open — one `apt-get install` from you if it comes up |
-| ~~Toolchain mismatch on every §16 pin~~ | — | **Resolved** — all pins installed and proven in WSL |
-| ~~Windows host; OneDrive; no Linux distro~~ | — | **Resolved** by D-005 (repo on ext4 in WSL Ubuntu) |
-| Q5 (PDA DLMM limit orders via CPI) | Kills the entire DLMM/bid layer | UNKNOWN — gate 5, due 2 Oct |
-| Q1/Q7 (permanent lock atomicity / splittable creator position) | L could be stalled or under-counted | UNKNOWN — gate 3, due 1 Oct (overdue) |
-| Q18 (atomic redeem CU) | Forces two-step redeem | UNKNOWN — due 4 Oct |
-| Mainnet Proof deviation | Never submit a mismatched claim | Not reached |
-| ~~Stray `C:\Users\HP\package.json` above the repo~~ | — | **Resolved** — `packageManager` pinned; `~/.ballast-env` strips `/mnt/*` from PATH |
+| Mainnet Meteora binaries may not load under Agave 2.1.21 | Forces an Agave move (STEP 2 rule) | Testing now (TEST 1) |
+| platform-tools v1.43 (cargo 1.79) vs edition-2024 transitive deps | Blocks `anchor build`/`test` | Testing now (TEST 2) |
+| Q5 (PDA DLMM limit orders via CPI) | Kills the DLMM bid layer | UNKNOWN — 3 Oct |
+| Q1/Q7 (permanent-lock atomicity / splittable creator position) | L stalled or under-counted | UNKNOWN — 3 Oct |
+| Q18 (atomic redeem CU) | Forces two-step redeem | UNKNOWN — 5 Oct |
+| Program size > 300 KB (D-007) | Deploy rent beyond the funding ask | Manual CPI builders; size reported every slice |
+| No funding for mainnet Full deploy | Traction criterion (D-006) relies on Lite + Scanner | Funding message 7 Oct |
+| No `V = 0` vector in `vectors.json` | Lite verifier path untested | Add before the verifier's Lite path |
+| `sudo` needs a password in WSL; `clang`/`unzip` absent | A build needing them stops | Ask the owner if it comes up |
+| This Claude Code session opens in the stale OneDrive copy | Edits could land in the wrong tree | All work by absolute path in `/home/hp/ballast`; launch future sessions from `~/ballast` |
 
 ## In progress
 
 | What | Where | Next concrete action |
 |---|---|---|
-| platform-tools probe | `evidence/step-1a/tools-version-probe.md` | `cargo build-sbf --tools-version v1.51` in `tests/toolchain-probe` (v1.54 already ruled out: target renamed to `sbpf-solana-solana`). Then v1.50, v1.49, v1.48, v1.47, v1.46.1, v1.42.1. |
-| Anchor probe workspace | `tests/toolchain-probe/` | Builds are blocked. `anchor keys sync` already ran (program id `C6vEPX5hU7uK6VXzJLBoZYM1nwnmbcbpEEJ83ghV4aPq`); `pnpm install --ignore-workspace` done; `tests/probe.ts` written and unrun. |
-| `floor-sbf` probe | `tests/toolchain-probe/floor-sbf/` | **Complete** — D-002 condition 3 proven. Leave as the regression check for the floor crate's SBF-cleanliness. |
-
-Nothing else is half-built. `crates/floor` is complete and fully tested.
-
-## Next task
-
-**Awaiting one decision**: how to get the Anchor program tree building for SBF
-(`DECISIONS.md` § OPEN DECISION — recommendation is option A, `--tools-version`, which keeps every
-§16 pin intact). Nothing past this can be trusted until `anchor build` and `anchor test` work.
-
-Once decided, in order:
-1. Finish STEP 1A (b) and (c): `anchor build`, `anchor test` on the probe workspace, CI locally.
-2. **STEP 1C** per D-001: `pnpm fixtures:dump` + `pnpm fixtures:check`, mainnet sha256 **and slot**
-   pins in `evidence/fixtures/mainnet-pins.json`; local validator booting with the **mainnet**
-   binaries plus every mainnet account they read — that account list discovered by **simulating** a
-   DBC config creation, a migration and a DLMM pair creation against mainnet, not guessed.
-3. **STEP 1D**: the P0 harness, on the mainnet-binary local validator. No devnet SOL needed yet.
-
-Also confirm: the **D-001 wording in `DECISIONS.md` is my reconstruction** — its text was never
-given to me.
+| STEP 2 TEST 1 | `scripts/fixtures/`, `evidence/fixtures/` | Write `fixtures:dump` / `fixtures:check`, dump the five programs, boot the validator |
+| STEP 2 TEST 2 | `tests/toolchain-probe/` | MSRV-aware lockfile, then `anchor build` + `anchor test` |

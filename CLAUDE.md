@@ -8,7 +8,14 @@ program-owned vault; the other 85% migrates into a DAMM v2 pool as two permanent
 PDA-owned positions. The whole vault rests as one DLMM limit order in the highest bin at or below F.
 F is the price at which locked liquidity plus the vault bid can absorb the entire outstanding supply,
 so every holder token can be sold at ≥ F. The claim is falsifiable: the floor is predicted on-chain
-before trade 1, and `ballast verify` recomputes it from raw accounts. Deadline 13 Oct 2026 06:59 UTC.
+before trade 1, and `ballast verify` recomputes it from raw accounts. Deadline 13 Oct 2026 06:59 UTC;
+**we submit 11 Oct.** Two tiers, one mechanism (D-008): **Ballast Lite** (DBC config only, V = 0) and
+**Ballast Full** (this program, vault and DLMM bids).
+
+## Environment
+
+Every shell command runs after `source ~/.ballast-env`; work only in /home/hp/ballast on ext4; never
+under /mnt/c or OneDrive.
 
 ## Source of truth
 
@@ -17,12 +24,20 @@ before trade 1, and `ballast verify` recomputes it from raw accounts. Deadline 1
 - Code, docs, or my own assumptions conflicting with the spec → the spec wins.
 - Spec conflicting with observed on-chain behaviour → **STOP.** Record evidence in `DECISIONS.md`,
   propose the minimum correction, wait for approval.
-- **Never invent Meteora behaviour.** Anything not verified by docs, program source, SDK, or a devnet
-  transaction is UNKNOWN until tested. Never mock Meteora in integration tests: dumped programs or devnet only.
+- **Never invent Meteora behaviour.** Anything not verified by docs, program source, SDK, or a
+  transaction is UNKNOWN until tested. Never mock Meteora in integration tests: mainnet-dumped programs
+  on the local validator, or devnet only.
+- **D-001 — mainnet binaries govern.** P0/P1 questions are answered first on a local validator running
+  the mainnet-dumped DBC, DAMM v2, DLMM, Token Metadata and Jupiter locker programs, with every mainnet
+  account they read cloned in (found by simulation, not guessed). Those results are authoritative.
+  Devnet = Q17 (keeper) and cross-checks only; any divergence is recorded and the mainnet result governs.
+  Pins: `evidence/fixtures/mainnet-pins.json`. **Run `pnpm fixtures:check` at session start and before
+  any mainnet action**; a hash change means re-running the affected gates.
 
 ## P0 gate rule
 
-**Nothing beyond test harnesses is built until Q1–Q5 pass on devnet.** No product code, no app, no
+**Nothing beyond test harnesses is built until Q1–Q5 pass on the mainnet-binary local validator
+(D-001).** No product code, no app, no
 program logic past a CPI test harness. The floor crate and its Python reference are exempt (pure math,
 no network). Q1 permanent lock · Q2 pool mode/range/constant L · Q3 L↔reserve mapping · Q4 PDA fee
 claims via CPI · Q5 PDA DLMM limit orders via CPI.
@@ -66,6 +81,8 @@ bid amounts, bid bin at or below F. No floating point anywhere in the crate.
 ## Banned wording (§21) — never in app/, README, docs, or events
 
 `safe` · `insured` · `protected` · `can't lose` · `guaranteed profit` · "price can never go below F"
+
+CI fails if `app/` or `README.md` contains any of them (D-006), including the TypeScript keyword `protected`.
 
 Required headline: "This is an executable buyback floor on Meteora, not a promise about prices elsewhere."
 Always say which of the six prices (§9) a number is: theoretical F, bid bin price, executable bid net,
@@ -116,18 +133,37 @@ ballast verify <launch> --rpc <url>            # verifier
 
 ## Working style
 
-- **Plan mode for every new slice.** Tests before implementation. Full test suite before "done".
+- **Operating loop, every slice:** plan mode → show the plan → tests first → implement → full test
+  suite → `/audit` (spec-auditor + security-reviewer) → update `STATUS.md` and `DECISIONS.md` → commit
+  citing spec sections → one-paragraph report: what changed → evidence → next → risks.
 - One commit per slice, citing the spec section. Tag every passed gate (`gate-1-pass`, …).
 - **Update `STATUS.md` and `DECISIONS.md` at the end of every task.** Evidence goes in `evidence/`.
-- A Top-20 question is VERIFIED only with a devnet transaction signature recorded in `DECISIONS.md`.
-- After each step report: what changed → evidence (tests, signatures) → next → open risks.
+- A Top-20 question is VERIFIED only with a transaction signature on the mainnet-binary local validator
+  (D-001) recorded in `DECISIONS.md` with a JSON dump in `evidence/`. Devnet signatures are secondary.
 - Parallel work only after the P0 gates pass, and only in a separate git worktree. Never two sessions
   on `programs/ballast`.
+
+## Decisions in force (full text in `DECISIONS.md`)
+
+- **D-006 judging order:** Meteora integration depth (DBC, DAMM v2 and DLMM each carry part of the
+  floor) → technical execution → originality → impact → traction. Apache-2.0; `JUDGES.md` maps each
+  criterion to linked evidence.
+- **D-007 budget:** no mainnet spend unless the owner approves **each transaction**. The primary proof is
+  `pnpm proof:local` (the full §22 sequence on the mainnet-binary local validator), then devnet.
+  Mainnet Full deploy only if funded. **Program `.so` ≤ 300 KB:** manual CPI instruction builders (no
+  full Meteora program crates), `opt-level = "z"`, `lto`, `codegen-units = 1`. **Report the `.so` size
+  after every program slice.**
+- **D-008 tiers:** Lite = DBC config only, flat 1% fee, 100% permanently locked LP split partner/creator,
+  migration fee 0, floor = locked-liquidity floor (V = 0). Full = the specified program. README and
+  `JUDGES.md` present both.
 
 ## STOP and ask me when
 
 - any P0 question fails, or a fallback would change the mechanism;
-- you need funds, keys, a multisig signature, or any mainnet action;
+- any change to the mechanism or canon;
+- any mainnet transaction or SOL spend; keys, a multisig signature, or funds;
+- devnet SOL is needed (state the exact amount);
+- anything is ambiguous between the spec and observed on-chain behaviour (record the evidence first);
 - a test could only pass by weakening an invariant, a rounding direction, or an account check;
 - you are about to build anything on the §31 DO NOT BUILD list (governance, platform token, points,
   oracles, transfer hooks, lending, stock/USDC classes, reserve-share slider, dashboards beyond the

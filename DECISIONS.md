@@ -3,9 +3,12 @@
 The record of every Top-20 answer, every toolchain pin, and every deviation from the spec.
 
 **Rules for this file**
-- A question is **VERIFIED** only with a devnet (or mainnet) transaction signature recorded here and a
-  JSON account dump in `evidence/`. Docs, SDK source, and the `meteora-researcher` agent produce **LEADS**,
-  never verifications.
+- A question is **VERIFIED** only with a transaction signature on the **mainnet-binary local
+  validator** (D-001) recorded here and a JSON account dump in `evidence/`. Those results are
+  authoritative. Devnet signatures are secondary cross-checks (and the only evidence for Q17); on any
+  divergence the mainnet-binary result governs and the divergence is recorded. Docs, SDK source, and
+  the `meteora-researcher` agent produce **LEADS**, never verifications.
+  *(Amended 2 Oct 2026 by D-001; was "a devnet (or mainnet) transaction signature".)*
 - Status values: `UNKNOWN` · `LEAD` (doc/source evidence only) · `VERIFIED` · `FAILED → fallback taken`.
 - If observed on-chain behaviour contradicts `docs/spec/BUILD_SPEC.md`: record the evidence here, propose
   the minimum correction, **stop and wait for approval**. Never silently adopt a fallback.
@@ -68,7 +71,10 @@ P0 = could invalidate the mechanism · P1 = could invalidate a subsystem · P2 =
 
 ---
 
-## §18 Devnet gates
+## §18 Gates
+
+Run first on the mainnet-binary local validator (D-001, authoritative), then on devnet (public
+evidence, secondary). The heading was "§18 Devnet gates" until 2 Oct 2026.
 
 | Gate | Phase | Pass criterion | Status | Tag | Evidence |
 |---|---|---|---|---|---|
@@ -210,9 +216,24 @@ with a `[D-00n]` marker so the spec and the code cannot drift apart.
 
 ### D-001 — Fixtures and the local validator use mainnet binaries and mainnet accounts
 
-**Status: APPROVED — but reconstructed, please confirm the wording.** The decision was referenced
-to me as "adjusted per D-001" without its text, so what follows is inferred from the STEP 1C
-instructions given alongside it. Correct it if this is not what was meant.
+**Status: APPROVED. Exact wording, given by the owner on 2 Oct 2026:**
+
+> Devnet Meteora binaries differ from mainnet. The target is the mainnet programs. All P0 and P1
+> questions are answered first on a local validator running the mainnet-dumped DBC, DAMM v2, DLMM,
+> Token Metadata and Jupiter locker programs, with every mainnet account they read cloned in (found
+> by simulation, not guessed). Those results are authoritative. Devnet is secondary: keeper
+> behaviour (Q17) and cross-checks only; any divergence is recorded and the mainnet result governs.
+> Mainnet program hashes and slots are pinned in evidence/fixtures/mainnet-pins.json; pnpm
+> fixtures:check runs at session start and before any mainnet action; a hash change means
+> re-running the affected gates.
+
+*Superseded 2 Oct 2026:* the text below was my reconstruction, written before the wording above was
+given. It is kept for history; where the two differ, the quote above governs. The quote adds three
+things the reconstruction lacked: Token Metadata and the Jupiter locker are explicitly in the
+program set; devnet is limited to Q17 and cross-checks; and `fixtures:check` runs at session start
+and before any mainnet action, with a hash change forcing a re-run of the affected gates.
+
+<details><summary>Reconstruction (superseded)</summary>
 
 - The local validator boots with the **mainnet** Meteora binaries, not devnet ones, plus **every
   mainnet account those programs read**.
@@ -226,6 +247,8 @@ instructions given alongside it. Correct it if this is not what was meant.
 Rationale: §14 forbids mocking Meteora, and devnet binaries can diverge from the deployed mainnet
 versions that the Proof and Public launches will actually run against. Supersedes the plainer
 reading of §17.
+
+</details>
 
 ### D-002 — Host Rust pinned to 1.85.0
 
@@ -300,6 +323,68 @@ your call.
 One hazard that follows from the move: `/mnt/c/Program Files/nodejs` leaks Windows `node`, `npm`
 and `pnpm` onto the WSL `PATH`, where they resolve the wrong binaries and cannot build Linux native
 modules. `~/.ballast-env` strips every `/mnt/*` entry from `PATH`; source it before any build.
+
+**Environment rule (2 Oct 2026, owner's wording, also in `CLAUDE.md`):** "Every shell command runs
+after `source ~/.ballast-env`; work only in /home/hp/ballast on ext4; never under /mnt/c or
+OneDrive."
+
+### D-006 — Judging: what to optimise for, in order of evidence
+
+**Status: APPROVED 2 Oct 2026. Owner's wording:**
+
+> Optimise for, in this order of evidence:
+> - Depth of Meteora integration: DBC, DAMM v2 and DLMM each carry part of the floor.
+> - Technical execution: tests, fuzzing, verifier, reproducible proof.
+> - Originality and taste: a new DBC use case that outlasts the meme-stock meta; quote-asset-agnostic pitch.
+> - Impact: a new asset class; any DBC launchpad can adopt it; floor() is readable by terminals.
+> - Traction: live on mainnet with people actively using it.
+>
+> Consequences:
+> - Public repo under Apache-2.0.
+> - CI fails if app/ or README.md contains: safe, insured, protected, can't lose, guaranteed profit, "price can never go below".
+> - JUDGES.md maps each criterion to linked evidence.
+
+Applied now: the CI `wording` job (`.github/workflows/ci.yml`) enforces the full list on `app/` and
+`README.md`. It was missing `safe` and `protected`. `sdk/` keeps the previous, narrower list, because
+`protected` is a TypeScript keyword. `Cargo.toml` already declares `license = "Apache-2.0"`.
+Not yet done: the `LICENSE` file and `JUDGES.md`, both on the calendar for 8–9 Oct. Making the
+repo public is the owner's action.
+
+### D-007 — Budget: no mainnet spend without per-transaction approval
+
+**Status: APPROVED 2 Oct 2026. Owner's wording:**
+
+> No mainnet spend unless I approve each transaction.
+> - The full trustless proof runs as `pnpm proof:local` (the complete §22 sequence on the
+>   mainnet-binary local validator, deterministic, rerunnable by judges; primary evidence) and on
+>   devnet (public evidence).
+> - Mainnet deployment of the full program happens only if funding arrives; keep the §19 runbook ready.
+> - Program size target ≤ 300 KB: manual CPI instruction builders instead of full Meteora program
+>   crates; opt-level "z", lto, codegen-units = 1. Report the .so size after every program slice.
+
+Amends §19 and §22: the mainnet Proof launch becomes conditional on funding; `proof:local` is the
+primary proof. Read-only mainnet RPC calls (`solana program dump`, `solana account`,
+`getAccountInfo`, `simulateTransaction`) spend nothing and sign nothing, so they are not covered by
+the approval requirement. `fixtures:dump` and `fixtures:check` use them.
+
+### D-008 — Two tiers, one mechanism
+
+**Status: APPROVED 2 Oct 2026. Owner's wording:**
+
+> - Ballast Lite = DBC config only: same shaped curve, flat 1% fee, 100% permanently locked LP split
+>   partner/creator, migration fee 0, no Ballast program. Floor = locked-liquidity floor. The
+>   verifier supports it (V = 0). Mainnet config cost ~0.05 SOL, with my approval; launchers pay
+>   their own pool rent.
+> - Ballast Full = the specified program, vault and DLMM bids.
+> - README and JUDGES.md present both tiers.
+
+Floor-engine note: Lite is the §4 equation with `V = 0`, i.e. `A·s² − B·s = 0`. That gives
+`s = ⌊B/A⌋ = ⌊L/(S + ⌈L/s_max⌉)⌋`, the same crate and the same rounding, so the "only
+`ballast-floor` computes F" rule holds for both tiers. The crate does not reject `V = 0`; it only
+errors on `S = 0` and on the §4 bounds (`crates/floor/src/lib.rs`, `FloorError`). **No `V = 0`
+vector exists yet.** One must be added to `vectors.json` and the Python reference before the
+verifier's Lite path relies on it. Whether a Lite config can migrate with 100% permanent lock is
+STEP 3 check (c).
 
 ---
 
