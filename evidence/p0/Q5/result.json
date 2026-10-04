@@ -1,0 +1,171 @@
+{
+  "question": "Q5 — PDA places/cancels DLMM limit orders via CPI; fills persist; cancel returns unfilled + filled + fees",
+  "lbPair": "4yeeb5PkRUw3ZWz9g4jNap9cfpsaCeZ1FDBsYpAHWKcQ",
+  "order": "DUtCQAAVRE4VKzXk6Sh7LuP38P6B9edAaBcgEPA77ZKb",
+  "bidBin": -11920,
+  "place": {
+    "signature": "5Uq5bU4tawjVpBgtuNS7yDC913w2G8nwY9hM2JgG8fexUe3TibH47Ncz6yvRW3czz9BPdQSfBNKB2rXMba3tv6QX",
+    "cu": 37463,
+    "amountY": "1000000000",
+    "pdaWsolSpent": "1000000000"
+  },
+  "sell": {
+    "signature": "5MvrhFiz4t51joq8BHe46LhYbMJwEw1bf69CFJDtDtvDv6r6Tvk4JE67CzGqfMNPyrGbFH1DYrjns52ge7kxQtTM",
+    "sellerGaveX": "50000000000000",
+    "sellerGotY": "0",
+    "quote": {
+      "consumedInAmount": "50000000000000",
+      "outAmount": "334375241",
+      "fee": "205056",
+      "protocolFee": "205057",
+      "minOutAmount": "0",
+      "priceImpact": {
+        "s": 1,
+        "e": -7,
+        "d": [
+          2,
+          9906520,
+          4115799,
+          9371300
+        ]
+      },
+      "binArraysPubkey": [
+        "6cxHDwBG6frMD2mD4V4VCjWiDHH7Pim7iQRYgSpMd8kM"
+      ],
+      "endPrice": {
+        "s": 1,
+        "e": -6,
+        "d": [
+          66,
+          9570708,
+          6012483,
+          6560000
+        ]
+      },
+      "feeOnInput": false
+    }
+  },
+  "orderAfterPlace": {
+    "publicKey": "DUtCQAAVRE4VKzXk6Sh7LuP38P6B9edAaBcgEPA77ZKb",
+    "limitOrderData": {
+      "totalDepositAmountX": "0",
+      "totalDepositAmountY": "1",
+      "limitOrderBinData": [
+        {
+          "binId": -11920,
+          "empty": false,
+          "depositAmountX": "0",
+          "depositAmountY": "1",
+          "unfilledAmountX": "0",
+          "unfilledAmountY": "1",
+          "swappedAmountX": "0",
+          "swappedAmountY": "0",
+          "isAskSide": false,
+          "filledAmountX": "0",
+          "filledAmountY": "0",
+          "feeAmountX": "0",
+          "feeAmountY": "0",
+          "status": 0
+        }
+      ],
+      "totalUnfilledAmountX": "0",
+      "totalUnfilledAmountY": "1",
+      "totalFilledAmountX": "0",
+      "totalFilledAmountY": "0",
+      "totalSwappedAmountX": "0",
+      "totalSwappedAmountY": "0",
+      "totalFeeAmountX": "0",
+      "totalFeeAmountY": "0",
+      "transferFeeExcludedWithdrawableAmountX": "0",
+      "transferFeeExcludedWithdrawableAmountY": "1"
+    }
+  },
+  "orderAfterFill": {
+    "publicKey": "DUtCQAAVRE4VKzXk6Sh7LuP38P6B9edAaBcgEPA77ZKb",
+    "limitOrderData": {
+      "totalDepositAmountX": "0",
+      "totalDepositAmountY": "1",
+      "limitOrderBinData": [
+        {
+          "binId": -11920,
+          "empty": false,
+          "depositAmountX": "0",
+          "depositAmountY": "1",
+          "unfilledAmountX": "0",
+          "unfilledAmountY": "0.665214646",
+          "swappedAmountX": "49999999.955102",
+          "swappedAmountY": "0",
+          "isAskSide": false,
+          "filledAmountX": "0",
+          "filledAmountY": "0.334785354",
+          "feeAmountX": "0",
+          "feeAmountY": "0.000205056",
+          "status": 1
+        }
+      ],
+      "totalUnfilledAmountX": "0",
+      "totalUnfilledAmountY": "0.665214646",
+      "totalFilledAmountX": "0",
+      "totalFilledAmountY": "0.334785354",
+      "totalSwappedAmountX": "49999999.955102",
+      "totalSwappedAmountY": "0",
+      "totalFeeAmountX": "0",
+      "totalFeeAmountY": "0.000205056",
+      "transferFeeExcludedWithdrawableAmountX": "49999999.955102",
+      "transferFeeExcludedWithdrawableAmountY": "0.665419702"
+    }
+  },
+  "reverseSwapThroughFilledBin": {
+    "sdkRefused": "Insufficient liquidity"
+  },
+  "orderAfterReverse": {
+    "publicKey": "DUtCQAAVRE4VKzXk6Sh7LuP38P6B9edAaBcgEPA77ZKb",
+    "limitOrderData": {
+      "totalDepositAmountX": "0",
+      "totalDepositAmountY": "1",
+      "limitOrderBinData": [
+        {
+          "binId": -11920,
+          "empty": false,
+          "depositAmountX": "0",
+          "depositAmountY": "1",
+          "unfilledAmountX": "0",
+          "unfilledAmountY": "0.665214646",
+          "swappedAmountX": "49999999.955102",
+          "swappedAmountY": "0",
+          "isAskSide": false,
+          "filledAmountX": "0",
+          "filledAmountY": "0.334785354",
+          "feeAmountX": "0",
+          "feeAmountY": "0.000205056",
+          "status": 1
+        }
+      ],
+      "totalUnfilledAmountX": "0",
+      "totalUnfilledAmountY": "0.665214646",
+      "totalFilledAmountX": "0",
+      "totalFilledAmountY": "0.334785354",
+      "totalSwappedAmountX": "49999999.955102",
+      "totalSwappedAmountY": "0",
+      "totalFeeAmountX": "0",
+      "totalFeeAmountY": "0.000205056",
+      "transferFeeExcludedWithdrawableAmountX": "49999999.955102",
+      "transferFeeExcludedWithdrawableAmountY": "0.665419702"
+    }
+  },
+  "fillsPersist": true,
+  "cancel": {
+    "foreignDestinationAttempt": {
+      "signature": "35Ndh9HHbinxCD9Zb7maritXdXZLxudJFAhmcRYVAiRgtu1NBf4ZwTAVZ3E2UrRXuSDmUWjNNR5deciw9JzKVe7M",
+      "err": null,
+      "errorLog": []
+    },
+    "destinationUsed": "vault PDA (foreign)",
+    "signature": "35Ndh9HHbinxCD9Zb7maritXdXZLxudJFAhmcRYVAiRgtu1NBf4ZwTAVZ3E2UrRXuSDmUWjNNR5deciw9JzKVe7M",
+    "cu": 56884,
+    "receivedX": "49999999955102",
+    "receivedY": "665419702",
+    "expectedFromOrder": {},
+    "orderAccountClosed": true
+  }
+}

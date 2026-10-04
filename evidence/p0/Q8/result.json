@@ -19,11 +19,11 @@
     }
   ],
   "seeds": "[ILM_BASE, min(mintX, mintY), max(mintX, mintY)] — no bin step (SDK deriveCustomizablePermissionlessLbPair)",
-  "lbPair": "3ce2fz6zrwvuSwABabf4jKfXryeJwWFPh2KxGKbPErrK",
+  "lbPair": "4yeeb5PkRUw3ZWz9g4jNap9cfpsaCeZ1FDBsYpAHWKcQ",
   "createdBy": "partner_auth PDA via CPI",
-  "createSignature": "2SFhMVRh4YegUyeRsTPf5dsmhZoQjuJ2vt7aE66ed2yzMopvSxxpoMmJTN3SAusPko9mcSxyj1xUihRRBZXbkumh",
+  "createSignature": "2t4o55ojFafE3QS54b2abwtrw3MfDyUhUdXyo7kVEGvf3TgL1q5ZdkWLFt65b3QRaP9Uf66HYsbfJfTJmJAY2s1E",
   "cpiAttempt": {
-    "signature": "2SFhMVRh4YegUyeRsTPf5dsmhZoQjuJ2vt7aE66ed2yzMopvSxxpoMmJTN3SAusPko9mcSxyj1xUihRRBZXbkumh",
+    "signature": "2t4o55ojFafE3QS54b2abwtrw3MfDyUhUdXyo7kVEGvf3TgL1q5ZdkWLFt65b3QRaP9Uf66HYsbfJfTJmJAY2s1E",
     "err": null,
     "errorLog": []
   },
@@ -44,7 +44,7 @@
     "error": null
   },
   "creatorDisableAttempt": {
-    "signature": "259mUmwA5CKwCrziaLoCujZDSwC8vARaLkvDJ23VftRCdYfmUFav12iZuXzKC33nL28ioWguVeiv6PDHMG3FuSed",
+    "signature": "2ansqZydB9CYPSuUhxTc4hFacy18aAXZxfH8A2CQKVFMzH88ahTma165jfg9vCUgYH13iHSbtCdSRDdinZxrSULV",
     "refused": true,
     "err": {
       "InstructionError": [
@@ -60,7 +60,7 @@
   },
   "statusChangers": "set_pair_status requires an `operator` account + signer (Meteora operator); set_pair_status_permissionless only for a creator with creator_pool_on_off_control (IDL)",
   "lbPairState": {
-    "creator": "9wXuLpHAERJ3sNajq8akLhGT2S4QVnEKUajs28Gspt9w",
+    "creator": "HxRY5JeRnwQVbDw5YRZxHUsjZxPdF33peEb4vsjq7kkh",
     "status": 0,
     "pairType": 2,
     "activeId": -10548,

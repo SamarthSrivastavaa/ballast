@@ -1,8 +1,8 @@
 [
   {
     "label": "proof: buy 0",
-    "signature": "3hLJw8tBz8hRRM6om2S8w8wUGdVUkLjHYh1swgHm1qefxU8YEGRhR8twGqHD69L5YNsa3t5MFBTfaWcaCsuZUULt",
-    "buyer": "6u9HKik5fUt5ivLCXVkZVpuqfGijpEvZzvaDVruZkzhN",
+    "signature": "5Z3DnaagcA2BUcF7h7w4mNr3ZrGvtdX3bCN7twcfnGEpDXGqBmo8mbuAXQ2HGwTiZj9WXxB7W2fsTwRmTDLATCuo",
+    "buyer": "AvoceDnmaFBhLUtyzja24ZQzQYPrWEdS7HeaQphPzQcA",
     "amountIn": "1000000000",
     "baseOut": "98692480002255",
     "dQuoteReserve": "990000000",
@@ -13,12 +13,12 @@
     "dTotalProtocolQuoteFee": "2000000",
     "quoteReserveAfter": "990000000",
     "sqrtPriceAfter": "75198221800471279",
-    "cu": 93260
+    "cu": 94760
   },
   {
     "label": "proof: buy 1",
-    "signature": "9DBE7AXyZU9iz1jRWey7jKPsg3MptTzN859y7yERZhBMLayTM9J9deJzyc6Bb6uoXe1YSFdVsBeAPegwV9pc6c6",
-    "buyer": "F5y3Npb6apKer7Lg7hMEvT8TK7MmzCtBUHGXYD1874eE",
+    "signature": "5oszf6NTra34JjyfD3GRGFMonU5pUDz5bej4c6b8KdQqHCixFb2L6zNahNQkzu6mZhSQ8P2DnZu8Uamq6MQ1uufP",
+    "buyer": "4eq2KYA2ffJQoc3NYrnUqghNg9LLVngUx5XEWyRfGMim",
     "amountIn": "1500000000",
     "baseOut": "86337631407473",
     "dQuoteReserve": "1485000000",
@@ -29,12 +29,12 @@
     "dTotalProtocolQuoteFee": "3000000",
     "quoteReserveAfter": "2475000000",
     "sqrtPriceAfter": "77832001292818876",
-    "cu": 89661
+    "cu": 95661
   },
   {
     "label": "proof: buy 2",
-    "signature": "rKkS9Ti9dHyNEjb3jxDA2MDdA8Q1K3zrXKdr6mvRcP8uZSHNAZHxd3B751HYiiF6LcZ9oks8a93zwQhATSWYk4E",
-    "buyer": "9RpBS5mNDZ8ERYe8tMfr13Rj8vn8ifzAFF7oA5A5RW85",
+    "signature": "4UDdrsY9rjen3zvJCzpcmcWhMMGU7ArNtmRZpqTrxezMdMQGgQJy4JB8Uo7h6XyCkSufeZDZdRH8VwjKdWakdMJp",
+    "buyer": "H13rf7mRdQzMKreBS5GzNNbZJNEsFWeGqJpxmM9StBMd",
     "amountIn": "2000000000",
     "baseOut": "106419809197198",
     "dQuoteReserve": "1980000000",
@@ -45,12 +45,12 @@
     "dTotalProtocolQuoteFee": "4000000",
     "quoteReserveAfter": "4455000000",
     "sqrtPriceAfter": "81343707282615672",
-    "cu": 88167
+    "cu": 89667
   },
   {
     "label": "proof: buy 3",
-    "signature": "54bU3PsaGskvbb2ocqMn9z3P4eSTq26LdRwA6cjiLeWXzs1SgTSiUcELrbuZKFHcEQySFvrJWMvKG9yCMJDj5Lnp",
-    "buyer": "6u9HKik5fUt5ivLCXVkZVpuqfGijpEvZzvaDVruZkzhN",
+    "signature": "4A2rCMXn7NVhVmFm2vX2ELa6onZAoWdyThK2wsCQcNdx89WqJuy2bCdzboosakUakfdUQ2RQNRhHkA4joHBJ6anV",
+    "buyer": "AvoceDnmaFBhLUtyzja24ZQzQYPrWEdS7HeaQphPzQcA",
     "amountIn": "1000000000",
     "baseOut": "49559419227627",
     "dQuoteReserve": "990000000",
@@ -61,12 +61,12 @@
     "dTotalProtocolQuoteFee": "2000000",
     "quoteReserveAfter": "5445000000",
     "sqrtPriceAfter": "83587785647221806",
-    "cu": 72951
+    "cu": 74451
   },
   {
     "label": "proof: buy 4",
-    "signature": "uRqM7RfZMXVnya5q72ZhAyaQPqp2bwcT2RgTesKnArWiSWtgScMKRK1ED2cEXy246gNjRSWRJ28zsdsCC8Po2pB",
-    "buyer": "F5y3Npb6apKer7Lg7hMEvT8TK7MmzCtBUHGXYD1874eE",
+    "signature": "5zYakubypBUTEoBWwSYQiVP7VLEofNQwoaeC71sm77sWkd8DcSzQ35WPnKTSERa56g3Wg7r1qDizi9sbos38sbQE",
+    "buyer": "4eq2KYA2ffJQoc3NYrnUqghNg9LLVngUx5XEWyRfGMim",
     "amountIn": "1500000000",
     "baseOut": "69496007614089",
     "dQuoteReserve": "1485000000",
@@ -77,12 +77,12 @@
     "dTotalProtocolQuoteFee": "3000000",
     "quoteReserveAfter": "6930000000",
     "sqrtPriceAfter": "86988776439235212",
-    "cu": 67871
+    "cu": 70871
   },
   {
     "label": "proof: buy 5",
-    "signature": "5Z3dKdoJ8XNpaFr2FgqY1BpYj4L44sJPcHgd49cnRQovPNj1FJfKEMWkEhuZaMSannoGnmw72u45AEEb5FvQ5jsP",
-    "buyer": "9RpBS5mNDZ8ERYe8tMfr13Rj8vn8ifzAFF7oA5A5RW85",
+    "signature": "jiuBY1cNkqAqY3bBhTQZT5fXeD2br7zms6AVLUae18u9ZGhw6viv5LxdXCaXmFZG7ubxZy9b7h1UUNZn1F2bgJS",
+    "buyer": "H13rf7mRdQzMKreBS5GzNNbZJNEsFWeGqJpxmM9StBMd",
     "amountIn": "1200000000",
     "baseOut": "51802878536332",
     "dQuoteReserve": "1188000000",
@@ -93,11 +93,11 @@
     "dTotalProtocolQuoteFee": "2400000",
     "quoteReserveAfter": "8118000000",
     "sqrtPriceAfter": "89709569072845936",
-    "cu": 67860
+    "cu": 69360
   },
   {
     "label": "Q15: swap2 PartialFill completing buy",
-    "signature": "u5kU3uLKxKKPrtA8rfAf9nSFfxDr9boRj5qTsFeLs5nfvAwtrGPhMERzcE36m9WLS3LjtMqN61H1oVS8pbHuayP",
+    "signature": "4T7jRAkAPmVKRmLghrZYRZ1oPTmbep5W4V6ekt1CjqBqZEM3GpguacEG5jinL4bk4dTEznmqY8qCTuRGYffEkXj5",
     "amountInOffered": "2204040405",
     "consumed": "1901010103",
     "refundedToBuyer": "303030302",
@@ -106,7 +106,7 @@
     "dPartnerQuoteFee": "7604041",
     "dCreatorQuoteFee": "7604041",
     "dProtocolQuoteFee": "3802020",
-    "cu": 70763,
+    "cu": 73763,
     "amountIn": "2204040405"
   }
 ]

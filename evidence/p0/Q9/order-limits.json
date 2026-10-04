@@ -1,0 +1,74 @@
+{
+  "question": "Q9 — order limits (simulated; PDA as sender/owner/payer)",
+  "bitmap": {
+    "bidBin": -11920,
+    "binArrayIndex": "-171",
+    "needsBitmapExtension": false
+  },
+  "minimumOrderSize": [
+    {
+      "bins": 1,
+      "amount": "1",
+      "ok": true,
+      "code": null,
+      "cu": 40811,
+      "error": null
+    },
+    {
+      "bins": 1,
+      "amount": "10",
+      "ok": true,
+      "code": null,
+      "cu": 40811,
+      "error": null
+    },
+    {
+      "bins": 1,
+      "amount": "1000",
+      "ok": true,
+      "code": null,
+      "cu": 40811,
+      "error": null
+    },
+    {
+      "bins": 1,
+      "amount": "100000",
+      "ok": true,
+      "code": null,
+      "cu": 40811,
+      "error": null
+    },
+    {
+      "bins": 1,
+      "amount": "1000000",
+      "ok": true,
+      "code": null,
+      "cu": 40811,
+      "error": null
+    }
+  ],
+  "fiftyBinsAscending": {
+    "bins": 50,
+    "amount": "1000000",
+    "ok": true,
+    "code": null,
+    "cu": 70810,
+    "error": null
+  },
+  "fiftyBinsDescending": {
+    "bins": 50,
+    "amount": "1000000",
+    "ok": false,
+    "code": 6105,
+    "cu": 26405,
+    "error": "Program log: AnchorError thrown in programs/lb_clmm/src/instructions/limit_order/place_limit_order.rs:68. Error Code: InvalidPlaceLimitOrderParameters. Error Number: 6105. Error Message: Invalid place limit order parameters."
+  },
+  "fiftyOneBinsAscending": {
+    "bins": 51,
+    "amount": "1000000",
+    "ok": false,
+    "code": 6105,
+    "cu": 26442,
+    "error": "Program log: AnchorError thrown in programs/lb_clmm/src/instructions/limit_order/place_limit_order.rs:54. Error Code: InvalidPlaceLimitOrderParameters. Error Number: 6105. Error Message: Invalid place limit order parameters."
+  }
+}

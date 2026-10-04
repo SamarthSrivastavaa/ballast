@@ -73,10 +73,10 @@
     },
     "initSqrtPrice": "94019780972219157"
   },
-  "tokenAMint": "7NoidnT7ai8EWvrwbta8pFq8UJwVe8GhGParhRyau1Zh",
+  "tokenAMint": "7XTiMbNEgckXSdAXCQPFog3Fvzz6ummCjB2DEXjmsBC3",
   "tokenBMint": "So11111111111111111111111111111111111111112",
-  "tokenAVault": "Hnw1QiyS4Ue5SoWfiTQjDuwfPLoD5RBc1nxvpYKoKk59",
-  "tokenBVault": "HNFwwQwCADZuQiUyB4A3cJxCLgUSkM4s6Sa5czYYwXgD",
+  "tokenAVault": "Bi7LrHn9szJpiuwyHbs22pjw1isbauGaywAfUv2P7Mhj",
+  "tokenBVault": "4ELfNzakGEagxpGhSWGrkQ8CPMeJjuLPtYynsTkAXUVu",
   "whitelistedVault": "11111111111111111111111111111111",
   "padding0": [
     0,
@@ -130,7 +130,7 @@
   "sqrtMinPrice": "4295048016",
   "sqrtMaxPrice": "79226673521066979257578248091",
   "sqrtPrice": "94019780972219157",
-  "activationPoint": "1791120821",
+  "activationPoint": "1791122506",
   "activationType": 1,
   "poolStatus": 0,
   "tokenAFlag": 0,

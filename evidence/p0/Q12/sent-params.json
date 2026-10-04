@@ -39,7 +39,7 @@
     "creatorFeePercentage": 0
   },
   "migratedPoolFee": {
-    "collectFeeMode": 1,
+    "collectFeeMode": 0,
     "dynamicFee": 0,
     "poolFeeBps": 100
   },

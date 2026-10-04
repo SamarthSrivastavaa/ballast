@@ -1,16 +1,16 @@
 {
   "question": "Q1 — one migration_damm_v2 leaves partner and creator positions fully permanent; Q6 — NFT holders",
-  "migrationSignature": "e5fFrqGtCXipoyaWWF6caG1655RszjoakiViUgNsnodbej6GcfRq6EkYtWmJGupaBDzAKwvpwwt9iSYDM18irZF",
-  "migrationSlot": 75,
-  "readAtSlot": 75,
-  "sameSlot": true,
-  "migrationCu": 282844,
-  "dammPool": "3688yewcPD2z2cB4apoJLqmo8wY6MsAdDMhnf81L7TS2",
+  "migrationSignature": "48SiqAYmVg2Pxw9s3JxU192oov39Ch9kP3at7iCUujNkRS3BHRp7Qf62pcHfw4P769ujwNDyV1Cva8EVS4RQaA57",
+  "migrationSlot": 66,
+  "readAtSlot": 67,
+  "sameSlot": false,
+  "migrationCu": 290344,
+  "dammPool": "DhDN1sbzTEu2TgDD247jAEttkAXcabzD3bCdwxchra5e",
   "positions": {
     "first": {
-      "position": "4LpnPviaVNtZdnq8FwR5CsiDEdyG5Frk8x7tDzRjsiFz",
-      "nftHolder": "CmgpLyPyjF5sSei3xNL6CU15TN8ShfW2FtwpeWTLHMAU",
-      "pool": "3688yewcPD2z2cB4apoJLqmo8wY6MsAdDMhnf81L7TS2",
+      "position": "7eaJM5ko5toYyxhBRxkaidiZ2fCYtrE8dfKPPmSVbgys",
+      "nftHolder": "Eeh7Xw3VYLycLpkjXr66b4mFbyu25mjHkD2fcZ6LPQpV",
+      "pool": "DhDN1sbzTEu2TgDD247jAEttkAXcabzD3bCdwxchra5e",
       "unlockedLiquidity": "0",
       "vestedLiquidity": "0",
       "permanentLockedLiquidity": "15351107078789826053431780029213",
@@ -40,9 +40,9 @@
       }
     },
     "second": {
-      "position": "Fsgdn4LMECpEeCcm5T5DZrU69FeZNRJX7PsGAmYV9aDy",
-      "nftHolder": "9wXuLpHAERJ3sNajq8akLhGT2S4QVnEKUajs28Gspt9w",
-      "pool": "3688yewcPD2z2cB4apoJLqmo8wY6MsAdDMhnf81L7TS2",
+      "position": "7yuEy7A8x7s55goW9eMnVqxDpemtBzA6SQkHc6ybxCqP",
+      "nftHolder": "HxRY5JeRnwQVbDw5YRZxHUsjZxPdF33peEb4vsjq7kkh",
+      "pool": "DhDN1sbzTEu2TgDD247jAEttkAXcabzD3bCdwxchra5e",
       "unlockedLiquidity": "0",
       "vestedLiquidity": "0",
       "permanentLockedLiquidity": "15351107078789826053431780029213",
@@ -76,8 +76,8 @@
   "q6Holders": {
     "partnerAuthHoldsAnNft": true,
     "creatorAuthHoldsAnNft": true,
-    "partnerAuth": "9wXuLpHAERJ3sNajq8akLhGT2S4QVnEKUajs28Gspt9w",
-    "creatorAuth": "CmgpLyPyjF5sSei3xNL6CU15TN8ShfW2FtwpeWTLHMAU"
+    "partnerAuth": "HxRY5JeRnwQVbDw5YRZxHUsjZxPdF33peEb4vsjq7kkh",
+    "creatorAuth": "Eeh7Xw3VYLycLpkjXr66b4mFbyu25mjHkD2fcZ6LPQpV"
   },
   "poolLiquidity": "30702214157579652106863560058426",
   "poolPermanentLockLiquidity": "30702214157579652106863560058426",
@@ -345,7 +345,7 @@
     }
   ],
   "withdrawMigrationFeeBeforeMigration": {
-    "signature": "JFKpgeN7f6T7syXbcwcKh2vQz1CeJLRbP9aDWCU6hEf1HsEffPEXrazau3B1xoBdB7bo94ibb3i8ibC3tsnAu7h",
+    "signature": "dPisZueEfmkgxTdARmsobDvQbNEyDiNnFz1Yj2yBk6BSjGonyLopryqn9cJF9g54H5SjCBTmrq95ocuHuE91w4e",
     "succeeded": true,
     "err": null,
     "errorLog": [],

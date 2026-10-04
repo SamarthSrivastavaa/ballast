@@ -1,8 +1,8 @@
 {
   "question": "Q12 — exact PoolConfig layout and enum encodings for the deployed DBC",
-  "signature": "4WRdaMmy2pLtTfXCQEuRMN5FGWJLLzcazJBighP1hEcCKeZjE4geiBc4rS4gC2vhJDeK4pHqhuZtXhmQkryczGA6",
-  "slot": 106,
-  "config": "B64gZCtT2xYo98UkbNcVPazdmKLAL1yp6qf4oivRRm9o",
+  "signature": "2QW4NycnC4bf2WNmsdgFayizUAQoF9SN8XLGxkzRy1xoNA1sKQk4zHLaT4GrnT9EGs2kUSFfSqfdHApNqQMrBTeR",
+  "slot": 36,
+  "config": "4N2dJqcnJi2zSoNbG591m9VmEtbUR8ExDdJefqkbXp8c",
   "owner": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
   "ownerIsDbc": true,
   "dataLen": 1048,
@@ -25,14 +25,14 @@
     },
     {
       "field": "feeClaimer",
-      "sent": "EuhvV72Kfm6fuFuczGp863hTgBVu9Y38cQxW2rQ3iBVG",
-      "stored": "EuhvV72Kfm6fuFuczGp863hTgBVu9Y38cQxW2rQ3iBVG",
+      "sent": "Gtu5ak7GzSnxf1FNvTaPNr8gSTUid5UDK7mPEJtH1yJ7",
+      "stored": "Gtu5ak7GzSnxf1FNvTaPNr8gSTUid5UDK7mPEJtH1yJ7",
       "ok": true
     },
     {
       "field": "leftoverReceiver",
-      "sent": "EuhvV72Kfm6fuFuczGp863hTgBVu9Y38cQxW2rQ3iBVG",
-      "stored": "EuhvV72Kfm6fuFuczGp863hTgBVu9Y38cQxW2rQ3iBVG",
+      "sent": "Gtu5ak7GzSnxf1FNvTaPNr8gSTUid5UDK7mPEJtH1yJ7",
+      "stored": "Gtu5ak7GzSnxf1FNvTaPNr8gSTUid5UDK7mPEJtH1yJ7",
       "ok": true
     },
     {

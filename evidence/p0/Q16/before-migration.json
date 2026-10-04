@@ -1,6 +1,6 @@
 {
   "question": "Q16 (before migration) — withdraw_leftover from a third wallet",
-  "signature": "Ezxjm5Ao2mygej7xFN25jsepbtauZ154TMbJbLCSYcxH1hacDXFoPKQ4UhFoEXsFwmtRgsM5SvtiHBR33T1L8Fm",
+  "signature": "kDZAqQTJWUhJz1QeQjKJ8PCBZQMghtD7qcTY14yCTdcTJhaxiHnauJ73zTN5rejcum82EgXgn8BoDWDR9Yd5aUB",
   "refused": true,
   "err": {
     "InstructionError": [

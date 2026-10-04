@@ -1,19 +1,19 @@
 # Ballast — Status
 
-**Updated:** 4 Oct 2026 (STEP 3 resumed — Q2 unblocked by D-010; DLMM in progress) · **Deadline:** 13 Oct 2026 06:59 UTC · **We submit 11 Oct.**
+**Updated:** 4 Oct 2026 — **P0 GATE PASSED (Q1–Q5 all verified)** · **Deadline:** 13 Oct 2026 06:59 UTC · **We submit 11 Oct.**
 
 ## Current state
 
 | | |
 |---|---|
-| Phase | STEP 3 (P0 harness) resumed. **Q2 unblocked: D-010 approved 4 Oct** and applied to `config.ts` + spec. Now on Q5/Q8/Q9 (DLMM) |
+| Phase | STEP 3 (P0 harness): **P0 gate CLOSED.** Q5 verified on a clean one-ledger run. Program code is unblocked |
 | Last passed gate | **none** — no §18 gate attempted |
-| P0 gate (Q1–Q5) | **Q1 VERIFIED · Q2 FAILED as specified (correction tested, awaiting approval) · Q3 VERIFIED · Q4 VERIFIED · Q5 NOT RUN** |
-| Open UNKNOWNs | 9 of 20 (Q5, Q7–Q10, Q17–Q20); Q14/Q15 partial. Verified: Q1, Q3, Q4, Q6, Q11, Q12, Q13, Q16 |
+| P0 gate (Q1–Q5) | **ALL FIVE VERIFIED.** Q1 ✓ · Q2 ✓ (via D-010) · Q3 ✓ · Q4 ✓ · **Q5 ✓** (place 37,463 CU, fill persists, cancel returns unfilled + filled + fees exactly, order closed) |
+| Open UNKNOWNs | 6 of 20 (Q7, Q10, Q17–Q20); Q14/Q15 partial. Verified: Q1–Q6, Q8, Q9, Q11, Q12, Q13, Q16 |
 | Last commit | see `git log`; this field was stale. HEAD was `b408400` before this commit |
 | Program code | none (correct — gated). `crates/floor` is exempt: pure math, no network |
 | Floor engine | **done and proven:** 31 tests, 100k-case property gate, 10,010 differential matches (Rust = Python); builds for SBF under platform-tools rustc 1.79 |
-| Meteora | Full DBC → DAMM v2 graduation runs on the mainnet binaries: config, pool, creator → PDA, buys, PDA fee claims via CPI, migration, 40 DAMM swaps, leftover. DLMM not yet exercised |
+| Meteora | Full DBC → DAMM v2 → DLMM lifecycle runs on the mainnet binaries from **one clean ledger**: config, pool, creator → PDA, buys, PDA fee claims via CPI, migration, 40 DAMM swaps, leftover, LimitOrder pair by PDA via CPI, PDA bid placed, filled by a seller, cancelled with exact reconciliation |
 | Devnet SOL | not requested (STEP 3 runs locally; devnet comes 6 Oct) |
 | Mainnet | untouched. D-007: no spend without per-transaction approval |
 | Environment | `/home/hp/ballast` on ext4 in WSL Ubuntu (D-005). `source ~/.ballast-env` before every command |
@@ -71,8 +71,10 @@ pool. DBC numbers its enum {0 QuoteToken, 1 OutputToken, 2 Compounding}; DAMM's 
   accounts (`cargo test -p meteora-types`)
 - [x] Q12, (a), Q1, Q3, Q4, Q6, Q11, Q13, Q16 answered; Q14, Q15 mostly answered — see `DECISIONS.md` Top-20
 - [x] 4 mainnet accounts discovered by execution and pinned
-- [ ] Q2 authoritative re-run with the corrected value (after approval)
-- [ ] Q5, Q8, Q9 (DLMM LimitOrder pair, PDA place/cancel, fills, reconciliation)
+- [x] Q2 authoritative re-run with D-010's value — pool is DAMM OnlyB, constant L (clean ledger)
+- [x] **Q5, Q8, Q9** — LimitOrder pair created by `partner_auth` via CPI; PDA bid placed (37,463 CU);
+  seller fill persists; cancel returned filled base + unfilled quote + fees exactly and closed the
+  order (56,884 CU). Bin steps 1–50 accepted; bid-bin `initialize_bin_array` ≈ 199k CU
 - [ ] Q7 (separate wallet-creator run; plus an overshoot-capable curve for Q14 fee basis + Q15 surplus)
 - [ ] Q18 (approximate atomic redeem CU)
 - [ ] (b) migration at the minimum size; (c) Lite 100% permanent
@@ -81,11 +83,14 @@ pool. DBC numbers its enum {0 QuoteToken, 1 OutputToken, 2 Compounding}; DAMM's 
 
 ## Next task
 
-Q2 is unblocked (D-010 approved 4 Oct, applied to `config.ts` and the spec). Remaining:
-1. ~~Set `migratedCollectFeeMode = 0`~~ **done**; `[D-010]` markers applied to §7 and §8.
-2. Clean full re-run of q12 → proof-setup → proof-buy → proof-premigration → proof-migrate → proof-post.
-3. Build Q5 (DLMM): pair creation (Q8), PDA place/cancel via proxy, swap through, reconcile (Q9).
-4. Q7, (b)/(c), Q18, then the report's go/no-go and `/handoff`.
+**The P0 gate is closed — program code is unblocked.** Remaining P0-adjacent work, then the program:
+
+1. **Decide `OPEN QUESTION Q8-funding`** (DECISIONS.md): §6 has `register_launch` create the DLMM
+   pair in the registration transaction, but DLMM requires the funder to hold ≥ 1 base unit and
+   nobody does at that point. Recommendation: test option C (payer as funder) — a harness change.
+2. Q7 (wallet-creator `split_position`), Q18 (atomic redeem CU), (b)/(c) from the calendar.
+3. Then **program part 1** (§6): `initialize_global`, `create_class` (a negative test per §7 rule),
+   `register_launch`, `settle_graduation`, `burn_leftover`.
 
 Spec sections: Top-20 table, §7, §8, §9 (DLMM), §10, §26 (CU), §27 (bins).
 

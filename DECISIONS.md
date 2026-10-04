@@ -31,11 +31,11 @@ P0 = could invalidate the mechanism · P1 = could invalidate a subsystem · P2 =
 | 2 | **P0** | Is the migrated pool `collect_fee_mode = 1` (OnlyB), non-compounding, full range (`sqrt_min_price` = MIN, `sqrt_max_price` = MAX), and do swaps and fee claims leave `pool.liquidity` and position liquidity unchanged? | All unchanged; full range | **FAILED as specified → corrected by D-010; re-run pending** | `evidence/p0/Q2/result.json`, `Q2/characterization-quote-fee-mode.json` (`EnFm9JEm…Gznyq`) | §7's DBC value 1 = DBC OutputToken → DAMM BothToken (0). Constant L, full range, non-compounding all PASS. DBC value 0 (QuoteToken) → DAMM OnlyB (1), quote-only fees, L constant. See § OPEN DECISION Q2 |
 | 3 | **P0** | Does pool state satisfy `amount_A = L·(s_max − s)/(s·s_max)` and `amount_B = L·(s − s_min)/2^128` with Q64 sqrt prices? | Equal within ≤ 2 base units | VERIFIED | `evidence/p0/Q3/result.json` | At migration token_a/b_amount = formula +2/+1 (≤ 2). After 40 swaps +13/+10: rounding accrues to the pool |
 | 4 | **P0** | Can a Ballast PDA, as `fee_claimer`, CPI `withdraw_migration_fee` (partner), `claim_trading_fee`, `partner_withdraw_surplus`? What destination accounts are allowed? | Works; destinations are token accounts owned by the fee claimer | VERIFIED | `5nynW8so…zsjy6t` (withdraw_migration_fee pre-migration), `4H13Pbob…243ZtR` (claim_trading_fee), `3jwXnZZC…1Vm` (partner_withdraw_surplus), `4gba6qqd…mnBr` (claim_position_fee); `evidence/p0/Q4/` | All four work with the PDA signing via CPI. withdraw_migration_fee works BEFORE migration. claim_trading_fee and partner_withdraw_surplus accept a destination NOT owned by the fee claimer (vault PDA's ATA) |
-| 5 | **P0** | Can the PDA CPI DLMM `place_limit_order` (sender = owner = PDA, fresh keypair order account signing from the outer tx) and `cancel_limit_order`? Do fills stay filled? Does cancel return unfilled quote + filled base + fees? | Yes on all counts | UNKNOWN | | |
+| 5 | **P0** | Can the PDA CPI DLMM `place_limit_order` (sender = owner = PDA, fresh keypair order account signing from the outer tx) and `cancel_limit_order`? Do fills stay filled? Does cancel return unfilled quote + filled base + fees? | Yes on all counts | **VERIFIED** | place `5Uq5bU4t…tv6QX` (37,463 CU); seller fill `…` (76,550 CU); cancel `35Ndh9HH…Ve7M` (56,884 CU); `evidence/p0/Q5/result.json` | **Yes on all counts.** PDA as sender = owner = payer via CPI, fresh keypair order account signing the outer tx: place works. A seller swapping X→Y fills part of the bid; `fillsPersist: true` (a reverse swap cannot take the filled base back). Cancel returns filled base **and** unfilled quote **and** fees, exactly: receivedX 49,999,999,955,102 base units = the swapped amount; receivedY 665,419,702 = unfilled 665,214,646 + fees 205,056. Order account closed. **New finding:** cancel accepts a destination **not** owned by the order owner (sent to the vault PDA's accounts, no error) — same latitude Q4 found for the DBC claims |
 | 6 | P1 | Who owns the partner position NFT after migration (`fee_claimer`?), and can the PDA call `claim_position_fee` on it? | Owner = fee claimer | VERIFIED | `evidence/p0/Q1/result.json` (q6Holders), `Q2/result.json` | Partner NFT → fee_claimer (partner_auth); creator NFT → creator_auth. Both PDAs claimed position fees via CPI |
 | 7 | P1 | Can the creator `split_position` (or otherwise move) permanently locked liquidity into new positions? | Likely yes (owner-only endpoint) | UNKNOWN | | |
-| 8 | P1 | DLMM customizable permissionless pair: seeds, uniqueness, creator/operator powers (pool status); can the PDA create it via CPI? | Pair unique per (mints, bin step); no post-activation creator powers | UNKNOWN | | |
-| 9 | P1 | DLMM limits: allowed bin steps and base fee, activation, collect-fee mode, minimum order size, ≤ 50 bins, bitmap-extension needs around bin ids −11,000 to −12,000 | Feasible with bitmap extension | UNKNOWN | | |
+| 8 | P1 | DLMM customizable permissionless pair: seeds, uniqueness, creator/operator powers (pool status); can the PDA create it via CPI? | Pair unique per (mints, bin step); no post-activation creator powers | **VERIFIED — expectation wrong in two ways** | create `2SFhMVRh…kumh` (pair `3ce2fz6z…ErrK`, by `partner_auth` via CPI); `evidence/p0/Q8/` | PDA creates it via CPI: **yes**. **(i) Seeds are `[ILM_BASE, min(mintX,mintY), max(mintX,mintY)]` — no bin step**, so there is exactly ONE pair per mint pair, not one per (mints, bin step); a second pair at bin step 25 was refused. The bin step must be right first time. **(ii) The funder must already hold ≥ 1 base unit** or DLMM refuses with `6060 MissingTokenAmountAsTokenLaunchProof` (tested 0 → refused, 1 → accepted) — see § OPEN QUESTION Q8-funding, which affects `register_launch`. Creator powers: `set_pair_status_permissionless` refused `6043 InvalidPoolType` with `creator_pool_on_off_control = 0`, so **no post-activation creator powers** as hoped; `set_pair_status` needs a Meteora `operator` signer |
+| 9 | P1 | DLMM limits: allowed bin steps and base fee, activation, collect-fee mode, minimum order size, ≤ 50 bins, bitmap-extension needs around bin ids −11,000 to −12,000 | Feasible with bitmap extension | **VERIFIED** | `evidence/p0/Q9/pair-scans.json`, `Q9/order-limits.json` | **Feasible.** Bin steps 1, 2, 4, 5, 8, 10, 16, 20, 25, 50 all accepted for a customizable LimitOrder pair; §9's 10 bps works. Order limits probed by simulation at the §27 Proof bid bin −11,920 (minimum size, 50 vs 51 bins, ascending vs descending) — see `order-limits.json`. **Cost finding for §26:** `initialize_bin_array` for the bid bin costs **≈ 199,000 CU** on its own, which `open` must budget for (§26 allows 600k) |
 | 10 | P1 | Does Jupiter route to the fresh DLMM pair and DAMM v2 pool, and how fast? | Within hours | UNKNOWN | | *Mainnet-only — Jupiter does not route on devnet (§18)* |
 | 11 | P1 | Is the DBC base mint's freeze authority `None`? | None | VERIFIED | `evidence/p0/Q11/result.json` | Freeze authority None; mint authority None; supply 10^15 |
 | 12 | P1 | Exact `PoolConfig` / `VirtualPool` layouts for the deployed DBC version; enum encodings (`migration_fee_option` customizable, `collect_fee_mode`, `token_type`) | Match | VERIFIED | `4WRdaMmy…zGA6` (create_config); `evidence/p0/Q12/`; `cargo test -p meteora-types` | PoolConfig: owner DBC, disc 1a6c0e7b74e6812b, 1,048 B, version 0, all fields as sent; vendored = SDK on PoolConfig (167 fields), VirtualPool (60), DAMM Pool (307), Position (174). Enum finding: DBC migrated collect-fee enum ≠ DAMM enum (see Q2) |
@@ -72,6 +72,36 @@ P0 = could invalidate the mechanism · P1 = could invalidate a subsystem · P2 =
 | 18 | Split into `redeem` + `refresh_floor` with a minimum size |
 | 19 | Disclose |
 | 20 | — |
+
+---
+
+## OPEN QUESTION Q8-funding — `register_launch` cannot create the DLMM pair as §6 specifies
+
+**Found 4 Oct 2026 by STEP 3 (Q8). Needs a decision before `register_launch` is written.**
+
+DLMM refuses `initialize_customizable_permissionless_lb_pair` unless the **funder already holds at
+least 1 base unit** of the token: `6060 MissingTokenAmountAsTokenLaunchProof`
+(`initialize_customizable_permissionless_lb_pair.rs:284`). Measured: balance 0 → refused,
+balance 1 → accepted (`evidence/p0/Q8/result.json`, `funderMustHoldBaseToken`).
+
+§6 `register_launch` and §9 both say the pair is created **in the same transaction** as DBC pool
+creation and registration. At that moment `virtual_pool.quote_reserve == 0`, no trade has happened,
+and the entire fixed supply sits in the DBC pool's base vault — so `partner_auth` holds **zero**
+base and the pair creation reverts. Q8 only succeeded in the harness because that step runs against
+the already-graduated token, where the PDA had base on hand.
+
+The spec's own Q8 fallback ("create the pair in the same transaction as the DBC pool; accept any
+pair passing parameter checks") does not address this, so it is not a usable fallback here.
+
+Options, none yet chosen:
+
+| | Option | Cost |
+|---|---|---|
+| A | The launching creator seeds 1 base unit to `partner_auth` inside the registration transaction | Needs base before the curve has sold any. DBC mints the whole supply to its vault at pool creation, so there may be no source — **verify** whether the creator can hold any base at that point. |
+| B | Create the pair later, in `open` (after `burn_leftover`, when `partner_auth` has held leftover base) | Loses §9's "pair exists before trade 1" property and the front-running protection §26 cites; `open` gets bigger. Note leftover is *burned*, so the 1 unit must be retained deliberately. |
+| C | Create the pair at registration from a 1-unit balance the **payer** holds, with the payer as funder, then rely on the pair being permissionless | Changes who the pair creator is; Q8 shows the creator has no post-activation powers (`6043`), so this may cost nothing — **the cheapest option if it holds**. |
+
+Recommendation: test C first (it is a harness change, not a design change), then A. B is the fallback.
 
 ---
 

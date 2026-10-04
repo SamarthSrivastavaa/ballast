@@ -9,8 +9,8 @@
  *               the PDA cancels; balances reconciled against the order's own accounting
  */
 import BN from "bn.js";
-import { Keypair, PublicKey } from "@solana/web3.js";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
+import { createSyncNativeInstruction, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import DLMM, { binIdToBinArrayIndex, deriveBinArrayBitmapExtension, deriveCustomizablePermissionlessLbPair, isOverflowDefaultBinArrayBitmap } from "@meteora-ag/dlmm";
 import { conn, dumpAccount, payer, send, sendSdkTx, writeEvidence } from "../env";
 import { WSOL } from "../config";
@@ -194,10 +194,44 @@ export async function dlmmOrder(): Promise<void> {
   console.log({ minSize: minSize.map((m) => `${m.amount}:${m.ok ? "ok" : m.code}`), fiftyDesc, fifty, fiftyOne });
 
   // ---- Q5: place for real, by the PDA via CPI, fresh keypair order account signing outside ----
-  const bidAmount = 1_000_000_000n; // 1 SOL of the PDA's WSOL (migration fee + claims)
+  //
+  // Two preconditions that an earlier version of this step assumed and that do NOT hold on a
+  // clean ledger:
+  //
+  //  1. `place_limit_order` requires the owner's token accounts to exist. Filtering the SDK's
+  //     transaction down to DLMM instructions alone drops its ATA-creation instructions, and the
+  //     program then fails with `3012 AccountNotInitialized caused by account: user_token`.
+  //  2. `partner_auth` does not necessarily hold any WSOL. Q4 established that
+  //     `claim_trading_fee` and `partner_withdraw_surplus` accept a destination not owned by the
+  //     fee claimer, and this harness sends them to the *vault* PDA's ATA — so the migration fee
+  //     and the claims are not in `partner_auth`'s own ATA at all.
+  //
+  // Both are fixed explicitly rather than by un-filtering, so the placement transaction still
+  // contains exactly the one DLMM instruction whose CPI behaviour Q5 is about.
   const order = Keypair.generate();
-  const w0 = await tokenBalance(ata(WSOL, partner.address));
-  // Only the DLMM instruction: the PDA already holds WSOL, so the SDK's wrap/ATA helpers are not needed.
+  const partnerWsol = ata(WSOL, partner.address);
+  const partnerBase = ata(baseMint, partner.address);
+  await send("Q5: ensure partner_auth token accounts (quote in, base on fill)", [
+    ensureAtaIx(WSOL, partner.address),
+    ensureAtaIx(baseMint, partner.address),
+  ]);
+
+  // Size the bid to what the PDA actually holds; top up from the payer if it is short, and record
+  // that this top-up is harness funding, not a protocol flow.
+  const wantBid = 1_000_000_000n; // 1 SOL
+  const held = await tokenBalance(partnerWsol);
+  const toppedUp = held < wantBid ? wantBid - held : 0n;
+  if (toppedUp > 0n) {
+    await send("Q5: harness top-up of partner_auth WSOL (not a protocol flow)", [
+      SystemProgram.transfer({ fromPubkey: payer.publicKey, toPubkey: partnerWsol, lamports: Number(toppedUp) }),
+      createSyncNativeInstruction(partnerWsol),
+    ]);
+  }
+  const bidAmount = await tokenBalance(partnerWsol);
+  if (bidAmount === 0n) throw new Error("Q5: partner_auth holds no WSOL to bid with");
+  const w0 = bidAmount;
+  // Only the DLMM instruction, so the CPI under test is isolated; the accounts it needs were
+  // created above.
   const dlmmOnly = (tx: { instructions: import("@solana/web3.js").TransactionInstruction[] }) => tx.instructions.filter((ix) => ix.programId.equals(DLMM_ID));
   const placed = await sendWithPdasAlt("Q5: place_limit_order (PDA sender = owner = payer) via CPI", dlmmOnly(await placeTx([{ id: BID_BIN, amount: bidAmount }], order)), [partner], [order]);
   const w1 = await tokenBalance(ata(WSOL, partner.address));

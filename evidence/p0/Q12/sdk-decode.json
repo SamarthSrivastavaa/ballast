@@ -1,7 +1,7 @@
 {
   "quoteMint": "So11111111111111111111111111111111111111112",
-  "feeClaimer": "EuhvV72Kfm6fuFuczGp863hTgBVu9Y38cQxW2rQ3iBVG",
-  "leftoverReceiver": "EuhvV72Kfm6fuFuczGp863hTgBVu9Y38cQxW2rQ3iBVG",
+  "feeClaimer": "Gtu5ak7GzSnxf1FNvTaPNr8gSTUid5UDK7mPEJtH1yJ7",
+  "leftoverReceiver": "Gtu5ak7GzSnxf1FNvTaPNr8gSTUid5UDK7mPEJtH1yJ7",
   "poolFees": {
     "baseFee": {
       "cliffFeeNumerator": "10000000",
@@ -128,7 +128,7 @@
   },
   "preMigrationTokenSupply": "1000000000000000",
   "postMigrationTokenSupply": "1000000000000000",
-  "migratedCollectFeeMode": 1,
+  "migratedCollectFeeMode": 0,
   "migratedDynamicFee": 0,
   "migratedPoolFeeBps": 100,
   "migratedPoolBaseFeeMode": 0,
