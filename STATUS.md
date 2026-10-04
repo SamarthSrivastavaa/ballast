@@ -1,16 +1,16 @@
 # Ballast — Status
 
-**Updated:** 4 Oct 2026 (STEP 3 **STOPPED at Q2**, awaiting the owner's decision) · **Deadline:** 13 Oct 2026 06:59 UTC · **We submit 11 Oct.**
+**Updated:** 4 Oct 2026 (STEP 3 resumed — Q2 unblocked by D-010; DLMM in progress) · **Deadline:** 13 Oct 2026 06:59 UTC · **We submit 11 Oct.**
 
 ## Current state
 
 | | |
 |---|---|
-| Phase | STEP 3 (P0 harness) **STOPPED at Q2** per the P0 rule — `evidence/p0/REPORT.md`. **Needs the owner's decision** on the §7 collect-fee-mode correction |
+| Phase | STEP 3 (P0 harness) resumed. **Q2 unblocked: D-010 approved 4 Oct** and applied to `config.ts` + spec. Now on Q5/Q8/Q9 (DLMM) |
 | Last passed gate | **none** — no §18 gate attempted |
 | P0 gate (Q1–Q5) | **Q1 VERIFIED · Q2 FAILED as specified (correction tested, awaiting approval) · Q3 VERIFIED · Q4 VERIFIED · Q5 NOT RUN** |
 | Open UNKNOWNs | 9 of 20 (Q5, Q7–Q10, Q17–Q20); Q14/Q15 partial. Verified: Q1, Q3, Q4, Q6, Q11, Q12, Q13, Q16 |
-| Last commit | `35e7530` (STEP 2), on top of `c246a6d` (STEP 1). Tree clean |
+| Last commit | see `git log`; this field was stale. HEAD was `b408400` before this commit |
 | Program code | none (correct — gated). `crates/floor` is exempt: pure math, no network |
 | Floor engine | **done and proven:** 31 tests, 100k-case property gate, 10,010 differential matches (Rust = Python); builds for SBF under platform-tools rustc 1.79 |
 | Meteora | Full DBC → DAMM v2 graduation runs on the mainnet binaries: config, pool, creator → PDA, buys, PDA fee claims via CPI, migration, 40 DAMM swaps, leftover. DLMM not yet exercised |
@@ -81,9 +81,8 @@ pool. DBC numbers its enum {0 QuoteToken, 1 OutputToken, 2 Compounding}; DAMM's 
 
 ## Next task
 
-**Waiting on the owner:** approve (or reject) the Q2 correction. On approval:
-1. Set `migratedCollectFeeMode = 0` in `tests/integration/p0/src/config.ts`, and apply the §7 /
-   DECISIONS amendment with a `[D-010]` marker.
+Q2 is unblocked (D-010 approved 4 Oct, applied to `config.ts` and the spec). Remaining:
+1. ~~Set `migratedCollectFeeMode = 0`~~ **done**; `[D-010]` markers applied to §7 and §8.
 2. Clean full re-run of q12 → proof-setup → proof-buy → proof-premigration → proof-migrate → proof-post.
 3. Build Q5 (DLMM): pair creation (Q8), PDA place/cancel via proxy, swap through, reconcile (Q9).
 4. Q7, (b)/(c), Q18, then the report's go/no-go and `/handoff`.

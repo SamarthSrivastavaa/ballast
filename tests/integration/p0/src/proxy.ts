@@ -65,8 +65,9 @@ export function proxyIx(calls: ProxiedCall[]): TransactionInstruction {
   const parts: Buffer[] = [PROXY_DISC, u32(calls.length)];
   for (const c of calls) {
     for (const s of c.signers) {
-      const used = c.ix.keys.find((k) => k.pubkey.equals(s.address));
-      if (!used?.isSigner) throw new Error(`PDA ${s.address.toBase58()} is not a signer of this call`);
+      // A key can appear several times in one instruction; it must be a signer in at least one.
+      if (!c.ix.keys.some((k) => k.pubkey.equals(s.address) && k.isSigner))
+        throw new Error(`PDA ${s.address.toBase58()} is not a signer of this call`);
     }
     const program = add(c.ix.programId, false, false);
     const accts = c.ix.keys.map((k) => ({ i: add(k.pubkey, k.isSigner, k.isWritable), s: k.isSigner, w: k.isWritable }));

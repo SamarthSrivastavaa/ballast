@@ -135,3 +135,164 @@
 {"label":"Q2-fix: DAMM swap A→B","signature":"3aBiKtN17Yh3EgLaFPAvDLnLvFRayFKKxbfuMHPY2jxhJwxocJVdP99GJp2uS9cU3dy7h1jxWfbFtRuRqcjMRCiz","slot":731,"err":null,"cu":54054,"logLines":46}
 {"label":"Q2-fix: DAMM swap B→A","signature":"49ci579unmFcGE2EPXcE3ntgh5gmKAn4yqJw46bASovqiBsugM7XmomY7C4XpcEbLCNuvptJSrbmQ25K8VEBbHw4","slot":732,"err":null,"cu":57809,"logLines":52}
 {"label":"Q2-fix: DAMM swap A→B","signature":"4ZxEGVdoVwz53ReZGbmPvyHsWUaxVscbNL9s63t4R9QxF9xb7FMphyuYmWq7gdBWnzZ29vCMUDJg9oR8E4W2xnHH","slot":733,"err":null,"cu":54042,"logLines":46}
+{"label":"proof: create_config","signature":"tnuuBnX7t18QuaGDc9j7iiuVGFaZWTCQuYnS7AvCjXya55qvWHfiY2C6Kd6ABmHreyifX82NixQqdiprmNNAsH6","slot":71,"err":null,"cu":45145,"logLines":12}
+{"label":"proof: initialize_virtual_pool_with_spl_token","signature":"3JQa2LvhNfTr2S9WBcyWRVfRoUe6uivXpDAoqdYfKmgkHpH9PY62DEwpiK4txvRTTFEtST7JvsMkBEw82zwSaVuP","slot":72,"err":null,"cu":125028,"logLines":54}
+{"label":"proof: transfer_pool_creator → creator_auth PDA","signature":"4youwFy4yEV5ov3BFEvTu1mzLGVDTt3ArqjzqiqRDNUVfSdnJS5KdMoCBxN2LQJx21T21P4qVT44YtzdJFsiTPh5","slot":73,"err":null,"cu":5785,"logLines":7}
+{"label":"fund DLoTr4oc","signature":"2PiWxCEmxGPaUcMyrECDFziGAEPmc26ZWLwEsYWgQ8bfAFKJHHb367fMtCUPS4pBfEatgiQqkuvpjLv3miu1SU3a","slot":74,"err":null,"cu":150,"logLines":2}
+{"label":"fund FaCYHFJJ","signature":"4ni99iTNDH7Aywh5Ch9skmy5wiPFUqXby3eyRVhfMbWw99YSrVof3kQrZdmznyFXXeHpppcFvsR39n9U3LomEBFm","slot":75,"err":null,"cu":150,"logLines":2}
+{"label":"proof: buy 0","signature":"5QM7GWy6ZdxZyBNUaFT4qwtwSFpXBp7DUPneHsdummaZwB5iPKvut6pRjd5RTPZeNR3bRmnqEx3qgGo7BZgTRmEj","slot":79,"err":null,"cu":96277,"logLines":72}
+{"label":"proof: buy 1","signature":"37B1TiVp8N1Hmj3DT2hEcgJCR7jQqyHEi7HDU5jU7Mm6S8haXvyBa7jCVMgRrMZm2oPc8h7eRCakuLwbmkSBhzbE","slot":80,"err":null,"cu":89661,"logLines":72}
+{"label":"proof: buy 2","signature":"5UR9prXUBSoYDjSC8GukZqMfTYBC45g4VTkZh8io9TWuxDGQKMLRosjR57R6ELqNcu7f71PPLx1GzcDpXipKdpTa","slot":83,"err":null,"cu":91184,"logLines":72}
+{"label":"proof: buy 3","signature":"4x6APG1x5q3MDPoFMQFfpe9t38GJ8eMtk74uV9gbworSKmWYnki4SXapNpUEDzdvYAUxLMjXMzaBMTCf7wSLM2sZ","slot":84,"err":null,"cu":74468,"logLines":51}
+{"label":"proof: buy 4","signature":"pDp2Lku915fmMiwZ3S1kb2XHzfDXDpA8s79dK2MiJt8vmQoP8R7aU1mFrf8vV8E8um63xAhCegpnfAdy6USTEic","slot":85,"err":null,"cu":69371,"logLines":51}
+{"label":"proof: buy 5","signature":"5cvdJdtMwu3qgKEpYRZFzH36qhJUFBXooimxmLTawei4MLLZWuxrqLFReQ12L96iuL5pzKSaPMQHVyEpCDeVeeS7","slot":86,"err":null,"cu":67877,"logLines":51}
+{"label":"Q15: ExactIn buy overshooting ~3% (expect refusal)","signature":"QVAywLtgRyHjdsbPLB5ykNQmkZBDgFq97ZTSqoZs7Yeic4PPACvYfmwzyMWTUnkY5tH8J9xSZ7JwEkafu8hFDAy","slot":87,"err":{"InstructionError":[4,{"Custom":6033}]},"cu":44135,"logLines":34}
+{"label":"Q15: swap2 PartialFill completing buy (same oversized amount)","signature":"3p6rSca2jyLYZWPMDuNJdJtLhVBNc7nHhGaTzMHHPQtKB3bLoUgyruL1GD7Bfm53UK1kvxx1tbf329PnWY45DNDW","slot":88,"err":null,"cu":72263,"logLines":54}
+{"label":"proof: buy after completion (expect refusal)","signature":"6UGgwnNXxH18PT5Fgz9HZaNTEmnBx7JXMy2yuUGMXSrCaymSZNhACJ1Zy4BVz24SKTbCsJyFcRaM3MUgJ3AdMJt","slot":89,"err":{"InstructionError":[4,{"Custom":6013}]},"cu":39376,"logLines":34}
+{"label":"proof: create leftover_receiver base ATA","signature":"2MC1pqrszvRhbt1ZYUyLQMf6dGhKMTn3yGBwmMcQzzCtgaxhwbYsfhEvKTy5sEto3P2xEd7EgphReQU2LXPGnNiL","slot":91,"err":null,"cu":20446,"logLines":21}
+{"label":"Q16: withdraw_leftover before migration (third wallet)","signature":"2CWtH2zShYLhzu837VhvdhHDEz9Xf85BsReezE4yenTfmLWmbv4ghA1i56AQPdnkyFBtave9PhqGFomUBXHjuVXG","slot":92,"err":{"InstructionError":[0,{"Custom":6022}]},"cu":9779,"logLines":5}
+{"label":"create partner_auth WSOL ATA","signature":"2bHnYwczeowLJV8JdRG6cf5RauygkFLtaTtcBLr7peY22qPuedTBukezgtDscw66tjmnFe5xUJRyXpPsfrtLrHuB","slot":93,"err":null,"cu":19416,"logLines":21}
+{"label":"Q4: withdraw_migration_fee (partner) via PDA CPI, BEFORE migration","signature":"5PsH4X5pxtLE8vicYoNQjKsDccpGh7GLX4i6UftnQahT3bpzdEnRQ52PFE1iUnLCL9fwDsx6enkESroTxG5fPE3t","slot":94,"err":null,"cu":26431,"logLines":17}
+{"label":"Q1: migration_damm_v2 (top-level, SDK)","signature":"2eW8RZP6CiM5i2qdQWCTzXw9U55cumRxNT7vJk2YvtokM64dqYnM1CRdzikHBvqawbRBSgVyJdtUiE1JhKLihDvi","slot":95,"err":null,"cu":276844,"logLines":154}
+{"label":"ATAs for DLoTr4","signature":"2BdYysdRwFhXCseoVEzeSWncL5sC3bWkBo1waVJmWddEr4UCgotPWr2LgxVKwL9jip1jGXf1657LPTaW9mXQuXLp","slot":96,"err":null,"cu":8875,"logLines":8}
+{"label":"ATAs for FaCYHF","signature":"5EmzmAS4USntFRT59KsRRSahxPeCT1Hu7LPrBSAWjUy7w5VzybeLECRMPRzxXDgnQmvfVJCZm9dBvHAiQnraCCi6","slot":97,"err":null,"cu":45862,"logLines":42}
+{"label":"ATAs for ACb5xC","signature":"iR6gwZXPsJeQY8XdiUG7wtFJJ4TrtpSr6C5FbPdzoJdtCrW15GSKQre7WczitzvJmtpshqLjjvoiSEGTqhtSgsa","slot":98,"err":null,"cu":42862,"logLines":42}
+{"label":"trader ATAs","signature":"fVpEmQ6vUjA9pc8rg7PiyvzR9tPaLHLg4norRwK4Vs1cdWxq8f2ZpKfUXH6NGLKiMg1V93A4wg9TBughfk2JXHQ","slot":100,"err":null,"cu":39862,"logLines":42}
+{"label":"Q2: DAMM swap B→A #0","signature":"5FPAECLbx5P2oY1DJHU3czHMEougb3ihB6DZ6AVyt5ZfyFKpeoPKMj1Xvks92BsjKaQUYf9dwBuwwXTQLVFU3CnE","slot":101,"err":null,"cu":41325,"logLines":35}
+{"label":"Q2: DAMM swap A→B #0","signature":"YvyJ8HtQgXAgyxGs6DMbqZBDwtNvCEHYKQFgzb6xyLVqEg2c5ZAnW6jXrrkzL2orPBA6z6Yq6Mhk2yGWDKyFzGo","slot":102,"err":null,"cu":52548,"logLines":46}
+{"label":"Q2: DAMM swap B→A #1","signature":"bibCqG63B5ZxjU2sEcindtZ2wb5TbN4bneU77B434x2u8Qn4tuz4RTGSi8Jezhp6C6ZbNdY7a2zkQjD6jdSksrQ","slot":104,"err":null,"cu":56308,"logLines":52}
+{"label":"Q2: DAMM swap A→B #1","signature":"5drCX2mKue18MvWqa2gszXcGdw3RJS1JEYhnoTiYWCUDtD6SQqDHdJy8X7MtMavyMVvDN6L6Kt3EksULC4jMMoSC","slot":105,"err":null,"cu":52537,"logLines":46}
+{"label":"Q2: DAMM swap B→A #2","signature":"2E2pjtNL7ZihHRPmSMU3Tnri2gTAegPTrKbB12FvESAjexHXLadsxALevYPEcG1qntfsitpFF4QFNoaXHP3YjpPn","slot":106,"err":null,"cu":56309,"logLines":52}
+{"label":"Q2: DAMM swap A→B #2","signature":"pERP2PFsPYMAAX8bRp5HfnUcbLZ9EYBZYANNnx1rrrLnQ9GVcW3tzwMGptrXuUEdf2PeyshpfTJxD2Vqq2jpgm3","slot":107,"err":null,"cu":52535,"logLines":46}
+{"label":"Q2: DAMM swap B→A #3","signature":"5ZN5gUZazSjH3NqbiYoPfhcUYAU5LD2KmVjb88Wi843mWo1fPhjZWpJb5wPZBinwGfMvbCYJMZLPcEjpjcxG3gd3","slot":108,"err":null,"cu":56305,"logLines":52}
+{"label":"Q2: DAMM swap A→B #3","signature":"4wpPBb8kxq2FjxPGbFBCdvQ8gm9Pr29uEx9p5DS3QfgNH4oaVZP4kY6ixoWtv77EoHT1dE5UdGgt4yjqyUKAwN5g","slot":109,"err":null,"cu":52535,"logLines":46}
+{"label":"Q2: DAMM swap B→A #4","signature":"5SQNc7g8qHHEgDWnGVeAxe1GAZuSg4eN3kpZRT7SJNj7pvMR4iSTqtN9PDoBnvwjiAyVJvmhYBvmHHGCjYdW5yLm","slot":110,"err":null,"cu":56309,"logLines":52}
+{"label":"Q2: DAMM swap A→B #4","signature":"YHzY2YQeY4KjAhJn2Ah1r9GZXoixxNZZ3fnKizFPFrbpk66zYsmMFCP9z1KnmaLbiRS34eg4WCb8ex5KaK527FZ","slot":111,"err":null,"cu":52542,"logLines":46}
+{"label":"Q2: DAMM swap B→A #5","signature":"5saBPHR4ybSWu8HT9XbGZSXN36R4iwVGCo8yLiEV6CkGxEt1Rx1Ac9JV6oGHCiKaSPJvuVzDwPAhz3ekE8hyaof6","slot":113,"err":null,"cu":56310,"logLines":52}
+{"label":"Q2: DAMM swap A→B #5","signature":"55v3JnCorULiXXdnyn4eqTcR9Pt4o7v6c77wyypun8vZpvaFGmnFBYUqMZcariibW6Mc7rB2b6Dsc3gb75A3cBLL","slot":114,"err":null,"cu":52536,"logLines":46}
+{"label":"Q2: DAMM swap B→A #6","signature":"CBUrHJBt5D68KL19V8X5RQPp9RPDjcmeZEDTuenCBKoSgcZR3vCxemNUQzVyp4d4a1PNz39xoUHCt7KJCXdE4ds","slot":115,"err":null,"cu":56311,"logLines":52}
+{"label":"Q2: DAMM swap A→B #6","signature":"XQXX3NC9RaRYAVXPu81pJxSybP2cHMxGhornDEkA4TZC1BVS1gmE9QE3o4DqnNnbimcZQdBSpSfNCfeFXrJ51Kh","slot":116,"err":null,"cu":52544,"logLines":46}
+{"label":"Q2: DAMM swap B→A #7","signature":"4AF2ajozzysz1hJ1mmTnnEm2YMChpsgJfH477NnVdpNgHHG35BEvTUNdqQV6HGxfUV6Ld2UeJ1wn7XDRY9A8aK8z","slot":117,"err":null,"cu":56308,"logLines":52}
+{"label":"Q2: DAMM swap A→B #7","signature":"7qPBdULV2v6QpsUCagoMFLG3fkfZLdpkmVgPwTWdjEiFduSpwK8hy2Xu4Qai2dtGLqMD2w4cQoH31yGgwJCUuF1","slot":118,"err":null,"cu":52538,"logLines":46}
+{"label":"Q2: DAMM swap B→A #8","signature":"8ytw4X2PJvprmtBkBf96GybjzvfGxZxLsWQmfafzqbDhvcZJNq7haVZ48CJMtyg4gt7nC2zxP7FLkce9jSDfqoB","slot":120,"err":null,"cu":56312,"logLines":52}
+{"label":"Q2: DAMM swap A→B #8","signature":"3C35shVDoRao8pkxrrPSpTtmmTmzbPxfiL1foBGXhoEJMVCCe48dyHKnCE8n26BCmQ9vdvpFx2AERztqQhvjV6HH","slot":122,"err":null,"cu":52536,"logLines":46}
+{"label":"Q2: DAMM swap B→A #9","signature":"49JHsr39kvTTndtQGJabJwoUC6TBGqT1vhnjNDHW9RJbao2TMEKJwkR9MfzLAAE7fxxTHNJfYoRvkyRzYpD3XGFj","slot":123,"err":null,"cu":56309,"logLines":52}
+{"label":"Q2: DAMM swap A→B #9","signature":"3zGK9k4nDdj8LdRTLWqqkyfw9KMezt8YytuWxvEiErL3xe8vfaPd5jFZJcubq5nqAdaHr1jftaetAwhYoMD1afzS","slot":124,"err":null,"cu":52545,"logLines":46}
+{"label":"Q2: DAMM swap B→A #10","signature":"64kAVY659YqdE5t9b7Gqowq895QF8UGdQ7sCegf9wJC99ymPyhE3x2VaXw5MgVEA7WgxFyNcrEDmsQHx6EKR7YKn","slot":125,"err":null,"cu":56311,"logLines":52}
+{"label":"Q2: DAMM swap A→B #10","signature":"5LXiz3eS2qr6NRHNH19stXvSXHmXHSmCmqkDJmCqEoZZVZgj47zfdcgusQC2oRVgZRoypBwiHnMH7FhhQ4cQgdde","slot":126,"err":null,"cu":52538,"logLines":46}
+{"label":"Q2: DAMM swap B→A #11","signature":"4fDfmLU2Phrx94k7Gf4cMMCraZttFqUqNPBQhRmKdnDKPU427BszXveEaJiD54zNSfRi176HyRb9XuonVD2VRWkJ","slot":127,"err":null,"cu":56308,"logLines":52}
+{"label":"Q2: DAMM swap A→B #11","signature":"3Qicv819YmLbeBmWxF5bUPC81dKi3N6fG2Us3SLng8VCE4bnQWL2giQuyjqsg7P7pJxTTpzL1RsApi8kRzQSg1M","slot":129,"err":null,"cu":52531,"logLines":46}
+{"label":"Q2: DAMM swap B→A #12","signature":"4CeLrRYy8w25ZgZZ23A4b5hKP9QkhUzgAsMdPF4EvxmDdxDnAyDbhU4iDHtMrMqMsFW8JuocuFk8PcBN9qgbNyiW","slot":130,"err":null,"cu":56309,"logLines":52}
+{"label":"Q2: DAMM swap A→B #12","signature":"2z6n5w9VK9of3peXPvavQ68e7Xwt1ihE98atcAtPxgDpLrHeAG74X3PfGzv3AVzXZerjNq4a8h2vi5bKymR9Fg9G","slot":131,"err":null,"cu":52538,"logLines":46}
+{"label":"Q2: DAMM swap B→A #13","signature":"8VQaf3VjnmBNjVk77zr2buC7xW3oF9Q7CUgQStvkeL8AcNijBVx9JVPgLcXmvksMz6muUhoiN5tfdSvJMw2kRH4","slot":132,"err":null,"cu":56312,"logLines":52}
+{"label":"Q2: DAMM swap A→B #13","signature":"5DDdneUw3K6KifwHRAvY3Y7a4Uq8AxnBRDHwV8uzHPKWC6ijLkuBBw9THMNAq4AW4Wtw1mz1m2oNZH8VJqEPteJ2","slot":133,"err":null,"cu":52543,"logLines":46}
+{"label":"Q2: DAMM swap B→A #14","signature":"4vrTtb7pCRvVsqvWfYbN7GMA4LaimfAWjrCXRiNCFyHHonaguwr2QP992Q42Q9x7Tnkg5bctbTA62RMvKmPgWvbf","slot":134,"err":null,"cu":56309,"logLines":52}
+{"label":"Q2: DAMM swap A→B #14","signature":"5ae7FP7XxZe5wCTQ96mi55GqayscxkndGhQcbcxCbVNsxzzFdTLXMaaeXN6Fw1APvrXdLcm7TirfZXXM3bnfaZ6w","slot":135,"err":null,"cu":52538,"logLines":46}
+{"label":"Q2: DAMM swap B→A #15","signature":"4gtdPDz59UidaqM917qCy5gJ26YYGnhDGgVpyRWyoUogtdEF4vtomyq3Q9XVP2Z1gQNwnRFXAkPmFafcyWTh8yzm","slot":136,"err":null,"cu":56310,"logLines":52}
+{"label":"Q2: DAMM swap A→B #15","signature":"54Zv3YHdGCji9ctdKGNgoLTkWYuXu1eG8kuc1mAD6vg3poeyGKkU1coCMWhLfVtF2TFPjVoaVKAyLpj36EtZkDcD","slot":137,"err":null,"cu":52542,"logLines":46}
+{"label":"Q2: DAMM swap B→A #16","signature":"5R9XuCKeFDFynMC2cH5hbPnrPxzRkXW7ACfWUgyoDjAJcje5kY2VeiH9EYP3971PQTNtzYFYocxBpLLm3YNgGvTB","slot":138,"err":null,"cu":56315,"logLines":52}
+{"label":"Q2: DAMM swap A→B #16","signature":"XsvAUrFXN3nfsZvJgjrNWw986HWu2KvbeSXFKoiVf6pG1nGvbn7QcB9QazbZsvTJM6EshSs26zJZCyqHjDx5ErF","slot":139,"err":null,"cu":52539,"logLines":46}
+{"label":"Q2: DAMM swap B→A #17","signature":"5h6E1YYAc2xSujATkJ3vpacVwayJ7emHBcrPZpiP6EbAmDZYRpFWNgfCvn6seuqtfUugQnwqMtY3Gqaimd7fYLVD","slot":140,"err":null,"cu":56304,"logLines":52}
+{"label":"Q2: DAMM swap A→B #17","signature":"4a2zFSmLqRsFUdJNKLfnkNsNafA37JGrdBuNxCtpGBHETZuBzWhSPL5C7S8e656mh5EGqHzGNTnsB93rYW6cXtU4","slot":141,"err":null,"cu":52548,"logLines":46}
+{"label":"Q2: DAMM swap B→A #18","signature":"4k5U1DXPCFyNVciQ5hkDy4hGPn4RcbRa68M5RDotU3wHVUCZ14E9WtC99bYPYks9A6XHMSzCtLrrQ5vXxoVp89nq","slot":142,"err":null,"cu":56307,"logLines":52}
+{"label":"Q2: DAMM swap A→B #18","signature":"5oqAavXtwUZT3FPTvFKmeeKBWJftNecqKd64kKBBK6vVLHFcDNqD3fM7FkgChMf7a73iTUY3rwvCA3pfvMin7ffv","slot":143,"err":null,"cu":52543,"logLines":46}
+{"label":"Q2: DAMM swap B→A #19","signature":"26C2mDWTJekBmmwLXTVxbf8FGWp2dw5z2bLgSR8jn7YiwQMuVYsNLFjAsg2jDxcBiZQiWMNJZUTbjKjWNncMLj6i","slot":144,"err":null,"cu":56305,"logLines":52}
+{"label":"Q2: DAMM swap A→B #19","signature":"2khY2Bxf9hGMHq7A84mWH8y2SZ2vTcNtEhDRLYtwgdfENSrtUtd3sWiFqfUsdnigcaa9JTM95J8wHrwap6ZjeQRr","slot":145,"err":null,"cu":52540,"logLines":46}
+{"label":"Q4/Q6: claim_position_fee (partner position) via partner_auth CPI","signature":"2jf8rNF2YBgSZ46pHCwdRwWJB1XCmrZQZr7GWXgparKaCHmRf2yRbKCkSPED5VXHr5fQf1TniAkkuenyoh3tTs3K","slot":146,"err":null,"cu":36083,"logLines":17}
+{"label":"Q2: claim_position_fee (creator position) via creator_auth CPI","signature":"2YFi1cmNm9ywZg9TS8Xg351symxfMFMt8dt5RpBNtoHQa7LQ6GH5dcXoKSS9n6iLQMMTJ3EiTSNyE6kRvCQMPaAJ","slot":147,"err":null,"cu":36085,"logLines":17}
+{"label":"Q4: claim_trading_fee via partner_auth → destination NOT owned by fee claimer (vault PDA)","signature":"GZM9nYCkL8widVoJ2VrbCLhwV2cMa5YGuVApagnoBh44pSu6sK1VcGNNGGtNaFZfgbUXwCCmbehR8RBomvPSLky","slot":148,"err":null,"cu":33042,"logLines":17}
+{"label":"Q4: partner_withdraw_surplus via partner_auth → vault PDA ATA","signature":"3R4Co4uu2fgJDfPwnH4MKHjkqevm1ohHSA5iSnWr356iXeswth4Yd3SkhSzQMjYhoP53hGv76v7bDqwJTKK3JVxM","slot":149,"err":null,"cu":26502,"logLines":17}
+{"label":"third wallet base ATA","signature":"GR7vrE7wqYwCdGraQ9CzZMnfaedV934tNHCjczazZr5Nki59FJtsUGGo3HeaMqs3EdEP6T3nkhzw9DZ8wrE1f2E","slot":150,"err":null,"cu":23446,"logLines":21}
+{"label":"Q16: withdraw_leftover (third wallet) → third wallet's own ATA (expect refusal)","signature":"3WPgmTn2MpiFvR3Qix2Kutw8imjiz7BZvtwMzWnGWLotmdaPYG6N3YnXzzssw3zirSuh8JgkHKS8svaWjqR84nX8","slot":151,"err":{"InstructionError":[0,{"Custom":2015}]},"cu":7922,"logLines":9}
+{"label":"Q16: withdraw_leftover (third wallet) → leftover_receiver ATA","signature":"2NG8zYe5BKbxsdyDWyBZPpUEGcNQQLXhCvaPkXet6RKoq7YuqcxGzcGStqtkzVbjuZx844WrzzUeHARHPr53Mu8a","slot":152,"err":null,"cu":19189,"logLines":11}
+{"label":"dlmm scout ATAs (base ATA left empty)","signature":"46Hwp3UbipRyCThqn8GToz7vvkpBgjCbrjJdFxu6QmQayTZiZydoSjFMuTfHLiubCLfVz3PwVRNw6xu8zwz7wvUC","slot":185,"err":null,"cu":41362,"logLines":42}
+{"label":"dlmm scout ATAs (base ATA left empty)","signature":"3Cw4SWjHs6sq972cRbdpzDBGEWqstC9LPAsyEdiFFQeGyNM5rFh729DfVRmNjEjnD1L3o9AAM5Gxx9yB7EQnSkRn","slot":261,"err":null,"cu":10375,"logLines":8}
+{"label":"dlmm scout: top up base to 1","signature":"WvjJzLurN1nfy7fh12TYupsLu9G7UxMfQYufwYcfTxdGBQr7SqBeczBwJsS2AaYyiMDLCWV9Q1CU1j54vyJfuqY","slot":262,"err":null,"cu":4645,"logLines":4}
+{"label":"proof: create_config","signature":"T8hTe7PYoqJguvbeTSqiFC4UBNFvHftF1N8sdGmfwDrjjRm4MUn9A52ArKzyJ7QuXJ5PiPG1tSwFmt15tnBL6Hx","slot":51,"err":null,"cu":45145,"logLines":12}
+{"label":"proof: initialize_virtual_pool_with_spl_token","signature":"4wYsfuUQYUN9cacLs8AcuJrBninqW3NDZiX49A5zhFgS1B1aTwTCZEbBYA8m4vwkfFdJzGN5KFdFfYotbGGvQhiJ","slot":52,"err":null,"cu":117528,"logLines":54}
+{"label":"proof: transfer_pool_creator → creator_auth PDA","signature":"4rXqnDU7rS36ERr9GAD4iB8JYsBNE9p9ycVJ8mCZ3au3vZT1AZdrk4Vy3infmPruxb98ygJuvysV7yTDBGtARTo4","slot":53,"err":null,"cu":5785,"logLines":7}
+{"label":"fund 9wXuLpHA","signature":"47vnMaagNrZD1suPyABtJ3qCJ5nRktLxbBD8d5yuwveojDsqVTfg4HX4NEGWzTt4oQch2kiQEwxVumrzbiob8rJE","slot":54,"err":null,"cu":150,"logLines":2}
+{"label":"fund CmgpLyPy","signature":"3i75mwbVXwGEer924Dgv8dCATrVUdAtx2jFFxZUbqj1N23qCkDfchzrs6suzRNAnNXYFqJxvAwPbgh4aXP5aqo5U","slot":55,"err":null,"cu":150,"logLines":2}
+{"label":"proof: buy 0","signature":"3hLJw8tBz8hRRM6om2S8w8wUGdVUkLjHYh1swgHm1qefxU8YEGRhR8twGqHD69L5YNsa3t5MFBTfaWcaCsuZUULt","slot":59,"err":null,"cu":93260,"logLines":72}
+{"label":"proof: buy 1","signature":"9DBE7AXyZU9iz1jRWey7jKPsg3MptTzN859y7yERZhBMLayTM9J9deJzyc6Bb6uoXe1YSFdVsBeAPegwV9pc6c6","slot":60,"err":null,"cu":89661,"logLines":72}
+{"label":"proof: buy 2","signature":"rKkS9Ti9dHyNEjb3jxDA2MDdA8Q1K3zrXKdr6mvRcP8uZSHNAZHxd3B751HYiiF6LcZ9oks8a93zwQhATSWYk4E","slot":61,"err":null,"cu":88167,"logLines":72}
+{"label":"proof: buy 3","signature":"54bU3PsaGskvbb2ocqMn9z3P4eSTq26LdRwA6cjiLeWXzs1SgTSiUcELrbuZKFHcEQySFvrJWMvKG9yCMJDj5Lnp","slot":62,"err":null,"cu":72951,"logLines":51}
+{"label":"proof: buy 4","signature":"uRqM7RfZMXVnya5q72ZhAyaQPqp2bwcT2RgTesKnArWiSWtgScMKRK1ED2cEXy246gNjRSWRJ28zsdsCC8Po2pB","slot":63,"err":null,"cu":67871,"logLines":51}
+{"label":"proof: buy 5","signature":"5Z3dKdoJ8XNpaFr2FgqY1BpYj4L44sJPcHgd49cnRQovPNj1FJfKEMWkEhuZaMSannoGnmw72u45AEEb5FvQ5jsP","slot":64,"err":null,"cu":67860,"logLines":51}
+{"label":"Q15: ExactIn buy overshooting ~3% (expect refusal)","signature":"2uJo5ouYUHjNaNi7F6dcQhSKrYc4U9C6KTBbWSw5sUVpnRAJhs5sbwo6ApX1M4sqcAGdi4SZhpVrDdXYQLDC31B4","slot":66,"err":{"InstructionError":[4,{"Custom":6033}]},"cu":42618,"logLines":34}
+{"label":"Q15: swap2 PartialFill completing buy (same oversized amount)","signature":"u5kU3uLKxKKPrtA8rfAf9nSFfxDr9boRj5qTsFeLs5nfvAwtrGPhMERzcE36m9WLS3LjtMqN61H1oVS8pbHuayP","slot":67,"err":null,"cu":70763,"logLines":54}
+{"label":"proof: buy after completion (expect refusal)","signature":"5WDDfoNfDDXXTERybGosj11t3tT9tptRwvnckrjwyGXzkPr3fKqYVfFrs4HxWkJW6XQsJQd3A8Xbk6GgppExLfNh","slot":68,"err":{"InstructionError":[4,{"Custom":6013}]},"cu":37859,"logLines":34}
+{"label":"proof: create leftover_receiver base ATA","signature":"5NyyaqrM7udmbfmJxVApXePSgmn7nvLaeJnZwKGipfg2m42GAj9kAi7xZLyZjjrxXgBJoiTVBXzULoTXx3yYeQPJ","slot":70,"err":null,"cu":27946,"logLines":21}
+{"label":"Q16: withdraw_leftover before migration (third wallet)","signature":"Ezxjm5Ao2mygej7xFN25jsepbtauZ154TMbJbLCSYcxH1hacDXFoPKQ4UhFoEXsFwmtRgsM5SvtiHBR33T1L8Fm","slot":71,"err":{"InstructionError":[0,{"Custom":6022}]},"cu":17279,"logLines":5}
+{"label":"create partner_auth WSOL ATA","signature":"5W1VfMkT5b6fvQaPWdx7LuHbfnRxRsTFVbVndH5Q858pCVZ87gRfpWYqJ5BUEhjbGAQe5Njni1SZ5kUwWdhwJFeY","slot":73,"err":null,"cu":19416,"logLines":21}
+{"label":"Q4: withdraw_migration_fee (partner) via PDA CPI, BEFORE migration","signature":"JFKpgeN7f6T7syXbcwcKh2vQz1CeJLRbP9aDWCU6hEf1HsEffPEXrazau3B1xoBdB7bo94ibb3i8ibC3tsnAu7h","slot":74,"err":null,"cu":26431,"logLines":17}
+{"label":"Q1: migration_damm_v2 (top-level, SDK)","signature":"e5fFrqGtCXipoyaWWF6caG1655RszjoakiViUgNsnodbej6GcfRq6EkYtWmJGupaBDzAKwvpwwt9iSYDM18irZF","slot":75,"err":null,"cu":282844,"logLines":154}
+{"label":"ATAs for 9wXuLp","signature":"2R9sr9CVRxpiABZvJ3BjAx3nLski5R4wW3WYG2QodgjuvRUqxCtcjo7GBezVAp7uxzFe1rVXssV3ZXMarXv3K4CD","slot":76,"err":null,"cu":16375,"logLines":8}
+{"label":"ATAs for CmgpLy","signature":"4KDUi3dcxV1Tamsmo296CyVx1JUN6ZrRmyGZcqBXcebJwuXMR8apxMegKdbcKj4QNCNACkaazy4Sj4hwHrhWZoea","slot":77,"err":null,"cu":39862,"logLines":42}
+{"label":"ATAs for CBSgtj","signature":"Hdw81TCZLRKt9PaX4AWtX4W36us2AVdsHjaFpt3aqEHY3yZdUR3X5u8eMoszbvXXNk7QimoMniFmraw5yU9vxag","slot":78,"err":null,"cu":41362,"logLines":42}
+{"label":"trader ATAs","signature":"2zX4bVSnzFodvBGTha9hRKwkQSMPZRhLFwr6v43BDHKYb6aV3oNejrJZkaNv1YA17H3PFGVpNQa86kbvC5MDwNq9","slot":80,"err":null,"cu":41362,"logLines":42}
+{"label":"Q2: DAMM swap B→A #0","signature":"4gzKmeHhvNLVANF4d3kNGFVb1FsVFpX4Q4UpBV2S11eGoSNEjniwCkFJVM6kvWvY3qELKPYZAdBMsim6dhbg82me","slot":81,"err":null,"cu":42825,"logLines":35}
+{"label":"Q2: DAMM swap A→B #0","signature":"4SThS5EYcjvoV8sS7ymSbjuRsjsUwaDUBTpFUm2n7TFbVrxZJiBokjUtWfrWroqZ34K8MpGNCsMxXjggpu9YipjC","slot":82,"err":null,"cu":54048,"logLines":46}
+{"label":"Q2: DAMM swap B→A #1","signature":"C4iQrMWEzF62uocmhQh6sLV5SBC3xoPpbTug3egCdWxgRuCDypkc8eH5pJBoyk75GSech9Bi19GtmYFNpsSEUhQ","slot":83,"err":null,"cu":57808,"logLines":52}
+{"label":"Q2: DAMM swap A→B #1","signature":"2ozNuePthpsChr45epYQmHLAjcLd6nnx4rEq1hr8e5751mVMbop9UPeXt1avsS7Z2VWNdvUJegT3yYY75EdajAiM","slot":84,"err":null,"cu":54037,"logLines":46}
+{"label":"Q2: DAMM swap B→A #2","signature":"5sc6CQrW9nY6MuKpyt3XDky9m6yzCDESnSNe9RndfhozcS5GuGS8VJSantg819TSF9hnBqk3DtEZL4EWysTbj4vj","slot":85,"err":null,"cu":57809,"logLines":52}
+{"label":"Q2: DAMM swap A→B #2","signature":"61VwDHHvEjM6vwbdjxNNq7K3duhrdjkMjurWzuxGLAjhucw75iQufkZvWhfxz5ZgJMrwDcYuvffVNZztg249yKoz","slot":86,"err":null,"cu":54035,"logLines":46}
+{"label":"Q2: DAMM swap B→A #3","signature":"5ecGs4ZBfR2ECCnNi4LqXpkhFBKQww6bfDCgQN3tfPpWq6Dkw7Z5yvjVqxq3fzkqa7vEcQjRmb8qcVHWwza356WZ","slot":87,"err":null,"cu":57805,"logLines":52}
+{"label":"Q2: DAMM swap A→B #3","signature":"wPW35QGJXe3C5YENoy38FJwaFZHUnD3mJ2567PV3nQwaRZWzab6BjuPY3k6Xd3wF8PjhCc1Y4ndfBtpHNbJAs5Z","slot":88,"err":null,"cu":54035,"logLines":46}
+{"label":"Q2: DAMM swap B→A #4","signature":"3p6ksfTHciAtf3QtqxVjB9Y4wKVvUBiwdm9FLeBSGRVLZN2M3RZ5PVMr7HxWPfhNh9DmkkXr9cwBjeJfed3txeBA","slot":89,"err":null,"cu":57809,"logLines":52}
+{"label":"Q2: DAMM swap A→B #4","signature":"DNvbr4wo7Wq6ndT48kgazvuhGZcn3wn8xHgpzHkXkM7Wg1RMpXwHAeSYyUzzhPouE4Bc2Ddox5t4he8ACzQpBXt","slot":90,"err":null,"cu":54042,"logLines":46}
+{"label":"Q2: DAMM swap B→A #5","signature":"YqsFbwaMYLcFrjVwN4cnRzXhjpdLDuhqUtkDyxga1yku22A1MzsQjCXxaeMqd6h4KEPSzK9XZtSx11kknYcT18M","slot":91,"err":null,"cu":57810,"logLines":52}
+{"label":"Q2: DAMM swap A→B #5","signature":"2Lqz7K8YqtY6d9EFyx6XNoT33hd3fdQw754KxecGGn4LoT35r7oobZt5Lte2yu4EpFFkdUKYs6kJ9dG8t2aFgZvs","slot":92,"err":null,"cu":54036,"logLines":46}
+{"label":"Q2: DAMM swap B→A #6","signature":"3u9yNCddLKuf9wqrKGSaRSnvMM1euYqUb6c18Z8xRQDGjnSGgMXupgAqYHrx9zEzqzSGJFYYrPTscbQQw2kbjaMC","slot":93,"err":null,"cu":57811,"logLines":52}
+{"label":"Q2: DAMM swap A→B #6","signature":"4Lc9HoA3nLiDfVAxQekoVBtoJejDkyXmQUvqgwUK6ByZz6EZ6GQcKVEyZRdajaiANjGB4VdGq3yEFoFLEDveNhKS","slot":94,"err":null,"cu":54044,"logLines":46}
+{"label":"Q2: DAMM swap B→A #7","signature":"ocucWUB2znKZuRpWBkwCttuY54t6MfmyfRq3mp3K1dR66Y1Up8sAm4bt1bGSaiGe7wVXZmt4Q2qeSpRCcEJTFGm","slot":95,"err":null,"cu":57808,"logLines":52}
+{"label":"Q2: DAMM swap A→B #7","signature":"4VYYvgm9EcbBnmaAxNBJTUxF3tZ1MGvM6A3AXwAxHAFF3n3Qq4CYtQaGR2SNij1JNzHCk6PDBPRFn8DTUc4XJtmu","slot":96,"err":null,"cu":54038,"logLines":46}
+{"label":"Q2: DAMM swap B→A #8","signature":"2uAeZpo3DNap5vpEiVJJbb9522NV4emrHZBNPNqEfRJ8kwUDXRdZt4TTX9LcvahZwFCohm68bsYq2zhPijq6PZbM","slot":97,"err":null,"cu":57812,"logLines":52}
+{"label":"Q2: DAMM swap A→B #8","signature":"4y1rN2bC1vWkd7awAJoXs9rUtRHrZpYtqjveY4GVDNCoxZArEuSuWFDmq1yAtvJjMAYwRPKVYQZfYRehtuF1LGD4","slot":98,"err":null,"cu":54036,"logLines":46}
+{"label":"Q2: DAMM swap B→A #9","signature":"24PusEhsa9Q7BSvcyMXe53bALfZPsJ98y4zFm8VQ1zaf8Lov2QnXi5RhcUL5d4GK9gczYzRrz74puJdA3piSpg6g","slot":99,"err":null,"cu":57809,"logLines":52}
+{"label":"Q2: DAMM swap A→B #9","signature":"4iaDcgHnAF7DrKTdA7iBSGeRnbvQ5pf4HdGpuKfRGkiMdv88YbPxTRcy6YFrmKCdQG6uv3PSkWD1av13hbED4NUR","slot":100,"err":null,"cu":54045,"logLines":46}
+{"label":"Q2: DAMM swap B→A #10","signature":"2W1h9j8u88EJtZW1vRsqfCqhjmkYRaNfQ12S1qwVdH4wahG2uENcNYpHV4CTLE2BWyiK6H4LDXCataANrWViyBcU","slot":101,"err":null,"cu":57811,"logLines":52}
+{"label":"Q2: DAMM swap A→B #10","signature":"2waufo7Hvm6ciBzC65KxfrQpL9kv5zRv3sgLdgJHN4T1LcXuXoxYZFwAEzsPAQGFzd1sR29nKgfue8xLwpXUBGhc","slot":102,"err":null,"cu":54038,"logLines":46}
+{"label":"Q2: DAMM swap B→A #11","signature":"437Lsj8hc5TTiMGoD42ivtcAckCvDSC6KKKWcpuRc5SYg5jKVjzsoTEJsgarXHCsLzQNJegaGMoE5ojcCgSsCMx9","slot":103,"err":null,"cu":57808,"logLines":52}
+{"label":"Q2: DAMM swap A→B #11","signature":"2PCyrrD9DCCWDeicDBTEKRsWuFPncfd4KAZihW9F2Hz67EEQSQEdyCvAvrjsa2xrpr2dGuEJyRmFjPgkwhE8rhn2","slot":104,"err":null,"cu":54031,"logLines":46}
+{"label":"Q2: DAMM swap B→A #12","signature":"4fjjX1pKNqteqYQiyzpPNVHUhP6WHwAGXxwGt9WpdgjBoGYvMpJ8fmGeBJW5EJ6oVkdeWLi7otmgeLA7vmjagDVL","slot":105,"err":null,"cu":57809,"logLines":52}
+{"label":"Q2: DAMM swap A→B #12","signature":"4bkWZRcFB4Gavsmzv6qqSVQGp79z7dpX7JxHEmFyCjwAyF2MHuR1G9noS3fSetcaWjcSgRs1NTuZfvoDP4BMrhGQ","slot":106,"err":null,"cu":54038,"logLines":46}
+{"label":"Q2: DAMM swap B→A #13","signature":"3jPUV2aRvFgMj87qh1Ab1UCsRZqgyxGbgt6oUX1AYSyh3QRCPScngaBmXT666TQ46NBDeHX7hALtAC7wa7AG26op","slot":107,"err":null,"cu":57812,"logLines":52}
+{"label":"Q2: DAMM swap A→B #13","signature":"3XsR9vxpLbJnAaR8d54zqjAtt7D6DygfcpsMhobdPhuddxgJYhLoSUV4R4ex8B7TMrx2G8iSKf5UZ6TDRcBLaDo","slot":108,"err":null,"cu":54043,"logLines":46}
+{"label":"Q2: DAMM swap B→A #14","signature":"TxGL7iHUbF6cy1ViM12N9k1TL3ehRqN1ycnoXi7ZGTPnBozUSgxXeGVbRwMAg1XuttDyczUNkEDxNjz6yr2g8yQ","slot":109,"err":null,"cu":57809,"logLines":52}
+{"label":"Q2: DAMM swap A→B #14","signature":"3efwcRUfj5h9f5VYxrTyQn1y1r1PVzeZgbGsdY221oQDFiDkF65aZk6VidHzzJXxEtNnFrDp8EpNf42tdjX3cELN","slot":110,"err":null,"cu":54038,"logLines":46}
+{"label":"Q2: DAMM swap B→A #15","signature":"4hX69fscMM9X8GNTaAdLmnXKB5jRQdnUoCFCdggUWuLM4gZVjB7TQtFRtTdBe5ARBhHaqookUtaorVzzZrKEdJau","slot":111,"err":null,"cu":57810,"logLines":52}
+{"label":"Q2: DAMM swap A→B #15","signature":"5FUupG8YU3iSArMGLw43oC8tF5mC9SHRicdXGjSTPvH6tocCLmU1fNxNbzRMNJ7mfJcwoJ54F9438ws2iVHBtHHQ","slot":112,"err":null,"cu":54042,"logLines":46}
+{"label":"Q2: DAMM swap B→A #16","signature":"5ci4r5ahHP2xG1cTZJBW86c2tuUs7BpkTmt8eRDsikzLJP4958SLf4ZtgwrC1Gcnzz4dgTgGhQPVgUKkcuGvWbaH","slot":113,"err":null,"cu":57815,"logLines":52}
+{"label":"Q2: DAMM swap A→B #16","signature":"464HfwgntDMjnY2tgdPq9RzL7HdTM6f9nWN9nUPebqcxqzLKMgr68zxkVV5Y5o5ehzjgcskVguhe7Y1mRY9yzKnb","slot":114,"err":null,"cu":54039,"logLines":46}
+{"label":"Q2: DAMM swap B→A #17","signature":"eKFDt3oUk1FibqF7mHEYg9fVXYY833y7ibtzn8STYeTGWm8b2eUx9ELF33M36UPn3mdyR4WLtFVDBXxzvWskJyv","slot":115,"err":null,"cu":57804,"logLines":52}
+{"label":"Q2: DAMM swap A→B #17","signature":"4EpnCxVET7f2UtfDSFXPBn12yjn7bwbhCjc7HCco3pVzwkhWarMPR9wzMKywqFmP9rtrWzH3foEE7jBCur1yWh63","slot":116,"err":null,"cu":54048,"logLines":46}
+{"label":"Q2: DAMM swap B→A #18","signature":"3vhgjbeVTFMYBA83KoQtcmnC8uj7UVUNb57bEtwfvmwJs4VkHhYkfwTsZzoJEGeKoVyhd95i3Vhm5WvcSXyvKk9K","slot":117,"err":null,"cu":57807,"logLines":52}
+{"label":"Q2: DAMM swap A→B #18","signature":"2NGguxcADwKVmnJ6xkRUugQNR5VdnnT4bFVceUhHM1PWmAm2NxYp9ga3YjFpeyp8uhCQD6TDxLGouHmtdDcHimev","slot":118,"err":null,"cu":54043,"logLines":46}
+{"label":"Q2: DAMM swap B→A #19","signature":"5zCRfXEDHy6CditbChjv6mV4zcP8MhQY8x4srJbrXu5ivWR6joLdGL27KV8CGe7AHXWLihxV9kGGDVUkP9Tqa4Ps","slot":119,"err":null,"cu":57805,"logLines":52}
+{"label":"Q2: DAMM swap A→B #19","signature":"QUPrTe1e1poi6osu4nn3icrgapTPetHhdzJBXP6ZaHrKcW4GuyG1dLgDgSNnAuynvV6FBYdXbgTGsbmoZmUapmP","slot":120,"err":null,"cu":54040,"logLines":46}
+{"label":"Q4/Q6: claim_position_fee (partner position) via partner_auth CPI","signature":"2MuyqgFafb8qfiWfGhzgH9Y3xwSsTQ3pNDzJ2hFYrZsEH6oMrT65dRfPhw8g8xKgZBrpDpWVwXs3anzWGrwX9ajz","slot":121,"err":null,"cu":36083,"logLines":17}
+{"label":"Q2: claim_position_fee (creator position) via creator_auth CPI","signature":"5iiXiMbX4Gch9RuA9Zrzqnt4cMX76R34goKzWnKyt3igvoyNLbxQsBAnjqV4G2J1DfRqcz674ohWt8bjfw3AQEUr","slot":122,"err":null,"cu":36085,"logLines":17}
+{"label":"Q4: claim_trading_fee via partner_auth → destination NOT owned by fee claimer (vault PDA)","signature":"2AVaan52zTgjcPpUTxBLKYzQt7pBjKYcA1xrhb5mVyCXSNnqLzCHB5m1gUFvFPevDoNn9KmqvJ3ZX6suyu1Z6fby","slot":123,"err":null,"cu":33042,"logLines":17}
+{"label":"Q4: partner_withdraw_surplus via partner_auth → vault PDA ATA","signature":"BH2hur7dDiovjdURYGMg59HeivZ67yCXZDdGLkzsJv5BhZXD6WBPi9rC9Nb9ksNMpMrhfUAaAb35khYp9rYJVZR","slot":124,"err":null,"cu":26502,"logLines":17}
+{"label":"third wallet base ATA","signature":"3phEJVyk13uN3j9hNEPDHgAt7wrDJJ7FTZ1iUWahtVpytSAy2AwEgYQWvRys6ai9AzjkN6ZeYKYeVWtbaq2PptXq","slot":125,"err":null,"cu":26446,"logLines":21}
+{"label":"Q16: withdraw_leftover (third wallet) → third wallet's own ATA (expect refusal)","signature":"2uNuRRdQQTkYv52Qhrd1nGdnKjeXk6K1SgwWyKRFbgahoS1m1gQxRG48XksQwUDbFijaBu5jaUKSQ4dwC8rd7aQR","slot":126,"err":{"InstructionError":[0,{"Custom":2015}]},"cu":7922,"logLines":9}
+{"label":"Q16: withdraw_leftover (third wallet) → leftover_receiver ATA","signature":"61nCw628FTbowS5gUvJUVNL8d36b73NKtCwud9vNyTYHz7nN1kDHSFpYj4uU4KAuJ3Rq99ixq1iZ1DSyh3DXKxW7","slot":127,"err":null,"cu":26689,"logLines":11}
+{"label":"dlmm scout ATAs (base ATA left empty)","signature":"4fURRxntDZpa6wESjnFSAykiF2cBasrdscW67aTnTAyisBFj6YjVuQr52FgEqoKdwFwXE3sVZWBqsURAnH8qQf6S","slot":129,"err":null,"cu":41362,"logLines":42}
+{"label":"dlmm scout: top up base to 1","signature":"e85mM3wmJNkLTFcPF5FNjS2Tf2BmX4CTtCRVYZiTstCnW2cW8yT5ymbvDABR5wCXxXM3W357UPFr6maHznmuXGn","slot":130,"err":null,"cu":4645,"logLines":4}
+{"label":"Q8: initialize_customizable_permissionless_lb_pair2 by partner_auth via CPI","signature":"2SFhMVRh4YegUyeRsTPf5dsmhZoQjuJ2vt7aE66ed2yzMopvSxxpoMmJTN3SAusPko9mcSxyj1xUihRRBZXbkumh","slot":132,"err":null,"cu":111279,"logLines":63}
+{"label":"Q8: creator set_pair_status_permissionless (on/off control = false)","signature":"259mUmwA5CKwCrziaLoCujZDSwC8vARaLkvDJ23VftRCdYfmUFav12iZuXzKC33nL28ioWguVeiv6PDHMG3FuSed","slot":133,"err":{"InstructionError":[1,{"Custom":6043}]},"cu":6652,"logLines":11}
+{"label":"Q9: initialize_bin_array for the bid bin","signature":"4nrK4Mu88xWk5YdLW4CUKggQC8bPRYYV5BwZ7VoAfjUaHkG26tvTojv8Pd2VR2QqjCyxKyXJ9ecmouX94EBjno4u","slot":174,"err":null,"cu":198731,"logLines":8}
+{"label":"dlmm limiter WSOL","signature":"65R5ACdzHv2V8sLP8RTy28SbzPqz8Dax8RqFWaMLXWX2zTrRL3kF71eyx4ZisUQg2GRbRoFnwxvmJarfLnJ9cXVS","slot":251,"err":null,"cu":25607,"logLines":27}
+{"label":"Q9 limits: create ALT","signature":"5stcSoCTjVYtePUjY231QVJB8724tVLFMBd5gFYEnTMWwDrTz5WXSPp8Y6CAiqXrr9yyw2EUxZrPew5X6ZQRZa9w","slot":252,"err":null,"cu":1200,"logLines":8}
+{"label":"Q9 limits: extend ALT","signature":"3bzX2Bbg8WpARUDiHQob3PdsRrJYgNAPdxCu8yzRoNkd9WDAHBCWbXn1J5H1WTyidy3hhVs91qirnxcf2XWn9PHR","slot":253,"err":null,"cu":900,"logLines":4}
+{"label":"Q5: place_limit_order (PDA sender = owner = payer) via CPI","signature":"5QwEYcAxCdf2Q8xjjN7goQqHgNHeQo7qG9ZoHkoSDtcWidXpezQGrBsDsa3PF2stXDQ9yEekwLq8sWXNaJjaamaX","slot":257,"err":null,"cu":76439,"logLines":62}
+{"label":"Q5: seller swaps X→Y through the bid","signature":"2y1XPK3TiYSzbtDFD9Z1PpkoSQSiZF4PuyngpGa5AE12JRPXap69qBafWXgEXEzsJMbcX4TdcrRj8fpwzb16vUfE","slot":258,"err":null,"cu":75050,"logLines":45}
+{"label":"dlmm buyer ATAs + wrap","signature":"26dzbhAdCyD1aZMSxzdsvHM4wKbWSK9guULoGr3aYrUJLwxD59qzNfdC4RA6KfdmkKnwXwrswGd6B61vCwnz7LpJ","slot":260,"err":null,"cu":44549,"logLines":48}
+{"label":"vault PDA ATAs","signature":"3M5joEB5aPtYfiHogBULiH4sMD5ypM3osdV1jiiyS6FiWAuY86mWtCaEZrhMW6VuMLyY6phkUgfCPmyJBFBpE2d5","slot":261,"err":null,"cu":10375,"logLines":8}
+{"label":"dlmm limiter WSOL","signature":"2d8kYQEsichevewXur9yUcmuq6Ev499MAu2t6X6xwGg5MTszsSYHvXgtE8RFsWZ8baZCoMhAX96tr5bY3B5uZMus","slot":350,"err":null,"cu":10631,"logLines":10}
+{"label":"Q9 limits: create ALT","signature":"2Ke2fYxBFbaeqbtm7tbNPbFaVeZduTQdF8moQeMwV8PzFAUF9YH1MdkF1qFTQCqkPmCy5KmsW3N7L7LDnY65XFty","slot":354,"err":null,"cu":1200,"logLines":8}
+{"label":"Q9 limits: extend ALT","signature":"3rJfAwguMDfczk6XeKjtetqUqxtfNVevUmaCXLNwDhziyU8FS6PmxQbnPrJ3fGZrFgniAJ5gK7X9Ryyr1yeuGePS","slot":355,"err":null,"cu":900,"logLines":4}
+{"label":"Q5: place_limit_order (PDA sender = owner = payer) via CPI: create ALT","signature":"311sejzzPYQ67qcfSfqSz3jpnHBPNoYmVGWM8JS9jTdPmFnvxAd4E98AsMPWPAN7vWMEFzB1nDGzPTbp97zsJXJK","slot":359,"err":null,"cu":1200,"logLines":8}
+{"label":"Q5: place_limit_order (PDA sender = owner = payer) via CPI: extend ALT","signature":"4WH78Bo31XAMckSBc1SNugcbtXfiKPuUvLbzebU2H7fN1g2fYmdZtv11B5rMNzQc6McFmBzWbQS7rLTU6EehJq27","slot":360,"err":null,"cu":900,"logLines":4}
+{"label":"Q5: place_limit_order (PDA sender = owner = payer) via CPI","signature":"dnZ9CEJfonQ6Vp2mKfwL9LhzZ6LnAnLhnXv7DeFZgfSKr94czrkfgZoRm3JCd6o58qtWcwAS7CccZewkuZDc1do","slot":394,"err":{"InstructionError":[1,{"Custom":3012}]},"cu":16908,"logLines":11}

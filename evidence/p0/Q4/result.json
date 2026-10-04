@@ -4,7 +4,7 @@
   "claimTradingFee": {
     "partnerQuoteFeeAccrued": "40404041",
     "toForeignDestination": {
-      "signature": "4H13PbobUvwyopDe5B4vYxWcDCNjP21W77JHcieQG8GbwVcapuwUKhWE5y9ND16H9VXcVc6tn8nvMrHhrJ243ZtR",
+      "signature": "2AVaan52zTgjcPpUTxBLKYzQt7pBjKYcA1xrhb5mVyCXSNnqLzCHB5m1gUFvFPevDoNn9KmqvJ3ZX6suyu1Z6fby",
       "succeeded": true,
       "err": null,
       "errorLog": [],
@@ -16,7 +16,7 @@
   "partnerWithdrawSurplus": {
     "quoteReserve": "10000000001",
     "toForeignDestination": {
-      "signature": "3jwXnZZCRJguBPL4TdQNkW7MguasG3bXV7DGU5jZKUpEpA27ApdutgKnM7qDjC3MTsy65uRph5V7ZA1rrFBGy5Vm",
+      "signature": "BH2hur7dDiovjdURYGMg59HeivZ67yCXZDdGLkzsJv5BhZXD6WBPi9rC9Nb9ksNMpMrhfUAaAb35khYp9rYJVZR",
       "succeeded": true,
       "err": null,
       "errorLog": [],
@@ -26,11 +26,11 @@
     "toOwnAta": null
   },
   "claimPositionFee": {
-    "signature": "4gba6qqduRE5RffcKQPRKZsJDBAdPbRd9vpPex98zG9R54mRhXnLcPdp7Yk3Ha5ZiYZjQzarBX2DgS3eh6QmnmBr",
+    "signature": "2MuyqgFafb8qfiWfGhzgH9Y3xwSsTQ3pNDzJ2hFYrZsEH6oMrT65dRfPhw8g8xKgZBrpDpWVwXs3anzWGrwX9ajz",
     "succeeded": true,
     "err": null,
     "errorLog": [],
-    "received": "4448032",
-    "cu": 44407
+    "received": "9207187",
+    "cu": 36083
   }
 }

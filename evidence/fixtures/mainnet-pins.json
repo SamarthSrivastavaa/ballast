@@ -3,7 +3,7 @@
   "cluster": "mainnet-beta",
   "genesisHash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
   "rpcHost": "api.mainnet-beta.solana.com",
-  "dumpedAt": "2026-10-04T13:15:44.247Z",
+  "dumpedAt": "2026-10-04T13:32:50.176Z",
   "programs": {
     "dbc": {
       "label": "Meteora Dynamic Bonding Curve",
@@ -111,6 +111,16 @@
       "dataSha256": "988089b8bacd1967ad85e4acd2bb520c847c872a74fed0614b01a89c57ae73a5",
       "readAtSlot": 453267141,
       "jsonFile": "fixtures/accounts/damm_v2_migration_config_customizable.json"
+    },
+    "dlmm_event_authority": {
+      "address": "D1ZN9Wj1fRSUQfCjhvnu1hqDMT7hzjzBBpi12nVniYD6",
+      "owner": "11111111111111111111111111111111",
+      "lamports": 5987435,
+      "executable": false,
+      "dataBytes": 0,
+      "dataSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readAtSlot": 453270950,
+      "jsonFile": "fixtures/accounts/dlmm_event_authority.json"
     }
   }
 }

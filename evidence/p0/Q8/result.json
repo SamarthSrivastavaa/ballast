@@ -1,0 +1,70 @@
+{
+  "question": "Q8 — customizable permissionless LimitOrder pair: seeds, uniqueness, creator powers, PDA via CPI",
+  "funderMustHoldBaseToken": [
+    {
+      "balance": "0",
+      "binStep": 10,
+      "feeBps": 10,
+      "ok": false,
+      "code": 6060,
+      "error": "Program log: AnchorError thrown in programs/lb_clmm/src/instructions/initialize_pool/initialize_customizable_permissionless_lb_pair.rs:284. Error Code: MissingTokenAmountAsTokenLaunchProof. Error Number: 6060. Error Message: Missing token amount as token launch owner proof."
+    },
+    {
+      "balance": "1",
+      "binStep": 10,
+      "feeBps": 10,
+      "ok": true,
+      "code": null,
+      "error": null
+    }
+  ],
+  "seeds": "[ILM_BASE, min(mintX, mintY), max(mintX, mintY)] — no bin step (SDK deriveCustomizablePermissionlessLbPair)",
+  "lbPair": "3ce2fz6zrwvuSwABabf4jKfXryeJwWFPh2KxGKbPErrK",
+  "createdBy": "partner_auth PDA via CPI",
+  "createSignature": "2SFhMVRh4YegUyeRsTPf5dsmhZoQjuJ2vt7aE66ed2yzMopvSxxpoMmJTN3SAusPko9mcSxyj1xUihRRBZXbkumh",
+  "cpiAttempt": {
+    "signature": "2SFhMVRh4YegUyeRsTPf5dsmhZoQjuJ2vt7aE66ed2yzMopvSxxpoMmJTN3SAusPko9mcSxyj1xUihRRBZXbkumh",
+    "err": null,
+    "errorLog": []
+  },
+  "params": {
+    "binStep": 10,
+    "feeBps": 1,
+    "activeId": -10548,
+    "concreteFunctionType": "LimitOrder (0)",
+    "collectFeeMode": "OnlyY (1)",
+    "activation": "slot, immediate",
+    "creatorPoolOnOffControl": false
+  },
+  "uniqueness_secondPairOtherBinStep": {
+    "binStep": 25,
+    "feeBps": 25,
+    "ok": false,
+    "code": 0,
+    "error": null
+  },
+  "creatorDisableAttempt": {
+    "signature": "259mUmwA5CKwCrziaLoCujZDSwC8vARaLkvDJ23VftRCdYfmUFav12iZuXzKC33nL28ioWguVeiv6PDHMG3FuSed",
+    "refused": true,
+    "err": {
+      "InstructionError": [
+        1,
+        {
+          "Custom": 6043
+        }
+      ]
+    },
+    "errorLog": [
+      "Program log: AnchorError thrown in programs/lb_clmm/src/instructions/set_pair_status_permissionless.rs:20. Error Code: InvalidPoolType. Error Number: 6043. Error Message: Invalid pool type."
+    ]
+  },
+  "statusChangers": "set_pair_status requires an `operator` account + signer (Meteora operator); set_pair_status_permissionless only for a creator with creator_pool_on_off_control (IDL)",
+  "lbPairState": {
+    "creator": "9wXuLpHAERJ3sNajq8akLhGT2S4QVnEKUajs28Gspt9w",
+    "status": 0,
+    "pairType": 2,
+    "activeId": -10548,
+    "binStep": 10,
+    "creatorPoolOnOffControl": 0
+  }
+}

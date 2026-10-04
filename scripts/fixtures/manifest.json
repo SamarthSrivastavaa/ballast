@@ -56,6 +56,12 @@
       "address": "A8gMrEPJkacWkcb3DGwtJwTe16HktSEfvwtuDh2MCtck",
       "why": "DAMM v2 config account DBC migrates into for migration_fee_option = 6 (Customizable); passed as the migration's remaining account. Owned by DAMM v2, 328 bytes.",
       "discoveredBy": "Q1: migration_damm_v2 (top-level, SDK) \u2014 evidence/p0/accounts/discovery.jsonl"
+    },
+    {
+      "name": "dlmm_event_authority",
+      "address": "D1ZN9Wj1fRSUQfCjhvnu1hqDMT7hzjzBBpi12nVniYD6",
+      "why": "DLMM __event_authority PDA (Anchor emit_cpi signer). System-owned 0-byte account holding lamports on mainnet; listed by DLMM instructions.",
+      "discoveredBy": "Q8: initialize_customizable_permissionless_lb_pair2 by partner_auth via CPI \u2014 evidence/p0/accounts/discovery.jsonl"
     }
   ]
 }

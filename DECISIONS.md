@@ -28,7 +28,7 @@ P0 = could invalidate the mechanism · P1 = could invalidate a subsystem · P2 =
 | # | Pri | Question | Expected | Status | Evidence (signature / dump / file:line) | Answer & fallback taken |
 |---|---|---|---|---|---|---|
 | 1 | **P0** | Does one `migration_damm_v2` tx leave partner and creator positions with all liquidity in `permanent_locked_liquidity` (unlocked = 0, vested = 0)? | Atomic, fully permanent | VERIFIED | `25wGvzzW…uQbnQ` (migration, slot 91); `evidence/p0/Q1/` | Atomic, fully permanent: both positions unlocked 0, vested 0, permanent 1.5351e31 each, read in the migration slot; inner ixs show pool creation + both permanent locks in one tx |
-| 2 | **P0** | Is the migrated pool `collect_fee_mode = 1` (OnlyB), non-compounding, full range (`sqrt_min_price` = MIN, `sqrt_max_price` = MAX), and do swaps and fee claims leave `pool.liquidity` and position liquidity unchanged? | All unchanged; full range | **FAILED as specified → correction proposed, awaiting approval** | `evidence/p0/Q2/result.json`, `Q2/characterization-quote-fee-mode.json` (`EnFm9JEm…Gznyq`) | §7's DBC value 1 = DBC OutputToken → DAMM BothToken (0). Constant L, full range, non-compounding all PASS. DBC value 0 (QuoteToken) → DAMM OnlyB (1), quote-only fees, L constant. See § OPEN DECISION Q2 |
+| 2 | **P0** | Is the migrated pool `collect_fee_mode = 1` (OnlyB), non-compounding, full range (`sqrt_min_price` = MIN, `sqrt_max_price` = MAX), and do swaps and fee claims leave `pool.liquidity` and position liquidity unchanged? | All unchanged; full range | **FAILED as specified → corrected by D-010; re-run pending** | `evidence/p0/Q2/result.json`, `Q2/characterization-quote-fee-mode.json` (`EnFm9JEm…Gznyq`) | §7's DBC value 1 = DBC OutputToken → DAMM BothToken (0). Constant L, full range, non-compounding all PASS. DBC value 0 (QuoteToken) → DAMM OnlyB (1), quote-only fees, L constant. See § OPEN DECISION Q2 |
 | 3 | **P0** | Does pool state satisfy `amount_A = L·(s_max − s)/(s·s_max)` and `amount_B = L·(s − s_min)/2^128` with Q64 sqrt prices? | Equal within ≤ 2 base units | VERIFIED | `evidence/p0/Q3/result.json` | At migration token_a/b_amount = formula +2/+1 (≤ 2). After 40 swaps +13/+10: rounding accrues to the pool |
 | 4 | **P0** | Can a Ballast PDA, as `fee_claimer`, CPI `withdraw_migration_fee` (partner), `claim_trading_fee`, `partner_withdraw_surplus`? What destination accounts are allowed? | Works; destinations are token accounts owned by the fee claimer | VERIFIED | `5nynW8so…zsjy6t` (withdraw_migration_fee pre-migration), `4H13Pbob…243ZtR` (claim_trading_fee), `3jwXnZZC…1Vm` (partner_withdraw_surplus), `4gba6qqd…mnBr` (claim_position_fee); `evidence/p0/Q4/` | All four work with the PDA signing via CPI. withdraw_migration_fee works BEFORE migration. claim_trading_fee and partner_withdraw_surplus accept a destination NOT owned by the fee claimer (vault PDA's ATA) |
 | 5 | **P0** | Can the PDA CPI DLMM `place_limit_order` (sender = owner = PDA, fresh keypair order account signing from the outer tx) and `cancel_limit_order`? Do fills stay filled? Does cancel return unfilled quote + filled base + fees? | Yes on all counts | UNKNOWN | | |
@@ -246,7 +246,9 @@ v2.3.3 is already cached here) or a deliberate split of the CLI pin from the bui
 
 Recommendation: probe `v1.51` and below first, since A preserves every §16 pin; fall back to B.
 
-### OPEN DECISION — Q2: §7's migrated-pool `collect_fee_mode` value (raised 4 Oct 2026)
+### ~~OPEN DECISION~~ — Q2: §7's migrated-pool `collect_fee_mode` value (raised 4 Oct 2026)
+
+*RESOLVED 4 Oct 2026 by D-010 (approved by the owner).* Kept as history.
 
 **STEP 3 stopped here, per the P0 rule.** Evidence: `evidence/p0/REPORT.md`, `evidence/p0/Q2/`.
 
@@ -526,6 +528,26 @@ after every program slice. Reason: STEP 2 finding T5 (Anchor baseline ≈ 210 KB
 | `open` | 600k | **≤ 420k** |
 | atomic `redeem` (cancel + burn + pay + place) | 1.2M | **≤ 840k** |
 | `refresh_floor` | 800k | **≤ 560k** |
+
+### D-010 — The DBC config sets `migrated_pool_fee.collect_fee_mode = 0` to get a DAMM v2 OnlyB pool
+
+**Status: APPROVED by the owner, 4 Oct 2026.** Amends §7 ("Migrated pool" row) and §8 ("Pool
+mode" row), with `[D-010]` markers.
+
+- §7 wrote DAMM v2's OnlyB value (1) into the **DBC** config field.
+- DBC numbers this enum `{0 QuoteToken, 1 OutputToken, 2 Compounding}`. DAMM v2 numbers it
+  `{0 BothToken, 1 OnlyB, 2 Compounding}`.
+- §2 already listed both enums correctly; §7 misapplied them.
+- On the mainnet binaries, DBC 1 → DAMM BothToken (`evidence/p0/Q2/result.json`), and DBC 0 →
+  DAMM OnlyB, quote-only fees, constant L (`evidence/p0/Q2/characterization-quote-fee-mode.json`).
+
+Consequences:
+- The DBC config uses `0`; the DAMM pool must read `1`.
+- `create_class`'s §7 rule 2 checks the DBC field = 0; the verifier and §8 check DAMM
+  `pool.collect_fee_mode = 1`.
+- The harness default is now 0 (`tests/integration/p0/src/config.ts`).
+- Q2 is re-answered under this config as its authoritative result.
+- The mechanism and the canon are unchanged: quote-only, non-compounding was always the intent.
 
 ---
 

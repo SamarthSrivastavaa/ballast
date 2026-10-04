@@ -327,7 +327,7 @@ If migration happens before `settle_graduation` (keeper lag), `settle_graduation
 | Dynamic fee | Disabled | Known worst-case exit fee |
 | `creator_trading_fee_percentage` | 50 | Creator income (forwarded) |
 | `migration_option` | 1 (DAMM v2) | Required |
-| Migrated pool | Customizable option; 100 bps; `collect_fee_mode = 1` (OnlyB); compounding 0; dynamic fee off | Quote-only, non-compounding |
+| Migrated pool | Customizable option; 100 bps; DBC `migrated_pool_fee.collect_fee_mode = 0` (DBC QuoteToken), which yields DAMM v2 `collect_fee_mode = 1` (OnlyB); compounding 0; dynamic fee off `[D-010: was "collect_fee_mode = 1 (OnlyB)" — the DAMM value written into the DBC field; DBC's 1 = OutputToken yields a DAMM BothToken pool (STEP 3, evidence/p0/Q2)]` | Quote-only, non-compounding |
 | `migration_fee_percentage`, `creator_migration_fee_percentage` | 15, 0 | Vault funding |
 | Partner / creator unlocked LP % | 0 / 0 | Nothing withdrawable |
 | Partner / creator permanent LP % | 50 / 50 | 100% permanent |
@@ -377,7 +377,7 @@ In OnlyB mode fees accrue to positions as claimable amounts, so swaps and claims
 
 | Check | Read | Pass |
 | --- | --- | --- |
-| Pool mode | `pool.collect_fee_mode`, compounding bps | 1, 0 |
+| Pool mode | DAMM v2 `pool.collect_fee_mode`, compounding bps | 1 (OnlyB), 0 `[D-010: the DAMM-side value; the DBC config field is 0]` |
 | Range | `pool.sqrt_min_price`, `sqrt_max_price` | MIN / MAX constants |
 | Positions | Both `Position` accounts: `pool`, `unlocked_liquidity`, `vested_liquidity`, `permanent_locked_liquidity` | Correct pool; 0; 0; > 0 |
 | Ownership | NFT token accounts' owners | `partner_auth`, `creator_auth` |

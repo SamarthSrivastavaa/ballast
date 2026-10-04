@@ -193,9 +193,10 @@ export async function send(
 export async function simulate(
   ixs: TransactionInstruction[],
   feePayer: PublicKey = payer.publicKey,
+  alts: AddressLookupTableAccount[] = [],
 ): Promise<{ err: unknown; logs: string[]; cu: number | null; customCode: number | null }> {
   const { blockhash } = await conn.getLatestBlockhash("confirmed");
-  const msg = new TransactionMessage({ payerKey: feePayer, recentBlockhash: blockhash, instructions: ixs }).compileToV0Message();
+  const msg = new TransactionMessage({ payerKey: feePayer, recentBlockhash: blockhash, instructions: ixs }).compileToV0Message(alts);
   const r = await conn.simulateTransaction(new VersionedTransaction(msg), { sigVerify: false, replaceRecentBlockhash: true });
   const code = JSON.stringify(r.value.err ?? null).match(/"Custom":(\d+)/)?.[1];
   return { err: r.value.err, logs: r.value.logs ?? [], cu: r.value.unitsConsumed ?? null, customCode: code ? Number(code) : null };

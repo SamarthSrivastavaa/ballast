@@ -138,3 +138,166 @@
 {"label":"Q2-fix: DAMM swap A→B","at":"2026-10-04T13:21:02.397Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
 {"label":"Q2-fix: DAMM swap B→A","at":"2026-10-04T13:21:02.853Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
 {"label":"Q2-fix: DAMM swap A→B","at":"2026-10-04T13:21:03.260Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"proof: create_config","at":"2026-10-04T13:31:06.440Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"proof: initialize_virtual_pool_with_spl_token","at":"2026-10-04T13:31:06.823Z","keys":16,"presentLocally":11,"absentBoth":5,"mainnetOnly":[]}
+{"label":"proof: transfer_pool_creator → creator_auth PDA","at":"2026-10-04T13:31:07.250Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"fund DLoTr4oc","at":"2026-10-04T13:31:07.731Z","keys":3,"presentLocally":2,"absentBoth":1,"mainnetOnly":[]}
+{"label":"fund FaCYHFJJ","at":"2026-10-04T13:31:08.141Z","keys":3,"presentLocally":2,"absentBoth":1,"mainnetOnly":[]}
+{"label":"proof: buy 0","at":"2026-10-04T13:31:09.777Z","keys":16,"presentLocally":14,"absentBoth":2,"mainnetOnly":[]}
+{"label":"proof: buy 1","at":"2026-10-04T13:31:10.188Z","keys":16,"presentLocally":14,"absentBoth":2,"mainnetOnly":[]}
+{"label":"proof: buy 2","at":"2026-10-04T13:31:11.391Z","keys":16,"presentLocally":14,"absentBoth":2,"mainnetOnly":[]}
+{"label":"proof: buy 3","at":"2026-10-04T13:31:11.827Z","keys":16,"presentLocally":15,"absentBoth":1,"mainnetOnly":[]}
+{"label":"proof: buy 4","at":"2026-10-04T13:31:12.237Z","keys":16,"presentLocally":15,"absentBoth":1,"mainnetOnly":[]}
+{"label":"proof: buy 5","at":"2026-10-04T13:31:12.635Z","keys":16,"presentLocally":15,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q15: ExactIn buy overshooting ~3% (expect refusal)","at":"2026-10-04T13:31:13.055Z","keys":16,"presentLocally":15,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q15: swap2 PartialFill completing buy (same oversized amount)","at":"2026-10-04T13:31:13.370Z","keys":16,"presentLocally":15,"absentBoth":1,"mainnetOnly":[]}
+{"label":"proof: buy after completion (expect refusal)","at":"2026-10-04T13:31:13.786Z","keys":16,"presentLocally":15,"absentBoth":1,"mainnetOnly":[]}
+{"label":"proof: create leftover_receiver base ATA","at":"2026-10-04T13:31:14.643Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q16: withdraw_leftover before migration (third wallet)","at":"2026-10-04T13:31:14.786Z","keys":11,"presentLocally":11,"absentBoth":0,"mainnetOnly":[]}
+{"label":"create partner_auth WSOL ATA","at":"2026-10-04T13:31:15.513Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q4: withdraw_migration_fee (partner) via PDA CPI, BEFORE migration","at":"2026-10-04T13:31:15.612Z","keys":13,"presentLocally":13,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q1: migration_damm_v2 (top-level, SDK)","at":"2026-10-04T13:31:16.331Z","keys":27,"presentLocally":16,"absentBoth":11,"mainnetOnly":[]}
+{"label":"ATAs for DLoTr4","at":"2026-10-04T13:31:16.747Z","keys":9,"presentLocally":9,"absentBoth":0,"mainnetOnly":[]}
+{"label":"ATAs for FaCYHF","at":"2026-10-04T13:31:17.084Z","keys":9,"presentLocally":7,"absentBoth":2,"mainnetOnly":[]}
+{"label":"ATAs for ACb5xC","at":"2026-10-04T13:31:17.535Z","keys":9,"presentLocally":6,"absentBoth":3,"mainnetOnly":[]}
+{"label":"trader ATAs","at":"2026-10-04T13:31:18.324Z","keys":9,"presentLocally":7,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #0","at":"2026-10-04T13:31:18.753Z","keys":15,"presentLocally":14,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #0","at":"2026-10-04T13:31:19.149Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #1","at":"2026-10-04T13:31:19.735Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #1","at":"2026-10-04T13:31:20.350Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #2","at":"2026-10-04T13:31:20.794Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #2","at":"2026-10-04T13:31:21.194Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #3","at":"2026-10-04T13:31:21.581Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #3","at":"2026-10-04T13:31:21.984Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #4","at":"2026-10-04T13:31:22.411Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #4","at":"2026-10-04T13:31:22.888Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #5","at":"2026-10-04T13:31:23.502Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #5","at":"2026-10-04T13:31:24.116Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #6","at":"2026-10-04T13:31:24.524Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #6","at":"2026-10-04T13:31:24.934Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #7","at":"2026-10-04T13:31:25.339Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #7","at":"2026-10-04T13:31:25.754Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #8","at":"2026-10-04T13:31:26.266Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #8","at":"2026-10-04T13:31:27.295Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #9","at":"2026-10-04T13:31:27.779Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #9","at":"2026-10-04T13:31:28.212Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #10","at":"2026-10-04T13:31:28.622Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #10","at":"2026-10-04T13:31:29.001Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #11","at":"2026-10-04T13:31:29.440Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #11","at":"2026-10-04T13:31:30.054Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #12","at":"2026-10-04T13:31:30.669Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #12","at":"2026-10-04T13:31:31.071Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #13","at":"2026-10-04T13:31:31.451Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #13","at":"2026-10-04T13:31:31.898Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #14","at":"2026-10-04T13:31:32.295Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #14","at":"2026-10-04T13:31:32.818Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #15","at":"2026-10-04T13:31:33.127Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #15","at":"2026-10-04T13:31:33.520Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #16","at":"2026-10-04T13:31:34.046Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #16","at":"2026-10-04T13:31:34.355Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #17","at":"2026-10-04T13:31:34.753Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #17","at":"2026-10-04T13:31:35.174Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #18","at":"2026-10-04T13:31:35.585Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #18","at":"2026-10-04T13:31:36.095Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #19","at":"2026-10-04T13:31:36.366Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #19","at":"2026-10-04T13:31:36.811Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q4/Q6: claim_position_fee (partner position) via partner_auth CPI","at":"2026-10-04T13:31:37.222Z","keys":17,"presentLocally":16,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q2: claim_position_fee (creator position) via creator_auth CPI","at":"2026-10-04T13:31:37.734Z","keys":17,"presentLocally":16,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q4: claim_trading_fee via partner_auth → destination NOT owned by fee claimer (vault PDA)","at":"2026-10-04T13:31:37.802Z","keys":16,"presentLocally":16,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q4: partner_withdraw_surplus via partner_auth → vault PDA ATA","at":"2026-10-04T13:31:38.211Z","keys":13,"presentLocally":13,"absentBoth":0,"mainnetOnly":[]}
+{"label":"third wallet base ATA","at":"2026-10-04T13:31:38.840Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q16: withdraw_leftover (third wallet) → third wallet's own ATA (expect refusal)","at":"2026-10-04T13:31:39.024Z","keys":11,"presentLocally":11,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q16: withdraw_leftover (third wallet) → leftover_receiver ATA","at":"2026-10-04T13:31:39.433Z","keys":11,"presentLocally":11,"absentBoth":0,"mainnetOnly":[]}
+{"label":"dlmm scout ATAs (base ATA left empty)","at":"2026-10-04T13:31:53.185Z","keys":9,"presentLocally":7,"absentBoth":2,"mainnetOnly":[]}
+{"label":"dlmm scout ATAs (base ATA left empty)","at":"2026-10-04T13:32:24.425Z","keys":9,"presentLocally":9,"absentBoth":0,"mainnetOnly":[]}
+{"label":"dlmm scout: top up base to 1","at":"2026-10-04T13:32:24.729Z","keys":5,"presentLocally":5,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q8: initialize_customizable_permissionless_lb_pair2 by partner_auth via CPI","at":"2026-10-04T13:32:26.415Z","keys":17,"presentLocally":12,"absentBoth":4,"mainnetOnly":[{"address":"D1ZN9Wj1fRSUQfCjhvnu1hqDMT7hzjzBBpi12nVniYD6","owner":"11111111111111111111111111111111","dataLen":0}]}
+{"label":"proof: create_config","at":"2026-10-04T13:33:32.151Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"proof: initialize_virtual_pool_with_spl_token","at":"2026-10-04T13:33:32.730Z","keys":16,"presentLocally":11,"absentBoth":5,"mainnetOnly":[]}
+{"label":"proof: transfer_pool_creator → creator_auth PDA","at":"2026-10-04T13:33:33.139Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"fund 9wXuLpHA","at":"2026-10-04T13:33:33.550Z","keys":3,"presentLocally":2,"absentBoth":1,"mainnetOnly":[]}
+{"label":"fund CmgpLyPy","at":"2026-10-04T13:33:33.959Z","keys":3,"presentLocally":2,"absentBoth":1,"mainnetOnly":[]}
+{"label":"proof: buy 0","at":"2026-10-04T13:33:35.507Z","keys":16,"presentLocally":14,"absentBoth":2,"mainnetOnly":[]}
+{"label":"proof: buy 1","at":"2026-10-04T13:33:36.006Z","keys":16,"presentLocally":14,"absentBoth":2,"mainnetOnly":[]}
+{"label":"proof: buy 2","at":"2026-10-04T13:33:36.416Z","keys":16,"presentLocally":14,"absentBoth":2,"mainnetOnly":[]}
+{"label":"proof: buy 3","at":"2026-10-04T13:33:36.780Z","keys":16,"presentLocally":15,"absentBoth":1,"mainnetOnly":[]}
+{"label":"proof: buy 4","at":"2026-10-04T13:33:37.235Z","keys":16,"presentLocally":15,"absentBoth":1,"mainnetOnly":[]}
+{"label":"proof: buy 5","at":"2026-10-04T13:33:37.612Z","keys":16,"presentLocally":15,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q15: ExactIn buy overshooting ~3% (expect refusal)","at":"2026-10-04T13:33:38.464Z","keys":16,"presentLocally":15,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q15: swap2 PartialFill completing buy (same oversized amount)","at":"2026-10-04T13:33:38.834Z","keys":16,"presentLocally":15,"absentBoth":1,"mainnetOnly":[]}
+{"label":"proof: buy after completion (expect refusal)","at":"2026-10-04T13:33:39.235Z","keys":16,"presentLocally":15,"absentBoth":1,"mainnetOnly":[]}
+{"label":"proof: create leftover_receiver base ATA","at":"2026-10-04T13:33:40.102Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q16: withdraw_leftover before migration (third wallet)","at":"2026-10-04T13:33:40.204Z","keys":11,"presentLocally":11,"absentBoth":0,"mainnetOnly":[]}
+{"label":"create partner_auth WSOL ATA","at":"2026-10-04T13:33:40.999Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q4: withdraw_migration_fee (partner) via PDA CPI, BEFORE migration","at":"2026-10-04T13:33:41.428Z","keys":13,"presentLocally":13,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q1: migration_damm_v2 (top-level, SDK)","at":"2026-10-04T13:33:42.150Z","keys":27,"presentLocally":16,"absentBoth":11,"mainnetOnly":[]}
+{"label":"ATAs for 9wXuLp","at":"2026-10-04T13:33:42.573Z","keys":9,"presentLocally":9,"absentBoth":0,"mainnetOnly":[]}
+{"label":"ATAs for CmgpLy","at":"2026-10-04T13:33:42.957Z","keys":9,"presentLocally":7,"absentBoth":2,"mainnetOnly":[]}
+{"label":"ATAs for CBSgtj","at":"2026-10-04T13:33:43.313Z","keys":9,"presentLocally":6,"absentBoth":3,"mainnetOnly":[]}
+{"label":"trader ATAs","at":"2026-10-04T13:33:44.187Z","keys":9,"presentLocally":7,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #0","at":"2026-10-04T13:33:44.563Z","keys":15,"presentLocally":14,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #0","at":"2026-10-04T13:33:45.018Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #1","at":"2026-10-04T13:33:45.419Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #1","at":"2026-10-04T13:33:45.823Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #2","at":"2026-10-04T13:33:46.180Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #2","at":"2026-10-04T13:33:46.586Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #3","at":"2026-10-04T13:33:46.973Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #3","at":"2026-10-04T13:33:47.388Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #4","at":"2026-10-04T13:33:47.790Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #4","at":"2026-10-04T13:33:48.228Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #5","at":"2026-10-04T13:33:48.611Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #5","at":"2026-10-04T13:33:49.044Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #6","at":"2026-10-04T13:33:49.512Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #6","at":"2026-10-04T13:33:49.933Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #7","at":"2026-10-04T13:33:50.342Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #7","at":"2026-10-04T13:33:50.741Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #8","at":"2026-10-04T13:33:51.161Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #8","at":"2026-10-04T13:33:51.570Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #9","at":"2026-10-04T13:33:51.970Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #9","at":"2026-10-04T13:33:52.313Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #10","at":"2026-10-04T13:33:52.709Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #10","at":"2026-10-04T13:33:53.133Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #11","at":"2026-10-04T13:33:53.549Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #11","at":"2026-10-04T13:33:53.947Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #12","at":"2026-10-04T13:33:54.394Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #12","at":"2026-10-04T13:33:54.849Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #13","at":"2026-10-04T13:33:55.258Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #13","at":"2026-10-04T13:33:55.656Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #14","at":"2026-10-04T13:33:56.078Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #14","at":"2026-10-04T13:33:56.413Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #15","at":"2026-10-04T13:33:56.807Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #15","at":"2026-10-04T13:33:57.306Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #16","at":"2026-10-04T13:33:57.715Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #16","at":"2026-10-04T13:33:58.085Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #17","at":"2026-10-04T13:33:58.536Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #17","at":"2026-10-04T13:33:58.943Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #18","at":"2026-10-04T13:33:59.328Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #18","at":"2026-10-04T13:33:59.764Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap B→A #19","at":"2026-10-04T13:34:00.173Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q2: DAMM swap A→B #19","at":"2026-10-04T13:34:00.571Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q4/Q6: claim_position_fee (partner position) via partner_auth CPI","at":"2026-10-04T13:34:01.001Z","keys":17,"presentLocally":16,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q2: claim_position_fee (creator position) via creator_auth CPI","at":"2026-10-04T13:34:01.402Z","keys":17,"presentLocally":16,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q4: claim_trading_fee via partner_auth → destination NOT owned by fee claimer (vault PDA)","at":"2026-10-04T13:34:01.560Z","keys":16,"presentLocally":16,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q4: partner_withdraw_surplus via partner_auth → vault PDA ATA","at":"2026-10-04T13:34:01.949Z","keys":13,"presentLocally":13,"absentBoth":0,"mainnetOnly":[]}
+{"label":"third wallet base ATA","at":"2026-10-04T13:34:02.688Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q16: withdraw_leftover (third wallet) → third wallet's own ATA (expect refusal)","at":"2026-10-04T13:34:02.771Z","keys":11,"presentLocally":11,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q16: withdraw_leftover (third wallet) → leftover_receiver ATA","at":"2026-10-04T13:34:03.186Z","keys":11,"presentLocally":11,"absentBoth":0,"mainnetOnly":[]}
+{"label":"dlmm scout ATAs (base ATA left empty)","at":"2026-10-04T13:34:04.314Z","keys":9,"presentLocally":7,"absentBoth":2,"mainnetOnly":[]}
+{"label":"dlmm scout: top up base to 1","at":"2026-10-04T13:34:04.530Z","keys":5,"presentLocally":5,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q8: initialize_customizable_permissionless_lb_pair2 by partner_auth via CPI","at":"2026-10-04T13:34:05.565Z","keys":17,"presentLocally":13,"absentBoth":4,"mainnetOnly":[]}
+{"label":"Q8: creator set_pair_status_permissionless (on/off control = false)","at":"2026-10-04T13:34:05.689Z","keys":6,"presentLocally":6,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q9: initialize_bin_array for the bid bin","at":"2026-10-04T13:34:22.618Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"dlmm limiter WSOL","at":"2026-10-04T13:34:54.501Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q9 limits: create ALT","at":"2026-10-04T13:34:54.896Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q9 limits: extend ALT","at":"2026-10-04T13:34:55.009Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q5: place_limit_order (PDA sender = owner = payer) via CPI","at":"2026-10-04T13:34:56.807Z","keys":15,"presentLocally":13,"absentBoth":2,"mainnetOnly":[]}
+{"label":"Q5: seller swaps X→Y through the bid","at":"2026-10-04T13:34:57.412Z","keys":17,"presentLocally":16,"absentBoth":1,"mainnetOnly":[]}
+{"label":"dlmm buyer ATAs + wrap","at":"2026-10-04T13:34:58.178Z","keys":9,"presentLocally":7,"absentBoth":2,"mainnetOnly":[]}
+{"label":"vault PDA ATAs","at":"2026-10-04T13:34:58.607Z","keys":9,"presentLocally":8,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q5: cancel_limit_order via CPI → vault PDA's accounts (not the owner's)","at":"2026-10-04T13:34:58.945Z","keys":21,"presentLocally":20,"absentBoth":1,"mainnetOnly":[]}
+{"label":"dlmm limiter WSOL","at":"2026-10-04T13:35:35.210Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q9 limits: create ALT","at":"2026-10-04T13:35:36.644Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q9 limits: extend ALT","at":"2026-10-04T13:35:36.958Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q5: place_limit_order (PDA sender = owner = payer) via CPI: create ALT","at":"2026-10-04T13:35:38.988Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"Q5: place_limit_order (PDA sender = owner = payer) via CPI: extend ALT","at":"2026-10-04T13:35:39.046Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"Q5: place_limit_order (PDA sender = owner = payer) via CPI","at":"2026-10-04T13:35:40.698Z","keys":14,"presentLocally":12,"absentBoth":2,"mainnetOnly":[]}

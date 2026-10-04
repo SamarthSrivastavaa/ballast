@@ -1,0 +1,172 @@
+{
+  "question": "Q9 — allowed bin steps / base fees for customizable LimitOrder pairs (simulated)",
+  "launchProofBalanceSearch": [
+    {
+      "balance": "0",
+      "binStep": 10,
+      "feeBps": 10,
+      "ok": false,
+      "code": 6060,
+      "error": "Program log: AnchorError thrown in programs/lb_clmm/src/instructions/initialize_pool/initialize_customizable_permissionless_lb_pair.rs:284. Error Code: MissingTokenAmountAsTokenLaunchProof. Error Number: 6060. Error Message: Missing token amount as token launch owner proof."
+    },
+    {
+      "balance": "1",
+      "binStep": 10,
+      "feeBps": 10,
+      "ok": true,
+      "code": null,
+      "error": null
+    }
+  ],
+  "binSteps": [
+    {
+      "binStep": 1,
+      "feeBps": 10,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 2,
+      "feeBps": 10,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 4,
+      "feeBps": 10,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 5,
+      "feeBps": 10,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 8,
+      "feeBps": 10,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 10,
+      "feeBps": 10,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 16,
+      "feeBps": 16,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 20,
+      "feeBps": 20,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 25,
+      "feeBps": 25,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 50,
+      "feeBps": 50,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 80,
+      "feeBps": 80,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 100,
+      "feeBps": 100,
+      "ok": true,
+      "code": null,
+      "error": null
+    }
+  ],
+  "feesAtBinStep10": [
+    {
+      "binStep": 10,
+      "feeBps": 1,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 10,
+      "feeBps": 2,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 10,
+      "feeBps": 5,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 10,
+      "feeBps": 10,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 10,
+      "feeBps": 15,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 10,
+      "feeBps": 20,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 10,
+      "feeBps": 25,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 10,
+      "feeBps": 50,
+      "ok": true,
+      "code": null,
+      "error": null
+    },
+    {
+      "binStep": 10,
+      "feeBps": 100,
+      "ok": true,
+      "code": null,
+      "error": null
+    }
+  ]
+}

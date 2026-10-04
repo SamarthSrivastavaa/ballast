@@ -76,7 +76,7 @@ export interface ClassSpec {
   migrationFeePercentage: number;
   partnerPermanent: number;
   creatorPermanent: number;
-  /** DBC `migrated_pool_fee.collect_fee_mode` (DBC enum: 0 QuoteToken, 1 OutputToken, 2 Compounding). §7 says 1. */
+  /** DBC `migrated_pool_fee.collect_fee_mode` (DBC enum: 0 QuoteToken, 1 OutputToken, 2 Compounding). D-010: 0 → DAMM OnlyB. */
   migratedCollectFeeMode?: number;
 }
 
@@ -142,8 +142,9 @@ export function configParameters(spec: ClassSpec) {
     creatorTradingFeePercentage: 50,
     tokenUpdateAuthority: 1, // Immutable
     migrationFee: { feePercentage: spec.migrationFeePercentage, creatorFeePercentage: 0 },
-    // §7 "Migrated pool": 100 bps, collect_fee_mode = 1 (OnlyB), dynamic fee off; compounding 0.
-    migratedPoolFee: { collectFeeMode: spec.migratedCollectFeeMode ?? 1, dynamicFee: 0, poolFeeBps: 100 },
+    // §7 "Migrated pool" (D-010): 100 bps, DAMM OnlyB, dynamic fee off; compounding 0.
+    // D-010: DBC QuoteToken (0) yields a DAMM v2 OnlyB (1) pool. §7 originally wrote 1 here (= DBC OutputToken → BothToken).
+    migratedPoolFee: { collectFeeMode: spec.migratedCollectFeeMode ?? 0, dynamicFee: 0, poolFeeBps: 100 },
     poolCreationFee: bn(0),
     partnerLiquidityVestingInfo: ZERO_VESTING_INFO,
     creatorLiquidityVestingInfo: ZERO_VESTING_INFO,
