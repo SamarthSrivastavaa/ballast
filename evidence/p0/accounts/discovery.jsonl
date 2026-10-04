@@ -477,3 +477,19 @@
 {"label":"Q5: cancel_limit_order via CPI → vault PDA's accounts (not the owner's): create ALT","at":"2026-10-04T14:02:45.620Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
 {"label":"Q5: cancel_limit_order via CPI → vault PDA's accounts (not the owner's): extend ALT","at":"2026-10-04T14:02:45.770Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
 {"label":"Q5: cancel_limit_order via CPI → vault PDA's accounts (not the owner's)","at":"2026-10-04T14:02:47.032Z","keys":17,"presentLocally":17,"absentBoth":0,"mainnetOnly":[]}
+{"label":"D-011: create_config (admin, not part of the launch tx)","at":"2026-10-04T14:27:27.196Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"D-011: probe pool (so builders have state)","at":"2026-10-04T14:27:35.353Z","keys":15,"presentLocally":10,"absentBoth":5,"mainnetOnly":[]}
+{"label":"D-011 launch: create ALT","at":"2026-10-04T14:27:36.246Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"D-011 launch: extend ALT","at":"2026-10-04T14:27:36.687Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"D-011 launch: extend ALT","at":"2026-10-04T14:27:37.095Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"D-011: create_config (admin, not part of the launch tx)","at":"2026-10-04T14:29:47.229Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"D-011: probe pool (so builders have state)","at":"2026-10-04T14:29:55.625Z","keys":15,"presentLocally":10,"absentBoth":5,"mainnetOnly":[]}
+{"label":"D-011 launch: create ALT","at":"2026-10-04T14:29:56.447Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"D-011 launch: extend ALT","at":"2026-10-04T14:29:56.522Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"D-011 launch: extend ALT","at":"2026-10-04T14:29:56.940Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"D-011: create_config (admin, not part of the launch tx)","at":"2026-10-04T14:31:54.005Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"D-011: probe pool (so builders have state)","at":"2026-10-04T14:32:03.967Z","keys":15,"presentLocally":10,"absentBoth":5,"mainnetOnly":[]}
+{"label":"D-011 launch: create ALT","at":"2026-10-04T14:32:04.757Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"D-011 launch: extend ALT","at":"2026-10-04T14:32:05.196Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"D-011 launch: extend ALT","at":"2026-10-04T14:32:05.616Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"D-012: ensure the payer's WSOL ATA exists","at":"2026-10-04T14:32:09.569Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}

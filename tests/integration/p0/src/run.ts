@@ -15,6 +15,8 @@ import { proofMigrate } from "./steps/proofMigrate";
 import { proofPost } from "./steps/proofPost";
 import { q2fix } from "./steps/q2fix";
 import { dlmmOrder, dlmmPair } from "./steps/dlmm";
+import { d011Fit } from "./steps/d011";
+import { d012 } from "./steps/d012";
 
 const STEPS: Record<string, () => Promise<void>> = {
   q12,
@@ -27,6 +29,8 @@ const STEPS: Record<string, () => Promise<void>> = {
   "q2-characterize": q2fix,
   "dlmm-pair": dlmmPair,
   "dlmm-order": dlmmOrder,
+  "d011-fit": d011Fit,
+  d012,
 };
 
 async function main(): Promise<void> {

@@ -1,0 +1,81 @@
+{
+  "question": "D-011 — does the atomic launch transaction fit in 1,232 bytes?",
+  "limit": 1232,
+  "binStep": 10,
+  "dustLimitLamports": "1000000",
+  "altEntries": 33,
+  "instructionCount": 15,
+  "variants": {
+    "legacyNoAlt": {
+      "bytes": 1795,
+      "fits": false,
+      "overBy": 563,
+      "staticAccounts": 36,
+      "altLookups": 0,
+      "crossCheck": null,
+      "crossCheckAgrees": null
+    },
+    "v0WithAlt_creatorIsSeparate": {
+      "bytes": 992,
+      "fits": true,
+      "overBy": 0,
+      "staticAccounts": 9,
+      "altLookups": 27,
+      "crossCheck": 992,
+      "crossCheckAgrees": true
+    },
+    "v0WithAlt_creatorIsPayer": {
+      "bytes": 928,
+      "fits": true,
+      "overBy": 0,
+      "staticAccounts": 9,
+      "altLookups": 27,
+      "crossCheck": 992,
+      "crossCheckAgrees": false
+    },
+    "v0WithAlt_plusComputeBudget": {
+      "bytes": 1032,
+      "fits": true,
+      "overBy": 0,
+      "staticAccounts": 10,
+      "altLookups": 27,
+      "crossCheck": 1032,
+      "crossCheckAgrees": true
+    }
+  },
+  "perGroup": {
+    "1_createPool": {
+      "instructions": 1,
+      "accountMetas": 16,
+      "dataBytes": 73
+    },
+    "2_dustBuy": {
+      "instructions": 6,
+      "accountMetas": 33,
+      "dataBytes": 40
+    },
+    "3_dlmmPair": {
+      "instructions": 6,
+      "accountMetas": 35,
+      "dataBytes": 99
+    },
+    "4_transferPoolCreator": {
+      "instructions": 1,
+      "accountMetas": 6,
+      "dataBytes": 8
+    },
+    "5_registerLaunch": {
+      "instructions": 1,
+      "accountMetas": 16,
+      "dataBytes": 40
+    }
+  },
+  "simulationOfTheFourRealInstructions": {
+    "note": "register_launch is excluded: its program is not deployed yet. Its own cost is small (account reads, one init, instruction-sysvar introspection).",
+    "err": null,
+    "customCode": null,
+    "cu": 299166,
+    "lastError": null
+  },
+  "verdict": "FITS with an ALT"
+}

@@ -75,9 +75,37 @@ P0 = could invalidate the mechanism · P1 = could invalidate a subsystem · P2 =
 
 ---
 
-## OPEN QUESTION Q8-funding — `register_launch` cannot create the DLMM pair as §6 specifies
+## OPEN DECISION — §7 rule 4: `migration_sqrt_price` vs the last curve point (needs the owner)
 
-**Found 4 Oct 2026 by STEP 3 (Q8). Needs a decision before `register_launch` is written.**
+**Raised 4 Oct 2026. Implemented provisionally in `programs/ballast/src/lib.rs` (`create_class`),
+which cites this entry. Not exercisable yet:** every class is `ClassNotPinned` until the compiler
+pins `sqrt_start_price` and `config_hash`.
+
+§7 rule 4 says `migration_sqrt_price` **equals** the last curve point. On the mainnet binaries it
+cannot. Segment liquidity must round **up** so the curve can absorb the whole threshold, which
+leaves DBC's derived `migration_sqrt_price` slightly **below** the last point: 4,580,459 low in
+9.4·10¹⁶, relative 5·10⁻¹¹ (`evidence/p0/Q12/result.json`; `evidence/p0/REPORT.md` finding 1).
+
+**Proposed amendment (provisional in code):** replace equality with two checks.
+
+1. **A two-sided band:** `last_point − 2^24 ≤ migration_sqrt_price ≤ last_point`
+   (`canon::MIGRATION_PRICE_TOLERANCE = 2^24`, about 3.7× the measured shortfall). It is
+   deliberately not one-sided. `migration_sqrt_price` is **not** in the rule-3 hash, so an open
+   `≤` would let two materially different configs hash identically, and `predicted_s_open` would
+   no longer provably belong to the validated config.
+2. **Capacity:** the curve's capacity, `Σ ⌊L_i·(s_i − s_{i−1})/2^128⌋` rounded down, must be
+   `≥ migration_quote_threshold` (`curve::capacity`, `ConfigCurveCapacityTooSmall`).
+
+**Alternative:** keep exact equality, and have the compiler solve for segment liquidities that make
+DBC's derived price land exactly on the last point. That needs DBC's exact rounding vendored, and
+it is fragile across DBC upgrades.
+
+**Recommendation:** approve the band + capacity form. Then mark §7 rule 4 with a `[D-015]`
+amendment marker and add a negative test for each side of the band.
+
+## OPEN QUESTION Q8-funding — RESOLVED by D-011 (option C), 4 Oct 2026
+
+*Kept as the reasoning behind D-011.* **Found 4 Oct 2026 by STEP 3 (Q8).**
 
 DLMM refuses `initialize_customizable_permissionless_lb_pair` unless the **funder already holds at
 least 1 base unit** of the token: `6060 MissingTokenAmountAsTokenLaunchProof`
@@ -365,6 +393,89 @@ integration layer **beyond those probes** is still unproven: STEP 3.
 Approved by the project owner on 2 Oct 2026 unless stated otherwise. A decision here overrides the
 spec text; where it amends the spec, the amendment has been applied to `docs/spec/BUILD_SPEC.md`
 with a `[D-00n]` marker so the spec and the code cannot drift apart.
+
+### D-011 — A launch is ONE atomic transaction; `register_launch` verifies it by introspection
+
+**Status: APPROVED 4 Oct 2026 (option C of OPEN QUESTION Q8-funding).** Amends §6, §9, §20, §21, §22.
+
+Q8 established that DLMM refuses to create a pair unless the funder already holds ≥ 1 base unit
+(`6060 MissingTokenAmountAsTokenLaunchProof`), which makes §6's "create the pair in the registration
+transaction" impossible as written — at that point the whole supply is still in the DBC vault. The
+fix is to buy a dust amount first, in the same transaction.
+
+A launch is one transaction, in this order:
+
+1. DBC pool creation
+2. **payer dust first buy** (≥ 1 base unit, ≤ the class dust limit)
+3. DLMM LimitOrder pair creation, **payer as funder**, at the class bin step
+4. `transfer_pool_creator` → `creator_auth`
+5. `register_launch`
+
+`register_launch` **drops the `virtual_pool.quote_reserve == 0` precondition** — step 2 makes it
+false by design. In its place, via **instruction-sysvar introspection**, it requires:
+
+- **(a)** this transaction contains the DBC pool-creation instruction for *this* pool, and the DLMM
+  pair creation for `(base_mint, WSOL)` with the class parameters;
+- **(b)** the only DBC swap preceding `register_launch` in this transaction is by the payer and is
+  ≤ the class dust limit;
+- **(c)** `virtual_pool.creator == creator_auth` after the transfer.
+
+**The claim wording changes** — this is the part that matters for honesty. It is no longer
+"prediction recorded before trade 1" but:
+
+> "prediction recorded in the pool-creation transaction, before any third-party trade."
+
+That wording must be used in §21 (app), §22 (Proof launch), the README and the demo. The verifier
+(§20) gains a check on the creation transaction's instruction list.
+
+Option C was chosen over seeding the creator (A) or deferring pair creation to `open` (B) because
+Q8 also proved the pair creator holds **no** post-activation powers
+(`set_pair_status_permissionless` → `6043 InvalidPoolType`), so making the payer the funder costs
+nothing in trust.
+
+**Gate before `register_launch` is written:** prove on the mainnet-binary localnet that this
+transaction fits in 1,232 bytes using an address lookup table. If it does not, test DBC's
+create-with-first-buy variant to merge steps 1 and 2. If it still does not, **stop and report the
+byte count** — see `evidence/p0/d011/fit.json`.
+
+### D-012 — `open` funds the bid from the vault PDA's token account; a missing token account is an error
+
+**Status: APPROVED 4 Oct 2026.** Rule for `CLAUDE.md`, the SDK and the tests.
+
+Q4 established that `claim_trading_fee` and `partner_withdraw_surplus` accept a destination the fee
+claimer does not own, and this project sends them to the **vault PDA's** ATA. So `open` funds the
+DLMM bid from the **vault PDA's token account**, not `partner_auth`'s.
+
+The second half is a lesson from a near-miss: the Q5 harness step read `partner_auth`'s WSOL balance
+with a helper that returns `0` for a *missing* account, and so placed a bid it believed was funded
+when the account did not exist. **Reading a missing token account is an ERROR, never 0.** A throwing
+balance helper is added, with a test that proves it throws; the returns-zero form may only be used
+where "absent" and "empty" are genuinely equivalent, and must be named so.
+
+### D-013 — `initialize_bin_array` is the keeper's job, not `open`'s
+
+**Status: APPROVED 4 Oct 2026.** Amends §26.
+
+Q9 measured `initialize_bin_array` for the bid bin at **≈ 199,000 CU** on its own — a third of
+§26's entire 600k budget for `open`, spent on setup that does not have to be atomic with it.
+
+- The **keeper** creates the bin arrays covering the predicted floor bin **and the next array up**,
+  as **top-level DLMM instructions**, before `open`.
+- When F moves into a new array, the keeper creates it before `refresh_floor`.
+- `open` and `refresh_floor` **verify the arrays exist and fail clearly if not** — they never create
+  them, so neither instruction carries that cost or that failure mode.
+
+§26's CU budgets are reduced accordingly.
+
+### D-014 — The bin step is fixed per class and validated in `create_class`
+
+**Status: APPROVED 4 Oct 2026** (recorded with D-011; consequence of Q8).
+
+The DLMM pair address derives from `[ILM_BASE, min(mintX,mintY), max(mintX,mintY)]` — it **carries
+no bin step**. There is therefore exactly one pair per mint pair, and a second pair at a different
+bin step is refused. **The bin step must be correct the first time**, so it is a property of the
+class, not of a launch: `create_class` validates `bid_bin_step` as one of its §7 rules, and
+`register_launch`'s introspection check (a) requires the pair creation to carry the class value.
 
 ### D-001 — Fixtures and the local validator use mainnet binaries and mainnet accounts
 

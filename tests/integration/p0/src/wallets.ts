@@ -64,7 +64,36 @@ export function wrapIxs(owner: Keypair, lamports: bigint): TransactionInstructio
   ];
 }
 
-export async function tokenBalance(account: PublicKey): Promise<bigint> {
+/**
+ * Balance of a token account that MUST exist (D-012).
+ *
+ * Throws if the account is missing. Use this wherever the number decides something — funding, bid
+ * sizing, payouts, reconciliation. Q5 placed a bid against a non-existent account because the
+ * returns-zero form made "missing" indistinguishable from "empty".
+ */
+export async function tokenBalanceStrict(account: PublicKey): Promise<bigint> {
+  const r = await conn.getTokenAccountBalance(account).catch((e: unknown) => {
+    throw new Error(
+      `token account ${account.toBase58()} does not exist or is unreadable (D-012: a missing ` +
+        `token account is an error, never 0): ${e instanceof Error ? e.message : String(e)}`,
+    );
+  });
+  if (!r?.value) throw new Error(`token account ${account.toBase58()} returned no balance (D-012)`);
+  return BigInt(r.value.amount);
+}
+
+/**
+ * Balance, or 0 when the account does not exist.
+ *
+ * Only for cases where "absent" and "empty" are genuinely equivalent — e.g. probing whether a
+ * wallet has ever held a mint. Never for funding or payout decisions: see `tokenBalanceStrict`.
+ */
+export async function tokenBalanceOrZero(account: PublicKey): Promise<bigint> {
   const r = await conn.getTokenAccountBalance(account).catch(() => null);
   return r ? BigInt(r.value.amount) : 0n;
+}
+
+/** @deprecated D-012: ambiguous. Use `tokenBalanceStrict` or, deliberately, `tokenBalanceOrZero`. */
+export async function tokenBalance(account: PublicKey): Promise<bigint> {
+  return tokenBalanceOrZero(account);
 }

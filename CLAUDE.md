@@ -51,6 +51,18 @@ Algorithm, identical in every implementation: (1) `D = B² + 4AC` in U256; (2) `
 **Rounding is toward the protocol, everywhere:** `⌈L/s_max⌉` in A, `⌊root⌋` for s, `⌊·⌋` on payouts and
 bid amounts, bid bin at or below F. No floating point anywhere in the crate.
 
+### Reading balances (D-012)
+
+**A missing token account is an ERROR, never 0.** Use the throwing helper wherever a balance decides
+anything — funding, payouts, bid sizing, reconciliation. The returns-zero form is allowed only where
+"absent" and "empty" are genuinely the same thing, and it must say so in its name
+(`…OrZero`). This cost us a near-miss: the Q5 harness read `partner_auth`'s WSOL with a
+returns-zero helper and placed a bid it believed was funded, against an account that did not exist.
+
+Related: **`open` funds the bid from the vault PDA's token account**, not `partner_auth`'s — Q4
+showed the DBC claims accept a destination the fee claimer does not own, and this project sends them
+to the vault.
+
 ### Code rules derived from the proof (§4)
 
 1. Only `ballast-floor` computes F. The program, verifier, and app call it — never reimplement.

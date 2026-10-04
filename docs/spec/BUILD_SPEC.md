@@ -253,9 +253,9 @@ If migration happens before `settle_graduation` (keeper lag), `settle_graduation
 ### `register_launch(creator_beneficiary)`
 
 - **Signers:** creator (current DBC pool creator), payer. **Accounts:** `class`, `launch` (w, init), `virtual_pool` (DBC), `base_mint`, `creator_auth`, `vault` (w, init), DLMM pair (w; created in the same tx, see section 9), DBC program, event authority.
-- **Preconditions:** `virtual_pool.config == class.dbc_config`; `virtual_pool.quote_reserve == 0` (no trade yet); the transaction also contains DBC `transfer_pool_creator(new_creator = creator_auth)`, checked by reading `virtual_pool.creator == creator_auth` after it.
+- **Preconditions** `[D-011: the `quote_reserve == 0` test is REMOVED — the launch transaction's own dust buy makes it false by design (Q8: DLMM will not create a pair unless the funder holds ≥ 1 base unit). Replaced by instruction-sysvar introspection]`**:** `virtual_pool.config == class.dbc_config`; and by introspection over this transaction: (a) it contains the DBC pool-creation instruction for this pool **and** the DLMM pair creation for `(base_mint, WSOL)` with the class parameters including the class bin step; (b) the only DBC swap before `register_launch` in this transaction is by the payer and is ≤ the class dust limit; (c) `virtual_pool.creator == creator_auth` after the `transfer_pool_creator` in the same transaction.
 - **Effect:** records the prediction (`predicted_s = class.predicted_s_open`), `registered_slot`, beneficiary, pair address. No funds move.
-- **Errors:** wrong config; pool already traded; creator not transferred; pair parameters invalid. **Event:** `LaunchRegistered{mint, predicted_s, slot}` — the on-chain prediction before trade 1.
+- **Errors:** wrong config; pool already traded; creator not transferred; pair parameters invalid. **Event:** `LaunchRegistered{mint, predicted_s, slot}` — the on-chain prediction, recorded in the pool-creation transaction, before any third-party trade `[D-011: was "before trade 1"; the payer's own dust buy precedes it in the same transaction]`.
 - **Re-entry:** `init` on `launch`.
 
 ### `settle_graduation()`
@@ -347,6 +347,7 @@ For segment i from price P\_{i−1} to P\_i carrying quote q\_i: L\_i = q\_i·2�
 2. Every scalar row in the table above matches exactly.
 3. `sha256(sqrt_start_price ‖ curve[0..20] ‖ migration_quote_threshold ‖ supply fields)` equals the constant compiled into the program for the declared `size_tag`.
 4. Derived checks: `migration_sqrt_price` equals the last curve point; curve has exactly 3 non-zero points; LP percentages sum to 100.
+5. `bid_bin_step` equals the class constant `[D-014: the DLMM pair address derives from [ILM_BASE, min(mintX,mintY), max(mintX,mintY)] and carries NO bin step (Q8), so there is one pair per mint pair and the bin step must be right first time. It is a class property, validated here, and `register_launch` requires the pair creation to carry it]`.
 5. `predicted_s_open` is copied from the program constant for the size; the verifier recomputes it independently from the same config (section 20).
 
 Any failure aborts with a rule-specific error code. Configs are immutable once created, so a validated class stays valid.
@@ -922,9 +923,9 @@ The Proof and Public classes differ only in threshold, start price and curve liq
 
 | Item | Budget | Measured on |
 | --- | --- | --- |
-| `open` | ≤ 600k CU; address lookup table for Meteora accounts | Devnet phase 5 |
+| `open` | ≤ 400k CU; address lookup table for Meteora accounts `[D-013: was 600k. `initialize_bin_array` (≈199k CU, measured in Q9) moves to the keeper as a top-level instruction before `open`; `open` only verifies the arrays exist]` | Devnet phase 5 |
 | Atomic `redeem` (cancel + burn + pay + place) | ≤ 1.2M CU | Devnet phase 7 (Q18) |
-| `refresh_floor` | ≤ 800k CU | Devnet phase 5 |
+| `refresh_floor` | ≤ 600k CU `[D-013: was 800k; bin-array creation is the keeper's, before the call]` | Devnet phase 5 |
 | Keeper cost | \~10 transactions per launch per day | Mainnet logs |
 | Idle capital | 15% of the raise, all resting as the bid | By design |
 

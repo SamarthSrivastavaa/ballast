@@ -1,0 +1,9 @@
+{
+  "decision": "D-012 — a missing token account is an ERROR, never 0",
+  "missingAccount": "DoDRLyRp4fRRMLaAuzso6xFB2peX7qE2uPHscCApM3ke",
+  "strictThrew": true,
+  "strictMessage": "token account DoDRLyRp4fRRMLaAuzso6xFB2peX7qE2uPHscCApM3ke does not exist or is unreadable (D-012: a missing token account is an error, never 0): failed to get token account balance: Invalid param: could not find account",
+  "orZeroReturned": "0",
+  "strictOnExistingAccount": "0",
+  "verdict": "PASS — strict throws, orZero returns 0; the ambiguity is now explicit in the name"
+}

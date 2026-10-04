@@ -1,0 +1,7 @@
+# STEP 2 lockfile method (D-002, §16). platform-tools v1.43 ships cargo/rustc 1.79 and cannot
+# parse an edition-2024 manifest. MSRV-aware resolution makes host cargo 1.85 prefer versions
+# compatible with the lowest declared rust-version in the graph (programs/ballast declares 1.79),
+# which keeps the SBF build parsable. Crates that use edition 2024 WITHOUT declaring rust-version
+# still slip through, so `scripts/toolchain/check_lock.py` guards the result in CI.
+[resolver]
+incompatible-rust-versions = "fallback"

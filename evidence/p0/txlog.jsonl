@@ -472,3 +472,19 @@
 {"label":"Q5: cancel_limit_order via CPI → vault PDA's accounts (not the owner's): create ALT","signature":"4CGkXRX8KRRshCwpoitnUftbE76u7GT3uV1ZwTuaAoJEnZavX7uBLA1vU8zjRWPxqeBzB2FyeJZWtgZGv8MrHSAf","slot":206,"err":null,"cu":1200,"logLines":8}
 {"label":"Q5: cancel_limit_order via CPI → vault PDA's accounts (not the owner's): extend ALT","signature":"5aSA1FgrUEnpTSbyuwdP4WvBkVswdtL18S5oC8eL46zAyJDmEto8qVRpfwdQcadfPX9ymA2kZhu1uiXsFgn4QS4t","slot":207,"err":null,"cu":900,"logLines":4}
 {"label":"Q5: cancel_limit_order via CPI → vault PDA's accounts (not the owner's)","signature":"35Ndh9HHbinxCD9Zb7maritXdXZLxudJFAhmcRYVAiRgtu1NBf4ZwTAVZ3E2UrRXuSDmUWjNNR5deciw9JzKVe7M","slot":243,"err":null,"cu":56884,"logLines":32}
+{"label":"D-011: create_config (admin, not part of the launch tx)","signature":"qEHXqrss8n1GhgrMF5sNQHTPN8fhnW4HHuvbuVTNvoAU9K1MKmYTywdfm2SfHtVLi3nMh1BybHokbGtQTcb15Li","slot":36,"err":null,"cu":45145,"logLines":12}
+{"label":"D-011: probe pool (so builders have state)","signature":"3Gs8CEAmubJRgsJ83yG49n4NLB4Bu7ZnihiJYTAvtaPadr8NkQozwp3aXqvLf9eb67fxsGbnvyDmq2BUNyrbjbVH","slot":40,"err":null,"cu":120342,"logLines":52}
+{"label":"D-011 launch: create ALT","signature":"3BqHEmyHEwZCLUgixVaMUy6FtDQqFwbhGKYcjwS82h6cDCkFXkdAdt5kPrvnSF6TseSoRVF6wLSWvTZprUwuu2ec","slot":42,"err":null,"cu":1200,"logLines":8}
+{"label":"D-011 launch: extend ALT","signature":"3ZXYNTu3cQbireSsxj5pNCs6wUUW9ZJVNRED8ZUhQde3tYb87EUk2TiYRdA333tsKVZJNFjBmLeJHbToLLzXQsMV","slot":43,"err":null,"cu":900,"logLines":4}
+{"label":"D-011 launch: extend ALT","signature":"3QUpESQydNAWan39GvixBB4F9UFWqd1es2mrZLRWeX4PD3G6bRTC4b23bGm3YbW6uocFPQysr4QQbzcpzMF8pCwz","slot":44,"err":null,"cu":900,"logLines":4}
+{"label":"D-011: create_config (admin, not part of the launch tx)","signature":"ca7Gpi64SnNAxuB95KGiwiPUWFNK8CNCoZfYcHxsfnsK3w8guBEtzSJuoEc4EdYdFocrJvgq8zhSefF8ohjAhLJ","slot":36,"err":null,"cu":45145,"logLines":12}
+{"label":"D-011: probe pool (so builders have state)","signature":"4D8A9JY5ydFVFrMN11w6DSziecNBHTPA9urCaGMwavUSv4GWDPMLkSmscxFTTMoasag9oWufwyNdvXPn2dyAbbSz","slot":40,"err":null,"cu":123342,"logLines":52}
+{"label":"D-011 launch: create ALT","signature":"32ax2EZ4mUKhVioDU1sXVW1pYqwvDeAXwUEXHKepranxFHEdmcdpLGCgtpSsAgdcBifm7UQf7NwBpcmzpmQZLWvQ","slot":41,"err":null,"cu":1200,"logLines":8}
+{"label":"D-011 launch: extend ALT","signature":"3samjZpzmG5aqPcgR53qaJinLYHjF8dfUMikMxcrJYuUWuwoAh55V4pQiKbNMnb2McATBf9pmskfgU4R1XcqdkNt","slot":42,"err":null,"cu":900,"logLines":4}
+{"label":"D-011 launch: extend ALT","signature":"5Kzp8VGkg6Mqi3jjCJxSMnJyyYSjw9dqbpnh9zFNKXJKtf2nkwrTqng9f9VSmGC51wK5XYaYH4XgFAAywsWudwbz","slot":43,"err":null,"cu":900,"logLines":4}
+{"label":"D-011: create_config (admin, not part of the launch tx)","signature":"2rpG6ZZL37VaXDTJR4isRgxkiF5hUtAEUVnn49Mi4mBkieva8DWhccsjvMVYXS7mheZiyhVPzzkmU3Q3JYjDwf5N","slot":36,"err":null,"cu":45145,"logLines":12}
+{"label":"D-011: probe pool (so builders have state)","signature":"BeVRhPiPqbZ4T2ViFePZwpetdkXrdiBEymTbw5jNgEwFd4E831MYefYdi9kPvUcSpShskpyyMk4apkBWjmvJNML","slot":44,"err":null,"cu":123342,"logLines":52}
+{"label":"D-011 launch: create ALT","signature":"nGps9UpbdTQ4ccDR78gUvJpLHHqTBxVbz6EddsyrARBVhaf6ADgzuo8Ud8SLXf68YUGPw6q46uce8VeXQ5gdwcz","slot":46,"err":null,"cu":1200,"logLines":8}
+{"label":"D-011 launch: extend ALT","signature":"gNmZKVanUHDDPMTutPMQWf6eyaKzLbLFQkjdXmXDPGuYE7TpDjj88uykwqzwPkfCjDShn623aFEgNic4U8v5gTN","slot":47,"err":null,"cu":900,"logLines":4}
+{"label":"D-011 launch: extend ALT","signature":"297kVsfTpHmU9i47SHS9HvfVaXzR4rbZVm8w1eTMV87Wq9H3YtqxTX4NU3hqNEEWS2suUxmY7k1ZnJhJstxZ2BQi","slot":48,"err":null,"cu":900,"logLines":4}
+{"label":"D-012: ensure the payer's WSOL ATA exists","signature":"2TWmxTdnyFisAECSEvBFHT9hDVaqw1uCQPHVHefnTYGhtebkNrQHZQmd1UurJQqqc3Jz6SjzKyLbauzZqgzfGVEL","slot":57,"err":null,"cu":19315,"logLines":21}

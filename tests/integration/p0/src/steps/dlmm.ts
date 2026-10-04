@@ -18,7 +18,7 @@ import { dammPool, norm } from "../flow";
 import { PdaKind, pda } from "../proxy";
 import { sendWithPdas, sendWithPdasAlt, simulateWithPdas } from "../pdasend";
 import { need, saveState } from "../state";
-import { ata, ensureAtaIx, funded, tokenBalance, wallet } from "../wallets";
+import { ata, ensureAtaIx, funded, tokenBalance, tokenBalanceStrict, wallet } from "../wallets";
 
 const pk = (s: string) => new PublicKey(s);
 /** T7: the SDK's "localhost" program id is NOT mainnet DLMM; always pin mainnet-beta. */
@@ -219,7 +219,8 @@ export async function dlmmOrder(): Promise<void> {
   // Size the bid to what the PDA actually holds; top up from the payer if it is short, and record
   // that this top-up is harness funding, not a protocol flow.
   const wantBid = 1_000_000_000n; // 1 SOL
-  const held = await tokenBalance(partnerWsol);
+  // D-012: after ensureAtaIx above, this account must exist — a missing one is an error.
+  const held = await tokenBalanceStrict(partnerWsol);
   const toppedUp = held < wantBid ? wantBid - held : 0n;
   if (toppedUp > 0n) {
     await send("Q5: harness top-up of partner_auth WSOL (not a protocol flow)", [
@@ -227,7 +228,7 @@ export async function dlmmOrder(): Promise<void> {
       createSyncNativeInstruction(partnerWsol),
     ]);
   }
-  const bidAmount = await tokenBalance(partnerWsol);
+  const bidAmount = await tokenBalanceStrict(partnerWsol);
   if (bidAmount === 0n) throw new Error("Q5: partner_auth holds no WSOL to bid with");
   const w0 = bidAmount;
   // Only the DLMM instruction, so the CPI under test is isolated; the accounts it needs were
