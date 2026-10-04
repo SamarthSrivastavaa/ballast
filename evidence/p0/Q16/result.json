@@ -1,0 +1,31 @@
+{
+  "question": "Q16 — withdraw_leftover permissionless, to leftover_receiver's token account, only after CreatedPool",
+  "caller": "CzynG1gDNWUWPh8iNYA3t1zuQzQNBVfpoPHxgQUYoYeT",
+  "leftoverReceiver": "D3DB2E3ce9jXRSUicNiScjKcuS72kWyJYBJTx53sLQDM",
+  "toCallersOwnAta": {
+    "signature": "567yxpHrZU2j76anhLxJB9divbUzfYqiUUtSYw68gRge4WhN3msAP9kHcHakyTuoKigWKV8KdhtRVAKJJ1TvQ6y1",
+    "succeeded": false,
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 2015
+        }
+      ]
+    },
+    "errorLog": [
+      "Program log: AnchorError caused by account: token_base_account. Error Code: ConstraintTokenOwner. Error Number: 2015. Error Message: A token owner constraint was violated."
+    ],
+    "received": "0",
+    "cu": 7922
+  },
+  "toLeftoverReceiverAta": {
+    "signature": "4E8MaG8SwMimZT1WTBQu6Xfhjp996TzMpWTqQjPha5Mb6M2mVxu6GyeiT6VXu9pAuSwSxaQkzDVHQRLqCSLqhrdX",
+    "succeeded": true,
+    "err": null,
+    "errorLog": [],
+    "received": "134558940128194",
+    "cu": 19189
+  },
+  "beforeMigration": "see Q16/before-migration.json"
+}

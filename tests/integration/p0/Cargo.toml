@@ -1,0 +1,10 @@
+# The STEP 3 P0 harness (D-001): its own workspace, built with the STEP 2 lockfile method
+# (rust-version 1.79 + MSRV-aware resolution + --precise pins; see DECISIONS.md § Toolchain).
+[workspace]
+resolver = "2"
+members = ["programs/*"]
+
+[profile.release]
+overflow-checks = true
+lto = "fat"
+codegen-units = 1

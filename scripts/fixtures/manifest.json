@@ -32,5 +32,30 @@
       "source": "@meteora-ag/dynamic-bonding-curve-sdk@1.5.13 LOCKER_PROGRAM_ID"
     }
   ],
-  "accounts": []
+  "accounts": [
+    {
+      "name": "dbc_event_authority",
+      "address": "8Ks12pbrD6PXxfty1hVQiE9sc289zgU1zHkvXhrSdriF",
+      "why": "DBC __event_authority PDA (Anchor emit_cpi signer). Exists on mainnet as a system-owned 0-byte account holding dust; every DBC instruction lists it.",
+      "discoveredBy": "Q12 create_config (Proof) \u2014 evidence/p0/accounts/discovery.jsonl"
+    },
+    {
+      "name": "dbc_pool_authority",
+      "address": "FhVo3mqL8PW5pH5U2CN4XE33DokiyZnUwuGpH2hmHLuM",
+      "why": "DBC pool_authority (constant address in the DBC IDL; signs vault transfers). System-owned 0-byte account holding lamports on mainnet; listed by every pool instruction.",
+      "discoveredBy": "proof: initialize_virtual_pool_with_spl_token \u2014 evidence/p0/accounts/discovery.jsonl"
+    },
+    {
+      "name": "damm_v2_pool_authority",
+      "address": "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC",
+      "why": "DAMM v2 pool_authority PDA (seeds [\"pool_authority\"]); signs DAMM vault transfers. System-owned 0-byte account holding lamports on mainnet.",
+      "discoveredBy": "Q1: migration_damm_v2 (top-level, SDK) \u2014 evidence/p0/accounts/discovery.jsonl"
+    },
+    {
+      "name": "damm_v2_migration_config_customizable",
+      "address": "A8gMrEPJkacWkcb3DGwtJwTe16HktSEfvwtuDh2MCtck",
+      "why": "DAMM v2 config account DBC migrates into for migration_fee_option = 6 (Customizable); passed as the migration's remaining account. Owned by DAMM v2, 328 bytes.",
+      "discoveredBy": "Q1: migration_damm_v2 (top-level, SDK) \u2014 evidence/p0/accounts/discovery.jsonl"
+    }
+  ]
 }

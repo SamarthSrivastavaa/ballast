@@ -260,23 +260,30 @@ export function sdkProgramIds(): Record<string, string[]> {
   };
 }
 
-/** The JSON shape `solana account --output json` writes and `solana-test-validator --account` reads. */
+/**
+ * The JSON shape `solana account --output json` writes and `solana-test-validator --account` reads.
+ *
+ * Rent-exempt accounts report `rentEpoch = u64::MAX`, which JSON.parse turns into a float the
+ * validator rejects ("invalid type: floating point"). Any value beyond 2^53 can only be that
+ * sentinel, so it is written back as the exact integer.
+ */
+const U64_MAX_TEXT = "18446744073709551615";
 export function accountJson(address: string, a: RawAccount): string {
-  return (
-    JSON.stringify(
-      {
-        pubkey: address,
-        account: {
-          lamports: a.lamports,
-          data: [a.data.toString("base64"), "base64"],
-          owner: a.owner,
-          executable: a.executable,
-          rentEpoch: a.rentEpoch,
-          space: a.space,
-        },
+  const exact = Number.isSafeInteger(a.rentEpoch);
+  const text = JSON.stringify(
+    {
+      pubkey: address,
+      account: {
+        lamports: a.lamports,
+        data: [a.data.toString("base64"), "base64"],
+        owner: a.owner,
+        executable: a.executable,
+        rentEpoch: exact ? a.rentEpoch : "__U64_MAX__",
+        space: a.space,
       },
-      null,
-      2,
-    ) + "\n"
+    },
+    null,
+    2,
   );
+  return (exact ? text : text.replace('"__U64_MAX__"', U64_MAX_TEXT)) + "\n";
 }

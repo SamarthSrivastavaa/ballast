@@ -1,0 +1,12 @@
+Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [1]
+Program log: Instruction: CreateConfig
+Program 11111111111111111111111111111111 invoke [2]
+Program 11111111111111111111111111111111 success
+Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [2]
+Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 643 of 162175 compute units
+Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN success
+Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN invoke [2]
+Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 643 of 155964 compute units
+Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN success
+Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN consumed 45145 of 200000 compute units
+Program dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN success

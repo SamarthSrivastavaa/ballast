@@ -1,0 +1,18 @@
+{
+  "question": "Q2 characterization — DBC migrated collect_fee_mode = 0 (QuoteToken) → which DAMM mode?",
+  "createConfig": "FH7wAtmYNhmciTxDU5vgG2f1NtoXHmEhj4soub8V3yRDPpu3rWJLXehwsrPQVB76mrGzp3EUxQtjAhHkk9Ta6Um",
+  "migration": "EnFm9JEm3Ks2jvtEPCuwvTuYscdFGMjx7NUnUDE1qbo16BsYaKzsE61CinPL7RT1MhUJe6uzFyFxA2iGbHGznyq",
+  "dbcConfigMigratedCollectFeeMode": 0,
+  "dammPool": "A4FeAdEWXzLuPWAPjToCkL3Vwr31p8keWYeLpipfz2hr",
+  "dammCollectFeeMode": 1,
+  "isOnlyB": true,
+  "protocolAFeeAfterSwaps": "0",
+  "protocolBFeeAfterSwaps": "1801915",
+  "feesOnlyInQuote": true,
+  "liquidityBefore": "30702214157579652106863560058426",
+  "liquidityAfter": "30702214157579652106863560058426",
+  "lUnchanged": true,
+  "sqrtMinPrice": "4295048016",
+  "sqrtMaxPrice": "79226673521066979257578248091",
+  "quoteReserveAtCompletion": "10000000001"
+}

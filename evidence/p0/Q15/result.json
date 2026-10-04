@@ -1,0 +1,33 @@
+{
+  "question": "Q15 — overshoot at completion; late buy; (setup for Q13)",
+  "threshold": "10000000000",
+  "quoteReserveAtCompletion": "10000000001",
+  "overshootLamports": "1",
+  "overshootPct": 0,
+  "isMigrated": 0,
+  "migrationProgress": 2,
+  "exactInOvershootAttempt": {
+    "amountIn": "2204040405",
+    "refused": true,
+    "error": "Q15: ExactIn buy overshooting ~3% (expect refusal) FAILED {\"InstructionError\":[4,{\"Custom\":6033}]} 5B6CGSsdAT5QzLJpmjy6HwVvyJwT7WT74MguNK6VENE68p6khe3pghD3kSbdrZynMgHeoxtsDp4XJvfHpUakU1nH",
+    "errorLog": [
+      "Program log: AnchorError thrown in programs/dynamic-bonding-curve/src/state/virtual_pool.rs:596. Error Code: InsufficientLiquidity. Error Number: 6033. Error Message: Liquidity in bonding curve is insufficient."
+    ]
+  },
+  "partialFillCompletion": {
+    "signature": "2GjcUBdGBB1NkmkR5Eznf5whAbwTUwqRtWNoz6iQBzT7fEqKBAeaosQtaRoAQNXrJb3SCb878UhxRtmMVWNwK68j",
+    "amountInOffered": "2204040405",
+    "consumed": "1901010103",
+    "refundedToBuyer": "303030302",
+    "dQuoteReserve": "1882000001",
+    "dTotalTradingQuoteFee": "15208082",
+    "dPartnerQuoteFee": "7604041",
+    "dCreatorQuoteFee": "7604041",
+    "dProtocolQuoteFee": "3802020",
+    "cu": 70780
+  },
+  "lateBuy": {
+    "refused": true,
+    "error": "proof: buy after completion (expect refusal) FAILED {\"InstructionError\":[4,{\"Custom\":6013}]} 43gvFzydKQaL4H87w6Dg3ud7mzyvcsvggpXDZJBqF7ZmLJyWT1kdDGYVncnf3bMDdxdgR6G3VVNMGCVzKLmaHdrA"
+  }
+}

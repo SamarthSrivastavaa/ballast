@@ -27,22 +27,22 @@ P0 = could invalidate the mechanism · P1 = could invalidate a subsystem · P2 =
 
 | # | Pri | Question | Expected | Status | Evidence (signature / dump / file:line) | Answer & fallback taken |
 |---|---|---|---|---|---|---|
-| 1 | **P0** | Does one `migration_damm_v2` tx leave partner and creator positions with all liquidity in `permanent_locked_liquidity` (unlocked = 0, vested = 0)? | Atomic, fully permanent | UNKNOWN | | |
-| 2 | **P0** | Is the migrated pool `collect_fee_mode = 1` (OnlyB), non-compounding, full range (`sqrt_min_price` = MIN, `sqrt_max_price` = MAX), and do swaps and fee claims leave `pool.liquidity` and position liquidity unchanged? | All unchanged; full range | UNKNOWN | | |
-| 3 | **P0** | Does pool state satisfy `amount_A = L·(s_max − s)/(s·s_max)` and `amount_B = L·(s − s_min)/2^128` with Q64 sqrt prices? | Equal within ≤ 2 base units | UNKNOWN | | |
-| 4 | **P0** | Can a Ballast PDA, as `fee_claimer`, CPI `withdraw_migration_fee` (partner), `claim_trading_fee`, `partner_withdraw_surplus`? What destination accounts are allowed? | Works; destinations are token accounts owned by the fee claimer | UNKNOWN | | |
+| 1 | **P0** | Does one `migration_damm_v2` tx leave partner and creator positions with all liquidity in `permanent_locked_liquidity` (unlocked = 0, vested = 0)? | Atomic, fully permanent | VERIFIED | `25wGvzzW…uQbnQ` (migration, slot 91); `evidence/p0/Q1/` | Atomic, fully permanent: both positions unlocked 0, vested 0, permanent 1.5351e31 each, read in the migration slot; inner ixs show pool creation + both permanent locks in one tx |
+| 2 | **P0** | Is the migrated pool `collect_fee_mode = 1` (OnlyB), non-compounding, full range (`sqrt_min_price` = MIN, `sqrt_max_price` = MAX), and do swaps and fee claims leave `pool.liquidity` and position liquidity unchanged? | All unchanged; full range | **FAILED as specified → correction proposed, awaiting approval** | `evidence/p0/Q2/result.json`, `Q2/characterization-quote-fee-mode.json` (`EnFm9JEm…Gznyq`) | §7's DBC value 1 = DBC OutputToken → DAMM BothToken (0). Constant L, full range, non-compounding all PASS. DBC value 0 (QuoteToken) → DAMM OnlyB (1), quote-only fees, L constant. See § OPEN DECISION Q2 |
+| 3 | **P0** | Does pool state satisfy `amount_A = L·(s_max − s)/(s·s_max)` and `amount_B = L·(s − s_min)/2^128` with Q64 sqrt prices? | Equal within ≤ 2 base units | VERIFIED | `evidence/p0/Q3/result.json` | At migration token_a/b_amount = formula +2/+1 (≤ 2). After 40 swaps +13/+10: rounding accrues to the pool |
+| 4 | **P0** | Can a Ballast PDA, as `fee_claimer`, CPI `withdraw_migration_fee` (partner), `claim_trading_fee`, `partner_withdraw_surplus`? What destination accounts are allowed? | Works; destinations are token accounts owned by the fee claimer | VERIFIED | `5nynW8so…zsjy6t` (withdraw_migration_fee pre-migration), `4H13Pbob…243ZtR` (claim_trading_fee), `3jwXnZZC…1Vm` (partner_withdraw_surplus), `4gba6qqd…mnBr` (claim_position_fee); `evidence/p0/Q4/` | All four work with the PDA signing via CPI. withdraw_migration_fee works BEFORE migration. claim_trading_fee and partner_withdraw_surplus accept a destination NOT owned by the fee claimer (vault PDA's ATA) |
 | 5 | **P0** | Can the PDA CPI DLMM `place_limit_order` (sender = owner = PDA, fresh keypair order account signing from the outer tx) and `cancel_limit_order`? Do fills stay filled? Does cancel return unfilled quote + filled base + fees? | Yes on all counts | UNKNOWN | | |
-| 6 | P1 | Who owns the partner position NFT after migration (`fee_claimer`?), and can the PDA call `claim_position_fee` on it? | Owner = fee claimer | UNKNOWN | | |
+| 6 | P1 | Who owns the partner position NFT after migration (`fee_claimer`?), and can the PDA call `claim_position_fee` on it? | Owner = fee claimer | VERIFIED | `evidence/p0/Q1/result.json` (q6Holders), `Q2/result.json` | Partner NFT → fee_claimer (partner_auth); creator NFT → creator_auth. Both PDAs claimed position fees via CPI |
 | 7 | P1 | Can the creator `split_position` (or otherwise move) permanently locked liquidity into new positions? | Likely yes (owner-only endpoint) | UNKNOWN | | |
 | 8 | P1 | DLMM customizable permissionless pair: seeds, uniqueness, creator/operator powers (pool status); can the PDA create it via CPI? | Pair unique per (mints, bin step); no post-activation creator powers | UNKNOWN | | |
 | 9 | P1 | DLMM limits: allowed bin steps and base fee, activation, collect-fee mode, minimum order size, ≤ 50 bins, bitmap-extension needs around bin ids −11,000 to −12,000 | Feasible with bitmap extension | UNKNOWN | | |
 | 10 | P1 | Does Jupiter route to the fresh DLMM pair and DAMM v2 pool, and how fast? | Within hours | UNKNOWN | | *Mainnet-only — Jupiter does not route on devnet (§18)* |
-| 11 | P1 | Is the DBC base mint's freeze authority `None`? | None | UNKNOWN | | |
-| 12 | P1 | Exact `PoolConfig` / `VirtualPool` layouts for the deployed DBC version; enum encodings (`migration_fee_option` customizable, `collect_fee_mode`, `token_type`) | Match | UNKNOWN | | |
-| 13 | P1 | Fee semantics: flat 1% encoding, dynamic fee off, `creator_trading_fee_percentage`, protocol and referral cuts; partner claim = partner share exactly | Matches docs | UNKNOWN | | |
-| 14 | P1 | Migration accounting: fee on threshold or reserve? How is the 0.2% protocol liquidity share taken? Exact Q_d, B_m, L_total vs L_perm | Protocol remainder is an unlocked position, excluded from L | UNKNOWN | | |
-| 15 | P1 | Overshoot: can the completing swap exceed the threshold; when is partner surplus withdrawable; `swap2` partial-fill behaviour | Surplus exists; withdrawable after completion | UNKNOWN | | |
-| 16 | P2 | Is `withdraw_leftover` permissionless, to `leftover_receiver`'s token account, only after `CreatedPool`? | Yes | UNKNOWN | | |
+| 11 | P1 | Is the DBC base mint's freeze authority `None`? | None | VERIFIED | `evidence/p0/Q11/result.json` | Freeze authority None; mint authority None; supply 10^15 |
+| 12 | P1 | Exact `PoolConfig` / `VirtualPool` layouts for the deployed DBC version; enum encodings (`migration_fee_option` customizable, `collect_fee_mode`, `token_type`) | Match | VERIFIED | `4WRdaMmy…zGA6` (create_config); `evidence/p0/Q12/`; `cargo test -p meteora-types` | PoolConfig: owner DBC, disc 1a6c0e7b74e6812b, 1,048 B, version 0, all fields as sent; vendored = SDK on PoolConfig (167 fields), VirtualPool (60), DAMM Pool (307), Position (174). Enum finding: DBC migrated collect-fee enum ≠ DAMM enum (see Q2) |
+| 13 | P1 | Fee semantics: flat 1% encoding, dynamic fee off, `creator_trading_fee_percentage`, protocol and referral cuts; partner claim = partner share exactly | Matches docs | VERIFIED | `evidence/p0/Q13/result.json` | fee = ⌈1%⌉ of consumed; protocol 20% of fee; partner = creator = 40%; partner claim = partner share exactly; dynamic fee off |
+| 14 | P1 | Migration accounting: fee on threshold or reserve? How is the 0.2% protocol liquidity share taken? Exact Q_d, B_m, L_total vs L_perm | Protocol remainder is an unlocked position, excluded from L | LEAD → mostly VERIFIED | `evidence/p0/Q14/`, `Q1/result.json` | Protocol share = 0.2% in TOKENS (quote 17,000,000; base 654,409,983,148), not an LP position ⇒ L_total = L_perm. Q_d 8,483,000,000; B_m 326,550,581,591,072. Realised L ≥ §27 predicted. Open: fee basis threshold vs reserve |
+| 15 | P1 | Overshoot: can the completing swap exceed the threshold; when is partner surplus withdrawable; `swap2` partial-fill behaviour | Surplus exists; withdrawable after completion | LEAD → mostly VERIFIED | `evidence/p0/Q15/result.json` | §7 curve: ExactIn overshoot reverts 6033; swap2 PartialFill completes to threshold+1 and refunds the rest; later buy reverts 6013. Open: overshoot on a curve with capacity past the threshold |
+| 16 | P2 | Is `withdraw_leftover` permissionless, to `leftover_receiver`'s token account, only after `CreatedPool`? | Yes | VERIFIED | `evidence/p0/Q16/` | Refused before migration (6022). After: permissionless (third wallet); destination must be owned by leftover_receiver (2015 otherwise); paid 134,558,940,128,194 |
 | 17 | P2 | Meteora keeper latency for 10 SOL pools; manual migration via SDK | Seconds to minutes | UNKNOWN | | |
 | 18 | P2 | Compute units and accounts for `open` and an atomic `redeem` (cancel + burn + pay + re-place) | < 1.4M CU with a lookup table | UNKNOWN | | |
 | 19 | P2 | Meteora admin powers: DAMM v2 `update_pool_fees`, pool status, DLMM pool status, upgrade authorities | Fees and status adjustable by operators; locked liquidity untouchable | UNKNOWN | | |
@@ -245,6 +245,38 @@ If no version sits in the gap, the choice is **B** (move Agave to a newer line; 
 v2.3.3 is already cached here) or a deliberate split of the CLI pin from the build pin.
 
 Recommendation: probe `v1.51` and below first, since A preserves every §16 pin; fall back to B.
+
+### OPEN DECISION — Q2: §7's migrated-pool `collect_fee_mode` value (raised 4 Oct 2026)
+
+**STEP 3 stopped here, per the P0 rule.** Evidence: `evidence/p0/REPORT.md`, `evidence/p0/Q2/`.
+
+- §7 sets the DBC config's `migrated_pool_fee.collect_fee_mode = 1`, intending DAMM v2 OnlyB.
+- DBC's enum is `{0 QuoteToken, 1 OutputToken, 2 Compounding}`; DAMM v2's is
+  `{0 BothToken, 1 OnlyB, 2 Compounding}`.
+- On the mainnet binaries, DBC value 1 produced a **BothToken** pool (fees in both tokens).
+- DBC value **0** produced an **OnlyB** pool with quote-only fees and constant L.
+
+**Proposed minimum correction (not applied):** §7 "Migrated pool" row → DBC value **0**; §7
+validator rule 2 checks DBC value 0; §8 keeps checking DAMM `pool.collect_fee_mode = 1`. No change
+to the mechanism or the canon: §1/§8's intent (quote-only, non-compounding) is unchanged, and only
+the encoding that achieves it changes.
+
+### Findings from STEP 3 so far (non-blocking)
+
+- **P1 — §7 rule 4** ("`migration_sqrt_price` equals the last curve point") cannot hold exactly.
+  Curve liquidity must round up to absorb the threshold, so DBC's migration price sits 4,580,459
+  below the last point. Proposal: `≤ last point` and capacity ≥ threshold.
+- **P2 — no overshoot with §7's curve:** completing ExactIn buys that exceed the remaining capacity
+  revert. The keeper and app complete with `swap2` PartialFill.
+- **P3 — protocol migration share is a token fee (0.2%), not LP:** L_total = L_perm, which is
+  better than §7's prediction assumed. Realised L ≥ predicted.
+- **P4 — DBC partner claims accept any destination token account** (Q4), so claims can go straight
+  to the vault. `withdraw_leftover` instead requires the destination to be owned by
+  `leftover_receiver`.
+- **P5 — lowest accepted threshold (Lite shape): 20 lamports** (extra check a); 19 → `InvalidCurve`.
+- **Cloned mainnet accounts so far:** `dbc_event_authority`, `dbc_pool_authority`,
+  `damm_v2_pool_authority`, `damm_v2_migration_config_customizable`. All were found by per-tx
+  discovery (`evidence/p0/accounts/discovery.jsonl`) and are pinned in `mainnet-pins.json`.
 
 ---
 
@@ -469,10 +501,31 @@ the approval requirement. `fixtures:dump` and `fixtures:check` use them.
 Floor-engine note: Lite is the §4 equation with `V = 0`, i.e. `A·s² − B·s = 0`. That gives
 `s = ⌊B/A⌋ = ⌊L/(S + ⌈L/s_max⌉)⌋`, the same crate and the same rounding, so the "only
 `ballast-floor` computes F" rule holds for both tiers. The crate does not reject `V = 0`; it only
-errors on `S = 0` and on the §4 bounds (`crates/floor/src/lib.rs`, `FloorError`). **No `V = 0`
-vector exists yet.** One must be added to `vectors.json` and the Python reference before the
-verifier's Lite path relies on it. Whether a Lite config can migrate with 100% permanent lock is
+errors on `S = 0` and on the §4 bounds (`crates/floor/src/lib.rs`, `FloorError`). *Corrected
+2 Oct 2026:* an earlier version of this note said no `V = 0` vector existed. That was wrong.
+§27's "Pool only (V = 0)" boundary vector is in `vectors.json` as `pool_only_v_zero`, along with
+2,500 random `V = 0` cases, and Rust matches Python on all of them. Whether a Lite config can migrate with 100% permanent lock is
 STEP 3 check (c).
+
+### D-009 — Program size relaxed to a soft ≤ 400 KB; CU budgets keep 30% headroom
+
+**Status: APPROVED 2 Oct 2026. Owner's wording:**
+
+> Program size target relaxed to a soft ≤ 400 KB (rent only matters if mainnet funding arrives);
+> keep size-optimised settings, report the .so size per slice, no build days spent on size
+> reduction. CU budgets keep 30% headroom under §26 until devnet cross-check.
+
+Amends D-007's 300 KB target; the rest of D-007 stands. The size-optimised settings stay
+(`opt-level = "z"`, `lto`, `codegen-units = 1`, manual CPI builders), and the `.so` size is reported
+after every program slice. Reason: STEP 2 finding T5 (Anchor baseline ≈ 210 KB).
+
+**CU targets until the devnet cross-check** (70% of each §26 budget, measured locally per finding T6):
+
+| Instruction | §26 budget | Local target (30% headroom) |
+|---|---|---|
+| `open` | 600k | **≤ 420k** |
+| atomic `redeem` (cancel + burn + pay + place) | 1.2M | **≤ 840k** |
+| `refresh_floor` | 800k | **≤ 560k** |
 
 ---
 

@@ -56,3 +56,6 @@ yarn-error.log*
 
 # Mainnet-binary local validator ledger (pnpm localnet)
 .localnet/
+
+# P0 harness throwaway local-validator keys (never evidence)
+tests/integration/p0/.state/

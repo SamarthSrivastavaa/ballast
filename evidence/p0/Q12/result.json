@@ -1,0 +1,225 @@
+{
+  "question": "Q12 — exact PoolConfig layout and enum encodings for the deployed DBC",
+  "signature": "4WRdaMmy2pLtTfXCQEuRMN5FGWJLLzcazJBighP1hEcCKeZjE4geiBc4rS4gC2vhJDeK4pHqhuZtXhmQkryczGA6",
+  "slot": 106,
+  "config": "B64gZCtT2xYo98UkbNcVPazdmKLAL1yp6qf4oivRRm9o",
+  "owner": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+  "ownerIsDbc": true,
+  "dataLen": 1048,
+  "discriminator": "1a6c0e7b74e6812b",
+  "discriminatorIsPoolConfig": true,
+  "curveCapacity": 20,
+  "storedOnly": {
+    "version": 0,
+    "quoteTokenFlag": 0,
+    "fixedTokenSupplyFlag": 1,
+    "migratedPoolBaseFeeMode": 0,
+    "poolCreationFee": "0"
+  },
+  "fieldChecks": [
+    {
+      "field": "quoteMint",
+      "sent": "So11111111111111111111111111111111111111112",
+      "stored": "So11111111111111111111111111111111111111112",
+      "ok": true
+    },
+    {
+      "field": "feeClaimer",
+      "sent": "EuhvV72Kfm6fuFuczGp863hTgBVu9Y38cQxW2rQ3iBVG",
+      "stored": "EuhvV72Kfm6fuFuczGp863hTgBVu9Y38cQxW2rQ3iBVG",
+      "ok": true
+    },
+    {
+      "field": "leftoverReceiver",
+      "sent": "EuhvV72Kfm6fuFuczGp863hTgBVu9Y38cQxW2rQ3iBVG",
+      "stored": "EuhvV72Kfm6fuFuczGp863hTgBVu9Y38cQxW2rQ3iBVG",
+      "ok": true
+    },
+    {
+      "field": "collectFeeMode",
+      "sent": 0,
+      "stored": 0,
+      "ok": true
+    },
+    {
+      "field": "migrationOption",
+      "sent": 1,
+      "stored": 1,
+      "ok": true
+    },
+    {
+      "field": "activationType",
+      "sent": 0,
+      "stored": 0,
+      "ok": true
+    },
+    {
+      "field": "tokenDecimal",
+      "sent": 6,
+      "stored": 6,
+      "ok": true
+    },
+    {
+      "field": "partnerLiquidityPercentage",
+      "sent": 0,
+      "stored": 0,
+      "ok": true
+    },
+    {
+      "field": "partnerPermanentLockedLiquidityPercentage",
+      "sent": 50,
+      "stored": 50,
+      "ok": true
+    },
+    {
+      "field": "creatorLiquidityPercentage",
+      "sent": 0,
+      "stored": 0,
+      "ok": true
+    },
+    {
+      "field": "creatorPermanentLockedLiquidityPercentage",
+      "sent": 50,
+      "stored": 50,
+      "ok": true
+    },
+    {
+      "field": "migrationQuoteThreshold",
+      "sent": "10000000000",
+      "stored": "10000000000",
+      "ok": true
+    },
+    {
+      "field": "sqrtStartPrice",
+      "sent": "33241012347184484",
+      "stored": "33241012347184484",
+      "ok": true
+    },
+    {
+      "field": "migrationFeeOption",
+      "sent": 6,
+      "stored": 6,
+      "ok": true
+    },
+    {
+      "field": "creatorTradingFeePercentage",
+      "sent": 50,
+      "stored": 50,
+      "ok": true
+    },
+    {
+      "field": "tokenUpdateAuthority",
+      "sent": 1,
+      "stored": 1,
+      "ok": true
+    },
+    {
+      "field": "enableFirstSwapWithMinFee (bool → u8)",
+      "sent": 0,
+      "stored": 0,
+      "ok": true
+    },
+    {
+      "field": "compoundingFeeBps → migratedCompoundingFeeBps",
+      "sent": 0,
+      "stored": 0,
+      "ok": true
+    },
+    {
+      "field": "tokenType",
+      "sent": 0,
+      "stored": 0,
+      "ok": true
+    },
+    {
+      "field": "migrationFeePercentage",
+      "sent": 15,
+      "stored": 15,
+      "ok": true
+    },
+    {
+      "field": "creatorMigrationFeePercentage",
+      "sent": 0,
+      "stored": 0,
+      "ok": true
+    },
+    {
+      "field": "preMigrationTokenSupply",
+      "sent": "1000000000000000",
+      "stored": "1000000000000000",
+      "ok": true
+    },
+    {
+      "field": "postMigrationTokenSupply",
+      "sent": "1000000000000000",
+      "stored": "1000000000000000",
+      "ok": true
+    },
+    {
+      "field": "curve[0]",
+      "sent": {
+        "sqrtPrice": "74329163249214348",
+        "liquidity": "4140881975101581037130091634899"
+      },
+      "stored": {
+        "sqrtPrice": "74329163249214348",
+        "liquidity": "4140881975101581037130091634899"
+      },
+      "ok": true
+    },
+    {
+      "field": "curve[1]",
+      "sent": {
+        "sqrtPrice": "81423518784157371",
+        "liquidity": "191860904204695389937539880986462"
+      },
+      "stored": {
+        "sqrtPrice": "81423518784157371",
+        "liquidity": "191860904204695389937539880986462"
+      },
+      "ok": true
+    },
+    {
+      "field": "curve[2]",
+      "sent": {
+        "sqrtPrice": "94019780976799616",
+        "liquidity": "148580030285363304820762116537731"
+      },
+      "stored": {
+        "sqrtPrice": "94019780976799616",
+        "liquidity": "148580030285363304820762116537731"
+      },
+      "ok": true
+    },
+    {
+      "field": "curve[3..20] all zero",
+      "sent": "zero",
+      "stored": "zero",
+      "ok": true
+    },
+    {
+      "field": "poolFees.baseFee.cliffFeeNumerator",
+      "sent": "10000000",
+      "stored": "10000000",
+      "ok": true
+    },
+    {
+      "field": "poolFees.baseFee.baseFeeMode",
+      "sent": 0,
+      "stored": 0,
+      "ok": true
+    }
+  ],
+  "allFieldsMatch": true,
+  "derivedByDbc": {
+    "migrationSqrtPrice": "94019780972219157",
+    "migrationBaseThreshold": "327204991574219",
+    "swapBaseAmount": "538236068297593",
+    "migrationQuoteThreshold": "10000000000",
+    "lastCurvePoint": "94019780976799616",
+    "migrationSqrtPriceEqualsLastCurvePoint": false,
+    "lastCurvePointMinusMigrationSqrtPrice": "4580459",
+    "swapPlusMigrationBase": "865441059871812"
+  },
+  "cu": 45145
+}

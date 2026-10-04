@@ -1,0 +1,41 @@
+{
+  "question": "Q3 — DAMM v2 L ↔ reserves mapping",
+  "atMigration": {
+    "label": "right after migration",
+    "layoutVersion": 1,
+    "L": "30702214157579652106863560058426",
+    "sqrtPrice": "94019780972219157",
+    "sqrtMinPrice": "4295048016",
+    "sqrtMaxPrice": "79226673521066979257578248091",
+    "expectedA": "326550581591070",
+    "expectedB": "8482999999",
+    "tokenAAmount": "326550581591072",
+    "tokenBAmount": "8483000000",
+    "vaultA": "326550581591072",
+    "vaultB": "8483000000",
+    "protocolAFee": "0",
+    "protocolBFee": "0",
+    "diffA_tokenAmount": "2",
+    "diffB_tokenAmount": "1",
+    "withinTwoUnits": true
+  },
+  "afterSwaps": {
+    "label": "after 40 swaps and 2 claims",
+    "layoutVersion": 1,
+    "L": "30702214157579652106863560058426",
+    "sqrtPrice": "94884209162082400",
+    "sqrtMinPrice": "4295048016",
+    "sqrtMaxPrice": "79226673521066979257578248091",
+    "expectedA": "323575592068190",
+    "expectedB": "8560993637",
+    "tokenAAmount": "323575592068203",
+    "tokenBAmount": "8560993647",
+    "vaultA": "323665333343125",
+    "vaultB": "8563217657",
+    "protocolAFee": "89741274921",
+    "protocolBFee": "2224009",
+    "diffA_tokenAmount": "13",
+    "diffB_tokenAmount": "10",
+    "withinTwoUnits": false
+  }
+}

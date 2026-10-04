@@ -134,8 +134,8 @@ pnpm -F sdk test; pnpm -F compiler test; pnpm -F keeper test; pnpm -F app build;
   execution → originality → impact → traction. Apache-2.0; `JUDGES.md` maps each criterion to linked evidence.
 - **D-007 budget:** no mainnet spend unless the owner approves **each transaction**. Primary proof: `pnpm proof:local`
   (the full §22 sequence on the mainnet-binary local validator), then devnet. Mainnet Full deploy only if funded.
-  **`.so` ≤ 300 KB:** manual CPI builders (no full Meteora crates), `opt-level = "z"`, `lto`, `codegen-units = 1`;
-  **report the `.so` size after every program slice.**
+  **D-009:** `.so` soft ≤ 400 KB (manual CPI builders, `opt-level = "z"`, `lto`, `codegen-units = 1`; report size per
+  slice; no days on size). CU: 30% headroom under §26 (open ≤ 420k, redeem ≤ 840k, refresh ≤ 560k) until devnet.
 - **D-008 tiers:** Lite = DBC config only, flat 1% fee, 100% permanently locked LP split partner/creator, migration
   fee 0, floor = locked-liquidity floor (V = 0). Full = the specified program. README and `JUDGES.md` show both.
 

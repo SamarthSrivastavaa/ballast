@@ -5,7 +5,7 @@ resolver = "2"
 # workspace members too. They are added as their slices land, so that `cargo test` stays
 # meaningful and green in the meantime. crates/floor needs no network and no Anchor, so it
 # is first (§33: "the floor crate needs no network, do it first").
-members = ["crates/floor"]
+members = ["crates/floor", "crates/meteora-types"]
 # The toolchain probe is its own workspace: it pulls the whole Anchor/Solana tree, which
 # should not be resolved here while the P0 gate is closed.
 exclude = ["tests/toolchain-probe"]

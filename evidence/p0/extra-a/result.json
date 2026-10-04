@@ -1,0 +1,85 @@
+{
+  "check": "(a) lowest migration_quote_threshold the deployed DBC accepts (Lite config, D-008)",
+  "ladder": [
+    {
+      "threshold": "1",
+      "ok": false,
+      "code": 6021,
+      "error": "Program log: AnchorError thrown in programs/dynamic-bonding-curve/src/instructions/partner/create_config/process_create_config.rs:493. Error Code: InvalidCurve. Error Number: 6021. Error Message: Invalid curve."
+    },
+    {
+      "threshold": "10",
+      "ok": false,
+      "code": 6021,
+      "error": "Program log: AnchorError thrown in programs/dynamic-bonding-curve/src/instructions/partner/create_config/process_create_config.rs:493. Error Code: InvalidCurve. Error Number: 6021. Error Message: Invalid curve."
+    },
+    {
+      "threshold": "100",
+      "ok": true,
+      "code": null
+    },
+    {
+      "threshold": "1000",
+      "ok": true,
+      "code": null
+    },
+    {
+      "threshold": "10000",
+      "ok": true,
+      "code": null
+    },
+    {
+      "threshold": "100000",
+      "ok": true,
+      "code": null
+    },
+    {
+      "threshold": "1000000",
+      "ok": true,
+      "code": null
+    },
+    {
+      "threshold": "10000000",
+      "ok": true,
+      "code": null
+    },
+    {
+      "threshold": "100000000",
+      "ok": true,
+      "code": null
+    },
+    {
+      "threshold": "1000000000",
+      "ok": true,
+      "code": null
+    },
+    {
+      "threshold": "10000000000",
+      "ok": true,
+      "code": null
+    }
+  ],
+  "monotonicOverLadder": true,
+  "minimumThresholdLamports": "20",
+  "minimumThresholdSol": 2e-8,
+  "accepted": {
+    "signature": "vBzsJNZZmVNucJQjAYRi67LKh8TL8yJqR5gC8NKDbZq7bb9azNKvkJKYBDHSKAxtoTuHqiVePdvxadixySKegiz",
+    "config": "EaJW8uFeSbNFmQMjYAQYY9Nmo2sQdRACPfB7wwT4NfHS",
+    "cu": 44866
+  },
+  "rejectedAtMinimumMinusOne": {
+    "threshold": "19",
+    "signature": "5gKDyuLNzMwvF9dYxX9TcEdWMkt2UCNVGvDTvSQCN7kxnUcguCAuHzPF215r3pfBAbPQJs68nBz1wBP1MXiX7xZQ",
+    "err": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6021
+        }
+      ]
+    },
+    "errorLog": [
+      "Program log: AnchorError thrown in programs/dynamic-bonding-curve/src/instructions/partner/create_config/process_create_config.rs:493. Error Code: InvalidCurve. Error Number: 6021. Error Message: Invalid curve."
+    ]
+  }
+}

@@ -34,6 +34,7 @@ import {
 } from "./lib";
 
 const acceptDrift = process.argv.includes("--accept-drift");
+const SYSTEM_PROGRAM = "11111111111111111111111111111111";
 
 async function main(): Promise<void> {
   await assertMainnet(RPC_URL);
@@ -85,8 +86,11 @@ async function main(): Promise<void> {
       accounts[a.name] = fresh;
       added++;
     } else {
+      // A system-owned account with no data (e.g. an Anchor __event_authority PDA holding dust)
+      // can only change by lamports, which no program reads; only its owner/data/existence can drift.
+      const lamportsOnly = fresh.owner === SYSTEM_PROGRAM && fresh.dataBytes === 0;
       const diffs = (["address", "owner", "lamports", "executable", "dataSha256"] as const).filter(
-        (k) => prev[k] !== fresh[k],
+        (k) => prev[k] !== fresh[k] && !(k === "lamports" && lamportsOnly),
       );
       for (const k of diffs) drift.push(`${a.name}: ${k} pinned=${prev[k]} mainnet=${fresh[k]}`);
       accounts[a.name] = diffs.length ? fresh : prev;

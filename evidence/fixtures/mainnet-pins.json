@@ -3,7 +3,7 @@
   "cluster": "mainnet-beta",
   "genesisHash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
   "rpcHost": "api.mainnet-beta.solana.com",
-  "dumpedAt": "2026-10-02T08:51:40.670Z",
+  "dumpedAt": "2026-10-04T13:15:44.247Z",
   "programs": {
     "dbc": {
       "label": "Meteora Dynamic Bonding Curve",
@@ -71,5 +71,46 @@
       "executableSha256": "c0c7851d48c05abbd74e129e349e83f9343e52ef789cf9ea451575c07515b160"
     }
   },
-  "accounts": {}
+  "accounts": {
+    "dbc_event_authority": {
+      "address": "8Ks12pbrD6PXxfty1hVQiE9sc289zgU1zHkvXhrSdriF",
+      "owner": "11111111111111111111111111111111",
+      "lamports": 1000056,
+      "executable": false,
+      "dataBytes": 0,
+      "dataSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readAtSlot": 453262932,
+      "jsonFile": "fixtures/accounts/dbc_event_authority.json"
+    },
+    "dbc_pool_authority": {
+      "address": "FhVo3mqL8PW5pH5U2CN4XE33DokiyZnUwuGpH2hmHLuM",
+      "owner": "11111111111111111111111111111111",
+      "lamports": 68821882530,
+      "executable": false,
+      "dataBytes": 0,
+      "dataSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readAtSlot": 453266198,
+      "jsonFile": "fixtures/accounts/dbc_pool_authority.json"
+    },
+    "damm_v2_pool_authority": {
+      "address": "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC",
+      "owner": "11111111111111111111111111111111",
+      "lamports": 175479019550,
+      "executable": false,
+      "dataBytes": 0,
+      "dataSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readAtSlot": 453267114,
+      "jsonFile": "fixtures/accounts/damm_v2_pool_authority.json"
+    },
+    "damm_v2_migration_config_customizable": {
+      "address": "A8gMrEPJkacWkcb3DGwtJwTe16HktSEfvwtuDh2MCtck",
+      "owner": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+      "lamports": 2887848,
+      "executable": false,
+      "dataBytes": 328,
+      "dataSha256": "988089b8bacd1967ad85e4acd2bb520c847c872a74fed0614b01a89c57ae73a5",
+      "readAtSlot": 453267141,
+      "jsonFile": "fixtures/accounts/damm_v2_migration_config_customizable.json"
+    }
+  }
 }

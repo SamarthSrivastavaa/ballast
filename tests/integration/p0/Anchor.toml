@@ -1,0 +1,17 @@
+[toolchain]
+anchor_version = "0.31.1"
+solana_version = "2.1.21"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.localnet]
+p0_harness = "8NXYd5YYAw8GhS3oNYSY98yovznADBoLroTGuSvNrnqu"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "localnet"
+wallet = "../../../.keys/devnet/localnet.json"

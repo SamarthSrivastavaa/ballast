@@ -1,0 +1,146 @@
+{
+  "question": "Q2 — pool mode, range, constant L under swaps and fee claims",
+  "before": {
+    "liquidity": "30702214157579652106863560058426",
+    "permanentLockLiquidity": "30702214157579652106863560058426",
+    "sqrtMinPrice": "4295048016",
+    "sqrtMaxPrice": "79226673521066979257578248091",
+    "collectFeeMode": 0,
+    "compoundingFeeBps": 0,
+    "poolStatus": 0,
+    "poolType": 1,
+    "partnerPosition": {
+      "unlocked": "0",
+      "vested": "0",
+      "permanent": "15351107078789826053431780029213",
+      "feeBPending": "0",
+      "feeAPending": "0"
+    },
+    "creatorPosition": {
+      "unlocked": "0",
+      "vested": "0",
+      "permanent": "15351107078789826053431780029213",
+      "feeBPending": "0",
+      "feeAPending": "0"
+    }
+  },
+  "afterSwaps": {
+    "liquidity": "30702214157579652106863560058426",
+    "permanentLockLiquidity": "30702214157579652106863560058426",
+    "sqrtMinPrice": "4295048016",
+    "sqrtMaxPrice": "79226673521066979257578248091",
+    "collectFeeMode": 0,
+    "compoundingFeeBps": 0,
+    "poolStatus": 0,
+    "poolType": 1,
+    "partnerPosition": {
+      "unlocked": "0",
+      "vested": "0",
+      "permanent": "15351107078789826053431780029213",
+      "feeBPending": "0",
+      "feeAPending": "0"
+    },
+    "creatorPosition": {
+      "unlocked": "0",
+      "vested": "0",
+      "permanent": "15351107078789826053431780029213",
+      "feeBPending": "0",
+      "feeAPending": "0"
+    }
+  },
+  "afterClaims": {
+    "liquidity": "30702214157579652106863560058426",
+    "permanentLockLiquidity": "30702214157579652106863560058426",
+    "sqrtMinPrice": "4295048016",
+    "sqrtMaxPrice": "79226673521066979257578248091",
+    "collectFeeMode": 0,
+    "compoundingFeeBps": 0,
+    "poolStatus": 0,
+    "poolType": 1,
+    "partnerPosition": {
+      "unlocked": "0",
+      "vested": "0",
+      "permanent": "15351107078789826053431780029213",
+      "feeBPending": "0",
+      "feeAPending": "0"
+    },
+    "creatorPosition": {
+      "unlocked": "0",
+      "vested": "0",
+      "permanent": "15351107078789826053431780029213",
+      "feeBPending": "0",
+      "feeAPending": "0"
+    }
+  },
+  "swaps": 40,
+  "swapSignatures": [
+    "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"
+  ],
+  "claims": {
+    "partner": {
+      "signature": "4gba6qqduRE5RffcKQPRKZsJDBAdPbRd9vpPex98zG9R54mRhXnLcPdp7Yk3Ha5ZiYZjQzarBX2DgS3eh6QmnmBr",
+      "succeeded": true,
+      "err": null,
+      "errorLog": [],
+      "received": "4448032",
+      "cu": 44407
+    },
+    "creator": {
+      "signature": "59nhd2e2UD1FZi4hwMbnzzFoArBD6d7QV7XnxffPzk92JH5HHHYMPVkjhC5JZVaEWsSaKZZWw7VMAwAHXJRhym6x",
+      "succeeded": true,
+      "err": null,
+      "errorLog": [],
+      "received": "4448032",
+      "cu": 44409
+    }
+  },
+  "collectFeeModeIsOnlyB": false,
+  "compoundingZero": true,
+  "fullRange": {
+    "sqrtMinPrice": "4295048016",
+    "sqrtMaxPrice": "79226673521066979257578248091",
+    "isMin": true,
+    "isMax": true
+  },
+  "lUnchangedAfterSwaps": true,
+  "lUnchangedAfterClaims": true
+}

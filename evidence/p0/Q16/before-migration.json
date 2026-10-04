@@ -1,0 +1,16 @@
+{
+  "question": "Q16 (before migration) — withdraw_leftover from a third wallet",
+  "signature": "4QEBuQxRnHGw9ktSXLgzj1GnGdVdCjpUDUr8PPVqpdt8oKTGKeijV8ow2hVFGgdcL5PromiPePLLW5TrNomFPE7G",
+  "refused": true,
+  "err": {
+    "InstructionError": [
+      0,
+      {
+        "Custom": 6022
+      }
+    ]
+  },
+  "errorLog": [
+    "Program log: AnchorError thrown in programs/dynamic-bonding-curve/src/instructions/migration/withdraw_leftover.rs:77. Error Code: NotPermitToDoThisAction. Error Number: 6022. Error Message: Not permit to do this action."
+  ]
+}

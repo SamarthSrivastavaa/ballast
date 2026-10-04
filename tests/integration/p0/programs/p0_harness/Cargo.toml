@@ -1,0 +1,22 @@
+[package]
+name = "p0_harness"
+description = "STEP 3 P0 harness: PDAs that act as fee_claimer, leftover_receiver, pool creator and limit-order owner, signing CPIs into the mainnet Meteora binaries. Not programs/ballast."
+version = "0.1.0"
+edition = "2021"
+# Compiled for SBF by platform-tools rustc 1.79 (Finding T1); also drives MSRV-aware resolution.
+rust-version = "1.79"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "p0_harness"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build"]
+
+[dependencies]
+anchor-lang = "=0.31.1"

@@ -112,4 +112,4 @@ jobs:
       # edition-2024 crate, no MSRV above 1.79, and Anchor 0.31.1 / solana-program 2.1.21 exactly
       # (DECISIONS.md § STEP 2 decision). programs/ballast joins this list when it lands.
       - name: check_lock.py
-        run: python3 scripts/toolchain/check_lock.py tests/toolchain-probe tests/toolchain-probe/floor-sbf
+        run: python3 scripts/toolchain/check_lock.py tests/toolchain-probe tests/toolchain-probe/floor-sbf tests/integration/p0

@@ -1,19 +1,19 @@
 # Ballast — Status
 
-**Updated:** 2 Oct 2026, end of session (STEP 1 and STEP 2 done and committed; STEP 3 P0 harness next) · **Deadline:** 13 Oct 2026 06:59 UTC · **We submit 11 Oct.**
+**Updated:** 4 Oct 2026 (STEP 3 **STOPPED at Q2**, awaiting the owner's decision) · **Deadline:** 13 Oct 2026 06:59 UTC · **We submit 11 Oct.**
 
 ## Current state
 
 | | |
 |---|---|
-| Phase | STEP 1 (decisions) **done**. STEP 2 (toolchain) **done: §16 pins kept**. Next: STEP 3 P0 harness (3 Oct) |
+| Phase | STEP 3 (P0 harness) **STOPPED at Q2** per the P0 rule — `evidence/p0/REPORT.md`. **Needs the owner's decision** on the §7 collect-fee-mode correction |
 | Last passed gate | **none** — no §18 gate attempted |
-| P0 gate (Q1–Q5) | **BLOCKING.** All five UNKNOWN. Answered on the mainnet-binary local validator (D-001) |
-| Open UNKNOWNs | **20 of 20** Top-20 questions. STEP 2 produced leads only (instructions present in the deployed binaries), no answers |
+| P0 gate (Q1–Q5) | **Q1 VERIFIED · Q2 FAILED as specified (correction tested, awaiting approval) · Q3 VERIFIED · Q4 VERIFIED · Q5 NOT RUN** |
+| Open UNKNOWNs | 9 of 20 (Q5, Q7–Q10, Q17–Q20); Q14/Q15 partial. Verified: Q1, Q3, Q4, Q6, Q11, Q12, Q13, Q16 |
 | Last commit | `35e7530` (STEP 2), on top of `c246a6d` (STEP 1). Tree clean |
 | Program code | none (correct — gated). `crates/floor` is exempt: pure math, no network |
 | Floor engine | **done and proven:** 31 tests, 100k-case property gate, 10,010 differential matches (Rust = Python); builds for SBF under platform-tools rustc 1.79 |
-| Meteora | **The five mainnet binaries execute** on Agave 2.1.21 at their real IDs (27/27 probes; DBC `create_partner_metadata` and Token Metadata `CreateMetadataAccountV3` ran to completion). Nothing deeper yet. `anchor build`/`anchor test` **pass** (lockfile method) |
+| Meteora | Full DBC → DAMM v2 graduation runs on the mainnet binaries: config, pool, creator → PDA, buys, PDA fee claims via CPI, migration, 40 DAMM swaps, leftover. DLMM not yet exercised |
 | Devnet SOL | not requested (STEP 3 runs locally; devnet comes 6 Oct) |
 | Mainnet | untouched. D-007: no spend without per-transaction approval |
 | Environment | `/home/hp/ballast` on ext4 in WSL Ubuntu (D-005). `source ~/.ballast-env` before every command |
@@ -57,22 +57,38 @@ Evidence: `evidence/step-1a/step2-decision.md`.
 - [x] RULE applied; recorded in `DECISIONS.md` § Toolchain (findings T2–T8)
 - [x] `/audit`: 0 critical · 1 high · 10 medium · 1 wording, **all fixed**. Re-audit confirmed the fixes; its 9 new mediums are also fixed. `scripts/fixtures/negative-tests.sh`: **14/14 guards refuse** (`evidence/step-1a/hardening.txt`). Final TEST 1 run on the hardened harness: 27/27, served bytes measured = pins
 
-## Next — STEP 3 (3 Oct): P0 harness on the mainnet-binary validator
+## STEP 3 — P0 harness (started 2 Oct, resumed 4 Oct) · STOPPED at Q2
 
-**Next task (one action):** in a new `tests/integration/p0/` harness (TS, run against `pnpm localnet`),
-create a Proof-shaped DBC config with `create_config` via DBC SDK 1.5.13. Then **simulate**
-`initialize_virtual_pool_with_spl_token` → swaps to the threshold → `migration_damm_v2` to discover
-every mainnet account they read: migration config key, DAMM v2 config, and so on. Add those
-accounts to `scripts/fixtures/manifest.json`, `pnpm fixtures:dump`, and restart localnet. Q1–Q3
-reads then follow on a real migrated pool. **Spec sections:** Top-20 table (BUILD_SPEC.md lines
-5–31), §2 (truth audit), §7 (DBC integration), §8 (DAMM v2), §9 (DLMM), §10 (vault), §18
-phases 1–5, §27 (vectors).
+**Why stopped:** §7's DBC `migrated_pool_fee.collect_fee_mode = 1` yields a DAMM **BothToken**
+pool. DBC numbers its enum {0 QuoteToken, 1 OutputToken, 2 Compounding}; DAMM's is
+{0 BothToken, 1 OnlyB, 2 Compounding}. DBC value 0 was tested to give OnlyB with constant L.
+**Proposed one-value correction**, not applied: `DECISIONS.md` § OPEN DECISION Q2;
+`evidence/p0/REPORT.md`.
 
-Q1–Q9, Q11–Q16, Q18 exactly as the Top-20 table describes, plus (a) the lowest `migration_quote_threshold` DBC accepts, (b) manual migration at that size, (c) a Lite config migrating with 100% permanent lock. Every answer → `DECISIONS.md` with signatures + JSON in `evidence/p0/`. **Any Q1–Q5 failure: STOP, present the spec's fallback.**
+- [x] Harness: `tests/integration/p0/` (Anchor proxy program `p0_harness` 188,560 B + TS runner;
+  `up.sh` / `clone.sh`)
+- [x] `crates/meteora-types`: generated from the vendored IDLs; field-for-field = SDK on real
+  accounts (`cargo test -p meteora-types`)
+- [x] Q12, (a), Q1, Q3, Q4, Q6, Q11, Q13, Q16 answered; Q14, Q15 mostly answered — see `DECISIONS.md` Top-20
+- [x] 4 mainnet accounts discovered by execution and pinned
+- [ ] Q2 authoritative re-run with the corrected value (after approval)
+- [ ] Q5, Q8, Q9 (DLMM LimitOrder pair, PDA place/cancel, fills, reconciliation)
+- [ ] Q7 (separate wallet-creator run; plus an overshoot-capable curve for Q14 fee basis + Q15 surplus)
+- [ ] Q18 (approximate atomic redeem CU)
+- [ ] (b) migration at the minimum size; (c) Lite 100% permanent
+- [ ] mainnet `simulateTransaction` for config/pool/DLMM-pair creation (discovery so far is per-tx key checks)
+- [ ] one clean end-to-end re-run on a fresh validator, so all evidence comes from one ledger
 
-Gotchas carried in: pass the **mainnet** DLMM ID explicitly to the DLMM SDK (its `localhost` entry is a different program, T7); measure CU locally but cross-check against mainnet `simulateTransaction` before deciding Q18 (T6).
+## Next task
 
-First moves: `pnpm fixtures:check` → `pnpm localnet` → DBC `create_config` via the SDK (1.5.13) → simulate pool creation + migration to discover the mainnet accounts each program reads (D-001), then add them to `scripts/fixtures/manifest.json` and re-dump.
+**Waiting on the owner:** approve (or reject) the Q2 correction. On approval:
+1. Set `migratedCollectFeeMode = 0` in `tests/integration/p0/src/config.ts`, and apply the §7 /
+   DECISIONS amendment with a `[D-010]` marker.
+2. Clean full re-run of q12 → proof-setup → proof-buy → proof-premigration → proof-migrate → proof-post.
+3. Build Q5 (DLMM): pair creation (Q8), PDA place/cancel via proxy, swap through, reconcile (Q9).
+4. Q7, (b)/(c), Q18, then the report's go/no-go and `/handoff`.
+
+Spec sections: Top-20 table, §7, §8, §9 (DLMM), §10, §26 (CU), §27 (bins).
 
 ## Open risks
 
@@ -80,12 +96,12 @@ First moves: `pnpm fixtures:check` → `pnpm localnet` → DBC `create_config` v
 |---|---|---|
 | ~~platform-tools v1.43 vs edition-2024 deps~~ | — | **Resolved** by the lockfile method; guarded in CI |
 | Local CU ≠ mainnet CU (Agave 2.1.21 cost model and feature set; finding T6) | Q18 decided on wrong numbers | Cross-check with mainnet `simulateTransaction` (read-only) or devnet before trusting a number near a limit |
-| Q5 (PDA DLMM limit orders via CPI) | Kills the DLMM bid layer | UNKNOWN — 3 Oct |
-| Q1/Q7 (permanent-lock atomicity / splittable creator position) | L stalled or under-counted | UNKNOWN — 3 Oct |
+| Q5 (PDA DLMM limit orders via CPI) | Kills the DLMM bid layer | **UNKNOWN — next after the Q2 decision** |
+| Q7 (splittable creator position) | L under-counted if the creator stays a wallet | UNKNOWN (Q1 atomicity VERIFIED); creator-PDA default works (transfer_pool_creator verified) |
 | Q18 (atomic redeem CU) | Forces two-step redeem | UNKNOWN — 5 Oct |
-| **Program size > 300 KB (D-007)** — Anchor baseline is already ~210 KB (probe: 211,312 B at `opt-level = "z"`, which saves only 3%) | Deploy rent beyond the funding ask | **Open, measured.** Manual CPI builders; size reported every slice; owner decision if the first slice lands > 300 KB |
+| **Calendar slip:** STEP 3 was due 3 Oct; P0 not closed on 4 Oct | Program part 1 (4 Oct) starts late | Buffer: cut order in the calendar; P0 work resumes on approval |
+| Program size (D-009: soft ≤ 400 KB; was 300 KB under D-007) — Anchor baseline ≈ 210 KB (T5) | Deploy rent if mainnet funding arrives | **Relaxed by D-009.** Size-optimised settings kept; size reported per slice; no build days on size |
 | No funding for mainnet Full deploy | Traction criterion (D-006) relies on Lite + Scanner | Funding message 7 Oct |
-| No `V = 0` vector in `vectors.json` | Lite verifier path untested | Add before the verifier's Lite path |
 | Meteora program IDs not yet read on **devnet** (§2 assumes identical) | 6 Oct devnet deploy targets wrong IDs | Open: devnet `getAccountInfo` of the three IDs before 6 Oct |
 | Pinned bytes are only re-fetchable while mainnet still serves them | A Meteora upgrade makes old pins unreproducible from a fresh clone | Accepted; `fixtures:dump` refuses drift; consider archiving the `.so` files as a release asset before submission |
 | `sudo` needs a password in WSL; `clang`/`unzip` absent | A build needing them stops | Ask the owner if it comes up |
@@ -96,7 +112,15 @@ First moves: `pnpm fixtures:check` → `pnpm localnet` → DBC `create_config` v
 
 ## In progress
 
-Nothing half-built and nothing uncommitted. The local validator is stopped; `pnpm localnet --quiet`
-restarts it from the pinned fixtures (online check first). Session-start routine: `source ~/.ballast-env
-&& cd ~/ballast && pnpm fixtures:check`. Root `node_modules` is installed. If a reinstall times out, the
-repo `.npmrc` already carries the WSL network settings.
+STEP 3 is **paused, not half-built**: everything run so far is committed with its evidence. To
+resume on a fresh ledger:
+
+```bash
+source ~/.ballast-env && cd ~/ballast
+pnpm localnet --quiet &                     # mainnet-binary validator (online fixtures check first)
+bash tests/integration/p0/up.sh             # fund payer, deploy p0_harness
+pnpm exec tsx tests/integration/p0/src/run.ts q12 qa proof-setup proof-buy proof-premigration proof-migrate proof-post
+```
+
+A run that stops with `NEEDS CLONE` names a mainnet account to pin: `bash tests/integration/p0/clone.sh
+<name> <address> "<why>" "<step>"`, then restart `pnpm localnet`.

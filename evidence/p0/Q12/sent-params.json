@@ -1,0 +1,88 @@
+{
+  "poolFees": {
+    "baseFee": {
+      "cliffFeeNumerator": "10000000",
+      "firstFactor": 0,
+      "secondFactor": "0",
+      "thirdFactor": "0",
+      "baseFeeMode": 0
+    },
+    "dynamicFee": null
+  },
+  "collectFeeMode": 0,
+  "migrationOption": 1,
+  "activationType": 0,
+  "tokenType": 0,
+  "tokenDecimal": 6,
+  "partnerLiquidityPercentage": 0,
+  "partnerPermanentLockedLiquidityPercentage": 50,
+  "creatorLiquidityPercentage": 0,
+  "creatorPermanentLockedLiquidityPercentage": 50,
+  "migrationQuoteThreshold": "10000000000",
+  "sqrtStartPrice": "33241012347184484",
+  "lockedVesting": {
+    "amountPerPeriod": "0",
+    "cliffDurationFromMigrationTime": "0",
+    "frequency": "0",
+    "numberOfPeriod": "0",
+    "cliffUnlockAmount": "0"
+  },
+  "migrationFeeOption": 6,
+  "tokenSupply": {
+    "preMigrationTokenSupply": "1000000000000000",
+    "postMigrationTokenSupply": "1000000000000000"
+  },
+  "creatorTradingFeePercentage": 50,
+  "tokenUpdateAuthority": 1,
+  "migrationFee": {
+    "feePercentage": 15,
+    "creatorFeePercentage": 0
+  },
+  "migratedPoolFee": {
+    "collectFeeMode": 1,
+    "dynamicFee": 0,
+    "poolFeeBps": 100
+  },
+  "poolCreationFee": "0",
+  "partnerLiquidityVestingInfo": {
+    "vestingPercentage": 0,
+    "bpsPerPeriod": 0,
+    "numberOfPeriods": 0,
+    "cliffDurationFromMigrationTime": 0,
+    "frequency": 0
+  },
+  "creatorLiquidityVestingInfo": {
+    "vestingPercentage": 0,
+    "bpsPerPeriod": 0,
+    "numberOfPeriods": 0,
+    "cliffDurationFromMigrationTime": 0,
+    "frequency": 0
+  },
+  "migratedPoolBaseFeeMode": 0,
+  "migratedPoolMarketCapFeeSchedulerParams": {
+    "numberOfPeriod": 0,
+    "sqrtPriceStepBps": 0,
+    "schedulerExpirationDuration": 0,
+    "reductionFactor": "0"
+  },
+  "enableFirstSwapWithMinFee": false,
+  "compoundingFeeBps": 0,
+  "padding": [
+    0,
+    0
+  ],
+  "curve": [
+    {
+      "sqrtPrice": "74329163249214348",
+      "liquidity": "4140881975101581037130091634899"
+    },
+    {
+      "sqrtPrice": "81423518784157371",
+      "liquidity": "191860904204695389937539880986462"
+    },
+    {
+      "sqrtPrice": "94019780976799616",
+      "liquidity": "148580030285363304820762116537731"
+    }
+  ]
+}

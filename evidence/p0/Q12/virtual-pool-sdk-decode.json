@@ -1,0 +1,74 @@
+{
+  "volatilityTracker": {
+    "lastUpdateTimestamp": "0",
+    "padding": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "sqrtPriceReference": "0",
+    "volatilityAccumulator": "0",
+    "volatilityReference": "0"
+  },
+  "config": "GwxHR9Euok8yUMdg2yL1QyzRWGmjdqGWteS27urEG8vR",
+  "creator": "Fz5UB75CcSRBTSUxvNYU9wxA12SQFqTQWnu1zQYFLCcZ",
+  "baseMint": "3Z4ctFRrwzLr5ACS26uHHSLfneptumRcGNRpV181e7t7",
+  "baseVault": "8Mtuq5D8oQxTL3am8PbLJR8GTsXdv3U4Yo631wR3ox98",
+  "quoteVault": "KJfptr3dsXSBh6EJzKxnWDFeAozShRBZzJFsMtJonkJ",
+  "baseReserve": "1000000000000000",
+  "quoteReserve": "0",
+  "protocolBaseFee": "0",
+  "protocolQuoteFee": "0",
+  "partnerBaseFee": "0",
+  "partnerQuoteFee": "0",
+  "sqrtPrice": "33241012347184484",
+  "activationPoint": "70",
+  "poolType": 0,
+  "isMigrated": 0,
+  "isPartnerWithdrawSurplus": 0,
+  "isProtocolWithdrawSurplus": 0,
+  "migrationProgress": 0,
+  "isWithdrawLeftover": 0,
+  "isCreatorWithdrawSurplus": 0,
+  "migrationFeeWithdrawStatus": 0,
+  "metrics": {
+    "totalProtocolBaseFee": "0",
+    "totalProtocolQuoteFee": "0",
+    "totalTradingBaseFee": "0",
+    "totalTradingQuoteFee": "0"
+  },
+  "finishCurveTimestamp": "0",
+  "creatorBaseFee": "0",
+  "creatorQuoteFee": "0",
+  "legacyCreationFeeBits": 0,
+  "creationFeeBits": 0,
+  "hasSwap": 0,
+  "padding0": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "protocolLiquidityMigrationFeeBps": 20,
+  "padding1": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "protocolMigrationBaseFeeAmount": "0",
+  "protocolMigrationQuoteFeeAmount": "0",
+  "padding2": [
+    "0",
+    "0",
+    "0"
+  ]
+}
