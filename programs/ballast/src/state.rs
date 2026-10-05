@@ -1,5 +1,4 @@
-//! On-chain state (§5). Only the accounts Program Part 1 needs are defined here; `Launch` and the
-//! rest arrive with `register_launch`.
+//! On-chain state (§5): `Global`, `Class`, `Launch`, and the §7/§9 canonical constants.
 
 use anchor_lang::prelude::*;
 
@@ -42,6 +41,64 @@ pub struct Class {
     pub launches: u32,
     pub bump: u8,
     pub reserved: [u8; 64],
+}
+
+/// §5 launch lifecycle. Stored as a `u8`; `0` is never a valid state.
+pub mod launch_state {
+    pub const REGISTERED: u8 = 1;
+    pub const FUNDED: u8 = 2;
+    /// §5 lists `Migrated` between `Funded` and `Cleaned`; `burn_leftover` is the first instruction
+    /// to observe `CreatedPool` and moves straight to `CLEANED`, so it is never stored on its own.
+    pub const MIGRATED: u8 = 3;
+    pub const CLEANED: u8 = 4;
+    pub const OPEN: u8 = 5;
+}
+
+/// §5: one launch. Never closed — it is the public proof record.
+#[account]
+#[derive(InitSpace)]
+pub struct Launch {
+    pub class: Pubkey,
+    pub dbc_pool: Pubkey,
+    pub base_mint: Pubkey,
+    /// Receives creator income (§6 `settle_graduation`, `harvest`). Set by the signing creator.
+    pub creator_beneficiary: Pubkey,
+    pub state: u8,
+    pub bump: u8,
+    pub creator_auth_bump: u8,
+    pub vault_bump: u8,
+    /// The on-chain prediction (§7): `class.predicted_s_open`, recorded in the pool-creation
+    /// transaction before any third-party trade (D-011).
+    pub predicted_s: u128,
+    pub registered_slot: u64,
+    pub damm_pool: Pubkey,
+    pub partner_position: Pubkey,
+    pub creator_position: Pubkey,
+    pub partner_nft_account: Pubkey,
+    pub creator_nft_account: Pubkey,
+    pub dlmm_pair: Pubkey,
+    pub bid_order: Pubkey,
+    pub bid_bin_id: i32,
+    pub bid_quote_committed: u64,
+    pub s_open: u128,
+    /// Only state cached across instructions (§4 code rule 2): the monotone check's last `s`.
+    pub s_last: u128,
+    pub burned: u64,
+    pub redeemed_tokens: u64,
+    pub redeemed_lamports: u64,
+    pub harvested: u64,
+    pub deposited: u64,
+    pub filled_tokens: u64,
+    pub creator_forwarded: u64,
+    pub treasury_fees: u64,
+    pub open_slot: u64,
+    /// `settle_graduation`: the partner migration fee and partner trading fees moved to the vault.
+    pub migration_fee: u64,
+    pub partner_fees: u64,
+    /// `burn_leftover`: leftover base units burned and partner surplus moved to the vault.
+    pub leftover_burned: u64,
+    pub surplus: u64,
+    pub reserved: [u8; 128],
 }
 
 /// The canonical parameters a class must match (§7). One per `size_tag`.
@@ -115,4 +172,16 @@ pub mod canon {
     pub const CURVE_POINTS: usize = 3;
     pub const REDEEM_FEE_BPS: u16 = 50;
     pub const HARVEST_TREASURY_BPS: u16 = 1_000;
+
+    // ---- §9 DLMM pair, as created in the launch transaction (D-011) and observed in Q8 ----
+    /// `LbPair.pair_type` of a customizable permissionless pair.
+    pub const DLMM_PAIR_TYPE_CUSTOMIZABLE: u8 = 2;
+    /// `parameters.function_type` of a LimitOrder pair (DLMM `FunctionType::LimitOrder`).
+    pub const DLMM_FUNCTION_TYPE_LIMIT_ORDER: u8 = 2;
+    /// `parameters.collect_fee_mode`: fees in token Y (WSOL) only.
+    pub const DLMM_COLLECT_FEE_MODE_ONLY_Y: u8 = 1;
+    /// §9 "base fee: minimum allowed" — Q9 measured 1 bps as accepted; base fee in bps is
+    /// `base_factor · bin_step / 10_000` with `base_fee_power_factor = 0`.
+    pub const DLMM_BASE_FEE_BPS_X10K: u32 = 10_000;
+    pub const DLMM_PAIR_STATUS_ENABLED: u8 = 0;
 }

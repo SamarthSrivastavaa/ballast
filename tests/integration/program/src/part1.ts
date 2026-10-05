@@ -43,7 +43,9 @@ async function dbcConfig(label: string, params: Params, opts: { feeClaimer?: (cf
 async function createClass(label: string, admin: Keypair, config: PublicKey, sizeTag = 0, dbcConfigOverride?: PublicKey): Promise<Landed> {
   const ix = await ballast.methods
     .createClass(sizeTag)
-    .accountsPartial({ global: pdas.global(), admin: admin.publicKey, class: pdas.class(config), dbcConfig: dbcConfigOverride ?? config })
+    // The class PDA is derived from the dbc_config actually passed, so a structural test reaches the
+    // handler's own checks rather than failing on Anchor's seeds constraint.
+    .accountsPartial({ global: pdas.global(), admin: admin.publicKey, class: pdas.class(dbcConfigOverride ?? config), dbcConfig: dbcConfigOverride ?? config })
     .instruction();
   return send(`${label}: create_class`, [ix], [admin], { expectFail: true });
 }
@@ -102,18 +104,23 @@ export async function part1(): Promise<number> {
     const ok = c.dbcConfig.equals(canonical.config) && c.sizeTag === 0 && c.bidBinStep === 10 && c.predictedSOpen.toString() === "47755047807748143";
     return { status: ok ? "pass" : "fail", expected: "Class fields per §5", got: ok ? "ok" : JSON.stringify(c), detail: { signature: t.signature, cu: t.cu } };
   });
-  await suite.case("create_class: same config twice is refused", async () => {
+  await suite.case("create_class: same config twice is refused (class already exists)", async () => {
+    // Only meaningful if the first call created the class.
+    const exists = await conn.getAccountInfo(pdas.class(canonical.config));
+    if (!exists) return { status: "fail", expected: "class exists before the second call", got: "no class account" };
     const t = await createClass("canonical again", admin, canonical.config);
-    return { status: t.err ? "pass" : "fail", expected: "refused (class exists)", got: t.err ? JSON.stringify(t.err) : "succeeded" };
+    const inUse = t.logs.some((l) => l.includes("already in use"));
+    return { status: t.err && inUse ? "pass" : "fail", expected: "refused: account already in use", got: t.err ? (inUse ? "already in use" : errorName(t.logs) ?? JSON.stringify(t.err)) : "succeeded" };
   });
 
   // ---------------------------------------------------------------- create_class: structural
+  // An unclaimed config: the canonical one already has a class, so `init` would fail first.
+  const fresh = await dbcConfig("canonical Proof #2", configParameters(PROOF));
   await suite.case("create_class: signer is not the admin", async () => {
-    const t = await createClass("not admin", intruder, canonical.config);
+    const t = await createClass("not admin", intruder, fresh.config);
     const got = errorName(t.logs);
     return { status: got === "NotAdmin" ? "pass" : "fail", expected: "NotAdmin", got };
   });
-  const fresh = await dbcConfig("canonical Proof #2", configParameters(PROOF));
   await suite.case("create_class: unknown size_tag", async () => {
     const t = await createClass("unknown size", admin, fresh.config, 7);
     const got = errorName(t.logs);
@@ -201,8 +208,10 @@ export async function part1(): Promise<number> {
       mutate: (p) => { p.curve = [...curveParams(curve.map((x) => ({ s: x.sqrtPrice, l: x.liquidity }))), { sqrtPrice: bn(sAt(9n)), liquidity: bn(curve[2].liquidity) }]; },
     },
     {
-      name: "rule 4: migration price far below the last point (segment 3 × 1.5)", expected: "ConfigMigrationPriceOutOfBand",
-      mutate: (p) => { p.curve = curveParams(curve.map((x, i) => ({ s: x.sqrtPrice, l: i === 2 ? (x.liquidity * 3n) / 2n : x.liquidity }))); },
+      // +1% on segment 3: the migration price drops ~0.5%, far outside the 2^24 band (relative
+      // ~1.8e-10), while DBC still accepts the supply (×1.5 sold more than the supply; DBC refused).
+      name: "rule 4: migration price below the band (segment 3 liquidity +1%)", expected: "ConfigMigrationPriceOutOfBand",
+      mutate: (p) => { p.curve = curveParams(curve.map((x, i) => ({ s: x.sqrtPrice, l: i === 2 ? (x.liquidity * 101n) / 100n : x.liquidity }))); },
     },
     {
       name: "rule 3: curve off by one unit of liquidity (hash mismatch)", expected: "ConfigHashMismatch",
@@ -242,5 +251,5 @@ export async function part1(): Promise<number> {
   }
 
   void isqrt;
-  return suite.finish("program/part1/results.json");
+  return suite.finish("part1/results.json");
 }

@@ -1,0 +1,524 @@
+{
+  "suite": "Program Part 1 — initialize_global, create_class",
+  "ranAt": "2026-10-05T14:27:35.026Z",
+  "pass": 41,
+  "fail": 0,
+  "unreachable": 9,
+  "results": [
+    {
+      "name": "initialize_global: signer is not the upgrade authority",
+      "status": "pass",
+      "expected": "NotUpgradeAuthority",
+      "got": "NotUpgradeAuthority",
+      "detail": {
+        "signature": "5UYF1X9P9AAFQd3DP8i3uUMHaNFSx97jX1UM1Dw4MsW8qzjnczz7QAGyruX9scoMsUwe8mHRB4QLdZCE6gtfnAn9"
+      }
+    },
+    {
+      "name": "initialize_global: treasury is not a token account",
+      "status": "pass",
+      "expected": "TreasuryNotTokenAccount",
+      "got": "TreasuryNotTokenAccount",
+      "detail": {
+        "signature": "2ttp23zhcMuPmQz9meKyKD3Pqkt6vNonWZP2x4da6ZDBBdtwvEfZzAcdrHXFSrp1NfpDCcrZLh9nYXpx7hDqyUTN"
+      }
+    },
+    {
+      "name": "initialize_global: treasury mint is not WSOL",
+      "status": "pass",
+      "expected": "TreasuryWrongMint",
+      "got": "TreasuryWrongMint",
+      "detail": {
+        "signature": "2iHycFaXJWhuUKZJzcxiMTCBjEiiMPCpLDqQyb15KZz369LoWK6UEPk2kv31fuNhahR9JuDxiwDHXxBXHivdJiJT"
+      }
+    },
+    {
+      "name": "initialize_global: upgrade authority, WSOL treasury → ok",
+      "status": "pass",
+      "expected": "ok",
+      "got": "ok",
+      "detail": {
+        "signature": "4fH66681poebooDkkYQajtm2WcoS2HAoHsA8cJ9PKirbENHGYDfMbXXowBH6NoXWAnkLoEHWeddg8QGNWYy15Zaf",
+        "global": {
+          "admin": "EjqP97TZMY6P45eXPVUsxqdBrZ336vpiQVctTPBmjnwE",
+          "treasury": "CCnGiVQBFiMraGvVoBK8ewgnbxjsAopPJLcFQ8mT7ujh",
+          "classCreationEnabled": true,
+          "version": 1,
+          "bump": 254,
+          "reserved": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "name": "initialize_global: second call is refused",
+      "status": "pass",
+      "expected": "refused (account in use)",
+      "got": "{\"InstructionError\":[0,{\"Custom\":0}]}",
+      "detail": {
+        "signature": "XgPab4pKm4BNTVxuvG8uEPfAo58rUG9N6z5jKRnizKH2LUfXHUAGAkF76bzwTFpMPuNNwN2aCTKWuW9nvvBL464"
+      }
+    },
+    {
+      "name": "create_class: canonical Proof config → ok, Class recorded",
+      "status": "pass",
+      "expected": "Class fields per §5",
+      "got": "ok",
+      "detail": {
+        "signature": "3EuacA9jyeQ1ZyGpAgBipnj8dxjtNLnn7Cv6AELQ6QoXNo9Mz7cJKD6Z5g3RtQzvJyBFm54YbShGLSKwksoR6Bxg",
+        "cu": 16089
+      }
+    },
+    {
+      "name": "create_class: same config twice is refused (class already exists)",
+      "status": "pass",
+      "expected": "refused: account already in use",
+      "got": "already in use"
+    },
+    {
+      "name": "create_class: signer is not the admin",
+      "status": "pass",
+      "expected": "NotAdmin",
+      "got": "NotAdmin"
+    },
+    {
+      "name": "create_class: unknown size_tag",
+      "status": "pass",
+      "expected": "UnknownSizeTag",
+      "got": "UnknownSizeTag"
+    },
+    {
+      "name": "rule 1: dbc_config not owned by DBC",
+      "status": "pass",
+      "expected": "ConfigWrongOwner",
+      "got": "ConfigWrongOwner"
+    },
+    {
+      "name": "rule 1: DBC-owned account that is not a PoolConfig",
+      "status": "pass",
+      "expected": "ConfigWrongDiscriminator",
+      "got": "ConfigWrongDiscriminator"
+    },
+    {
+      "name": "rule 2: quote_mint is not WSOL",
+      "status": "pass",
+      "expected": "ConfigQuoteMint",
+      "got": "ConfigQuoteMint",
+      "detail": {
+        "dbcSignature": "3Fu9mf1wYWiRsf1XYaJQdVamZAnKVLsdM8Vmwfn1tVCBdDmYk5Lrn8KCsM9ZRpYDTw6tWqUsPJ4CjKwrLfZdunBK",
+        "signature": "nXTJXbEfcs5NaLtV9wmRLzk5zAAbfQcdEFq8ZVPhdGpo9r9KLAqNXhUEVsZ1J7gGEWgXoFLDyVuK1x5DVjtPfHt"
+      }
+    },
+    {
+      "name": "rule 2: fee_claimer is not partner_auth",
+      "status": "pass",
+      "expected": "ConfigFeeClaimer",
+      "got": "ConfigFeeClaimer",
+      "detail": {
+        "dbcSignature": "3ahfEfCDW6dWCE4sbDj1DMmqy7Y6MvEJs8FyNVdoqBf3UNDvaLChFN5hwbKbA3CvwzSX3YbVuWXUqmzhmrETJKXA",
+        "signature": "2ECyQMvTimyjrwuzreRfQh8Kn16zzL6JGxtqqo4dsRVZLQntxfCrV1sDBByZEyYXjJtKEAfzxWjsvUg5GRTpE9KV"
+      }
+    },
+    {
+      "name": "rule 2: leftover_receiver is not partner_auth",
+      "status": "pass",
+      "expected": "ConfigLeftoverReceiver",
+      "got": "ConfigLeftoverReceiver",
+      "detail": {
+        "dbcSignature": "4oG2SjaTZAaHiqixXDws4VugDreMhM3UmRGb3PCWmdQAyb13hPubi181VjjBsDLRiPq9ZbsUVRyLjZd5zLRvsuFh",
+        "signature": "2M7wnyv7ccoKR3opSV3n2KrBjuJT1qmXqipe6nPAjrHBpWp3i9PmmyF8XiUUeGoFvk5MiCGJyQqfzAVB5aZdXBo4"
+      }
+    },
+    {
+      "name": "rule 2: token_type Token-2022",
+      "status": "pass",
+      "expected": "ConfigTokenType",
+      "got": "ConfigTokenType",
+      "detail": {
+        "dbcSignature": "5ysR3NEgdvBBYakhkU9KCwy2aQ67STzXc4MgUQViPkQc5WNqL3neqKNMXBgiggVYi5NaG3pjJu2uHTmMLZf5ixM",
+        "signature": "2jnhmRgNwQFUG4u7CZ48RR3GKPaF1fJnnvKXe1kRFTHB4nPHvpFGytkEUXh5ZhTq8fyf8wbG9W9xFpH4xfm6GPk5"
+      }
+    },
+    {
+      "name": "rule 2: token_decimal 9",
+      "status": "pass",
+      "expected": "ConfigTokenDecimal",
+      "got": "ConfigTokenDecimal",
+      "detail": {
+        "dbcSignature": "5yeo3TGgLCTYgVuJCBHfh6mPvyoHVNJbcp4P7bmvbakC6HwmssAJvhvRKr4gmsEQbNTVGgbfSVegnGrbU4HHcswE",
+        "signature": "4sB6GsFx2BwaZ97dPd9uUzTRPx3rrNRiVk2BtxEAsUoGBgzZdKRfEWSJLfdqLyPyNZFfzctSe3ekVNb2ze84xNAT"
+      }
+    },
+    {
+      "name": "rule 2: supply not fixed",
+      "status": "pass",
+      "expected": "ConfigFixedSupplyFlag",
+      "got": "ConfigFixedSupplyFlag",
+      "detail": {
+        "dbcSignature": "2bcQpauBjhkRNiPqsjTegny6imGRPscoUUMmVefEkLa4uvcKsVjfXza3g2R9rpxj1m2cKBFFGzyJtmJJvJfXmSKn",
+        "signature": "3hKsdcAdmah6Ynvv7sfQS7ZQmY2DcFcGfexZPmESFMdgFW9raBhHTydNh46stK67DFLg3TtUNoM2egFqa1tyZZQ"
+      }
+    },
+    {
+      "name": "rule 2: pre_migration_token_supply 2·10^15",
+      "status": "pass",
+      "expected": "ConfigPreMigrationSupply",
+      "got": "ConfigPreMigrationSupply",
+      "detail": {
+        "dbcSignature": "5RhCQwWG4oLWcCTjUgvgEJFJhnfeaQgjuu3FKu1J6nrqsNfqxG5VK7rJSrH9gVbhMbENz2GSsYMWn39UtzDpBpCq",
+        "signature": "3SHsFK3Wm2psL2hj2WiyGWchQPfeoG8NRNcde9LSGXikjTdf3uxJy9cX6zpyVCG2FPHH87fQ4nKL9bJHgosrfxTZ"
+      }
+    },
+    {
+      "name": "rule 2: token_update_authority not Immutable",
+      "status": "pass",
+      "expected": "ConfigTokenUpdateAuthority",
+      "got": "ConfigTokenUpdateAuthority",
+      "detail": {
+        "dbcSignature": "2Hmk4gZKXzAuWMQ6ejN7zJLyD8qLQuaBsyJndHiC7zavkQavdiQjwGD4x1jQShzPNpk3qFPZJQS53rqxd3H9EkE9",
+        "signature": "RMKgff32SncoC3o1pbPDMKrtpWc7fYsyCDjX69dT3RCzRR2guyzVY9Vsby9etx967npShtgTBUpyRH4PP2ZJNdf"
+      }
+    },
+    {
+      "name": "rule 2: collect_fee_mode OutputToken",
+      "status": "pass",
+      "expected": "ConfigCollectFeeMode",
+      "got": "ConfigCollectFeeMode",
+      "detail": {
+        "dbcSignature": "49tBW8PPgEeu9wHEURhFL54JeqjkMutAvDyo2HtkXx9QbpQsKVD58UcxoxTyjWymYDf2Mgk5jFmcwToAXpEeixau",
+        "signature": "SMaXV1PXqBFjpK7EfVZGoAJ7KwRWieb94yfd4GFtriVuF4joVpuNPTkX9HNwAyMuTNC9ut2xkE9CpiK8w8EzPXH"
+      }
+    },
+    {
+      "name": "rule 2: migration_fee_option FixedBps100",
+      "status": "pass",
+      "expected": "ConfigMigrationFeeOption",
+      "got": "ConfigMigrationFeeOption",
+      "detail": {
+        "dbcSignature": "2h7VbMmPzDvQw45C5xskrg2BVqE5oPY7gzHMy8wadbipGpXj87EzBCwCWM99t9JKT67nyXrr7bWP262N7GcJw9fh",
+        "signature": "3VjUECXFuuphiNKBNU3Nd3JXYvckAr2i2yZqrPuYwxWkCCiyJEB5BHxHU21RUKFUBr88Btz8y9SQdwMKbYph7f5w"
+      }
+    },
+    {
+      "name": "rule 2: migrated collect fee mode 1 (§7's old value, D-010)",
+      "status": "pass",
+      "expected": "ConfigMigratedCollectFeeMode",
+      "got": "ConfigMigratedCollectFeeMode",
+      "detail": {
+        "dbcSignature": "62nEUfLgqbShj3EJC5dMTHDAebNYopLF1mJaGMNGtgecSoqRvRvoFM28e1USjHTDsDvxD3rDs7cmYT5RQ6P9vh1X",
+        "signature": "kSpqVQNG3NigEuWT6ynDwTDoreFymFybuhKKGrX84Bhk35VY7JLyqZaus8GKdmofauz3TmfR5bJEU4sTeHwB37o"
+      }
+    },
+    {
+      "name": "rule 2: migrated dynamic fee on",
+      "status": "pass",
+      "expected": "ConfigMigratedDynamicFee",
+      "got": "ConfigMigratedDynamicFee",
+      "detail": {
+        "dbcSignature": "5ri4THSVdJ9sK1Nk7VA4sfqDnMXQJcTZxWWyB9Y69hXSL8zNWFWE7K87mzzpTVSyoDeKHzcVnwdjokdzuYhdJYzK",
+        "signature": "3x5fjoHddatrcxUCgaaTEkuTCjkhXsq5XbEEz5VVUYMc8jjSZXJKURvBrstqr6LN8EYLhWH7b3DFhmwpughGFr6i"
+      }
+    },
+    {
+      "name": "rule 2: migrated pool fee 200 bps",
+      "status": "pass",
+      "expected": "ConfigMigratedPoolFeeBps",
+      "got": "ConfigMigratedPoolFeeBps",
+      "detail": {
+        "dbcSignature": "pfB9fXEsx9muG6M3Z9hX9mquRKpZGdQoKwVticpW2iNdGT2RuM66FaXkM3ynDDjAs8Rkh4gmW4QEhL5rTQz7n4g",
+        "signature": "2xrvTmQdCbwV5dHXLt9QzSULFU3SU5vPVcmpnFxpFiaWCUY5jBECoJTVsH2oQrx9XZtgGwWjBAS7948XeU34mMou"
+      }
+    },
+    {
+      "name": "rule 2: migrated pool base fee mode exponential",
+      "status": "pass",
+      "expected": "ConfigMigratedBaseFeeMode",
+      "got": "ConfigMigratedBaseFeeMode",
+      "detail": {
+        "dbcSignature": "2jjcbKZgaXttEm4Rs9uYzfdMc86D9iuYrhTXgErHpotgKnuE7UkinGFX6hJ3xaUakQtxx9eZT9QgoGK3WSghtEf5",
+        "signature": "5TBeBSU8MGhX6v22vpjCJFzWBQxCnFyds3sQZxAJuSyKwuo76MYzUKhDTC9urPR2TPsY3wNcvRHzov4V6ARHAico"
+      }
+    },
+    {
+      "name": "rule 2: compounding pool (masked: needs collect mode 2, rejected first)",
+      "status": "pass",
+      "expected": "ConfigMigratedCollectFeeMode",
+      "got": "ConfigMigratedCollectFeeMode",
+      "detail": {
+        "dbcSignature": "3Y579TcYQPtw5pUBbTvsptMooNiBMyV6re7fq3ZTS66di3S5SL1UpnwunDE2A6mdFkaRv8YdrcAtqpFEK544H8xC",
+        "signature": "4vKs1yvdAHGptinvC75ujHoLEjaneRLpW3r81WvuWdCuWMwWPZ7rgGY5wggf6b78yvty8sPh2jjdiB9kSqrzEjQn"
+      }
+    },
+    {
+      "name": "rule 2: creator_trading_fee_percentage 40",
+      "status": "pass",
+      "expected": "ConfigCreatorTradingFee",
+      "got": "ConfigCreatorTradingFee",
+      "detail": {
+        "dbcSignature": "NMbpGoHab3ZGnguUcGp6AbsmCx65ibUgFBcXKdKhqrG2fduQze6kJvEuzfZnCGFP2gzp3qHF8LpVs22N6MJvSXU",
+        "signature": "3NKmoqgox7VkrwT5wv9CqYZQ9aFFMfxcruMix6tAy4N2nXPy9hsMzeFj3mxw2f7URag43bNy9ENqArTHke54tazC"
+      }
+    },
+    {
+      "name": "rule 2: migration_fee_percentage 10",
+      "status": "pass",
+      "expected": "ConfigMigrationFeePercentage",
+      "got": "ConfigMigrationFeePercentage",
+      "detail": {
+        "dbcSignature": "HRz87MaXYsdV8fw9kiHZc1Cy4w4oH4185vn2uofTuWrKGJuARxuu3TXQn83VcmVukmgsEVYVt15PUihyhsRFbwJ",
+        "signature": "2zjtKNekhLAef84C6WUNcXr411JSRs9bKLaFA8S6yFEWiGMuN3LZaLxcCk1DtKPaspwiXxCMjtHNy49Ntkjk7Eqo"
+      }
+    },
+    {
+      "name": "rule 2: creator_migration_fee_percentage 10",
+      "status": "pass",
+      "expected": "ConfigCreatorMigrationFeePercentage",
+      "got": "ConfigCreatorMigrationFeePercentage",
+      "detail": {
+        "dbcSignature": "2bdAP1M1oku84eFmXuUMbouwdeQahrnX2Trzft1nXL94CGmyTt9hwiHmv8y2WSRaKXgjAtTGwXGexZWWqye2Dws5",
+        "signature": "2dn1gqPkDa34Sh2xVtf7Hh6evQ3GFQTjNmadmChLvCu2BZYeYhUMcp5uFKdD4Yp9hd4QsC7weSQB8XRPTqqrSPm8"
+      }
+    },
+    {
+      "name": "rule 2: partner permanent LP 40 (creator 60)",
+      "status": "pass",
+      "expected": "ConfigPartnerPermanentLp",
+      "got": "ConfigPartnerPermanentLp",
+      "detail": {
+        "dbcSignature": "4FqYhHBjFDTwfk63pyT63csTL9sX3qmBh5TZtsi9NgGSjNt8kEJYrZU3kUJr4SKDTdW2ubFmYj6RoKTHJUXBGwVX",
+        "signature": "6pg3wS6rWxRynJoAWZLy6yM7rWsbHviAkDKVsanXDV2gXiEZJax6BxY3TneBSuYejxikjxmHoqhyJP8go7SiLCZ"
+      }
+    },
+    {
+      "name": "rule 2: creator permanent LP 40 (+10 unlocked)",
+      "status": "pass",
+      "expected": "ConfigCreatorPermanentLp",
+      "got": "ConfigCreatorPermanentLp",
+      "detail": {
+        "dbcSignature": "4QyE7e8QZ74pNd52UwMyjEBzmTrtU9CSRPFJTTxB9NZEGpVwDQWSmVUWTqHNMjwrj9MmDWo1F67TUGjBE47EzCbB",
+        "signature": "j4BuS2TytbbfcHQHE1wtmgBUYa9U7qGqe3bncusShtGLR8BfQNBH92BgcfW3aaZtRRraSqEipZwaFnDpNrbg4uu"
+      }
+    },
+    {
+      "name": "rule 2: LP vesting on",
+      "status": "unreachable",
+      "expected": "ConfigLpVesting",
+      "got": "DBC rejects this config itself: InvalidFeePercentage",
+      "detail": {
+        "dbcSignature": "425HXjb3okSiyx1kekhHGEhcRChsuF8So3EmJg4aq3kzYZMZ5i74mXP347DEbw67qVVUEHb4zzXcLiavJ2wLo8Pu"
+      }
+    },
+    {
+      "name": "rule 2: token locked vesting on",
+      "status": "pass",
+      "expected": "ConfigLockedVesting",
+      "got": "ConfigLockedVesting",
+      "detail": {
+        "dbcSignature": "67cpbMNVYPfdjWdLRezmMyxGx6yMCEm4zZUvsf4dszYsVzv9JFWyN4G6MCi2hXaGpvvBB4tPnB6ypua44rhn2EGQ",
+        "signature": "66VvgahTt9utVmyu9r1NZEHR9ejC6h2bn6xbouKADbr8QhSnbhY4xP7kfAmR4dDcDrNFt4BPD1x139kY55W1VrRp"
+      }
+    },
+    {
+      "name": "rule 2: enable_first_swap_with_min_fee",
+      "status": "pass",
+      "expected": "ConfigFirstSwapMinFee",
+      "got": "ConfigFirstSwapMinFee",
+      "detail": {
+        "dbcSignature": "3AAeKWadHzBiZy3a9tVMCbdk3BMgv7igjrrVsLXm9z9uLr1itK89nTFGjsEDtd7GENM1LonS13D9JJFzDmAtoMAq",
+        "signature": "4eq7mJTToNZM9dLhdN2Ck37wtGTfU2d4sW2TTkWz3FUQV5X8byYgszuK1WY21awq946KbmoWdnCwioQZQvaTAqJ7"
+      }
+    },
+    {
+      "name": "rule 2: base fee 2%",
+      "status": "pass",
+      "expected": "ConfigBaseFee",
+      "got": "ConfigBaseFee",
+      "detail": {
+        "dbcSignature": "3e1FxeXvxmUsLGUTD21Na3uweJbucy5HYVGovU6d2UwnraKpiNnD9cLyYwUDqbkwQdN1GmuDb1Ctj37hjv3Dc7wx",
+        "signature": "59fM8bEfsM9NhN7Bbng6FXi47FmDSgLZDivXRLAQC8ktJpspNGEF1VWKtL6o8gGoYBtkaAag5V4hxH6n7RhRQGbb"
+      }
+    },
+    {
+      "name": "rule 2: dynamic fee on",
+      "status": "pass",
+      "expected": "ConfigDynamicFee",
+      "got": "ConfigDynamicFee",
+      "detail": {
+        "dbcSignature": "4vZxvXTchkKgofVvgpxm8mTN2kJpzBZvbk97xhbTmVYh5adWyKn4v2q1UA7mNApdQBU7X44eJRjeibTCUqBGPPfr",
+        "signature": "5NozFjog5zo3LyE3syLxcwbjniSkj3PGqdjUQxj64znmtodEV5vCeToRRD1haBS1LpjfByewck4nsPLWfa7ywhiu"
+      }
+    },
+    {
+      "name": "rule 2: threshold 11 SOL (curve rebuilt, same shape)",
+      "status": "pass",
+      "expected": "ConfigThreshold",
+      "got": "ConfigThreshold",
+      "detail": {
+        "dbcSignature": "5VgFGmjxwssRErtkSHfX2FRUUCLQq5xpi7eqSXd7cf52eYoGz8FzCUpAXYxbsdKazRwY37yvRYvbQ78cqZGkoHec",
+        "signature": "4hB2SJVijhQpjtdYkyVDhb7UBFQduxBbPMVtNcVnUVmArfJXEc4PqKmhdaGRGKPUJ97oBkhDFwcak14NmLBdV2Uf"
+      }
+    },
+    {
+      "name": "rule 2: sqrt_start_price from p0 = 3.2473e-9",
+      "status": "pass",
+      "expected": "ConfigStartPrice",
+      "got": "ConfigStartPrice",
+      "detail": {
+        "dbcSignature": "2VzE82qeBQ4GbJGfUrjsr8A5Ek41qR9Qv57FcGTJPJcBfrS9m9bMxZTcLxbg6QDhvYi8TgedGSgB4J3bpkNvg91S",
+        "signature": "2tvX8Q3tJbCyx2VQujAAeaSEhAnX1X6AAMTgn2o5QN1zZTuLJUf1iFtvghYpMpQCbsC2h2Qr25GPUM8S8Zoq7viM"
+      }
+    },
+    {
+      "name": "rule 4: two-point curve",
+      "status": "pass",
+      "expected": "ConfigCurvePointCount",
+      "got": "ConfigCurvePointCount",
+      "detail": {
+        "dbcSignature": "3w8j8NKCiHVZadh1wf7Rjc5BsJj7VFttg6K2nqmYYoyikq45EC6FRKujUGibU6eJQ4K3U8DQcouAFhRTWpSuiUSD",
+        "signature": "2ecauQgEuPVJ7n51TxF91Gw8fKmU5rxKcSWDmPaeS5ecsfogcNBsNtNSUxfq9p127YDUsJ2AUS3zs2FKWQQ1eQs9"
+      }
+    },
+    {
+      "name": "rule 4: non-zero fourth point",
+      "status": "pass",
+      "expected": "ConfigCurveTailNotZero",
+      "got": "ConfigCurveTailNotZero",
+      "detail": {
+        "dbcSignature": "2gAKtB5oRoXjr5y8kZPEwYmvzSF626XGowTeJNEEdUbuee3f9SDfi51mx8YrqeZDGanWCxJaSN2g4QzRghQaqTzD",
+        "signature": "4Bpbs1tnUB5zpJGY6N7A3pCGYr7M2RrSt3fKdknUwDgLwkwBPnfSVXPwx5xkKbeoUyyzXTtzqLoho6WPzRU52ia7"
+      }
+    },
+    {
+      "name": "rule 4: migration price below the band (segment 3 liquidity +1%)",
+      "status": "pass",
+      "expected": "ConfigMigrationPriceOutOfBand",
+      "got": "ConfigMigrationPriceOutOfBand",
+      "detail": {
+        "dbcSignature": "5VBF4bKFS1roWSqLNqaqGMuUL63KfshRvbwKASeBo7PADBcrcK3wDJmSTgViyMMtrkB5NKMhdG9GyCtQkMcc6x9c",
+        "signature": "2qotELHB1yzDkbsHXxf2fyYX6i1iDjv1VyUuih3cdfdcWyg39q3Wc7h9CNh2wFMckdmvcm31Qs6Xs97XqKEVo68p"
+      }
+    },
+    {
+      "name": "rule 3: curve off by one unit of liquidity (hash mismatch)",
+      "status": "pass",
+      "expected": "ConfigHashMismatch",
+      "got": "ConfigHashMismatch",
+      "detail": {
+        "dbcSignature": "5Y7fpcLVKCCWMeFqLmzm7oA2aYdX8uFtH35RV4RzLHZPAUuLxU16EEbSq76XdogQhoZk5QfiWnKqc7k75UCTEAsb",
+        "signature": "5iXYYBD5LkiL4nBjajrqwz11ukQRv52Ri5Tqg56KsjHBx1R72uFghomncvsJnb72zAdsiFVo28Yuk6jykeoN3YjF"
+      }
+    },
+    {
+      "name": "rule 1: wrong size with a PoolConfig discriminator",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "only DBC writes DBC-owned accounts; it never writes a PoolConfig of another size"
+    },
+    {
+      "name": "rule 1: PoolConfig.version",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "DBC sets version itself; the deployed binary writes 0 (Q12)"
+    },
+    {
+      "name": "rule 2: quote_token_flag Token-2022",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "needs a Token-2022 quote mint with a DBC token badge (admin-issued)"
+    },
+    {
+      "name": "rule 2: partner unlocked LP > 0",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "DBC requires the four LP percentages to sum to 100, so a permanent field deviates first"
+    },
+    {
+      "name": "rule 2: creator unlocked LP > 0 alone",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "same: the sum forces a permanent field to deviate first (covered by 'creator permanent LP 40')"
+    },
+    {
+      "name": "rule 4: curve not ascending",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "DBC rejects a non-ascending curve at create_config"
+    },
+    {
+      "name": "rule 4: capacity below threshold",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "DBC rejects a curve that cannot reach the threshold at create_config"
+    },
+    {
+      "name": "rule 4: LP percentages sum ≠ 100",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "DBC enforces the sum at create_config"
+    }
+  ]
+}
