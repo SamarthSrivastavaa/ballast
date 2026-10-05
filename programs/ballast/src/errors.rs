@@ -132,4 +132,54 @@ pub enum BallastError {
     // ---- arithmetic ----
     #[msg("arithmetic overflow")]
     Overflow,
+
+    // ---- register_launch (§6, D-011) — appended so earlier codes stay stable ----
+    #[msg("launch tx: an instruction is too short to parse")]
+    LaunchTxMalformed,
+    #[msg("launch tx: no DBC pool creation for this pool before register_launch")]
+    LaunchPoolNotCreatedInTx,
+    #[msg("launch tx: no DLMM pair creation for this pair before register_launch")]
+    LaunchPairNotCreatedInTx,
+    #[msg("launch: the pool creator was not transferred to creator_auth")]
+    LaunchCreatorNotTransferred,
+    #[msg("launch: the pool is not from this class's DBC config")]
+    LaunchWrongConfig,
+    #[msg("launch: base mint does not match the pool")]
+    LaunchBaseMintMismatch,
+    #[msg("launch: the signing creator is not the pool's creator")]
+    LaunchCreatorMismatch,
+    #[msg("launch tx: more than one DBC swap before register_launch")]
+    LaunchTooManySwaps,
+    #[msg("launch tx: the DBC swap before register_launch is not by the payer")]
+    LaunchSwapNotByPayer,
+    #[msg("launch tx: the payer's first buy exceeds the class dust limit")]
+    LaunchDustBuyTooLarge,
+    #[msg("launch tx: unexpected DBC instruction before register_launch")]
+    LaunchUnexpectedDbcInstruction,
+    #[msg("launch tx: unexpected DLMM instruction before register_launch")]
+    LaunchUnexpectedDlmmInstruction,
+    #[msg("launch: virtual_pool is not a DBC VirtualPool")]
+    LaunchPoolWrongOwner,
+    #[msg("launch: the pool's quote reserve exceeds the dust limit (already traded)")]
+    LaunchPoolAlreadyTraded,
+    #[msg("launch: base mint is not an SPL Token mint")]
+    LaunchBaseMintNotSpl,
+    #[msg("launch: dlmm_pair is not a DLMM LbPair")]
+    LaunchPairWrongOwner,
+    #[msg("launch: dlmm_pair is not the customizable pair for (base mint, WSOL)")]
+    LaunchPairWrongAddress,
+    #[msg("launch: pair mints are not (base mint, WSOL)")]
+    LaunchPairWrongMints,
+    #[msg("launch: pair bin step is not the class bin step (D-014)")]
+    LaunchPairWrongBinStep,
+    #[msg("launch: pair is not a customizable LimitOrder pair")]
+    LaunchPairWrongType,
+    #[msg("launch: pair does not collect fees in WSOL only")]
+    LaunchPairWrongFeeMode,
+    #[msg("launch: pair base fee is not 1 bps")]
+    LaunchPairWrongBaseFee,
+    #[msg("launch: pair creator has on/off control")]
+    LaunchPairCreatorControl,
+    #[msg("launch: pair is not enabled")]
+    LaunchPairDisabled,
 }

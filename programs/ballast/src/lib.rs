@@ -1,6 +1,6 @@
 //! Ballast — a Meteora DBC launch class with an on-chain, executable buyback floor `F`.
 //!
-//! **Program Part 1 (§6):** `initialize_global` and `create_class`. `register_launch`,
+//! **Program Part 1 (§6):** `initialize_global`, `create_class`, `register_launch` (D-011).
 //! `settle_graduation` and `burn_leftover` are not written yet.
 //!
 //! The P0 gate (Q1–Q5) closed on 4 Oct 2026 against the mainnet Meteora binaries, which is what
@@ -17,15 +17,23 @@ use anchor_lang::solana_program::hash::hash;
 
 pub mod curve;
 pub mod errors;
+pub mod introspect;
+pub mod spl;
 pub mod state;
 
 use errors::BallastError;
-use state::{canon, Class, ClassCanon, Global};
+use state::{canon, launch_state, Class, ClassCanon, Global, Launch};
 
 declare_id!("HSSv351Q1DftJ7mgEzKm9rt41WUTyWZJZLXUq7sfqerr");
 
 /// DBC program ID (§12: CPI and owner program IDs are hard-coded, never taken on trust).
 pub const DBC_PROGRAM_ID: Pubkey = pubkey!("dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN");
+
+/// DLMM program ID (§12).
+pub const DLMM_PROGRAM_ID: Pubkey = pubkey!("LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo");
+/// DLMM's seed prefix for customizable permissionless pairs (SDK `ILM_BASE`). Q8: the pair address
+/// is `[ILM_BASE, min(mint), max(mint)]` under DLMM — it carries no bin step (D-014).
+pub const DLMM_ILM_BASE: Pubkey = pubkey!("MFGQxwAmB91SwuYX36okv2Qmdc9aMuHTwWGUrp4AtB1");
 
 /// SPL Token program, for validating the treasury without pulling in `anchor-spl`.
 pub const TOKEN_PROGRAM_ID: Pubkey = pubkey!("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
@@ -44,17 +52,23 @@ pub const CLASSES: &[ClassCanon] = &[
         name: "proof",
         migration_quote_threshold: 10_000_000_000, // 10 SOL (§7)
         sqrt_start_price: 33241012347184484,
-        config_hash: [100, 92, 202, 53, 29, 155, 61, 133, 109, 64, 124, 122, 127, 114, 184, 22, 32, 237, 37, 120, 238, 212, 185, 240, 158, 10, 130, 70, 43, 247, 33, 146],
-        predicted_s_open: 47_755_047_807_748_143,  // §27 Proof vector
-        bid_bin_step: 10,                          // §9, 10 bps; D-014 fixes it per class
-        dust_limit: 1_000_000,                     // D-011(b): 0.001 SOL
+        config_hash: [
+            100, 92, 202, 53, 29, 155, 61, 133, 109, 64, 124, 122, 127, 114, 184, 22, 32, 237, 37,
+            120, 238, 212, 185, 240, 158, 10, 130, 70, 43, 247, 33, 146,
+        ],
+        predicted_s_open: 47_755_047_807_748_143, // §27 Proof vector
+        bid_bin_step: 10,                         // §9, 10 bps; D-014 fixes it per class
+        dust_limit: 1_000_000,                    // D-011(b): 0.001 SOL
     },
     ClassCanon {
         size_tag: 1,
         name: "public",
         migration_quote_threshold: 25_000_000_000, // 25 SOL (§7)
         sqrt_start_price: 52558655373441379,
-        config_hash: [231, 147, 1, 47, 114, 185, 64, 21, 40, 24, 254, 116, 137, 56, 92, 57, 186, 107, 4, 104, 162, 101, 113, 229, 175, 155, 75, 60, 61, 176, 234, 206],
+        config_hash: [
+            231, 147, 1, 47, 114, 185, 64, 21, 40, 24, 254, 116, 137, 56, 92, 57, 186, 107, 4, 104,
+            162, 101, 113, 229, 175, 155, 75, 60, 61, 176, 234, 206,
+        ],
         predicted_s_open: 75_507_360_421_341_854, // §27 Public vector
         bid_bin_step: 10,
         dust_limit: 1_000_000,
@@ -408,7 +422,7 @@ pub mod ballast {
         let migration_sqrt_price = cfg.migration_sqrt_price;
         let lower = last_point.saturating_sub(canon::MIGRATION_PRICE_TOLERANCE);
         require!(
-            migration_sqrt_price <= last_point && migration_sqrt_price >= lower,
+            (lower..=last_point).contains(&migration_sqrt_price),
             BallastError::ConfigMigrationPriceOutOfBand
         );
 
@@ -471,6 +485,186 @@ pub mod ballast {
         });
         Ok(())
     }
+
+    /// §6 `register_launch(creator_beneficiary)`, as amended by D-011: the last instruction of the
+    /// single launch transaction. Verifies the transaction by introspection and DBC/DLMM state,
+    /// records the prediction, and creates the vault. No funds move.
+    pub fn register_launch(
+        ctx: Context<RegisterLaunch>,
+        creator_beneficiary: Pubkey,
+    ) -> Result<()> {
+        let class = &ctx.accounts.class;
+        let base_mint = ctx.accounts.base_mint.key();
+        let creator_auth = ctx.accounts.creator_auth.key();
+
+        // ---- the DBC pool (§5 rules 1–2) ----
+        let pool_info = &ctx.accounts.virtual_pool;
+        require_keys_eq!(
+            *pool_info.owner,
+            DBC_PROGRAM_ID,
+            BallastError::LaunchPoolWrongOwner
+        );
+        let (cfg, pool_base, pool_creator, quote_reserve) = {
+            let data = pool_info.try_borrow_data()?;
+            let vp = meteora_types::decode::<meteora_types::dbc::VirtualPool>(
+                &data,
+                &meteora_types::dbc::VirtualPool::DISCRIMINATOR,
+            )
+            .ok_or_else(|| error!(BallastError::LaunchPoolWrongOwner))?;
+            let s = &vp.pool_state;
+            (
+                Pubkey::new_from_array(s.config),
+                Pubkey::new_from_array(s.base_mint),
+                Pubkey::new_from_array(s.creator),
+                s.quote_reserve,
+            )
+        };
+        require_keys_eq!(cfg, class.dbc_config, BallastError::LaunchWrongConfig);
+        require_keys_eq!(pool_base, base_mint, BallastError::LaunchBaseMintMismatch);
+        // D-011(c): the creator role moved to creator_auth earlier in this transaction.
+        require_keys_eq!(
+            pool_creator,
+            creator_auth,
+            BallastError::LaunchCreatorNotTransferred
+        );
+        // State-level guard against any buy introspection cannot see (e.g. inside another
+        // program's CPI): after the payer's dust buy, the quote reserve is at most the dust limit.
+        require!(
+            quote_reserve <= class.dust_limit,
+            BallastError::LaunchPoolAlreadyTraded
+        );
+        require_keys_eq!(
+            *ctx.accounts.base_mint.owner,
+            TOKEN_PROGRAM_ID,
+            BallastError::LaunchBaseMintNotSpl
+        );
+
+        // ---- the DLMM pair (§9, D-014), created earlier in this transaction ----
+        let pair_info = &ctx.accounts.dlmm_pair;
+        require_keys_eq!(
+            *pair_info.owner,
+            DLMM_PROGRAM_ID,
+            BallastError::LaunchPairWrongOwner
+        );
+        let (lo, hi) = if base_mint < canon::QUOTE_MINT {
+            (base_mint, canon::QUOTE_MINT)
+        } else {
+            (canon::QUOTE_MINT, base_mint)
+        };
+        let (expected_pair, _) = Pubkey::find_program_address(
+            &[DLMM_ILM_BASE.as_ref(), lo.as_ref(), hi.as_ref()],
+            &DLMM_PROGRAM_ID,
+        );
+        require_keys_eq!(
+            pair_info.key(),
+            expected_pair,
+            BallastError::LaunchPairWrongAddress
+        );
+        {
+            let data = pair_info.try_borrow_data()?;
+            let lb = meteora_types::decode::<meteora_types::dlmm::LbPair>(
+                &data,
+                &meteora_types::dlmm::LbPair::DISCRIMINATOR,
+            )
+            .ok_or_else(|| error!(BallastError::LaunchPairWrongOwner))?;
+            require!(
+                Pubkey::new_from_array(lb.token_x_mint) == base_mint
+                    && Pubkey::new_from_array(lb.token_y_mint) == canon::QUOTE_MINT,
+                BallastError::LaunchPairWrongMints
+            );
+            let bin_step = lb.bin_step;
+            require!(
+                bin_step == class.bid_bin_step,
+                BallastError::LaunchPairWrongBinStep
+            );
+            let p = &lb.parameters;
+            require!(
+                lb.pair_type == canon::DLMM_PAIR_TYPE_CUSTOMIZABLE
+                    && p.function_type == canon::DLMM_FUNCTION_TYPE_LIMIT_ORDER,
+                BallastError::LaunchPairWrongType
+            );
+            require!(
+                p.collect_fee_mode == canon::DLMM_COLLECT_FEE_MODE_ONLY_Y,
+                BallastError::LaunchPairWrongFeeMode
+            );
+            let base_factor = p.base_factor;
+            require!(
+                p.base_fee_power_factor == 0
+                    && (base_factor as u32).checked_mul(bin_step as u32)
+                        == Some(canon::DLMM_BASE_FEE_BPS_X10K),
+                BallastError::LaunchPairWrongBaseFee
+            );
+            require!(
+                lb.creator_pool_on_off_control == 0,
+                BallastError::LaunchPairCreatorControl
+            );
+            require!(
+                lb.status == canon::DLMM_PAIR_STATUS_ENABLED,
+                BallastError::LaunchPairDisabled
+            );
+        }
+
+        // ---- D-011(a)(b): the transaction itself ----
+        introspect::verify_launch_tx(
+            &ctx.accounts.instructions,
+            &introspect::Expect {
+                config: class.dbc_config,
+                pool: pool_info.key(),
+                base_mint,
+                creator: ctx.accounts.creator.key(),
+                creator_auth,
+                payer: ctx.accounts.payer.key(),
+                dlmm_pair: expected_pair,
+                dust_limit: class.dust_limit,
+            },
+        )?;
+
+        // ---- the vault: a WSOL token account at ["vault", launch], authority partner_auth ----
+        let launch_key = ctx.accounts.launch.key();
+        let vault_bump = ctx.bumps.vault;
+        spl::create_pda_token_account(
+            &ctx.accounts.payer.to_account_info(),
+            &ctx.accounts.vault.to_account_info(),
+            &ctx.accounts.quote_mint.to_account_info(),
+            &ctx.accounts.partner_auth.key(),
+            &[b"vault", launch_key.as_ref(), &[vault_bump]],
+            &ctx.accounts.system_program.to_account_info(),
+            &ctx.accounts.token_program.to_account_info(),
+        )?;
+
+        // ---- record the prediction ----
+        let slot = Clock::get()?.slot;
+        let predicted_s = class.predicted_s_open;
+        let class_key = class.key();
+        let l = &mut ctx.accounts.launch;
+        l.class = class_key;
+        l.dbc_pool = pool_info.key();
+        l.base_mint = base_mint;
+        l.creator_beneficiary = creator_beneficiary;
+        l.state = launch_state::REGISTERED;
+        l.bump = ctx.bumps.launch;
+        l.creator_auth_bump = ctx.bumps.creator_auth;
+        l.vault_bump = vault_bump;
+        l.predicted_s = predicted_s;
+        l.registered_slot = slot;
+        l.dlmm_pair = expected_pair;
+
+        let c = &mut ctx.accounts.class;
+        c.launches = c
+            .launches
+            .checked_add(1)
+            .ok_or_else(|| error!(BallastError::Overflow))?;
+
+        emit!(LaunchRegistered {
+            launch: launch_key,
+            base_mint,
+            predicted_s,
+            slot,
+            dlmm_pair: expected_pair,
+            creator_beneficiary,
+        });
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
@@ -523,6 +717,49 @@ pub struct CreateClass<'info> {
     pub system_program: Program<'info, System>,
 }
 
+#[derive(Accounts)]
+pub struct RegisterLaunch<'info> {
+    #[account(mut, seeds = [b"class", class.dbc_config.as_ref()], bump = class.bump)]
+    pub class: Account<'info, Class>,
+    #[account(
+        init,
+        payer = payer,
+        space = 8 + Launch::INIT_SPACE,
+        seeds = [b"launch", base_mint.key().as_ref()],
+        bump,
+    )]
+    pub launch: Account<'info, Launch>,
+    /// CHECK: DBC VirtualPool — owner, discriminator and cross-links validated in the handler.
+    pub virtual_pool: UncheckedAccount<'info>,
+    /// CHECK: cross-checked against the pool and the DLMM pair; owner must be SPL Token.
+    pub base_mint: UncheckedAccount<'info>,
+    /// CHECK: PDA with no data; the DBC pool creator after `transfer_pool_creator`.
+    #[account(seeds = [b"creator", launch.key().as_ref()], bump)]
+    pub creator_auth: UncheckedAccount<'info>,
+    /// CHECK: PDA with no data; the vault's token authority (§5).
+    #[account(seeds = [b"partner", class.dbc_config.as_ref()], bump = class.partner_auth_bump)]
+    pub partner_auth: UncheckedAccount<'info>,
+    /// CHECK: created here as a WSOL token account owned by partner_auth.
+    #[account(mut, seeds = [b"vault", launch.key().as_ref()], bump)]
+    pub vault: UncheckedAccount<'info>,
+    /// CHECK: SPL WSOL.
+    #[account(address = canon::QUOTE_MINT)]
+    pub quote_mint: UncheckedAccount<'info>,
+    /// CHECK: DLMM LbPair; address re-derived and fields validated in the handler.
+    pub dlmm_pair: UncheckedAccount<'info>,
+    /// The original DBC pool creator: sets `creator_beneficiary`, so it must sign.
+    pub creator: Signer<'info>,
+    #[account(mut)]
+    pub payer: Signer<'info>,
+    /// CHECK: the instructions sysvar (D-011 introspection).
+    #[account(address = anchor_lang::solana_program::sysvar::instructions::ID)]
+    pub instructions: UncheckedAccount<'info>,
+    /// CHECK: SPL Token program.
+    #[account(address = TOKEN_PROGRAM_ID)]
+    pub token_program: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
+}
+
 #[event]
 pub struct GlobalInitialized {
     pub admin: Pubkey,
@@ -536,4 +773,16 @@ pub struct ClassCreated {
     pub config_hash: [u8; 32],
     pub predicted_s_open: u128,
     pub bid_bin_step: u16,
+}
+
+#[event]
+pub struct LaunchRegistered {
+    pub launch: Pubkey,
+    pub base_mint: Pubkey,
+    /// The on-chain prediction, recorded in the pool-creation transaction before any third-party
+    /// trade (D-011).
+    pub predicted_s: u128,
+    pub slot: u64,
+    pub dlmm_pair: Pubkey,
+    pub creator_beneficiary: Pubkey,
 }

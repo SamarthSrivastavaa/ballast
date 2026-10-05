@@ -24,5 +24,10 @@ overflow-checks = true    # §12: an arithmetic bug must panic, never wrap silen
 lto = "fat"
 codegen-units = 1
 
+# D-007 / D-009: the program is size-optimised. Per-package so crates/floor's host tests and the
+# property gate keep opt-level 3. (overflow-checks, lto and codegen-units above still apply.)
+[profile.release.package.ballast]
+opt-level = "z"
+
 [profile.test]
 overflow-checks = true

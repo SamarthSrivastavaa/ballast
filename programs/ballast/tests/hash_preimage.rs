@@ -9,7 +9,9 @@
 use std::path::PathBuf;
 
 fn repo(rel: &str) -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..").join(rel)
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .join(rel)
 }
 
 fn json(rel: &str) -> serde_json::Value {
@@ -80,7 +82,10 @@ fn proof_hash_over_the_real_on_chain_config_equals_compiler_and_pin() {
         "hash vs compiler"
     );
     assert_eq!(h, ballast::CLASSES[0].config_hash, "hash vs pinned CLASSES");
-    assert_eq!({ cfg.sqrt_start_price }, ballast::CLASSES[0].sqrt_start_price);
+    assert_eq!(
+        { cfg.sqrt_start_price },
+        ballast::CLASSES[0].sqrt_start_price
+    );
 }
 
 #[test]
