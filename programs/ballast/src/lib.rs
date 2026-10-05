@@ -34,16 +34,17 @@ const SPL_TOKEN_ACCOUNT_LEN: usize = 165;
 
 /// §7 canonical parameters per `size_tag`.
 ///
-/// `config_hash` and `sqrt_start_price` come from the compiler (§7 "Prediction") and are **not yet
-/// pinned**. `create_class` refuses an unpinned size with `ClassNotPinned`, so no class can be
-/// created until the compiler emits them — fail-closed by construction.
+/// `sqrt_start_price` and `config_hash` are **compiler output** (`compiler/out/classes.json`,
+/// `pnpm -F compiler emit`); `pnpm -F compiler test` fails if these literals drift from §7. The Proof
+/// hash was also reproduced over the real config DBC stored on the mainnet binary in STEP 3 (Q12).
+/// A size with a zero hash or start price would still fail closed with `ClassNotPinned`.
 pub const CLASSES: &[ClassCanon] = &[
     ClassCanon {
         size_tag: 0,
         name: "proof",
         migration_quote_threshold: 10_000_000_000, // 10 SOL (§7)
-        sqrt_start_price: 0,                       // compiler output; 0 = unpinned
-        config_hash: [0u8; 32],                    // compiler output; zeros = unpinned
+        sqrt_start_price: 33241012347184484,
+        config_hash: [100, 92, 202, 53, 29, 155, 61, 133, 109, 64, 124, 122, 127, 114, 184, 22, 32, 237, 37, 120, 238, 212, 185, 240, 158, 10, 130, 70, 43, 247, 33, 146],
         predicted_s_open: 47_755_047_807_748_143,  // §27 Proof vector
         bid_bin_step: 10,                          // §9, 10 bps; D-014 fixes it per class
         dust_limit: 1_000_000,                     // D-011(b): 0.001 SOL
@@ -52,8 +53,8 @@ pub const CLASSES: &[ClassCanon] = &[
         size_tag: 1,
         name: "public",
         migration_quote_threshold: 25_000_000_000, // 25 SOL (§7)
-        sqrt_start_price: 0,
-        config_hash: [0u8; 32],
+        sqrt_start_price: 52558655373441379,
+        config_hash: [231, 147, 1, 47, 114, 185, 64, 21, 40, 24, 254, 116, 137, 56, 92, 57, 186, 107, 4, 104, 162, 101, 113, 229, 175, 155, 75, 60, 61, 176, 234, 206],
         predicted_s_open: 75_507_360_421_341_854, // §27 Public vector
         bid_bin_step: 10,
         dust_limit: 1_000_000,

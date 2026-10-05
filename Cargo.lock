@@ -232,8 +232,10 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "ballast-floor",
+ "bytemuck",
  "meteora-types",
  "ruint",
+ "serde_json",
 ]
 
 [[package]]

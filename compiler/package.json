@@ -1,0 +1,10 @@
+{
+  "name": "compiler",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Compiles the §7 Ballast classes into the constants programs/ballast pins (sqrt_start_price, curve, config_hash, predicted_s_open).",
+  "scripts": {
+    "emit": "tsx src/emit.ts",
+    "test": "tsx src/emit.ts --check"
+  }
+}
