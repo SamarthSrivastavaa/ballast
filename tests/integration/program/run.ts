@@ -12,6 +12,7 @@ import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
 import { assertLocal, NeedsClone, REPO } from "../p0/src/env";
 import { part1 } from "./src/part1";
+import { part2 } from "./src/part2";
 
 async function main(): Promise<void> {
   await assertLocal();
@@ -21,7 +22,10 @@ async function main(): Promise<void> {
       "--program-id", resolve(REPO, "target/deploy/ballast-keypair.json"), resolve(REPO, "target/deploy/ballast.so")],
     { stdio: ["ignore", "inherit", "inherit"] },
   );
-  const fails = await part1();
+  const only = process.argv[2];
+  let fails = 0;
+  if (!only || only === "part1") fails += await part1();
+  if (!only || only === "part2") fails += await part2();
   process.exit(fails ? 1 : 0);
 }
 

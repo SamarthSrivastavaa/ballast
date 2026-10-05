@@ -83,7 +83,7 @@ mod tests {
         }
         let cap = capacity(s0, &pts).expect("no overflow");
         assert!(
-            cap <= 3_000_000_000 && cap >= 3_000_000_000 - 3,
+            (3_000_000_000 - 3..=3_000_000_000).contains(&cap),
             "cap = {cap}"
         );
     }

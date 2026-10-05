@@ -44,7 +44,14 @@ fn b64(s: &str) -> Vec<u8> {
 }
 
 fn hex(b: &[u8]) -> String {
-    b.iter().map(|x| format!("{x:02x}")).collect()
+    {
+        use std::fmt::Write;
+        b.iter()
+            .fold(String::with_capacity(b.len() * 2), |mut s, x| {
+                let _ = write!(s, "{x:02x}");
+                s
+            })
+    }
 }
 
 fn class(name: &str) -> serde_json::Value {
