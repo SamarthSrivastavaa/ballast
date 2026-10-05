@@ -1,0 +1,176 @@
+{
+  "suite": "Program Part 1 — register_launch (D-011)",
+  "ranAt": "2026-10-05T14:40:49.155Z",
+  "pass": 16,
+  "fail": 0,
+  "unreachable": 1,
+  "results": [
+    {
+      "name": "register_launch: the D-011 atomic launch transaction → Registered",
+      "status": "pass",
+      "expected": "all fields per §5",
+      "got": "ok",
+      "detail": {
+        "signature": "4LnN64XwsGrtZd73venPNQxzwtewaVsuMvkRuJEtnhtDxiqfTgBopGPJwxMYurzgsGiU5x6sbnJwXhwXjVoYWPCx",
+        "txCu": 300219,
+        "registerLaunchCu": 62259,
+        "txBytes": 875,
+        "launch": "BC73vhnefyGQMsjac7e945P3WTga6kFryaK6WfFQoj3q",
+        "vault": "CHAuWtxQBV4wfSJ39VASBdKRY7nucq431qfU4kwpZiqr",
+        "checks": {
+          "state": true,
+          "predicted": true,
+          "pool": true,
+          "mint": true,
+          "pair": true,
+          "beneficiary": true,
+          "vaultIsWsol": true,
+          "vaultOwnedByPartnerAuth": true,
+          "vaultEmpty": true,
+          "classLaunches": true
+        }
+      }
+    },
+    {
+      "name": "register_launch: pair bin step 25 (class is 10)",
+      "status": "pass",
+      "expected": "LaunchPairWrongBinStep",
+      "got": "LaunchPairWrongBinStep",
+      "detail": {
+        "signature": "4tRzAj1sBWHazbvnVCVbQ1r4quBmFsQj1cHrj593RGajfoJEfuX7o96VMgrHRht6xHRxMobKdfkfyGy9uCvi54CC"
+      }
+    },
+    {
+      "name": "register_launch: pair collects fees in both tokens",
+      "status": "pass",
+      "expected": "LaunchPairWrongFeeMode",
+      "got": "LaunchPairWrongFeeMode",
+      "detail": {
+        "signature": "wdbmkoGwjAxGhtuB1mzkXMXfKqhjNNR7as57hSn6TaCxy1Nj5Wqh2oHFugSYZBB3PUiZ9cah5bRpkJSGkBHXL6D"
+      }
+    },
+    {
+      "name": "register_launch: pair base fee 5 bps",
+      "status": "pass",
+      "expected": "LaunchPairWrongBaseFee",
+      "got": "LaunchPairWrongBaseFee",
+      "detail": {
+        "signature": "5K2djXENSnGdVpXMpKpxCdTpLXAe4JSRzKSjkjN9s4o2rn4T2qrfMtA6skdfYkuCi6fw79ADYTwynt9zog6Jf6R6"
+      }
+    },
+    {
+      "name": "register_launch: pair creator keeps on/off control",
+      "status": "pass",
+      "expected": "LaunchPairCreatorControl",
+      "got": "LaunchPairCreatorControl",
+      "detail": {
+        "signature": "4LZDW1Np6qVRnfLoe6Mj1qySAoqhVBuqrfmAgFENC6X6E8f6bUkYTpe4XNujtCVkKWh3UrnC9r7TjY976TwWYEbP"
+      }
+    },
+    {
+      "name": "register_launch: no DLMM pair",
+      "status": "pass",
+      "expected": "LaunchPairWrongOwner",
+      "got": "LaunchPairWrongOwner",
+      "detail": {
+        "signature": "49iyKj4VDUTuvLoTuGzptAUL8Regt2X9cRRf3hGykdb4Nj8ZqXqh79qwHUgYGyuEqM47MWiVpagv6GJSndZUUZ1R"
+      }
+    },
+    {
+      "name": "register_launch: dust buy just over the limit (1,010,000 > 1,000,000; reserve stays ≤ limit)",
+      "status": "pass",
+      "expected": "LaunchDustBuyTooLarge",
+      "got": "LaunchDustBuyTooLarge",
+      "detail": {
+        "signature": "2TJDaAmqFokmnpJjoitAVT1sjZdRjptty8hVp7gNpN3usEEExtMYepokoavMyocjdvsc4FTTZVsm4tUQGQGU1Mbu"
+      }
+    },
+    {
+      "name": "register_launch: first buy 2× the dust limit (reserve > limit)",
+      "status": "pass",
+      "expected": "LaunchPoolAlreadyTraded",
+      "got": "LaunchPoolAlreadyTraded",
+      "detail": {
+        "signature": "2E2ehcLChBTVWimEmkikQW6o2tQDJ9JNvmHuNX4P6uthwct7sov9S4Kfs7vhmpi5g7K1wD5kVQFUc1iyR4JkGcMq"
+      }
+    },
+    {
+      "name": "register_launch: two swaps before register",
+      "status": "pass",
+      "expected": "LaunchTooManySwaps",
+      "got": "LaunchTooManySwaps",
+      "detail": {
+        "signature": "roL6SkSW2C5M4VeASiurRkehM8RA6GWcUiWPqAkm3VJxeVCNLX6Mqv6Ukvxmi45qeSxAcsufkdRhNxgve3jvFAQ"
+      }
+    },
+    {
+      "name": "register_launch: the first buy is by someone other than the payer",
+      "status": "pass",
+      "expected": "LaunchSwapNotByPayer",
+      "got": "LaunchSwapNotByPayer",
+      "detail": {
+        "signature": "4qa9AK92G6KgrjLmgmWJFg3iRLbX3dSZQFXpTNFnnxDukaSPg7HkLygko9JHu1uCziwrxutVnqUUHwHDKuXHUWE8"
+      }
+    },
+    {
+      "name": "register_launch: no creator transfer",
+      "status": "pass",
+      "expected": "LaunchCreatorNotTransferred",
+      "got": "LaunchCreatorNotTransferred",
+      "detail": {
+        "signature": "4i6VkxAy3uB9xeHVXWWTa3W3v8QQFa4pAHdiK7v37vj8hixie8V7ffZa4Q5pEZaK2YbWhKymUZpf1XwNoKwNaUxN"
+      }
+    },
+    {
+      "name": "register_launch: creator transferred to someone else",
+      "status": "pass",
+      "expected": "LaunchCreatorNotTransferred",
+      "got": "LaunchCreatorNotTransferred",
+      "detail": {
+        "signature": "TyTDUj3v2rUE6enibCPB6qkJmWPyh6xFKvqYbMVfLHGX5Wj6TDdqK2VWhopmqHGMAwtnMTqCgjrGtAcks42EGTG"
+      }
+    },
+    {
+      "name": "register_launch: register signed by a different 'creator'",
+      "status": "pass",
+      "expected": "LaunchCreatorMismatch",
+      "got": "LaunchCreatorMismatch",
+      "detail": {
+        "signature": "32NrekCbDdXUPJKCALYqK6vXFAX1kjjFDyKCsWRqnextErah7SZU8iuZqygRjDSq2y6EjZsnrJpWiWFHwBU168J6"
+      }
+    },
+    {
+      "name": "register_launch: pool from a DBC config with no Ballast class",
+      "status": "pass",
+      "expected": "LaunchWrongConfig",
+      "got": "LaunchWrongConfig",
+      "detail": {
+        "signature": "ii1KhvHwLauAziBgmpLdhxkLZpfSJT8kYj2d775WXs5jAGrPvwvYi9FVhNrogwhWeDVexPUzW1jT3XRNDdTmJhM"
+      }
+    },
+    {
+      "name": "register_launch: an unexpected DBC instruction before register",
+      "status": "pass",
+      "expected": "LaunchUnexpectedDbcInstruction",
+      "got": "LaunchUnexpectedDbcInstruction",
+      "detail": {
+        "signature": "5QU1iaH1Nk38b8GJe2DdXGxr1q5vzeg6SBvw6ADCDsWP24A1DPj3dAXmsXur4FSQX7ogXkAJkWcPeM3JnHXnxCkV"
+      }
+    },
+    {
+      "name": "register_launch: pool created in an EARLIER transaction (third-party trade window)",
+      "status": "pass",
+      "expected": "LaunchPoolNotCreatedInTx",
+      "got": "LaunchPoolNotCreatedInTx",
+      "detail": {
+        "signature": "3CErpRqjQ1Lb3H5fMRQNLUjBjgTsrdbxcLrVDzbehQ5SPw6pRm4KFk8FoBz5UuzdsiEqQwq91tW9qYqVgTouQzwj"
+      }
+    },
+    {
+      "name": "register_launch: LaunchPairNotCreatedInTx",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "the pair is keyed by the base mint, which only exists from this transaction's own pool creation; a pair cannot pre-exist, so the state check fires first (covered by 'no DLMM pair')"
+    }
+  ]
+}

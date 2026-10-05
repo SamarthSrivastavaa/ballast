@@ -9,7 +9,7 @@ import { conn, payer, send } from "../../p0/src/env";
 import { configParameters, PROOF, sqrtPriceQ64, WSOL } from "../../../../compiler/src/canon";
 import { dbc } from "../../p0/src/dbc";
 import { funded, wallet, wrapIxs } from "../../p0/src/wallets";
-import { ballast, errorName, pdas } from "./client";
+import { accounts, ballast, errorName, pdas } from "./client";
 import { CLASS_DUST, launch, LaunchOpts } from "./launch";
 import { Suite } from "./runner";
 
@@ -45,9 +45,9 @@ export async function part2(): Promise<number> {
   await suite.case("register_launch: the D-011 atomic launch transaction → Registered", async () => {
     const l = await launch("positive launch", classConfig, creator, s0);
     if (l.landed.err) return { status: "fail", expected: "ok", got: errorName(l.landed.logs) ?? JSON.stringify(l.landed.err), detail: { signature: l.landed.signature, logs: l.landed.logs.slice(-12) } };
-    const rec = await ballast.account.launch.fetch(l.launch);
+    const rec = await accounts.launch.fetch(l.launch);
     const vault = await getAccount(conn, l.vault, "confirmed");
-    const cls = await ballast.account.class.fetch(pdas.class(classConfig));
+    const cls = await accounts.class.fetch(pdas.class(classConfig));
     const checks = {
       state: rec.state === 1,
       predicted: rec.predictedS.toString() === "47755047807748143",

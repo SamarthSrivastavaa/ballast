@@ -17,7 +17,7 @@ import { conn, Landed, payer, send } from "../../p0/src/env";
 import { configParameters, isqrt, PROOF, Q128, shapedCurve, sqrtPriceQ64, WSOL } from "../../../../compiler/src/canon";
 import { dbc } from "../../p0/src/dbc";
 import { ensureAtaIx, ata, funded } from "../../p0/src/wallets";
-import { ballast, errorName, pdas } from "./client";
+import { accounts, ballast, errorName, pdas } from "./client";
 import { Suite } from "./runner";
 
 type Params = ReturnType<typeof configParameters>;
@@ -85,7 +85,7 @@ export async function part1(): Promise<number> {
   await expectErr("initialize_global: treasury mint is not WSOL", "TreasuryWrongMint", initIx(payer.publicKey, ata(otherMint, payer.publicKey)), []);
   await suite.case("initialize_global: upgrade authority, WSOL treasury → ok", async () => {
     const t = await send("initialize_global", [await initIx(payer.publicKey, treasury)], [], { expectFail: true });
-    const g = t.err ? null : await ballast.account.global.fetch(pdas.global());
+    const g = t.err ? null : await accounts.global.fetch(pdas.global());
     const ok = !t.err && g!.admin.equals(admin.publicKey) && g!.treasury.equals(treasury) && g!.classCreationEnabled === true;
     return { status: ok ? "pass" : "fail", expected: "ok", got: t.err ? errorName(t.logs) : "ok", detail: { signature: t.signature, global: g } };
   });
@@ -100,7 +100,7 @@ export async function part1(): Promise<number> {
     if (canonical.landed.err) return { status: "fail", expected: "DBC accepts", got: errorName(canonical.landed.logs) };
     const t = await createClass("canonical", admin, canonical.config);
     if (t.err) return { status: "fail", expected: "ok", got: errorName(t.logs) ?? JSON.stringify(t.err), detail: { signature: t.signature } };
-    const c = await ballast.account.class.fetch(pdas.class(canonical.config));
+    const c = await accounts.class.fetch(pdas.class(canonical.config));
     const ok = c.dbcConfig.equals(canonical.config) && c.sizeTag === 0 && c.bidBinStep === 10 && c.predictedSOpen.toString() === "47755047807748143";
     return { status: ok ? "pass" : "fail", expected: "Class fields per §5", got: ok ? "ok" : JSON.stringify(c), detail: { signature: t.signature, cu: t.cu } };
   });

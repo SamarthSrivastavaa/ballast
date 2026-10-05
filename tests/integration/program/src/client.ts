@@ -11,6 +11,9 @@ import { conn, payer, REPO } from "../../p0/src/env";
 export const IDL = JSON.parse(readFileSync(resolve(REPO, "target/idl/ballast.json"), "utf8"));
 export const BALLAST_ID = new PublicKey(IDL.address);
 export const ballast = new Program(IDL, new AnchorProvider(conn, new Wallet(payer), { commitment: "confirmed" }));
+/** Typed view of the account namespace (the IDL is loaded as JSON, so Anchor cannot type it). */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const accounts = ballast.account as unknown as Record<"global" | "class" | "launch", { fetch(k: PublicKey): Promise<any> }>;
 const BPF_UPGRADEABLE = new PublicKey("BPFLoaderUpgradeab1e11111111111111111111111");
 
 const find = (seeds: (Buffer | Uint8Array)[], program = BALLAST_ID) => PublicKey.findProgramAddressSync(seeds, program)[0];
