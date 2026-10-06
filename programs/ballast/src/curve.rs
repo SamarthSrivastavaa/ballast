@@ -38,9 +38,60 @@ pub fn capacity(sqrt_start_price: u128, points: &[(u128, u128)]) -> Option<u128>
     u128::try_from(total).ok()
 }
 
+/// §7 rule 4 as amended by D-017: `last_point − tolerance ≤ migration_sqrt_price ≤ last_point`.
+///
+/// Two-sided on purpose: `migration_sqrt_price` is not in the rule-3 hash, so an open `≤` would let
+/// two different configs hash identically.
+pub fn migration_price_in_band(
+    last_point: u128,
+    migration_sqrt_price: u128,
+    tolerance: u128,
+) -> bool {
+    (last_point.saturating_sub(tolerance)..=last_point).contains(&migration_sqrt_price)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// D-017 negative tests just outside the band, both sides, at the two measured classes' last
+    /// points (evidence/program/d017/band.json), plus the edges themselves.
+    #[test]
+    fn migration_band_edges() {
+        use crate::state::canon::MIGRATION_PRICE_TOLERANCE as TOL;
+        assert_eq!(
+            TOL, 4_580_461,
+            "D-017: max measured shortfall 4,580,459 + 2"
+        );
+        for &(last, measured) in &[
+            (94_019_780_976_799_616u128, 94_019_780_972_219_157u128), // Proof
+            (148_658_326_498_428_696, 148_658_326_495_531_759),       // Public
+        ] {
+            assert!(
+                migration_price_in_band(last, measured, TOL),
+                "measured value is inside"
+            );
+            assert!(
+                migration_price_in_band(last, last, TOL),
+                "upper edge is inside"
+            );
+            assert!(
+                migration_price_in_band(last, last - TOL, TOL),
+                "lower edge is inside"
+            );
+            assert!(
+                !migration_price_in_band(last, last + 1, TOL),
+                "one above the last point"
+            );
+            assert!(
+                !migration_price_in_band(last, last - TOL - 1, TOL),
+                "one below the band"
+            );
+        }
+        // The largest measured shortfall sits exactly 2 units inside the lower edge.
+        let (last, measured) = (94_019_780_976_799_616u128, 94_019_780_972_219_157u128);
+        assert_eq!(measured - (last - TOL), 2);
+    }
 
     /// The §7 encoding is an identity: a segment built to carry `q` must report `q` back, up to
     /// the one unit that flooring can lose.

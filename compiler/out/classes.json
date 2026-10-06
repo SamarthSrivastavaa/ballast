@@ -61,7 +61,13 @@
         146
       ],
       "predictedSOpen": "47755047807748143",
-      "predictedSource": "crates/floor/vectors.json case \"proof\" (§27)"
+      "predictedSource": "crates/floor/vectors.json case \"proof\" — min of §27 \"proof\", \"proof_band_lo\", \"proof_band_hi\" (D-017)",
+      "bandPrediction": {
+        "migrationPriceTolerance": "4580461",
+        "bandLoS": "47811433357069708",
+        "bandHiS": "47811433353714945",
+        "lowerFEnd": "band_hi (last curve point)"
+      }
     },
     {
       "sizeTag": 1,
@@ -122,7 +128,13 @@
         206
       ],
       "predictedSOpen": "75507360421341854",
-      "predictedSource": "crates/floor/vectors.json case \"public\" (§27)"
+      "predictedSource": "crates/floor/vectors.json case \"public\" — min of §27 \"public\", \"public_band_lo\", \"public_band_hi\" (D-017)",
+      "bandPrediction": {
+        "migrationPriceTolerance": "4580461",
+        "bandLoS": "75596513433716731",
+        "bandHiS": "75596513430362024",
+        "lowerFEnd": "band_hi (last curve point)"
+      }
     }
   ]
 }

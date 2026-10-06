@@ -1,0 +1,29 @@
+{
+  "what": "D-017: DBC's derived migration_sqrt_price vs the last curve point, canonical classes, mainnet DBC binary (D-001)",
+  "rows": [
+    {
+      "class": "proof",
+      "config": "7Rg9LM8qkEbV9YzkCj355cd42vXoYt6s6yJs9y1DiYm4",
+      "signature": "9mHZMzDKnh2pnAoF89C4tr3n1ZAGmXxuGiYy9bekPeae799qEyMESHmwpSGCgbks6Ttc3P6UnFYHt7KEsaxH96s",
+      "slot": 533,
+      "lastCurvePoint": "94019780976799616",
+      "migrationSqrtPrice": "94019780972219157",
+      "shortfall": "4580459",
+      "relative": 4.871803520931704e-11
+    },
+    {
+      "class": "public",
+      "config": "4vhH5nRqJiKBvuxHV3jKhuELqnRnGa4f1RyZecpqBdiu",
+      "signature": "fCNvBpEwgsnLnpjggSTDafrVGGAbDukAh5qqb81LGs3gqiaUUs96LphhtkRHvrT1QoA8cPD7ALXZgrSKzZunzBt",
+      "slot": 534,
+      "lastCurvePoint": "148658326498428696",
+      "migrationSqrtPrice": "148658326495531759",
+      "shortfall": "2896937",
+      "relative": 1.9487216547070575e-11
+    }
+  ],
+  "maxShortfall": "4580459",
+  "anyAboveLastPoint": false,
+  "tolerance": "4580461",
+  "toleranceRule": "max observed shortfall + 2 units of rounding margin (D-017)"
+}

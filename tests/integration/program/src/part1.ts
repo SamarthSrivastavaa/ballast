@@ -236,6 +236,60 @@ export async function part1(): Promise<number> {
     });
   }
 
+  // ---------------------------------------------------------------- D-017: the band edges, on DBC
+  // Raising segment 3's liquidity lowers DBC's derived migration price. Tune it against the real
+  // binary (secant, then a short walk) until the shortfall lands just outside / just inside the band.
+  const TOL = 4_580_461n;
+  const withSeg3 = (dl: bigint) => {
+    const p = configParameters(PROOF);
+    p.curve = curveParams(curve.map((x, i) => ({ s: x.sqrtPrice, l: i === 2 ? x.liquidity + dl : x.liquidity })));
+    return p;
+  };
+  const last = curve[2].sqrtPrice;
+  const probe = async (label: string, dl: bigint) => {
+    const cfg = await dbcConfig(label, withSeg3(dl));
+    if (cfg.landed.err) throw new Error(`${label}: DBC refused ΔL=${dl}: ${errorName(cfg.landed.logs) ?? JSON.stringify(cfg.landed.err)}`);
+    const mig = BigInt((await dbc.account.poolConfig.fetch(cfg.config)).migrationSqrtPrice.toString());
+    return { cfg, shortfall: last - mig };
+  };
+  const tune = async (label: string, lo: bigint, hi: bigint) => {
+    const a = await probe(`${label} probe 0`, 0n);
+    const step = 10n ** 18n;
+    const b = await probe(`${label} probe 1e18`, step);
+    const perUnit = b.shortfall - a.shortfall; // shortfall gained per 1e18 of ΔL
+    let dl = ((lo - a.shortfall) * step) / perUnit;
+    for (let i = 0; i < 12; i++) {
+      const r = await probe(`${label} ΔL=${dl}`, dl);
+      if (r.shortfall >= lo && r.shortfall <= hi) return { ...r, dl };
+      dl += ((r.shortfall < lo ? lo - r.shortfall : hi - r.shortfall) * step) / perUnit || (r.shortfall < lo ? 1n : -1n);
+    }
+    throw new Error(`${label}: could not land the shortfall in [${lo}, ${hi}]`);
+  };
+  await suite.case("rule 4 (D-017): migration price 1–3 units below the band", async () => {
+    const r = await tune("D-017 just outside", TOL + 1n, TOL + 3n);
+    const t = await createClass("D-017 just outside", admin, r.cfg.config);
+    const got = t.err ? errorName(t.logs) ?? JSON.stringify(t.err) : "succeeded";
+    return {
+      status: got === "ConfigMigrationPriceOutOfBand" ? "pass" : "fail", expected: "ConfigMigrationPriceOutOfBand", got,
+      detail: { shortfall: r.shortfall.toString(), tolerance: TOL.toString(), seg3DeltaL: r.dl.toString(), dbcSignature: r.cfg.landed.signature, signature: t.signature },
+    };
+  });
+  await suite.case("rule 4 (D-017): migration price just inside the band passes rule 4 (stops at the rule-3 hash)", async () => {
+    // [TOL−1, TOL]: the canonical config itself sits at TOL−2, so this window forces a mutated curve.
+    const r = await tune("D-017 just inside", TOL - 1n, TOL);
+    if (r.dl === 0n) throw new Error("D-017 just inside: tuner returned the unmutated curve");
+    const t = await createClass("D-017 just inside", admin, r.cfg.config);
+    const got = t.err ? errorName(t.logs) ?? JSON.stringify(t.err) : "succeeded";
+    return {
+      status: got === "ConfigHashMismatch" ? "pass" : "fail", expected: "ConfigHashMismatch", got,
+      detail: { shortfall: r.shortfall.toString(), tolerance: TOL.toString(), seg3DeltaL: r.dl.toString(), dbcSignature: r.cfg.landed.signature, signature: t.signature },
+    };
+  });
+  await suite.case("rule 4 (D-017): migration price above the last point", async () => ({
+    status: "unreachable", expected: "ConfigMigrationPriceOutOfBand",
+    got: "DBC derives the price from the curve and refuses a curve that cannot reach the threshold; covered by the unit test curve::tests::migration_band_edges",
+  }));
+
   // Rules that no DBC-valid config can violate — recorded, not faked.
   for (const [name, why] of [
     ["rule 1: wrong size with a PoolConfig discriminator", "only DBC writes DBC-owned accounts; it never writes a PoolConfig of another size"],

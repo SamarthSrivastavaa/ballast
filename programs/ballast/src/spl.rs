@@ -5,12 +5,33 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::instruction::{AccountMeta, Instruction};
 use anchor_lang::solana_program::program::invoke_signed;
-use anchor_lang::solana_program::system_instruction;
+use anchor_lang::solana_program::system_program;
 
 use crate::TOKEN_PROGRAM_ID;
 
 /// SPL Token account length.
 pub const TOKEN_ACCOUNT_LEN: u64 = 165;
+
+/// System `CreateAccount` (variant 0), built by hand (D-018): `system_instruction::create_account`
+/// serialises with bincode. Data: u32 variant ‖ u64 lamports ‖ u64 space ‖ owner, little-endian.
+pub fn create_account(
+    from: &Pubkey,
+    to: &Pubkey,
+    lamports: u64,
+    space: u64,
+    owner: &Pubkey,
+) -> Instruction {
+    let mut data = Vec::with_capacity(52);
+    data.extend_from_slice(&0u32.to_le_bytes());
+    data.extend_from_slice(&lamports.to_le_bytes());
+    data.extend_from_slice(&space.to_le_bytes());
+    data.extend_from_slice(owner.as_ref());
+    Instruction {
+        program_id: system_program::ID,
+        accounts: vec![AccountMeta::new(*from, true), AccountMeta::new(*to, true)],
+        data,
+    }
+}
 
 /// SPL Token `InitializeAccount3` (tag 18): account, mint; owner in the data. No rent sysvar.
 fn initialize_account3(account: &Pubkey, mint: &Pubkey, owner: &Pubkey) -> Instruction {
@@ -57,7 +78,7 @@ pub fn create_pda_token_account<'info>(
 ) -> Result<()> {
     let rent = Rent::get()?.minimum_balance(TOKEN_ACCOUNT_LEN as usize);
     invoke_signed(
-        &system_instruction::create_account(
+        &create_account(
             payer.key,
             account.key,
             rent,
@@ -89,4 +110,26 @@ pub fn read_token_account(info: &AccountInfo) -> Option<(Pubkey, Pubkey, u64)> {
     let owner = Pubkey::new_from_array(data[32..64].try_into().ok()?);
     let amount = u64::from_le_bytes(data[64..72].try_into().ok()?);
     Some((mint, owner, amount))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use anchor_lang::solana_program::system_instruction;
+
+    /// D-018: the hand-built `CreateAccount` is byte-identical to the SDK's bincode encoding.
+    #[test]
+    fn create_account_matches_system_instruction() {
+        let (a, b, o) = (
+            Pubkey::new_unique(),
+            Pubkey::new_unique(),
+            Pubkey::new_unique(),
+        );
+        for &(lamports, space) in &[(0u64, 0u64), (2_039_280, 165), (u64::MAX, u64::MAX)] {
+            assert_eq!(
+                create_account(&a, &b, lamports, space, &o),
+                system_instruction::create_account(&a, &b, lamports, space, &o)
+            );
+        }
+    }
 }

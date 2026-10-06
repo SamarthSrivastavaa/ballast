@@ -1,6 +1,6 @@
 {
   "suite": "Program Part 1 — settle_graduation, burn_leftover (§6)",
-  "ranAt": "2026-10-06T09:10:37.103Z",
+  "ranAt": "2026-10-06T13:43:37.970Z",
   "pass": 26,
   "fail": 0,
   "unreachable": 1,
@@ -11,7 +11,7 @@
       "expected": "CurveNotComplete",
       "got": "CurveNotComplete",
       "detail": {
-        "signature": "4sMWecvngDfUN9NzJVoesRJcdppSWhFpFCQ8WHSAJ7z6LFyiD6zgr3oMjzkbPqco7iMAw3PCqBgJxdoAf4yZxEuK"
+        "signature": "5wA8i6kVwGh1esBFB6pk28uzn6H3zZ26RiKFKDNVm8dHP25PRz5MwB7gTKDsfqZ5w3J9H21m1SYngdCfE9Eizc9w"
       }
     },
     {
@@ -20,7 +20,7 @@
       "expected": "BeneficiaryAccountInvalid",
       "got": "BeneficiaryAccountInvalid",
       "detail": {
-        "signature": "5XCnCUzY5JPnjFTiWumRv9zUZojFqfoV1CxNQPm4B12o5Fs7L6UkzFp6UfkpDwogg1N3gKk3hB5jEd8MKB8FY1GE"
+        "signature": "3nc8mCii71bNQ5XenoNr9kavP65ZumevRsGD3Dj3oTwoBhasiMaiHao5KzsPqGwExZGGArjNiGo4PnwSficBjxqb"
       }
     },
     {
@@ -29,7 +29,7 @@
       "expected": "BeneficiaryAccountInvalid",
       "got": "BeneficiaryAccountInvalid",
       "detail": {
-        "signature": "67bJn62BF4V8uts17ZHiMwcL68UyM8sneYr3U1x8e8tKjK4UbrVeYu4npZ8Z1CTknfuAvrgE4M4zUSuLZAiEUqdw"
+        "signature": "5gchJet5MpNdqcY32ztga9dUjXYg2GBEetH4HbjQc2ErbCrGNQMPJAEYx2zoKqULRER8FXXDhPmj3bj7GeSR9pBA"
       }
     },
     {
@@ -38,7 +38,7 @@
       "expected": "BeneficiaryAccountInvalid",
       "got": "BeneficiaryAccountInvalid",
       "detail": {
-        "signature": "4z6H6TdfRt1fEPAG7VpmADZT9iVNA4HJ1p5623sSBkKLTrzi2AFbX1JZ42JjvVHyDUhTtc78pWv9P9Wykeqgsz9m"
+        "signature": "3Q3oDQrDyiGniMCNNssi2wwirpHVmn3BrMPw3vypJwjoJfyFXkn4R5dZ4VNrZrKUh3FYcHKLpybYEUbqpZEyYVcs"
       }
     },
     {
@@ -47,7 +47,7 @@
       "expected": "StagingNotPartnerAta",
       "got": "StagingNotPartnerAta",
       "detail": {
-        "signature": "pjAfeuT7safujrX9U8RcrGvcE3bti5RPqxKfAW7q11k1jWr1wXkP52UrXcuyr6scrpgZ5UicJy2v7zeb8Xt2Sxs"
+        "signature": "fzRc2ywSRZfLBQARbm8c6KeDcimZKwmSf7hAmLiWcsoSMTwwXp5orWJDfsEhCYyUmjRLyDiJ7CfrUFnfwqaBDFK"
       }
     },
     {
@@ -56,7 +56,7 @@
       "expected": "PoolVaultMismatch",
       "got": "PoolVaultMismatch",
       "detail": {
-        "signature": "UF7QHjwzsJk3tmqYY7sP8YRJC1BcC3GxEh5wXg9UTEAPcx9nBoM8ax7eW7DTnQVf2KnGB9ri89CWjgvWYoc9Fot"
+        "signature": "3q5pS4jMwXMDEj2ofoRXQkEz6qQaJ8NNih3zZzhkFTLreW663rYmURG2BKN6nCVzeUWt8gSyMr2hQmDUYA4ACXq9"
       }
     },
     {
@@ -65,7 +65,7 @@
       "expected": "PoolVaultMismatch",
       "got": "PoolVaultMismatch",
       "detail": {
-        "signature": "5fzTdYXZFiWNXetXYWrEVZsrrDU84hGkVs7Ls9VSyyfzKRDnX8b1jRmgb9jdqD6GBRApv2RcEzpouiZZUzyfnonz"
+        "signature": "3MLNSzz7z4Rv3HYtoyLkxjarDscBqTtfr6FYRK2z52FYVjKXrRU3pjcEkFF93gezhNLYg5YVqkv7GP35gFAMHYFg"
       }
     },
     {
@@ -74,7 +74,7 @@
       "expected": "ConstraintSeeds",
       "got": "ConstraintSeeds",
       "detail": {
-        "signature": "BsdUfrekUtordtcQ29eEA2BG3WASzV8vr1qffCZNuERXnVcTKeKwxAmx9v2R7JNGzfuYwd95chvUb1EtqeqW383"
+        "signature": "3vJ5PGRxgKzyxNyCGQi43UTMHYKfsSwkXy28JNDBgeCtJazHgbnKAkCkM3xcKZW9eWntPSsBtC1okkG9ZtkP5L8X"
       }
     },
     {
@@ -83,7 +83,7 @@
       "expected": "ConstraintAddress",
       "got": "ConstraintAddress",
       "detail": {
-        "signature": "2jGXcWqGGgYKcjR2fZWiEpXffb3VQKW3z6Cs3R4NbNMz2tVi4vj1HqWmDwiWw9aRSvawHqamysQRgQdXNdtkneWo"
+        "signature": "5dpfcAFukiNHBhHrF6HU7sJNwLyqbmbUiLeKPeqbJDF1yrNrnhaCWD41DvdSVZ9fivfU7KVFHVR1EPF2CGqYVWs9"
       }
     },
     {
@@ -92,7 +92,7 @@
       "expected": "ConstraintSeeds",
       "got": "ConstraintSeeds",
       "detail": {
-        "signature": "3AbTTtQiBBWifkTRMQ8UTxSXaN55sU1cR4cftEr7MLZ9HoB9m2KBkkmEwJ7ig69qkRdEdK61vsBT9PsDzgsRC7GH"
+        "signature": "5vYZk7bCDMBJzpUe2k5jmZ2YAJeysS8UHhEjpydiuQPPqYj7WAC2JJWBRXJLL54vBxakqtjJKYb6VbYZXPeduK35"
       }
     },
     {
@@ -101,7 +101,7 @@
       "expected": "ConstraintAddress",
       "got": "ConstraintAddress",
       "detail": {
-        "signature": "5wRr6i3r25JCL9sD7CAM58t6WCueXNz3DKASRjrtwyLJx5qQvPfk4LDPvU2LyeFZPQJWZc9BJasHAUKmRtQbfqhG"
+        "signature": "aKwsTU7FH7eon13i51fRGPhbfDNFs1jtLWhG5dycBmmqXGx8viCsgvSUrATDBHreR52YUfU6eyTUZRoWsdaxNDv"
       }
     },
     {
@@ -110,7 +110,7 @@
       "expected": "ConstraintAddress",
       "got": "ConstraintAddress",
       "detail": {
-        "signature": "kNtndMufsPCSYnNHSDBEFK9jZ9aVTGARkPzxG2DvKNKCFagbFenhQXaezxCR4Xoh6VhNyUJNbN8iHMWYFQnfnjB"
+        "signature": "4YPvyVHgSCXVfTJuwwvPRzpzHKMgHk98KhZLMFzQXojV7v8Hqxa7zdCfEbRGFr99EWadJggdQa2g7bNF8WQqzKRD"
       }
     },
     {
@@ -119,7 +119,7 @@
       "expected": "LaunchWrongState",
       "got": "LaunchWrongState",
       "detail": {
-        "signature": "sRrrMhg2SbnhXcCtbU3jmbBermfyc778ocbwVNuu7rhKABEufokZabUQwhyLxmrjSkbHZpTARE99TieJLWRpvnm"
+        "signature": "2cChgQdw6nQt2V138WefnXmX1rMMRzNLJT75L5SATQgCUncvYA2gpKw4b78ueC7kRcQSU7CG9oswCJ2zf3TaF2uS"
       }
     },
     {
@@ -128,7 +128,7 @@
       "expected": "every check",
       "got": "ok",
       "detail": {
-        "signature": "2J5a6RxbAANARFfw8r6fNj6mBDRFcMF7PsXvYcqGEYQQ2waxYqnHKLtUXbGKNJW9Ge63eBv1wKKQyJgcYY1Hu3Ft",
+        "signature": "5PjFc87MDqJy74tCfvgmnZegt1zwMighWLiy9vb8u8rqFgo8kkFF3vECqsbJYAjZ2H5FDiN9RhbwciYy3FGBkhAb",
         "txCu": 140841,
         "settleCu": 115810,
         "migrationFee": "1500000000",
@@ -157,7 +157,7 @@
       "expected": "LaunchWrongState",
       "got": "LaunchWrongState",
       "detail": {
-        "signature": "5HXTaMWsFJ5F9Jx5uPCLm5KD7iTw1ix4ZmeVvQsVaA7hX5kt9HrwKw2hgMorYHLewDbbUKy1mFvFALAaQrv4L8mB"
+        "signature": "3CmBeZAxrpFKMKZveap8m54WUe8UUdXXkcdHXtDGkFubpq2GYU7Rh8JTKPk9qy8qfNeg9PkbDkVDRzQddQoWytu7"
       }
     },
     {
@@ -166,7 +166,7 @@
       "expected": "refused by DBC",
       "got": "Unauthorized",
       "detail": {
-        "signature": "48MAZjbRpn6DSutVxitRzFJfq2h85qp1Xk5ax1LDvJYqjkaW95zBJnHMHs7GNoepozAn5EMRDMPq9xnL8DHo4Qz3"
+        "signature": "53BHCgZG2rLUjWzMjkF98SM7SqYTW1os8fWTahLaEmhnZrcjjUsnZEx8Cw3L8FySSyybmrNpLR6DAdugP94YrGVb"
       }
     },
     {
@@ -175,7 +175,7 @@
       "expected": "refused by DBC",
       "got": "Unauthorized",
       "detail": {
-        "signature": "3CbxvRSWt9iLeMVQAiLqyuXE6bbwjwdXxfrcjZvDSstHqUYfeRkUF1boN7Q4osDwarJxpHx63W7eRJmQ97nPDhiy"
+        "signature": "4ied8zYTet95grDC5tizLLJHBLmjbwH8yKLb8dn8aroA715Qs4uuBFhPeQMSZSeAut8qtb9hwdkAqj3aFJb1wKVy"
       }
     },
     {
@@ -184,7 +184,7 @@
       "expected": "refused by DBC",
       "got": "NotPermitToDoThisAction",
       "detail": {
-        "signature": "4ZMqFHrbcfEf61tVqMPbkRwM37oPTfbRdvXMTzDu6amGAP9bSMaS6MfaPsTLbuTKjkVnGZ413y1WRVUHfq6MiZWu"
+        "signature": "5T2CqKZDE79m9r19inwrQGy7PEninEMvXfcXmtHzfLsUZMmy1BoY9osc7j1i16YQ86KtWRD4GHqhq1AmeedT9yqh"
       }
     },
     {
@@ -193,7 +193,7 @@
       "expected": "PoolNotMigrated",
       "got": "PoolNotMigrated",
       "detail": {
-        "signature": "5kEXp4GQfbewpFAVPk95FnCtXcowGMo9XccLvTMmGP7rnd2xHSBTHoxETeaRD6XRDkA4BnWmAoAKcwnuD1aDuLJ6",
+        "signature": "3TTNAGnZHgva4RvGifSYQejm5bht3rP3eaQbsv1P9uNnk4YfGHcwcEyvojujRLB1GFjdbXcKDQNWNPpFg2EHhKFt",
         "migrationProgress": 2
       }
     },
@@ -203,7 +203,7 @@
       "expected": "StagingNotPartnerAta",
       "got": "StagingNotPartnerAta",
       "detail": {
-        "signature": "3pRvD3BkDifRUPCLhN8FGfzK5DG4rB7TsGqRLgqX16WULfL4Wo8KAngirgeHQM2XYT2hgK8yJn5w4n13mHjykQwM"
+        "signature": "PEb82F5vQCEMWVCFcNSRovgcvRRuexDTzGGt1Hx28JRxr6YmJ7vG5nXu7oVLpK2H8MbcF4rcumERAyQkXCbpmis"
       }
     },
     {
@@ -212,7 +212,7 @@
       "expected": "refused by DBC",
       "got": "ConstraintAssociated",
       "detail": {
-        "signature": "5jbKYPH5EokASHme4Q3DdRt3BogGCevppZB2kJ6782zurM2iLvY6184gmCevuyuWghCHQth2fZJaPnX1PcMTo2Sc",
+        "signature": "y5PFeq7g81yqBszDzGdRLMEr6jqpSVzoejVgCCRBF3eTVMUu3rVNmmWcH9vVB2TGsyeZXhZ53Td44ckRJvympCf",
         "received": "0"
       }
     },
@@ -222,10 +222,10 @@
       "expected": "every check",
       "got": "ok",
       "detail": {
-        "signature": "3B4CEjwzHik5aBKRWFHDv5dRqU5SGQQSd51kibt1stDZoVeSweMQq4APwBaiLqEQFPCo9C7xDyTZMxF6Jq6TPFLP",
+        "signature": "4cCQdSeecPcQ9nKijrWkNgjzsTJJiJZAaGPeR9yY79L4RrgCyBsSvRksKFFri486gt6uuaRzDzp9WagWK3hqdAjd",
         "txCu": 86869,
         "burnCu": 82283,
-        "migrateSignature": "3uTjxN9FAp2pkFL8Y8vKCbdM4J3oXBgDY2WQ7Kmyw5AwoxrqrkA4Md5QnHuwrL8PqgiQxqo7NfUKpPu4Rt6B5Aap",
+        "migrateSignature": "29d1QUFDK51gU3KogpUo427uXB2RGQP5NvMxRJC8F3gkCQBsGYqZVZ27PQykmL2wjSQYvDkBnciiG5jpUaGCEWhD",
         "leftover": "134558940128191",
         "surplus": "0",
         "quoteReserve": "10000000000",
@@ -255,7 +255,7 @@
       "expected": "LaunchWrongState",
       "got": "LaunchWrongState",
       "detail": {
-        "signature": "45ARWeUNrkjLZniC4sJSgFmw3zeujXPzQnT1ZyFEeZHfNXGyxQvGsWwHAQFMdbqmhv9pADMmMqzc8X37yaTWwXY5"
+        "signature": "4nYcxM21wh2QEj9UPoWkpAB24ENBEHuciPkK4aifhUxGXAYW4W64DUntiCTZUZChJtR1vdHryVXdbY3bDxgvWHyb"
       }
     },
     {
@@ -264,8 +264,8 @@
       "expected": "Funded, vault += 15% + partner fees",
       "got": "state 2, vault +1540404041",
       "detail": {
-        "signature": "54xDwqCZw6CxWRLNFT1uxhEh7erc1GGxB7D7RfFwJofQ2GtwDADLxGNLuk8NKzXjhWQJgbPv3i76TRYiAhMVfBT7",
-        "migrateSignature": "5FNoRTuch9HGZLZzUe8mQKxFUgeaxURyMdzEQQxQ8TADhzQLvd9HQvRo8XZWnsiwTRQthur6PxBhEvoGo5wvXJbj",
+        "signature": "2rhJANqoQ7sUsjCW9DFFusYL75kNnN2o2KTo9cmTiqEt7His2dR23aovZZWCnx75Jv4YQNcmcWSpLiFfJuNPoTrR",
+        "migrateSignature": "424Wcd7cYPSg5hZ1kQSe4EnfdaHCevBCK7ugBA2jSog8aMAYS5PevRxt7e3umxusbL78wNwW1SJoqiuBq6A7X2bz",
         "migrationProgress": 3
       }
     },
@@ -275,9 +275,9 @@
       "expected": "every check",
       "got": "ok",
       "detail": {
-        "frontRun": "464X1TVR7QdDMwmEwhEqvd5KKwVWVFtAerRYbrywLZi4PkSGPEaSgFHaTEUFHkRMYGbqxchQ5SL5Jy8YsQvt5rVb",
-        "signature": "3DcRCrigzgNTJddTnbkrq9MjdkvL8fhm231Kravag4XSDWuW5bLe98xkjgPBB5oPDxsK2TCnSGGxnBt88DFJhBvM",
-        "burnCu": 62048,
+        "frontRun": "5sYSDukkEQ54VNe7kpvvfyRz8ybNmAvNyFHmsEVDjDHw9rJJ7RxSxJs8d3v4pQzbwgmpVvKgjLjPw2xqe5mNzH3S",
+        "signature": "ScBsyt3UiDkWwwdNeabWbF38jxEQkBJ2UN4Uf1kL8guF5UEpba7nfd1BsQ7DJVU829XZCaAWkgM8bsWSdkVPo5J",
+        "burnCu": 59048,
         "leftover": "134558940128191",
         "checks": {
           "state": true,
@@ -294,10 +294,10 @@
       "expected": "every check",
       "got": "ok",
       "detail": {
-        "migrate": "49gwPpzZdmNDoZPrDHujaGL1rbw1C4zR4FhcXCCgLxVPRcMFLanV5k72tVy6AgBrWz8Rwmydx6EWvnRTY8PC14gF",
-        "frontRun": "5AoTwRKR7pP9yyeYs6sNL8K8U8Ps2t6uGRuxCQi7WtAaKuKDReRtsK9cBKoecBrPk1wTDQMexbzLPwr1YFuSTLQ3",
-        "settle": "3FooeG8dy6Lh229gf9R4FuZpX34FZgfp7DDGmnsPU4e9oz7nmFhpjicY6wSFZDajK1Azir1XNcxqY8Wg4PfnRavE",
-        "burn": "x2jcWeF2Qb89WopmCJZe89UoJD7oQK4MSV8Gymgh6TT8YutU5aQSYvGyqeBVcLrzimHC63pNeMGGgFeH3PEyKWV",
+        "migrate": "5GjfrzcYiYVKd7ds9nwq7JdBGaVJQSn6Di5pgvdW3UUdjMELibDvoUnjfirj3oW9hW1akwDRJAgQGFQs4jYwDQ6G",
+        "frontRun": "2bh8b9npBW8aALm3ZryQLNQLPCp3HhyhWNWoTSd1jwqe2mAKDavHeijGUdW9pYhcPFmXJroBza1VSt9BAzwyuCnr",
+        "settle": "4p1ZuTtbDDaADcsyZTGmvkFoYGh1MhfZDrvYQSr56JLLwi7o5NLcHkif28RKECrPBJJmAww3rcZ9JjJ6LkMMD8d4",
+        "burn": "2XGRUQqg3SbxiGXCPBnEfsRQPNmtJfTixpQ94s3Yb8cvsvaGiZqAAS49Hfcyhf1PnctAWxvXwhfkkpZ68Z64z1Kw",
         "leftover": "134558940128191",
         "checks": {
           "settleBurnedNothing": true,

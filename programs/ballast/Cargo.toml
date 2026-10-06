@@ -13,7 +13,9 @@ crate-type = ["cdylib", "lib"]
 name = "ballast"
 
 [features]
-default = []
+# D-018: drop Anchor's on-chain IDL instructions (the IDL is still generated off-chain by
+# `anchor build` via idl-build and committed under target/idl for the clients).
+default = ["no-idl"]
 cpi = ["no-entrypoint"]
 no-entrypoint = []
 no-idl = []

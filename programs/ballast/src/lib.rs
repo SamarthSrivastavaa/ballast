@@ -529,27 +529,21 @@ pub mod ballast {
         }
         let last_point = pts[canon::CURVE_POINTS - 1].0;
 
-        // §7 rule 4 says `migration_sqrt_price` EQUALS the last curve point. On the mainnet
-        // binaries it does not: segment liquidity must round up so the curve can absorb the whole
-        // threshold, leaving DBC's derived price slightly BELOW the last point (measured 4,580,459
-        // low, relative 5e-11 — evidence/p0/REPORT.md finding 1).
-        //
-        // The band is therefore two-sided and bounded. A one-sided `<=` would free
-        // `migration_sqrt_price` entirely, and because that field is NOT in the rule-3 hash, two
-        // materially different configs would hash identically and `predicted_s_open` would no
-        // longer provably belong to the validated config.
-        //
-        // This is a §7 amendment and is PENDING THE OWNER'S APPROVAL (DECISIONS.md § OPEN DECISION
-        // rule-4). It cannot be exercised yet: every class is `ClassNotPinned` until the compiler
-        // emits the constants.
-        let migration_sqrt_price = cfg.migration_sqrt_price;
-        let lower = last_point.saturating_sub(canon::MIGRATION_PRICE_TOLERANCE);
+        // §7 rule 4 as amended by D-017 (approved 6 Oct 2026): DBC derives `migration_sqrt_price`
+        // slightly BELOW the last point because segment liquidity rounds up, so equality cannot
+        // hold. The band is two-sided and bounded by the largest shortfall measured on the mainnet
+        // binary + 2 (`curve::migration_price_in_band`). The pinned prediction is taken at the
+        // band end that gives the lower F (compiler, D-017).
         require!(
-            (lower..=last_point).contains(&migration_sqrt_price),
+            curve::migration_price_in_band(
+                last_point,
+                cfg.migration_sqrt_price,
+                canon::MIGRATION_PRICE_TOLERANCE
+            ),
             BallastError::ConfigMigrationPriceOutOfBand
         );
 
-        // The other half of the §7 rule-4 proposal: the curve must actually absorb the threshold.
+        // D-017 keeps the capacity check: the curve must actually absorb the threshold.
         let cap = curve::capacity(start, &pts).ok_or_else(|| error!(BallastError::Overflow))?;
         require!(
             cap >= threshold as u128,

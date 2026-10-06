@@ -191,6 +191,67 @@ SPEC_VECTORS: list[tuple[str, int, int, int, int]] = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# §7 prediction at the two ends of the rule-4 band (D-017)
+# ---------------------------------------------------------------------------
+
+#: DAMM v2 minimum sqrt price, Q64.64 (DAMM v2 MIN_SQRT_PRICE).
+S_MIN_DAMM_V2 = 4295048016
+
+#: §7 rule-4 band, D-017: the largest shortfall of DBC's migration_sqrt_price below the last curve
+#: point measured on the mainnet DBC binary (Proof 4,580,459; Public 2,896,937 --
+#: evidence/program/d017/band.json) + 2 units of rounding margin. Must equal
+#: programs/ballast/src/state.rs canon::MIGRATION_PRICE_TOLERANCE (the compiler checks it).
+MIGRATION_PRICE_TOLERANCE = 4_580_461
+
+#: Q14: Meteora's migration protocol share, 0.2% of the migrated amounts, taken as tokens.
+PROTOCOL_SHARE_BPS = 20
+
+CLASSES_JSON = __import__("pathlib").Path(__file__).resolve().parents[2] / "compiler/out/classes.json"
+
+
+def prediction_inputs(threshold: int, sqrt_start: int, curve: list[tuple[int, int]],
+                      s_mig: int, migration_fee_pct: int = 15) -> tuple[int, int, int]:
+    """(V, S, L) at open for a class whose DBC config migrates at sqrt price s_mig (§7 "Prediction").
+
+    Every rounding goes toward a LOWER floor: V and L down, S up.
+      V = migration fee = threshold * 15%                                      (floor)
+      L = (migrated quote - protocol share) * 2^128 / (s_mig - s_min)          (floor; share ceil)
+      S = base sold along the curve to s_mig  +  base DBC migrates for the full migrated quote
+          at s_mig (pool + protocol share, both still outstanding)             (each term ceil)
+    Bonding fees, surplus and the partner trading fees are left out, so they only raise F.
+    """
+    v = threshold * migration_fee_pct // 100
+    q_mig = threshold - v
+    q_protocol = _ceil_div(q_mig * PROTOCOL_SHARE_BPS, 10_000)
+    l = (q_mig - q_protocol) * TWO_128 // (s_mig - S_MIN_DAMM_V2)
+
+    sold, lo = 0, sqrt_start
+    for s_pt, l_seg in curve:
+        hi = min(s_pt, s_mig)
+        if hi > lo:
+            sold += _ceil_div(l_seg * (hi - lo), lo * hi)
+        lo = s_pt
+        if s_pt >= s_mig:
+            break
+    l_full = _ceil_div(q_mig * TWO_128, s_mig - S_MIN_DAMM_V2)
+    base_mig = _ceil_div(l_full * (S_MAX_DAMM_V2 - s_mig), s_mig * S_MAX_DAMM_V2)
+    return v, sold + base_mig, l
+
+
+def band_prediction_vectors() -> list[tuple[str, int, int, int]]:
+    """(name, V, S, L) at both rule-4 band ends for every compiled class (D-017)."""
+    out = []
+    for c in json.loads(CLASSES_JSON.read_text())["classes"]:
+        curve = [(int(p["sqrtPrice"]), int(p["liquidity"])) for p in c["curve"]]
+        last = curve[-1][0]
+        for end, s_mig in (("band_lo", last - MIGRATION_PRICE_TOLERANCE), ("band_hi", last)):
+            v, s_supply, l = prediction_inputs(int(c["migrationQuoteThreshold"]),
+                                               int(c["sqrtStartPrice"]), curve, s_mig)
+            out.append((f"{c['name']}_{end}", v, s_supply, l))
+    return out
+
+
 def selftest() -> int:
     """Check every §27 vector. Returns the number of failures."""
     failures = 0
@@ -255,6 +316,14 @@ def emit(n_random: int, seed: int = 20261002) -> dict:
             "name": name, "kind": "spec",
             "v": str(v), "s_supply": str(s_supply), "l": str(l),
             "s_max": str(S_MAX_DAMM_V2), "s": str(s),
+        })
+
+    # D-017: the §7 prediction at both ends of the rule-4 band; the compiler pins the lowest s.
+    for name, v, s_supply, l in band_prediction_vectors():
+        cases.append({
+            "name": name, "kind": "prediction",
+            "v": str(v), "s_supply": str(s_supply), "l": str(l),
+            "s_max": str(S_MAX_DAMM_V2), "s": str(floor_sqrt_q64(v, s_supply, l)),
         })
 
     # Random cases spread over the whole legal input space, including the edges.

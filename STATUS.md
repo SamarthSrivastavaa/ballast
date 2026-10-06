@@ -10,34 +10,30 @@
 | Last passed gate | **none** — no §18 gate attempted (gate 2 "graduation and migration" and gate 4 "vault funding" are now exercisable locally) |
 | P0 gate (Q1–Q5) | **ALL FIVE VERIFIED** (4 Oct) |
 | Program tests | One fresh-ledger run, mainnet binaries: config **41 pass / 0 fail / 9 unreachable**; `register_launch` **19 / 0 / 1**; `settle_graduation` + `burn_leftover` **26 / 0 / 1** (`evidence/program/part1/`). Migration fee exactly 1,500,000,000; leftover 134,558,940,128,191 burned, supply drop = burn |
-| Program size | **381,952 B** (D-009 soft ≤ 400 KB; size log in `DECISIONS.md` § D-009) |
+| Program size | **339,216 B** after D-018 (`no-idl` + hand-built `CreateAccount`; was 381,952). D-018 accepts up to ≈ 500 KB |
 | CU (local) | `register_launch` 59k (whole launch tx 305k, 875 B); `settle_graduation` 116k; `burn_leftover` 82k (62k when the leftover was front-run) |
 | Decisions this slice | **D-016** (graduation routing; `burn_leftover` requires `Funded`; beneficiary is an outside ATA; leftover front-run) — APPROVED 6 Oct |
-| Still OPEN | §7 rule 4 band + capacity (`DECISIONS.md` § OPEN DECISION) — code already implements the band |
+| Decisions 6 Oct | **D-017** rule-4 band T = 4,580,461 (measured max + 2), prediction at the lower-F end (pins unchanged); **D-018** size; **D-019** calendar + cuts |
 | Floor engine | done and proven: 31 tests, 100k-case property gate, 10,010 differential matches (Rust = Python) |
-| Devnet SOL | not requested yet (devnet proof is the 6 Oct calendar item — now late) |
+| Devnet | Meteora IDs read 6 Oct: all exist + executable, same ProgramData, **binaries differ from mainnet** (`DECISIONS.md` § Devnet). SOL needed: **14.1 min / 18 recommended** |
 | Mainnet | untouched. D-007: no spend without per-transaction approval |
 | Environment | `/home/hp/ballast` on ext4 in WSL Ubuntu (D-005). `source ~/.ballast-env` before every command |
 
-## Calendar (replaces §28)
+## Calendar (D-019, 6 Oct 2026 — replaces §28 and the 2 Oct calendar)
 
 | Date | Work | Done when |
 |---|---|---|
-| **2 Oct** | Session check; STEP 1 decisions; **STEP 2 toolchain decision** (TEST 1 mainnet binaries execute on the local validator; TEST 2 lockfile pins → anchor build/test) | Decision recorded with evidence in `evidence/step-1a/` + `DECISIONS.md`; committed |
-| **3 Oct** | **STEP 3 — P0 harness** on the mainnet-binary local validator: Q1–Q9, Q11–Q16, Q18; plus (a) lowest `migration_quote_threshold` DBC accepts, (b) manual migration at that size, (c) Lite config migrates with 100% permanent lock | Every answer in `DECISIONS.md` with signatures + JSON in `evidence/p0/`. **P0 go/no-go** |
-| **4 Oct** | Program part 1: `initialize_global`, `create_class` (every §7 rule + a negative test per rule), `register_launch`, `settle_graduation`, `burn_leftover`. **Separate worktree:** Floor Scanner (read-only, free RPC tier, paginated + cached, never touches `programs/ballast`) | Tests green; `.so` size reported (≤ 300 KB target, D-007) |
-| **5 Oct** | Program part 2: `open`, `refresh_floor`, `redeem` (atomic, CU measured), `harvest`, `deposit`, `floor` view + 1M-step model fuzz. Scanner live on mainnet. Lite config scripts with `--dry-run` | Fuzz clean; CU within §26 budgets |
-| **6 Oct** | `pnpm proof:local` complete → `evidence/proof-local/`; devnet deploy + devnet proof → `evidence/proof-devnet/` | Verifier PASS on both |
-| **7 Oct** | Draft the funding message (Meteora / Superteam: ~4–5 SOL deploy rent, refundable, with proof links); Lite outreach materials | Drafts ready for the owner |
-| **8–9 Oct** | Minimal app (token page: floor, max loss if buying now, floor composition, redeem; Lite launch form); live stats page from on-chain data; `JUDGES.md`; README in §34 order. If funded: mainnet Full deploy via §19, owner signs every step | App builds; wording gate green |
-| **10 Oct** | Feature freeze; demo checklist mapping each §35 step to evidence | Checklist complete |
-| **11 Oct** | **Submit.** Afterwards only stats updates and fixes | Submitted |
+| **6 Oct** (today) | Program Part 2 core: `open` → `refresh_floor` → `redeem` → `floor`; then `harvest` → `deposit` | Fresh-ledger suite green; CU vs §26; `.so` size; `/audit` 0 critical/high; pushed |
+| **7 Oct** (+1) | Full-lifecycle test = `pnpm proof:local` + lifecycle fuzzer | `evidence/proof-local/` summary table; fuzz clean |
+| **8 Oct** (+2) | Verifier CLI + devnet deploy/proof | Verifier PASS on local and devnet; `evidence/proof-devnet/` |
+| **9 Oct** (+3) | Floor Scanner + Lite config + keeper scripts | Scanner CLI on mainnet; Lite config script `--dry-run` |
+| **10 Oct** (+4) | Token page + README + `JUDGES.md` | App builds; wording gate green |
+| **11 Oct** | Video + **submit** | Submitted |
+| **12 Oct** | Buffer | — |
 
-Optional, with owner approval (~0.3 SOL): a tiny mainnet Lite proof if STEP 3 (a) shows a low threshold works.
-Open challenge (no bounty): "make F go down" on devnet and Lite launches, rules per §24.
-
-**Cut order if behind:** compiler CLI flags → stats polish → challenge page → Lite launch form (scripts instead).
-**Never cut:** verifier, fuzz suite, `proof:local`, devnet proof, Floor Scanner CLI, `JUDGES.md`.
+**CUT (D-019):** compiler CLI flags · stats page (→ README evidence table) · challenge page (→ README
+section) · Lite launch form (→ scripts).
+**Never cut:** verifier, fuzzer, `proof:local`, devnet proof, scanner CLI, `JUDGES.md`.
 
 ## Done
 

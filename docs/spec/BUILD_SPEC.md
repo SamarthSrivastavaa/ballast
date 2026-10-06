@@ -346,7 +346,7 @@ For segment i from price P\_{i−1} to P\_i carrying quote q\_i: L\_i = q\_i·2�
 1. Account owner is DBC and the discriminator is `PoolConfig`; `version` equals the version validated on devnet.
 2. Every scalar row in the table above matches exactly.
 3. `sha256(sqrt_start_price ‖ curve[0..20] ‖ migration_quote_threshold ‖ supply fields)` equals the constant compiled into the program for the declared `size_tag`.
-4. Derived checks: `migration_sqrt_price` equals the last curve point; curve has exactly 3 non-zero points; LP percentages sum to 100.
+4. Derived checks: `migration_sqrt_price` equals the last curve point `[D-017: within a two-sided band — last point − 4,580,461 ≤ migration_sqrt_price ≤ last point; 4,580,461 = the largest shortfall measured on the mainnet DBC binary (4,580,459) + 2. DBC rounds segment liquidity up, so equality cannot hold. Plus capacity: Σ⌊L_i·Δs_i/2^128⌋ ≥ threshold]`; curve has exactly 3 non-zero points; LP percentages sum to 100.
 5. `bid_bin_step` equals the class constant `[D-014: the DLMM pair address derives from [ILM_BASE, min(mintX,mintY), max(mintX,mintY)] and carries NO bin step (Q8), so there is one pair per mint pair and the bin step must be right first time. It is a class property, validated here, and `register_launch` requires the pair creation to carry it]`.
 5. `predicted_s_open` is copied from the program constant for the size; the verifier recomputes it independently from the same config (section 20).
 
@@ -354,7 +354,7 @@ Any failure aborts with a rule-specific error code. Configs are immutable once c
 
 ### Prediction (lower bound)
 
-Computed by the compiler with `ballast-floor` from: V₀ = 15% of the threshold; L from the migrated quote at the migration price, minus the protocol share (Q14, conservative 0.2%); S = curve-sold base + migration base. Bonding fees, surplus and the remaining protocol share are excluded, so the realised floor can only be higher.
+`[D-017: evaluated at both ends of the rule-4 band; the pinned value is min(§27 vector, both ends), so it never assumes the favourable end]` Computed by the compiler with `ballast-floor` from: V₀ = 15% of the threshold; L from the migrated quote at the migration price, minus the protocol share (Q14, conservative 0.2%); S = curve-sold base + migration base. Bonding fees, surplus and the remaining protocol share are excluded, so the realised floor can only be higher.
 
 ## 8. DAMM v2 Integration
 

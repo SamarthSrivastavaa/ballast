@@ -159,11 +159,13 @@ pub mod canon {
     pub const BASE_FEE_MODE_FLAT: u8 = 0;
     /// Flat migrated-pool base fee. §31 forbids market-cap-fee pools outright.
     pub const MIGRATED_POOL_BASE_FEE_MODE_FLAT: u8 = 0;
-    /// §7 rule 4 band. DBC derives `migration_sqrt_price` slightly below the last curve point
-    /// because segment liquidity rounds up; the measured shortfall was 4,580,459 (relative 5e-11,
-    /// evidence/p0/REPORT.md finding 1). 2^24 leaves headroom while keeping the field pinned —
-    /// a one-sided bound would not, since this field is absent from the rule-3 hash.
-    pub const MIGRATION_PRICE_TOLERANCE: u128 = 1 << 24;
+    /// §7 rule 4 band (D-017). DBC derives `migration_sqrt_price` slightly below the last curve
+    /// point because segment liquidity rounds up. Tolerance = the largest shortfall measured on the
+    /// mainnet DBC binary (Proof 4,580,459; Public 2,896,937 — evidence/program/d017/band.json),
+    /// plus 2 units of rounding margin. Two-sided on purpose: this field is absent from the rule-3
+    /// hash, so a one-sided bound would leave it unpinned. `compiler --check` keeps it equal to
+    /// the reference's value; the pinned prediction is taken at the lower-F band end (D-017).
+    pub const MIGRATION_PRICE_TOLERANCE: u128 = 4_580_461;
     /// Bin steps DLMM accepted for a customizable LimitOrder pair (Q9, measured by simulation).
     pub const DLMM_BIN_STEPS: [u16; 10] = [1, 2, 4, 5, 8, 10, 16, 20, 25, 50];
     /// The DBC `PoolConfig.version` validated on the mainnet binaries (Q12).
