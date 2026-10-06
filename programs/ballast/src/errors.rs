@@ -182,4 +182,24 @@ pub enum BallastError {
     LaunchPairCreatorControl,
     #[msg("launch: pair is not enabled")]
     LaunchPairDisabled,
+
+    // ---- settle_graduation, burn_leftover (§6) — appended so earlier codes stay stable ----
+    #[msg("launch is not in the state this instruction requires")]
+    LaunchWrongState,
+    #[msg("DBC curve not complete (quote_reserve < migration threshold)")]
+    CurveNotComplete,
+    #[msg("DBC pool not migrated (migration_progress != CreatedPool)")]
+    PoolNotMigrated,
+    #[msg("base or quote vault is not the DBC pool's")]
+    PoolVaultMismatch,
+    #[msg("staging account is not partner_auth's base-mint ATA")]
+    StagingNotPartnerAta,
+    #[msg("beneficiary account is not a WSOL account owned by creator_beneficiary")]
+    BeneficiaryAccountInvalid,
+    #[msg("vault is not a WSOL account owned by partner_auth")]
+    VaultInvalid,
+    #[msg("a creator base-token fee would be burned; refusing (class pins QuoteToken fees)")]
+    CreatorBaseFee,
+    #[msg("creator_beneficiary is one of this program's PDAs")]
+    BeneficiaryIsBallastPda,
 }

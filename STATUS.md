@@ -1,20 +1,21 @@
 # Ballast — Status
 
-**Updated:** 4 Oct 2026 — **P0 GATE PASSED (Q1–Q5 all verified)** · **Deadline:** 13 Oct 2026 06:59 UTC · **We submit 11 Oct.**
+**Updated:** 6 Oct 2026 — **Program Part 1 done** (5 of 11 instructions, mainnet-binary local validator) · **Deadline:** 13 Oct 2026 06:59 UTC · **We submit 11 Oct.**
 
 ## Current state
 
 | | |
 |---|---|
-| Phase | STEP 3 (P0 harness): **P0 gate CLOSED.** Q5 verified on a clean one-ledger run. Program code is unblocked |
-| Last passed gate | **none** — no §18 gate attempted |
-| P0 gate (Q1–Q5) | **ALL FIVE VERIFIED.** Q1 ✓ · Q2 ✓ (via D-010) · Q3 ✓ · Q4 ✓ · **Q5 ✓** (place 37,463 CU, fill persists, cancel returns unfilled + filled + fees exactly, order closed) |
-| Open UNKNOWNs | 6 of 20 (Q7, Q10, Q17–Q20); Q14/Q15 partial. Verified: Q1–Q6, Q8, Q9, Q11, Q12, Q13, Q16 |
-| Last commit | see `git log`; this field was stale. HEAD was `b408400` before this commit |
-| Program code | none (correct — gated). `crates/floor` is exempt: pure math, no network |
-| Floor engine | **done and proven:** 31 tests, 100k-case property gate, 10,010 differential matches (Rust = Python); builds for SBF under platform-tools rustc 1.79 |
-| Meteora | Full DBC → DAMM v2 → DLMM lifecycle runs on the mainnet binaries from **one clean ledger**: config, pool, creator → PDA, buys, PDA fee claims via CPI, migration, 40 DAMM swaps, leftover, LimitOrder pair by PDA via CPI, PDA bid placed, filled by a seller, cancelled with exact reconciliation |
-| Devnet SOL | not requested (STEP 3 runs locally; devnet comes 6 Oct) |
+| Phase | **Program Part 1 complete** (§6): `initialize_global`, `create_class`, `register_launch`, `settle_graduation`, `burn_leftover`. Next: Part 2 (`open`, `refresh_floor`, `redeem`, `harvest`, `deposit`) |
+| Last passed gate | **none** — no §18 gate attempted (gate 2 "graduation and migration" and gate 4 "vault funding" are now exercisable locally) |
+| P0 gate (Q1–Q5) | **ALL FIVE VERIFIED** (4 Oct) |
+| Program tests | One fresh-ledger run, mainnet binaries: config **41 pass / 0 fail / 9 unreachable**; `register_launch` **19 / 0 / 1**; `settle_graduation` + `burn_leftover` **26 / 0 / 1** (`evidence/program/part1/`). Migration fee exactly 1,500,000,000; leftover 134,558,940,128,191 burned, supply drop = burn |
+| Program size | **381,952 B** (D-009 soft ≤ 400 KB; size log in `DECISIONS.md` § D-009) |
+| CU (local) | `register_launch` 59k (whole launch tx 305k, 875 B); `settle_graduation` 116k; `burn_leftover` 82k (62k when the leftover was front-run) |
+| Decisions this slice | **D-016** (graduation routing; `burn_leftover` requires `Funded`; beneficiary is an outside ATA; leftover front-run) — APPROVED 6 Oct |
+| Still OPEN | §7 rule 4 band + capacity (`DECISIONS.md` § OPEN DECISION) — code already implements the band |
+| Floor engine | done and proven: 31 tests, 100k-case property gate, 10,010 differential matches (Rust = Python) |
+| Devnet SOL | not requested yet (devnet proof is the 6 Oct calendar item — now late) |
 | Mainnet | untouched. D-007: no spend without per-transaction approval |
 | Environment | `/home/hp/ballast` on ext4 in WSL Ubuntu (D-005). `source ~/.ballast-env` before every command |
 
@@ -45,6 +46,7 @@ Open challenge (no bounty): "make F go down" on devnet and Lite launches, rules 
 - [x] **Environment** — WSL Ubuntu ext4 (D-005); Agave 2.1.21, Anchor 0.31.1, Node 20.20.2, pnpm 9.15.4, rustc 1.85.0 (`9435abd`)
 - [x] **D-002 condition 3** — `crates/floor` + `ruint` build for SBF under platform-tools v1.43 (rustc 1.79), 46,784-byte ELF
 - [x] **STEP 1** (2 Oct) — D-001 exact wording; D-006, D-007, D-008 recorded; environment rule; CI wording gate extended to D-006's full list; spec markers on §3, §17, §18, §19, §22, §28 (`c246a6d`)
+- [x] **Program Part 1** (§6, 4–6 Oct) — `initialize_global` (upgrade-authority gated), `create_class` (every §7 rule, one error + one negative test each), `register_launch` (D-011 atomic launch tx, 15 single-defect negatives + D-016 beneficiary checks), `settle_graduation`, `burn_leftover` (normal order, keeper lag, and leftover front-run before/after a late settle). `/audit`: 0 critical · 0 high · 5 medium — 3 fixed in code, 2 recorded as D-016
 - [x] **Commit identity** — all history re-authored to `samarthsrivastava897@gmail.com` (dates and trees unchanged; old→new hash map in `DECISIONS.md` § History rewrite; backup branch `backup/pre-identity-rewrite`)
 
 ## STEP 2 — toolchain decision (2 Oct) · DONE
@@ -83,16 +85,13 @@ pool. DBC numbers its enum {0 QuoteToken, 1 OutputToken, 2 Compounding}; DAMM's 
 
 ## Next task
 
-**The P0 gate is closed — program code is unblocked.** Remaining P0-adjacent work, then the program:
+**Program Part 2 (§6):** `open` (positions recorded and verified permanent, F via `ballast-floor`,
+`s_open ≥ predicted_s`, bid via DLMM `place_limit_order` from the vault — D-012, bin arrays by the
+keeper — D-013), then `refresh_floor`, atomic `redeem` (CU vs §26), `harvest`, `deposit`; every
+mutating instruction ends with the §4 monotone check. Tests first on the mainnet-binary validator.
 
-1. **Decide `OPEN QUESTION Q8-funding`** (DECISIONS.md): §6 has `register_launch` create the DLMM
-   pair in the registration transaction, but DLMM requires the funder to hold ≥ 1 base unit and
-   nobody does at that point. Recommendation: test option C (payer as funder) — a harness change.
-2. Q7 (wallet-creator `split_position`), Q18 (atomic redeem CU), (b)/(c) from the calendar.
-3. Then **program part 1** (§6): `initialize_global`, `create_class` (a negative test per §7 rule),
-   `register_launch`, `settle_graduation`, `burn_leftover`.
-
-Spec sections: Top-20 table, §7, §8, §9 (DLMM), §10, §26 (CU), §27 (bins).
+Also owed: devnet read of the three Meteora program IDs (risk below); Q7, Q18, extra checks (b)/(c);
+the owner's call on the §7 rule 4 OPEN DECISION.
 
 ## Open risks
 
@@ -103,8 +102,8 @@ Spec sections: Top-20 table, §7, §8, §9 (DLMM), §10, §26 (CU), §27 (bins).
 | Q5 (PDA DLMM limit orders via CPI) | Kills the DLMM bid layer | **UNKNOWN — next after the Q2 decision** |
 | Q7 (splittable creator position) | L under-counted if the creator stays a wallet | UNKNOWN (Q1 atomicity VERIFIED); creator-PDA default works (transfer_pool_creator verified) |
 | Q18 (atomic redeem CU) | Forces two-step redeem | UNKNOWN — 5 Oct |
-| **Calendar slip:** STEP 3 was due 3 Oct; P0 not closed on 4 Oct | Program part 1 (4 Oct) starts late | Buffer: cut order in the calendar; P0 work resumes on approval |
-| Program size (D-009: soft ≤ 400 KB; was 300 KB under D-007) — Anchor baseline ≈ 210 KB (T5) | Deploy rent if mainnet funding arrives | **Relaxed by D-009.** Size-optimised settings kept; size reported per slice; no build days on size |
+| **Calendar slip:** Program Part 1 (due 4 Oct) closed 6 Oct; Part 2 (due 5 Oct) and the local + devnet proof (due 6 Oct) not started | Squeezes the 7–10 Oct app/README days | Cut order in the calendar applies; the owner may want to re-plan 7–11 Oct |
+| Program size (D-009: soft ≤ 400 KB) — 381,952 B with 5 of 11 instructions | Part 2 will push it over 400 KB | Size log in D-009. Known cheap cuts: Anchor `no-idl` feature (IDL instructions ≈ 15 KB), hand-built `create_account` (drops bincode) |
 | No funding for mainnet Full deploy | Traction criterion (D-006) relies on Lite + Scanner | Funding message 7 Oct |
 | Meteora program IDs not yet read on **devnet** (§2 assumes identical) | 6 Oct devnet deploy targets wrong IDs | Open: devnet `getAccountInfo` of the three IDs before 6 Oct |
 | Pinned bytes are only re-fetchable while mainnet still serves them | A Meteora upgrade makes old pins unreproducible from a fresh clone | Accepted; `fixtures:dump` refuses drift; consider archiving the `.so` files as a release asset before submission |
@@ -116,14 +115,13 @@ Spec sections: Top-20 table, §7, §8, §9 (DLMM), §10, §26 (CU), §27 (bins).
 
 ## In progress
 
-STEP 3 is **paused, not half-built**: everything run so far is committed with its evidence. To
-resume on a fresh ledger:
+Nothing half-built: Program Part 1 is committed with its evidence. To re-run on a fresh ledger:
 
 ```bash
 source ~/.ballast-env && cd ~/ballast
-pnpm localnet --quiet &                     # mainnet-binary validator (online fixtures check first)
-bash tests/integration/p0/up.sh             # fund payer, deploy p0_harness
-pnpm exec tsx tests/integration/p0/src/run.ts q12 qa proof-setup proof-buy proof-premigration proof-migrate proof-post
+pnpm localnet --quiet &                              # mainnet-binary validator (fresh ledger)
+bash tests/integration/p0/up.sh                      # fund the payer
+anchor build && pnpm exec tsx tests/integration/program/run.ts   # part1 → part2 → part3 (one ledger)
 ```
 
 A run that stops with `NEEDS CLONE` names a mainnet account to pin: `bash tests/integration/p0/clone.sh

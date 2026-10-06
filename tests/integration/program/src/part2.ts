@@ -85,6 +85,9 @@ export async function part2(): Promise<number> {
     { name: "pool from a DBC config with no Ballast class", expected: "LaunchWrongConfig", opts: () => ({ poolConfig: foreignConfig }) },
     { name: "an unexpected DBC instruction before register", expected: "LaunchUnexpectedDbcInstruction", opts: () => ({ extraDbcIx: true }) },
     { name: "pool created in an EARLIER transaction (third-party trade window)", expected: "LaunchPoolNotCreatedInTx", opts: () => ({ poolInEarlierTx: true }) },
+    { name: "creator_beneficiary = partner_auth (D-016)", expected: "BeneficiaryIsBallastPda", opts: () => ({ beneficiary: (p) => p.partnerAuth }) },
+    { name: "creator_beneficiary = creator_auth (D-016)", expected: "BeneficiaryIsBallastPda", opts: () => ({ beneficiary: (p) => p.creatorAuth }) },
+    { name: "creator_beneficiary = the launch's vault (D-016)", expected: "BeneficiaryIsBallastPda", opts: () => ({ beneficiary: (p) => p.vault }) },
   ];
   for (const c of cases) {
     await suite.case(`register_launch: ${c.name}`, async () => {

@@ -13,6 +13,7 @@ import { resolve } from "node:path";
 import { assertLocal, NeedsClone, REPO } from "../p0/src/env";
 import { part1 } from "./src/part1";
 import { part2 } from "./src/part2";
+import { part3 } from "./src/part3";
 
 async function main(): Promise<void> {
   await assertLocal();
@@ -26,6 +27,7 @@ async function main(): Promise<void> {
   let fails = 0;
   if (!only || only === "part1") fails += await part1();
   if (!only || only === "part2") fails += await part2();
+  if (!only || only === "part3") fails += await part3();
   process.exit(fails ? 1 : 0);
 }
 

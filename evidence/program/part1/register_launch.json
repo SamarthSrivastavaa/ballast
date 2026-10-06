@@ -1,7 +1,7 @@
 {
   "suite": "Program Part 1 — register_launch (D-011)",
-  "ranAt": "2026-10-05T14:40:49.155Z",
-  "pass": 16,
+  "ranAt": "2026-10-06T09:09:27.536Z",
+  "pass": 19,
   "fail": 0,
   "unreachable": 1,
   "results": [
@@ -11,12 +11,12 @@
       "expected": "all fields per §5",
       "got": "ok",
       "detail": {
-        "signature": "4LnN64XwsGrtZd73venPNQxzwtewaVsuMvkRuJEtnhtDxiqfTgBopGPJwxMYurzgsGiU5x6sbnJwXhwXjVoYWPCx",
-        "txCu": 300219,
-        "registerLaunchCu": 62259,
+        "signature": "3J1jF9vDuLb2Cb2uG3MMqoTCxt7sHbuGzsS7QY7bMv1qYZMfmFkasziKKoZMcJrEC9EcVev1Rm5aZaLjpLAVW2yG",
+        "txCu": 304944,
+        "registerLaunchCu": 59484,
         "txBytes": 875,
-        "launch": "BC73vhnefyGQMsjac7e945P3WTga6kFryaK6WfFQoj3q",
-        "vault": "CHAuWtxQBV4wfSJ39VASBdKRY7nucq431qfU4kwpZiqr",
+        "launch": "7e9ZhxNGuMCcvPmErQhtGF6Z1nfqvRLQ1Joxu65cTjQR",
+        "vault": "8zz2Mb3yQDPT2y4egtyuLfyQL9PP8YWppY1ghbpD6gBw",
         "checks": {
           "state": true,
           "predicted": true,
@@ -37,7 +37,7 @@
       "expected": "LaunchPairWrongBinStep",
       "got": "LaunchPairWrongBinStep",
       "detail": {
-        "signature": "4tRzAj1sBWHazbvnVCVbQ1r4quBmFsQj1cHrj593RGajfoJEfuX7o96VMgrHRht6xHRxMobKdfkfyGy9uCvi54CC"
+        "signature": "4fWYyMMgRMoTENLDdHAw3ZtoUiTxWZuw9yKHUPRUo5aUGV4C4RQ6WKxWSAHfSCxTUnCgoG9DR3smiQu1rySvduCk"
       }
     },
     {
@@ -46,7 +46,7 @@
       "expected": "LaunchPairWrongFeeMode",
       "got": "LaunchPairWrongFeeMode",
       "detail": {
-        "signature": "wdbmkoGwjAxGhtuB1mzkXMXfKqhjNNR7as57hSn6TaCxy1Nj5Wqh2oHFugSYZBB3PUiZ9cah5bRpkJSGkBHXL6D"
+        "signature": "BKsoKUsHdrWX61gDJ8pro1TKaEAMHiMzzum3gDmPLfr24yFNyZQ6A6TYpvrzbNFm7HFLuN8WWpQdDQM3z7KSSx4"
       }
     },
     {
@@ -55,7 +55,7 @@
       "expected": "LaunchPairWrongBaseFee",
       "got": "LaunchPairWrongBaseFee",
       "detail": {
-        "signature": "5K2djXENSnGdVpXMpKpxCdTpLXAe4JSRzKSjkjN9s4o2rn4T2qrfMtA6skdfYkuCi6fw79ADYTwynt9zog6Jf6R6"
+        "signature": "4JMQ46WiDw9FfCewBsC7no8Htr3rc65yrEekERMc2GXf7BUSAo8Nq8dAKrjc2RrQNeRcd4GVaP8GzfxboWyiDQYV"
       }
     },
     {
@@ -64,7 +64,7 @@
       "expected": "LaunchPairCreatorControl",
       "got": "LaunchPairCreatorControl",
       "detail": {
-        "signature": "4LZDW1Np6qVRnfLoe6Mj1qySAoqhVBuqrfmAgFENC6X6E8f6bUkYTpe4XNujtCVkKWh3UrnC9r7TjY976TwWYEbP"
+        "signature": "4YyVXbErfyokNgfQe79ahydWGq2NMoZGk3TJUk3YJkr2GJtman6kndha1sgWHgbvfxjTkAwNs8F6WEP8e9SbaTcC"
       }
     },
     {
@@ -73,7 +73,7 @@
       "expected": "LaunchPairWrongOwner",
       "got": "LaunchPairWrongOwner",
       "detail": {
-        "signature": "49iyKj4VDUTuvLoTuGzptAUL8Regt2X9cRRf3hGykdb4Nj8ZqXqh79qwHUgYGyuEqM47MWiVpagv6GJSndZUUZ1R"
+        "signature": "2FmPwhA2nu5ohjWkvZxxwBEhPixSbbmj6bCKNPhyWJVqdd1gt4ZjYn8r5auez3gETkBzWqPpMs55c5xv5K32JhTD"
       }
     },
     {
@@ -82,7 +82,7 @@
       "expected": "LaunchDustBuyTooLarge",
       "got": "LaunchDustBuyTooLarge",
       "detail": {
-        "signature": "2TJDaAmqFokmnpJjoitAVT1sjZdRjptty8hVp7gNpN3usEEExtMYepokoavMyocjdvsc4FTTZVsm4tUQGQGU1Mbu"
+        "signature": "2eLLBf2CYbdGJHqaNEYqPN11yVmwYT4ufkL3tiNe9tFLhPsGNnGJVV65TQcRURNohNuPZRxNTp6HnppzMfVPChBC"
       }
     },
     {
@@ -91,7 +91,7 @@
       "expected": "LaunchPoolAlreadyTraded",
       "got": "LaunchPoolAlreadyTraded",
       "detail": {
-        "signature": "2E2ehcLChBTVWimEmkikQW6o2tQDJ9JNvmHuNX4P6uthwct7sov9S4Kfs7vhmpi5g7K1wD5kVQFUc1iyR4JkGcMq"
+        "signature": "2W9K45fJgQfuxvcqQRuWa7GYJdmNPeXCa5AWhw7EApEpEkeUYQDsQ6UZNcWgRJBHevCokpbJDoFfLsAqr1y8iGxW"
       }
     },
     {
@@ -100,7 +100,7 @@
       "expected": "LaunchTooManySwaps",
       "got": "LaunchTooManySwaps",
       "detail": {
-        "signature": "roL6SkSW2C5M4VeASiurRkehM8RA6GWcUiWPqAkm3VJxeVCNLX6Mqv6Ukvxmi45qeSxAcsufkdRhNxgve3jvFAQ"
+        "signature": "5kZwAXNdySwXL6QBHos3CZmgLTgGCyvP3cr4Wn3ssFqb97qtzdv3sRHWgigzSPXTWVif8geMZKHUCHeDkwn2Pppi"
       }
     },
     {
@@ -109,7 +109,7 @@
       "expected": "LaunchSwapNotByPayer",
       "got": "LaunchSwapNotByPayer",
       "detail": {
-        "signature": "4qa9AK92G6KgrjLmgmWJFg3iRLbX3dSZQFXpTNFnnxDukaSPg7HkLygko9JHu1uCziwrxutVnqUUHwHDKuXHUWE8"
+        "signature": "5U1kSu78ekEW25TsKdX4475o6NHKzhg1nM3dLcNSDMp8DTvrMTpZ8XNUPN3UntwUHEwFVY9MdS3y6yYK2nnSTC5P"
       }
     },
     {
@@ -118,7 +118,7 @@
       "expected": "LaunchCreatorNotTransferred",
       "got": "LaunchCreatorNotTransferred",
       "detail": {
-        "signature": "4i6VkxAy3uB9xeHVXWWTa3W3v8QQFa4pAHdiK7v37vj8hixie8V7ffZa4Q5pEZaK2YbWhKymUZpf1XwNoKwNaUxN"
+        "signature": "3DR2MnwYBmEgigLT4GSSU8Def1REdrgCecjZzHkHMeaCMJfRhx3JvkwAsQ4x34YULqwj4hDGbbPTMZsUfHZQXNz7"
       }
     },
     {
@@ -127,7 +127,7 @@
       "expected": "LaunchCreatorNotTransferred",
       "got": "LaunchCreatorNotTransferred",
       "detail": {
-        "signature": "TyTDUj3v2rUE6enibCPB6qkJmWPyh6xFKvqYbMVfLHGX5Wj6TDdqK2VWhopmqHGMAwtnMTqCgjrGtAcks42EGTG"
+        "signature": "2tq3jC6P6phbtCGhYLvxKiCn9c4MEoeSzgVa48sCf6MWYr4CfNmoBgh6tHa7KggzEn5V73NvYFsKzh3ujqBXYkqb"
       }
     },
     {
@@ -136,7 +136,7 @@
       "expected": "LaunchCreatorMismatch",
       "got": "LaunchCreatorMismatch",
       "detail": {
-        "signature": "32NrekCbDdXUPJKCALYqK6vXFAX1kjjFDyKCsWRqnextErah7SZU8iuZqygRjDSq2y6EjZsnrJpWiWFHwBU168J6"
+        "signature": "n56kom24jxH8Tv3CY2c96eRBvzqa1HwbtZoKFh1x2vPushyHeLvHJMzhEextE7tviCwFTthaE8bLrVenD6jWtmM"
       }
     },
     {
@@ -145,7 +145,7 @@
       "expected": "LaunchWrongConfig",
       "got": "LaunchWrongConfig",
       "detail": {
-        "signature": "ii1KhvHwLauAziBgmpLdhxkLZpfSJT8kYj2d775WXs5jAGrPvwvYi9FVhNrogwhWeDVexPUzW1jT3XRNDdTmJhM"
+        "signature": "5x3v3mXQkcyxm3cw2KRnTC4PUzKFf4PPWEFrwfLFmthcakT5ZNEzcDg6rZQpdn61LxcBgFjd8m9vhkPNGzMPb8hA"
       }
     },
     {
@@ -154,7 +154,7 @@
       "expected": "LaunchUnexpectedDbcInstruction",
       "got": "LaunchUnexpectedDbcInstruction",
       "detail": {
-        "signature": "5QU1iaH1Nk38b8GJe2DdXGxr1q5vzeg6SBvw6ADCDsWP24A1DPj3dAXmsXur4FSQX7ogXkAJkWcPeM3JnHXnxCkV"
+        "signature": "23a1A9SE5ccTmLGQRzqCGEMycRQaUX2TveSvCRVz1ewz1NKgfrej2g1YF9T3ZSfpPq8GgKAKBJrfeg9YzAcofmQv"
       }
     },
     {
@@ -163,7 +163,34 @@
       "expected": "LaunchPoolNotCreatedInTx",
       "got": "LaunchPoolNotCreatedInTx",
       "detail": {
-        "signature": "3CErpRqjQ1Lb3H5fMRQNLUjBjgTsrdbxcLrVDzbehQ5SPw6pRm4KFk8FoBz5UuzdsiEqQwq91tW9qYqVgTouQzwj"
+        "signature": "5Ry4FkbBmtaL2KNQRNaFpazPsd3HhJMcs7rWwMVPt19tBmiP3ZT7cUHAS6AhZCiXJPsfJ4KA1TPRzVKB4ynXJ1gC"
+      }
+    },
+    {
+      "name": "register_launch: creator_beneficiary = partner_auth (D-016)",
+      "status": "pass",
+      "expected": "BeneficiaryIsBallastPda",
+      "got": "BeneficiaryIsBallastPda",
+      "detail": {
+        "signature": "o71yvqcdpbmZSFqcvYebrdmssyfHhgFA1XW34Cz5cuaLpwUn8U7L5uWujGuKMkgWqQqGAMfXm7AnmnDCWevcuES"
+      }
+    },
+    {
+      "name": "register_launch: creator_beneficiary = creator_auth (D-016)",
+      "status": "pass",
+      "expected": "BeneficiaryIsBallastPda",
+      "got": "BeneficiaryIsBallastPda",
+      "detail": {
+        "signature": "r48EDSAnUhup2RzKbGXmJkDqVw7v9WKECJuFy3PTu2Wa5SXjxo6pCU9zdhXqHQxDTWqVPbV3n5AJkNTJfVG4397"
+      }
+    },
+    {
+      "name": "register_launch: creator_beneficiary = the launch's vault (D-016)",
+      "status": "pass",
+      "expected": "BeneficiaryIsBallastPda",
+      "got": "BeneficiaryIsBallastPda",
+      "detail": {
+        "signature": "3maZ5o4YpN8HgGWzuW95rHSGJsozg7hX46WLwkwV91jUbtCoprMMsMbyRefKsJLXcgCZH6x6hhSFUQNRkDKbgBfH"
       }
     },
     {

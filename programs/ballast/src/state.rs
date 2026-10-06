@@ -184,4 +184,8 @@ pub mod canon {
     /// `base_factor · bin_step / 10_000` with `base_fee_power_factor = 0`.
     pub const DLMM_BASE_FEE_BPS_X10K: u32 = 10_000;
     pub const DLMM_PAIR_STATUS_ENABLED: u8 = 0;
+
+    // ---- DBC lifecycle, as observed on the mainnet binaries ----
+    /// `VirtualPool.migration_progress` after `migration_damm_v2` (Q1: 2 at completion, 3 after).
+    pub const DBC_MIGRATION_PROGRESS_CREATED_POOL: u8 = 3;
 }

@@ -1,0 +1,322 @@
+{
+  "suite": "Program Part 1 — settle_graduation, burn_leftover (§6)",
+  "ranAt": "2026-10-06T09:10:37.103Z",
+  "pass": 26,
+  "fail": 0,
+  "unreachable": 1,
+  "results": [
+    {
+      "name": "settle_graduation: curve not complete",
+      "status": "pass",
+      "expected": "CurveNotComplete",
+      "got": "CurveNotComplete",
+      "detail": {
+        "signature": "4sMWecvngDfUN9NzJVoesRJcdppSWhFpFCQ8WHSAJ7z6LFyiD6zgr3oMjzkbPqco7iMAw3PCqBgJxdoAf4yZxEuK"
+      }
+    },
+    {
+      "name": "settle_graduation: beneficiary WSOL account owned by someone else",
+      "status": "pass",
+      "expected": "BeneficiaryAccountInvalid",
+      "got": "BeneficiaryAccountInvalid",
+      "detail": {
+        "signature": "5XCnCUzY5JPnjFTiWumRv9zUZojFqfoV1CxNQPm4B12o5Fs7L6UkzFp6UfkpDwogg1N3gKk3hB5jEd8MKB8FY1GE"
+      }
+    },
+    {
+      "name": "settle_graduation: beneficiary's own WSOL account that is not its ATA (D-016)",
+      "status": "pass",
+      "expected": "BeneficiaryAccountInvalid",
+      "got": "BeneficiaryAccountInvalid",
+      "detail": {
+        "signature": "67bJn62BF4V8uts17ZHiMwcL68UyM8sneYr3U1x8e8tKjK4UbrVeYu4npZ8Z1CTknfuAvrgE4M4zUSuLZAiEUqdw"
+      }
+    },
+    {
+      "name": "settle_graduation: beneficiary account = this launch's vault",
+      "status": "pass",
+      "expected": "BeneficiaryAccountInvalid",
+      "got": "BeneficiaryAccountInvalid",
+      "detail": {
+        "signature": "4z6H6TdfRt1fEPAG7VpmADZT9iVNA4HJ1p5623sSBkKLTrzi2AFbX1JZ42JjvVHyDUhTtc78pWv9P9Wykeqgsz9m"
+      }
+    },
+    {
+      "name": "settle_graduation: staging base account is not partner_auth's ATA",
+      "status": "pass",
+      "expected": "StagingNotPartnerAta",
+      "got": "StagingNotPartnerAta",
+      "detail": {
+        "signature": "pjAfeuT7safujrX9U8RcrGvcE3bti5RPqxKfAW7q11k1jWr1wXkP52UrXcuyr6scrpgZ5UicJy2v7zeb8Xt2Sxs"
+      }
+    },
+    {
+      "name": "settle_graduation: quote vault of another pool",
+      "status": "pass",
+      "expected": "PoolVaultMismatch",
+      "got": "PoolVaultMismatch",
+      "detail": {
+        "signature": "UF7QHjwzsJk3tmqYY7sP8YRJC1BcC3GxEh5wXg9UTEAPcx9nBoM8ax7eW7DTnQVf2KnGB9ri89CWjgvWYoc9Fot"
+      }
+    },
+    {
+      "name": "settle_graduation: base vault of another pool",
+      "status": "pass",
+      "expected": "PoolVaultMismatch",
+      "got": "PoolVaultMismatch",
+      "detail": {
+        "signature": "5fzTdYXZFiWNXetXYWrEVZsrrDU84hGkVs7Ls9VSyyfzKRDnX8b1jRmgb9jdqD6GBRApv2RcEzpouiZZUzyfnonz"
+      }
+    },
+    {
+      "name": "settle_graduation: substituted vault (another launch's)",
+      "status": "pass",
+      "expected": "ConstraintSeeds",
+      "got": "ConstraintSeeds",
+      "detail": {
+        "signature": "BsdUfrekUtordtcQ29eEA2BG3WASzV8vr1qffCZNuERXnVcTKeKwxAmx9v2R7JNGzfuYwd95chvUb1EtqeqW383"
+      }
+    },
+    {
+      "name": "settle_graduation: virtual pool of another launch",
+      "status": "pass",
+      "expected": "ConstraintAddress",
+      "got": "ConstraintAddress",
+      "detail": {
+        "signature": "2jGXcWqGGgYKcjR2fZWiEpXffb3VQKW3z6Cs3R4NbNMz2tVi4vj1HqWmDwiWw9aRSvawHqamysQRgQdXNdtkneWo"
+      }
+    },
+    {
+      "name": "settle_graduation: creator_auth of another launch",
+      "status": "pass",
+      "expected": "ConstraintSeeds",
+      "got": "ConstraintSeeds",
+      "detail": {
+        "signature": "3AbTTtQiBBWifkTRMQ8UTxSXaN55sU1cR4cftEr7MLZ9HoB9m2KBkkmEwJ7ig69qkRdEdK61vsBT9PsDzgsRC7GH"
+      }
+    },
+    {
+      "name": "settle_graduation: DBC config that is not the class's",
+      "status": "pass",
+      "expected": "ConstraintAddress",
+      "got": "ConstraintAddress",
+      "detail": {
+        "signature": "5wRr6i3r25JCL9sD7CAM58t6WCueXNz3DKASRjrtwyLJx5qQvPfk4LDPvU2LyeFZPQJWZc9BJasHAUKmRtQbfqhG"
+      }
+    },
+    {
+      "name": "settle_graduation: fake DBC program",
+      "status": "pass",
+      "expected": "ConstraintAddress",
+      "got": "ConstraintAddress",
+      "detail": {
+        "signature": "kNtndMufsPCSYnNHSDBEFK9jZ9aVTGARkPzxG2DvKNKCFagbFenhQXaezxCR4Xoh6VhNyUJNbN8iHMWYFQnfnjB"
+      }
+    },
+    {
+      "name": "burn_leftover: launch still Registered (settle first)",
+      "status": "pass",
+      "expected": "LaunchWrongState",
+      "got": "LaunchWrongState",
+      "detail": {
+        "signature": "sRrrMhg2SbnhXcCtbU3jmbBermfyc778ocbwVNuu7rhKABEufokZabUQwhyLxmrjSkbHZpTARE99TieJLWRpvnm"
+      }
+    },
+    {
+      "name": "settle_graduation: launch A → Funded; 15% + partner fees → vault, creator fees → beneficiary",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "2J5a6RxbAANARFfw8r6fNj6mBDRFcMF7PsXvYcqGEYQQ2waxYqnHKLtUXbGKNJW9Ge63eBv1wKKQyJgcYY1Hu3Ft",
+        "txCu": 140841,
+        "settleCu": 115810,
+        "migrationFee": "1500000000",
+        "partnerFees": "40404041",
+        "creatorFees": "40404041",
+        "quoteReserve": "10000000000",
+        "migrationFeeWithdrawStatus": 4,
+        "checks": {
+          "state": true,
+          "vaultDelta": true,
+          "migrationFeeRecorded": true,
+          "partnerFeesRecorded": true,
+          "partnerFeesNonZero": true,
+          "beneficiaryDelta": true,
+          "creatorForwarded": true,
+          "dbcPartnerFeeZero": true,
+          "dbcCreatorFeeZero": true,
+          "noBaseFees": true,
+          "stagingEmpty": true
+        }
+      }
+    },
+    {
+      "name": "settle_graduation: second call refused (double settlement)",
+      "status": "pass",
+      "expected": "LaunchWrongState",
+      "got": "LaunchWrongState",
+      "detail": {
+        "signature": "5HXTaMWsFJ5F9Jx5uPCLm5KD7iTw1ix4ZmeVvQsVaA7hX5kt9HrwKw2hgMorYHLewDbbUKy1mFvFALAaQrv4L8mB"
+      }
+    },
+    {
+      "name": "DBC: claim_trading_fee by a non-PDA signer is refused",
+      "status": "pass",
+      "expected": "refused by DBC",
+      "got": "Unauthorized",
+      "detail": {
+        "signature": "48MAZjbRpn6DSutVxitRzFJfq2h85qp1Xk5ax1LDvJYqjkaW95zBJnHMHs7GNoepozAn5EMRDMPq9xnL8DHo4Qz3"
+      }
+    },
+    {
+      "name": "DBC: claim_creator_trading_fee by a non-PDA signer is refused",
+      "status": "pass",
+      "expected": "refused by DBC",
+      "got": "Unauthorized",
+      "detail": {
+        "signature": "3CbxvRSWt9iLeMVQAiLqyuXE6bbwjwdXxfrcjZvDSstHqUYfeRkUF1boN7Q4osDwarJxpHx63W7eRJmQ97nPDhiy"
+      }
+    },
+    {
+      "name": "DBC: withdraw_migration_fee (partner flag) by a non-PDA signer is refused",
+      "status": "pass",
+      "expected": "refused by DBC",
+      "got": "NotPermitToDoThisAction",
+      "detail": {
+        "signature": "4ZMqFHrbcfEf61tVqMPbkRwM37oPTfbRdvXMTzDu6amGAP9bSMaS6MfaPsTLbuTKjkVnGZ413y1WRVUHfq6MiZWu"
+      }
+    },
+    {
+      "name": "burn_leftover: before migration (CreatedPool not reached)",
+      "status": "pass",
+      "expected": "PoolNotMigrated",
+      "got": "PoolNotMigrated",
+      "detail": {
+        "signature": "5kEXp4GQfbewpFAVPk95FnCtXcowGMo9XccLvTMmGP7rnd2xHSBTHoxETeaRD6XRDkA4BnWmAoAKcwnuD1aDuLJ6",
+        "migrationProgress": 2
+      }
+    },
+    {
+      "name": "burn_leftover: staging base account is not partner_auth's ATA",
+      "status": "pass",
+      "expected": "StagingNotPartnerAta",
+      "got": "StagingNotPartnerAta",
+      "detail": {
+        "signature": "3pRvD3BkDifRUPCLhN8FGfzK5DG4rB7TsGqRLgqX16WULfL4Wo8KAngirgeHQM2XYT2hgK8yJn5w4n13mHjykQwM"
+      }
+    },
+    {
+      "name": "DBC: withdraw_leftover to a partner_auth-owned NON-ATA account is refused (leftover can only reach the ATA)",
+      "status": "pass",
+      "expected": "refused by DBC",
+      "got": "ConstraintAssociated",
+      "detail": {
+        "signature": "5jbKYPH5EokASHme4Q3DdRt3BogGCevppZB2kJ6782zurM2iLvY6184gmCevuyuWghCHQth2fZJaPnX1PcMTo2Sc",
+        "received": "0"
+      }
+    },
+    {
+      "name": "burn_leftover: launch A → Cleaned; leftover withdrawn and burned, surplus → vault",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "3B4CEjwzHik5aBKRWFHDv5dRqU5SGQQSd51kibt1stDZoVeSweMQq4APwBaiLqEQFPCo9C7xDyTZMxF6Jq6TPFLP",
+        "txCu": 86869,
+        "burnCu": 82283,
+        "migrateSignature": "3uTjxN9FAp2pkFL8Y8vKCbdM4J3oXBgDY2WQ7Kmyw5AwoxrqrkA4Md5QnHuwrL8PqgiQxqo7NfUKpPu4Rt6B5Aap",
+        "leftover": "134558940128191",
+        "surplus": "0",
+        "quoteReserve": "10000000000",
+        "baseVaultBefore": "135213350111339",
+        "baseVaultAfter": "654409983148",
+        "supplyBefore": "1000000000000000",
+        "supplyAfter": "865441059871809",
+        "vault": "1540404041",
+        "checks": {
+          "state": true,
+          "supplyFell": true,
+          "burnedNonZero": true,
+          "baseVaultDrainedByLeftover": true,
+          "burnedCounter": true,
+          "surplusRecorded": true,
+          "stagingEmpty": true,
+          "dbcLeftoverFlag": true,
+          "dbcSurplusFlag": true,
+          "vaultReconciles": true,
+          "tokenConservation": true
+        }
+      }
+    },
+    {
+      "name": "burn_leftover: second call refused",
+      "status": "pass",
+      "expected": "LaunchWrongState",
+      "got": "LaunchWrongState",
+      "detail": {
+        "signature": "45ARWeUNrkjLZniC4sJSgFmw3zeujXPzQnT1ZyFEeZHfNXGyxQvGsWwHAQFMdbqmhv9pADMmMqzc8X37yaTWwXY5"
+      }
+    },
+    {
+      "name": "settle_graduation: after migration (keeper lag, §5) → Funded",
+      "status": "pass",
+      "expected": "Funded, vault += 15% + partner fees",
+      "got": "state 2, vault +1540404041",
+      "detail": {
+        "signature": "54xDwqCZw6CxWRLNFT1uxhEh7erc1GGxB7D7RfFwJofQ2GtwDADLxGNLuk8NKzXjhWQJgbPv3i76TRYiAhMVfBT7",
+        "migrateSignature": "5FNoRTuch9HGZLZzUe8mQKxFUgeaxURyMdzEQQxQ8TADhzQLvd9HQvRo8XZWnsiwTRQthur6PxBhEvoGo5wvXJbj",
+        "migrationProgress": 3
+      }
+    },
+    {
+      "name": "burn_leftover: leftover front-run by a third party into partner_auth's ATA → still burned",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "frontRun": "464X1TVR7QdDMwmEwhEqvd5KKwVWVFtAerRYbrywLZi4PkSGPEaSgFHaTEUFHkRMYGbqxchQ5SL5Jy8YsQvt5rVb",
+        "signature": "3DcRCrigzgNTJddTnbkrq9MjdkvL8fhm231Kravag4XSDWuW5bLe98xkjgPBB5oPDxsK2TCnSGGxnBt88DFJhBvM",
+        "burnCu": 62048,
+        "leftover": "134558940128191",
+        "checks": {
+          "state": true,
+          "burnedWhatSat": true,
+          "supplyFell": true,
+          "stagingEmpty": true,
+          "tokenConservation": true
+        }
+      }
+    },
+    {
+      "name": "leftover front-run BEFORE a late settle: settle leaves it, burn_leftover burns and records it",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "migrate": "49gwPpzZdmNDoZPrDHujaGL1rbw1C4zR4FhcXCCgLxVPRcMFLanV5k72tVy6AgBrWz8Rwmydx6EWvnRTY8PC14gF",
+        "frontRun": "5AoTwRKR7pP9yyeYs6sNL8K8U8Ps2t6uGRuxCQi7WtAaKuKDReRtsK9cBKoecBrPk1wTDQMexbzLPwr1YFuSTLQ3",
+        "settle": "3FooeG8dy6Lh229gf9R4FuZpX34FZgfp7DDGmnsPU4e9oz7nmFhpjicY6wSFZDajK1Azir1XNcxqY8Wg4PfnRavE",
+        "burn": "x2jcWeF2Qb89WopmCJZe89UoJD7oQK4MSV8Gymgh6TT8YutU5aQSYvGyqeBVcLrzimHC63pNeMGGgFeH3PEyKWV",
+        "leftover": "134558940128191",
+        "checks": {
+          "settleBurnedNothing": true,
+          "settleLeftLeftover": true,
+          "funded": true,
+          "cleaned": true,
+          "leftoverRecorded": true,
+          "burnedCounter": true,
+          "supplyFell": true,
+          "stagingEmpty": true,
+          "tokenConservation": true
+        }
+      }
+    },
+    {
+      "name": "settle_graduation: CreatorBaseFee (creator base-token fee fails closed)",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "§7 rule 2 (ConfigCollectFeeMode) pins DBC collect_fee_mode = QuoteToken, so creator_base_fee cannot accrue on any class pool"
+    }
+  ]
+}

@@ -54,6 +54,8 @@ export interface LaunchOpts {
   extraDbcIx?: boolean;
   /** Create the pool in an EARLIER transaction (D-011 forbids it). */
   poolInEarlierTx?: boolean;
+  /** `creator_beneficiary` passed to register_launch (default: the creator), from the launch's PDAs. */
+  beneficiary?: (p: { launch: PublicKey; creatorAuth: PublicKey; vault: PublicKey; partnerAuth: PublicKey }) => PublicKey;
 }
 
 export interface Launch {
@@ -156,7 +158,7 @@ export async function launch(label: string, classConfig: PublicKey, creator: Key
   const registerCreator = opts.registerCreator ?? creator;
   sign(registerCreator);
   const register = await ballast.methods
-    .registerLaunch(creator.publicKey)
+    .registerLaunch(opts.beneficiary?.({ launch: launchPda, creatorAuth, vault, partnerAuth: pdas.partner(classConfig) }) ?? creator.publicKey)
     .accountsPartial({
       class: pdas.class(classConfig), launch: launchPda, virtualPool: pool, baseMint: baseMint.publicKey,
       creatorAuth, partnerAuth: pdas.partner(classConfig), vault, quoteMint: WSOL, dlmmPair: lbPair,

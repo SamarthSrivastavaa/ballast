@@ -62,3 +62,39 @@ fn dlmm_discriminators_match_the_vendored_idl() {
         disc_of(&i, "initialize_customizable_permissionless_lb_pair2")
     );
 }
+
+/// `dbc_cpi` builds settle/burn CPIs by hand: discriminators, the constant pool authority and the
+/// event-authority PDA must match the vendored IDL, or the CPI would hit the wrong instruction.
+#[test]
+fn dbc_cpi_constants_match_the_vendored_idl() {
+    use anchor_lang::prelude::Pubkey;
+    use ballast::dbc_cpi::{self, disc as d};
+    let i = idl("dynamic_bonding_curve.json");
+    assert_eq!(
+        d::WITHDRAW_MIGRATION_FEE,
+        disc_of(&i, "withdraw_migration_fee")
+    );
+    assert_eq!(d::CLAIM_TRADING_FEE, disc_of(&i, "claim_trading_fee"));
+    assert_eq!(
+        d::CLAIM_CREATOR_TRADING_FEE,
+        disc_of(&i, "claim_creator_trading_fee")
+    );
+    assert_eq!(d::WITHDRAW_LEFTOVER, disc_of(&i, "withdraw_leftover"));
+    assert_eq!(
+        d::PARTNER_WITHDRAW_SURPLUS,
+        disc_of(&i, "partner_withdraw_surplus")
+    );
+
+    let ix = i["instructions"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|x| x["name"] == "withdraw_leftover")
+        .unwrap();
+    let pool_authority = ix["accounts"][0]["address"].as_str().unwrap();
+    assert_eq!(dbc_cpi::DBC_POOL_AUTHORITY.to_string(), pool_authority);
+
+    let (event_authority, _) =
+        Pubkey::find_program_address(&[b"__event_authority"], &ballast::DBC_PROGRAM_ID);
+    assert_eq!(dbc_cpi::DBC_EVENT_AUTHORITY, event_authority);
+}

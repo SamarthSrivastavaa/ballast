@@ -263,14 +263,14 @@ If migration happens before `settle_graduation` (keeper lag), `settle_graduation
 - **Signers:** any payer. **Accounts:** `launch` (w), `class`, `virtual_pool`, DBC quote vault, `partner_auth`, WSOL staging ATA (w), `vault` (w), `creator_auth` + its WSOL ATA (w), creator beneficiary WSOL ATA (w), DBC program + event authority.
 - **Preconditions:** curve complete; state `Registered`.
 - **CPI:** `withdraw_migration_fee` (partner flag; signer `partner_auth`), `claim_trading_fee` (partner; max amounts), `claim_creator_trading_fee` (signer `creator_auth`).
-- **Effect:** partner flows → staging → `vault`; creator trading fees → beneficiary. Amounts measured as balance deltas. State → `Funded`.
+- **Effect:** partner flows → staging → `vault`; creator trading fees → beneficiary. Amounts measured as balance deltas. State → `Funded`. `[D-016: no WSOL staging and no creator_auth WSOL ATA — the partner flows go straight to the vault and the creator's quote fees straight to ATA(creator_beneficiary, WSOL), which register_launch requires to be an outside account; the only staging account is partner_auth's base ATA, whose partner-claim delta is burned; a creator base fee fails closed]`
 - **Errors:** curve not complete; already settled (status bitmask). **Event:** `GraduationSettled{migration_fee, partner_fees, creator_fees}`.
 - **Re-entry:** DBC's withdraw bitmask makes a repeat a no-op; Ballast checks state first.
 
 ### `burn_leftover()`
 
 - **Signers:** any payer. **Accounts:** `launch` (w), `virtual_pool`, DBC base vault, `partner_auth` base ATA (w), `base_mint` (w), WSOL staging, `vault` (w), DBC program.
-- **Preconditions:** `migration_progress == CreatedPool`; state `Funded` or `Registered` (late settle runs first).
+- **Preconditions:** `migration_progress == CreatedPool`; state `Funded` or `Registered` (late settle runs first). `[D-016: state Funded only — a lagging keeper sends settle_graduation first, same transaction allowed. If a third party already ran DBC's permissionless withdraw_leftover (it can pay only partner_auth's ATA), the CPI is skipped and the whole ATA balance is burned and recorded]`
 - **CPI:** `withdraw_leftover` (to `partner_auth` ATA), `partner_withdraw_surplus`; SPL `burn` signed by `partner_auth`.
 - **Effect:** leftover burned (S falls); surplus → vault. State → `Cleaned`. **Event:** `LeftoverBurned{amount, surplus}`.
 

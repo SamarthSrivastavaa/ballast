@@ -1,7 +1,7 @@
 //! Ballast — a Meteora DBC launch class with an on-chain, executable buyback floor `F`.
 //!
-//! **Program Part 1 (§6):** `initialize_global`, `create_class`, `register_launch` (D-011).
-//! `settle_graduation` and `burn_leftover` are not written yet.
+//! **Program Part 1 (§6):** `initialize_global`, `create_class`, `register_launch` (D-011),
+//! `settle_graduation`, `burn_leftover`.
 //!
 //! The P0 gate (Q1–Q5) closed on 4 Oct 2026 against the mainnet Meteora binaries, which is what
 //! permits any of this to exist (`CLAUDE.md` § P0 gate rule, `evidence/p0/REPORT.md`).
@@ -14,8 +14,10 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::bpf_loader_upgradeable;
 use anchor_lang::solana_program::hash::hash;
+use anchor_lang::solana_program::program::{invoke, invoke_signed};
 
 pub mod curve;
+pub mod dbc_cpi;
 pub mod errors;
 pub mod introspect;
 pub mod spl;
@@ -37,6 +39,9 @@ pub const DLMM_ILM_BASE: Pubkey = pubkey!("MFGQxwAmB91SwuYX36okv2Qmdc9aMuHTwWGUr
 
 /// SPL Token program, for validating the treasury without pulling in `anchor-spl`.
 pub const TOKEN_PROGRAM_ID: Pubkey = pubkey!("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+/// SPL Associated Token Account program: staging accounts are `partner_auth`'s ATAs (§5), and DBC's
+/// `withdraw_leftover` pays only the leftover receiver's ATA.
+pub const ATA_PROGRAM_ID: Pubkey = pubkey!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
 /// An SPL token account is exactly this long; mint at offset 0, owner at 32.
 const SPL_TOKEN_ACCOUNT_LEN: usize = 165;
 
@@ -110,6 +115,120 @@ pub fn config_hash_preimage(cfg: &meteora_types::dbc::PoolConfig) -> Vec<u8> {
     out
 }
 
+/// `UpgradeableLoaderState::ProgramData { slot, upgrade_authority_address }` as bincode lays it
+/// out: variant `u32` = 3, `slot` u64, `Option` tag u8, then the 32-byte authority (45 bytes).
+fn upgrade_authority(info: &AccountInfo) -> Result<Option<Pubkey>> {
+    let d = info.try_borrow_data()?;
+    require!(
+        d.len() >= 45 && d[0..4] == 3u32.to_le_bytes(),
+        BallastError::NotUpgradeAuthority
+    );
+    if d[12] != 1 {
+        return Ok(None);
+    }
+    let key: [u8; 32] = d[13..45]
+        .try_into()
+        .map_err(|_| error!(BallastError::NotUpgradeAuthority))?;
+    Ok(Some(Pubkey::new_from_array(key)))
+}
+
+/// The `VirtualPool` fields `settle_graduation` and `burn_leftover` act on.
+struct PoolView {
+    base_vault: Pubkey,
+    quote_vault: Pubkey,
+    quote_reserve: u64,
+    migration_progress: u8,
+    is_withdraw_leftover: u8,
+    is_partner_withdraw_surplus: u8,
+}
+
+/// Decode the launch's DBC pool and re-check its cross-links (§5 rules 1–2): owner, discriminator,
+/// `config == class.dbc_config`, `base_mint == launch.base_mint`, and the passed vaults are its own.
+fn read_launch_pool(
+    info: &AccountInfo,
+    class: &Class,
+    launch: &Launch,
+    base_vault: &Pubkey,
+    quote_vault: &Pubkey,
+) -> Result<PoolView> {
+    require_keys_eq!(
+        *info.owner,
+        DBC_PROGRAM_ID,
+        BallastError::LaunchPoolWrongOwner
+    );
+    let data = info.try_borrow_data()?;
+    let vp = meteora_types::decode::<meteora_types::dbc::VirtualPool>(
+        &data,
+        &meteora_types::dbc::VirtualPool::DISCRIMINATOR,
+    )
+    .ok_or_else(|| error!(BallastError::LaunchPoolWrongOwner))?;
+    let s = &vp.pool_state;
+    require_keys_eq!(
+        Pubkey::new_from_array(s.config),
+        class.dbc_config,
+        BallastError::LaunchWrongConfig
+    );
+    require_keys_eq!(
+        Pubkey::new_from_array(s.base_mint),
+        launch.base_mint,
+        BallastError::LaunchBaseMintMismatch
+    );
+    let view = PoolView {
+        base_vault: Pubkey::new_from_array(s.base_vault),
+        quote_vault: Pubkey::new_from_array(s.quote_vault),
+        quote_reserve: s.quote_reserve,
+        migration_progress: s.migration_progress,
+        is_withdraw_leftover: s.is_withdraw_leftover,
+        is_partner_withdraw_surplus: s.is_partner_withdraw_surplus,
+    };
+    require!(
+        view.base_vault == *base_vault && view.quote_vault == *quote_vault,
+        BallastError::PoolVaultMismatch
+    );
+    Ok(view)
+}
+
+/// Balance of a token account whose mint and authority must be exactly these (§5 rule 3).
+/// Missing, foreign or malformed accounts are an error, never 0 (D-012).
+fn token_balance(
+    info: &AccountInfo,
+    mint: &Pubkey,
+    owner: &Pubkey,
+    err: BallastError,
+) -> Result<u64> {
+    let (m, o, amount) = spl::read_token_account(info).ok_or_else(|| error!(err))?;
+    if m != *mint || o != *owner {
+        return Err(error!(err));
+    }
+    Ok(amount)
+}
+
+/// The SPL associated token account of `owner` for `mint`. `partner_auth`'s base ATA is the only
+/// staging account and the only account DBC's `withdraw_leftover` can pay (so a third party
+/// front-running it can only fill this one); the beneficiary is paid only at its WSOL ATA (D-016).
+fn ata_of(owner: &Pubkey, mint: &Pubkey) -> Pubkey {
+    Pubkey::find_program_address(
+        &[owner.as_ref(), TOKEN_PROGRAM_ID.as_ref(), mint.as_ref()],
+        &ATA_PROGRAM_ID,
+    )
+    .0
+}
+
+/// The staging account's balance after checking it is `partner_auth`'s base ATA.
+fn staging_balance(info: &AccountInfo, partner_auth: &Pubkey, base_mint: &Pubkey) -> Result<u64> {
+    require_keys_eq!(
+        info.key(),
+        ata_of(partner_auth, base_mint),
+        BallastError::StagingNotPartnerAta
+    );
+    token_balance(
+        info,
+        base_mint,
+        partner_auth,
+        BallastError::StagingNotPartnerAta,
+    )
+}
+
 #[program]
 pub mod ballast {
     use super::*;
@@ -122,6 +241,10 @@ pub mod ballast {
     /// there is no admin setter and `init` makes the legitimate call fail. That would falsify
     /// §19's "exactly two authorities exist, both a 2-of-3 multisig".
     pub fn initialize_global(ctx: Context<InitializeGlobal>, admin: Pubkey) -> Result<()> {
+        require!(
+            upgrade_authority(&ctx.accounts.program_data)? == Some(ctx.accounts.deployer.key()),
+            BallastError::NotUpgradeAuthority
+        );
         // §5 rule 3: a token account's mint and authority are checked, never assumed. The treasury
         // receives 10% of harvested partner LP fees (§6 `harvest`), so it must really be a WSOL
         // token account — and it must be checked here, because nothing downstream can recover it.
@@ -496,6 +619,15 @@ pub mod ballast {
         let class = &ctx.accounts.class;
         let base_mint = ctx.accounts.base_mint.key();
         let creator_auth = ctx.accounts.creator_auth.key();
+        // D-016: creator income goes to an outside account. A Ballast PDA as beneficiary would let
+        // a caller route creator fees into a vault or the class-wide partner_auth accounts.
+        require!(
+            creator_beneficiary != ctx.accounts.partner_auth.key()
+                && creator_beneficiary != creator_auth
+                && creator_beneficiary != ctx.accounts.launch.key()
+                && creator_beneficiary != ctx.accounts.vault.key(),
+            BallastError::BeneficiaryIsBallastPda
+        );
 
         // ---- the DBC pool (§5 rules 1–2) ----
         let pool_info = &ctx.accounts.virtual_pool;
@@ -665,6 +797,277 @@ pub mod ballast {
         });
         Ok(())
     }
+
+    /// §6 `settle_graduation()`: once the curve is complete, move the partner migration fee and the
+    /// partner trading fees into the vault and the creator trading fees to the beneficiary, each
+    /// measured as a balance delta. Valid before or after migration (§5 keeper lag).
+    pub fn settle_graduation(ctx: Context<SettleGraduation>) -> Result<()> {
+        let a = &ctx.accounts;
+        require!(
+            a.launch.state == launch_state::REGISTERED,
+            BallastError::LaunchWrongState
+        );
+        let pv = read_launch_pool(
+            &a.virtual_pool,
+            &a.class,
+            &a.launch,
+            a.base_vault.key,
+            a.quote_vault.key,
+        )?;
+        require!(
+            pv.quote_reserve >= a.class.migration_threshold,
+            BallastError::CurveNotComplete
+        );
+        let partner = a.partner_auth.key();
+        let base_mint = a.launch.base_mint;
+        let vault = a.vault.key();
+        let st0 = staging_balance(&a.staging_base, &partner, &base_mint)?;
+        let beneficiary = a.launch.creator_beneficiary;
+        require_keys_eq!(
+            a.beneficiary_quote.key(),
+            ata_of(&beneficiary, &canon::QUOTE_MINT),
+            BallastError::BeneficiaryAccountInvalid
+        );
+        let ben_bal = || {
+            token_balance(
+                &a.beneficiary_quote,
+                &canon::QUOTE_MINT,
+                &beneficiary,
+                BallastError::BeneficiaryAccountInvalid,
+            )
+        };
+        ben_bal()?;
+        let sub = |x: u64, y: u64| {
+            x.checked_sub(y)
+                .ok_or_else(|| error!(BallastError::Overflow))
+        };
+        let vault_bal = || {
+            token_balance(
+                &a.vault,
+                &canon::QUOTE_MINT,
+                &partner,
+                BallastError::VaultInvalid,
+            )
+        };
+        let v0 = vault_bal()?;
+
+        let pool = dbc_cpi::Pool {
+            config: a.class.dbc_config,
+            pool: a.virtual_pool.key(),
+            base_vault: pv.base_vault,
+            quote_vault: pv.quote_vault,
+            base_mint,
+            quote_mint: canon::QUOTE_MINT,
+        };
+        let infos = [
+            a.dbc_pool_authority.to_account_info(),
+            a.dbc_config.to_account_info(),
+            a.virtual_pool.to_account_info(),
+            a.vault.to_account_info(),
+            a.staging_base.to_account_info(),
+            a.beneficiary_quote.to_account_info(),
+            a.base_vault.to_account_info(),
+            a.quote_vault.to_account_info(),
+            a.base_mint.to_account_info(),
+            a.quote_mint.to_account_info(),
+            a.partner_auth.to_account_info(),
+            a.creator_auth.to_account_info(),
+            a.token_program.to_account_info(),
+            a.dbc_event_authority.to_account_info(),
+            a.dbc_program.to_account_info(),
+        ];
+        let partner_seeds: &[&[u8]] = &[
+            b"partner",
+            pool.config.as_ref(),
+            &[a.class.partner_auth_bump],
+        ];
+        let launch_key = a.launch.key();
+        let creator_seeds: &[&[u8]] = &[
+            b"creator",
+            launch_key.as_ref(),
+            &[a.launch.creator_auth_bump],
+        ];
+
+        invoke_signed(
+            &dbc_cpi::withdraw_migration_fee(
+                &pool,
+                &vault,
+                &partner,
+                dbc_cpi::MIGRATION_FEE_FLAG_PARTNER,
+            ),
+            &infos,
+            &[partner_seeds],
+        )?;
+        let v1 = vault_bal()?;
+        invoke_signed(
+            &dbc_cpi::claim_trading_fee(&pool, a.staging_base.key, &vault, &partner),
+            &infos,
+            &[partner_seeds],
+        )?;
+        let v2 = vault_bal()?;
+        let st1 = staging_balance(&a.staging_base, &partner, &base_mint)?;
+        // Read after the partner claims, so the delta is the creator claim alone.
+        let ben0 = ben_bal()?;
+        invoke_signed(
+            &dbc_cpi::claim_creator_trading_fee(
+                &pool,
+                a.staging_base.key,
+                a.beneficiary_quote.key,
+                a.creator_auth.key,
+            ),
+            &infos,
+            &[creator_seeds],
+        )?;
+        let ben1 = ben_bal()?;
+        // §7 rule 2 pins DBC collect_fee_mode = QuoteToken, so no base fee accrues to anyone.
+        // A creator base fee would belong to the beneficiary: fail closed rather than burn it.
+        require!(
+            staging_balance(&a.staging_base, &partner, &base_mint)? == st1,
+            BallastError::CreatorBaseFee
+        );
+        // Partner base fees from this instruction's own claim are burned (S falls, so F can only
+        // rise). Only this delta: a leftover a third party already withdrew into staging stays
+        // there for `burn_leftover` to burn and record (D-016).
+        let stray = sub(st1, st0)?;
+        if stray > 0 {
+            invoke_signed(
+                &spl::burn(a.staging_base.key, &base_mint, &partner, stray),
+                &infos,
+                &[partner_seeds],
+            )?;
+        }
+
+        let migration_fee = sub(v1, v0)?;
+        let partner_fees = sub(v2, v1)?;
+        let creator_fees = sub(ben1, ben0)?;
+        let l = &mut ctx.accounts.launch;
+        l.migration_fee = migration_fee;
+        l.partner_fees = partner_fees;
+        l.creator_forwarded = l
+            .creator_forwarded
+            .checked_add(creator_fees)
+            .ok_or_else(|| error!(BallastError::Overflow))?;
+        l.burned = l
+            .burned
+            .checked_add(stray)
+            .ok_or_else(|| error!(BallastError::Overflow))?;
+        l.state = launch_state::FUNDED;
+        emit!(GraduationSettled {
+            launch: launch_key,
+            migration_fee,
+            partner_fees,
+            creator_fees,
+            base_burned: stray,
+        });
+        Ok(())
+    }
+
+    /// §6 `burn_leftover()`: after migration, withdraw DBC's leftover base into `partner_auth`'s ATA
+    /// (skipped if a third party already did — DBC can only pay that ATA), pull the partner surplus
+    /// into the vault, and burn everything in the ATA. The `Migrated` observation and the move to
+    /// `Cleaned` happen here together (§5).
+    pub fn burn_leftover(ctx: Context<BurnLeftover>) -> Result<()> {
+        let a = &ctx.accounts;
+        require!(
+            a.launch.state == launch_state::FUNDED,
+            BallastError::LaunchWrongState
+        );
+        let pv = read_launch_pool(
+            &a.virtual_pool,
+            &a.class,
+            &a.launch,
+            a.base_vault.key,
+            a.quote_vault.key,
+        )?;
+        require!(
+            pv.migration_progress == canon::DBC_MIGRATION_PROGRESS_CREATED_POOL,
+            BallastError::PoolNotMigrated
+        );
+        let partner = a.partner_auth.key();
+        let base_mint = a.launch.base_mint;
+        let vault = a.vault.key();
+        staging_balance(&a.staging_base, &partner, &base_mint)?;
+        let vault_bal = || {
+            token_balance(
+                &a.vault,
+                &canon::QUOTE_MINT,
+                &partner,
+                BallastError::VaultInvalid,
+            )
+        };
+        let v0 = vault_bal()?;
+
+        let pool = dbc_cpi::Pool {
+            config: a.class.dbc_config,
+            pool: a.virtual_pool.key(),
+            base_vault: pv.base_vault,
+            quote_vault: pv.quote_vault,
+            base_mint,
+            quote_mint: canon::QUOTE_MINT,
+        };
+        let infos = [
+            a.dbc_pool_authority.to_account_info(),
+            a.dbc_config.to_account_info(),
+            a.virtual_pool.to_account_info(),
+            a.vault.to_account_info(),
+            a.staging_base.to_account_info(),
+            a.base_vault.to_account_info(),
+            a.quote_vault.to_account_info(),
+            a.base_mint.to_account_info(),
+            a.quote_mint.to_account_info(),
+            a.partner_auth.to_account_info(),
+            a.token_program.to_account_info(),
+            a.dbc_event_authority.to_account_info(),
+            a.dbc_program.to_account_info(),
+        ];
+        let partner_seeds: &[&[u8]] = &[
+            b"partner",
+            pool.config.as_ref(),
+            &[a.class.partner_auth_bump],
+        ];
+
+        if pv.is_withdraw_leftover == 0 {
+            invoke(
+                &dbc_cpi::withdraw_leftover(&pool, a.staging_base.key, &partner),
+                &infos,
+            )?;
+        }
+        if pv.is_partner_withdraw_surplus == 0 {
+            invoke_signed(
+                &dbc_cpi::partner_withdraw_surplus(&pool, &vault, &partner),
+                &infos,
+                &[partner_seeds],
+            )?;
+        }
+        let v1 = vault_bal()?;
+        let amount = staging_balance(&a.staging_base, &partner, &base_mint)?;
+        if amount > 0 {
+            invoke_signed(
+                &spl::burn(a.staging_base.key, &base_mint, &partner, amount),
+                &infos,
+                &[partner_seeds],
+            )?;
+        }
+
+        let surplus = v1
+            .checked_sub(v0)
+            .ok_or_else(|| error!(BallastError::Overflow))?;
+        let launch_key = a.launch.key();
+        let l = &mut ctx.accounts.launch;
+        l.leftover_burned = amount;
+        l.surplus = surplus;
+        l.burned = l
+            .burned
+            .checked_add(amount)
+            .ok_or_else(|| error!(BallastError::Overflow))?;
+        l.state = launch_state::CLEANED;
+        emit!(LeftoverBurned {
+            launch: launch_key,
+            amount,
+            surplus,
+        });
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
@@ -681,14 +1084,16 @@ pub struct InitializeGlobal<'info> {
     /// deployment and §19 runbook step 3, and admin/treasury are permanently takeable.
     #[account(mut)]
     pub deployer: Signer<'info>,
+    /// CHECK: loader-owned, at the program's canonical ProgramData PDA; the upgrade authority is
+    /// parsed in the handler. Anchor's `Account<ProgramData>` decodes with bincode/serde, which
+    /// pulls serde and float formatting into the binary (D-009 size budget).
     #[account(
         seeds = [crate::ID.as_ref()],
         bump,
         seeds::program = bpf_loader_upgradeable::ID,
-        constraint = program_data.upgrade_authority_address == Some(deployer.key())
-            @ BallastError::NotUpgradeAuthority,
+        owner = bpf_loader_upgradeable::ID,
     )]
-    pub program_data: Account<'info, ProgramData>,
+    pub program_data: UncheckedAccount<'info>,
     /// CHECK: validated inside the instruction as an SPL token account whose mint is WSOL (§5 r3).
     pub treasury: UncheckedAccount<'info>,
     pub system_program: Program<'info, System>,
@@ -760,6 +1165,116 @@ pub struct RegisterLaunch<'info> {
     pub system_program: Program<'info, System>,
 }
 
+#[derive(Accounts)]
+pub struct SettleGraduation<'info> {
+    #[account(
+        mut,
+        seeds = [b"launch", launch.base_mint.as_ref()],
+        bump = launch.bump,
+        has_one = class,
+    )]
+    pub launch: Box<Account<'info, Launch>>,
+    #[account(seeds = [b"class", class.dbc_config.as_ref()], bump = class.bump)]
+    pub class: Box<Account<'info, Class>>,
+    /// CHECK: the class's DBC `PoolConfig`; DBC re-checks it against the pool.
+    #[account(address = class.dbc_config)]
+    pub dbc_config: UncheckedAccount<'info>,
+    /// CHECK: the launch's DBC `VirtualPool`; owner, discriminator and cross-links checked in the handler.
+    #[account(mut, address = launch.dbc_pool)]
+    pub virtual_pool: UncheckedAccount<'info>,
+    /// CHECK: must be the pool's base vault (handler).
+    #[account(mut)]
+    pub base_vault: UncheckedAccount<'info>,
+    /// CHECK: must be the pool's quote vault (handler).
+    #[account(mut)]
+    pub quote_vault: UncheckedAccount<'info>,
+    /// CHECK: the launch's base mint; writable for a stray base-fee burn.
+    #[account(mut, address = launch.base_mint)]
+    pub base_mint: UncheckedAccount<'info>,
+    /// CHECK: SPL WSOL.
+    #[account(address = canon::QUOTE_MINT)]
+    pub quote_mint: UncheckedAccount<'info>,
+    /// CHECK: PDA with no data; DBC `fee_claimer`, signs the partner CPIs.
+    #[account(seeds = [b"partner", class.dbc_config.as_ref()], bump = class.partner_auth_bump)]
+    pub partner_auth: UncheckedAccount<'info>,
+    /// CHECK: PDA with no data; DBC pool creator, signs the creator fee claim.
+    #[account(seeds = [b"creator", launch.key().as_ref()], bump = launch.creator_auth_bump)]
+    pub creator_auth: UncheckedAccount<'info>,
+    /// CHECK: the launch's WSOL vault (§5) — derived, never caller-supplied.
+    #[account(mut, seeds = [b"vault", launch.key().as_ref()], bump = launch.vault_bump)]
+    pub vault: UncheckedAccount<'info>,
+    /// CHECK: `partner_auth`'s base-mint ATA (staging); address and fields checked in the handler.
+    #[account(mut)]
+    pub staging_base: UncheckedAccount<'info>,
+    /// CHECK: a WSOL token account owned by `launch.creator_beneficiary` (handler).
+    #[account(mut)]
+    pub beneficiary_quote: UncheckedAccount<'info>,
+    /// CHECK: DBC's constant pool authority.
+    #[account(address = dbc_cpi::DBC_POOL_AUTHORITY)]
+    pub dbc_pool_authority: UncheckedAccount<'info>,
+    /// CHECK: DBC's `__event_authority` PDA.
+    #[account(address = dbc_cpi::DBC_EVENT_AUTHORITY)]
+    pub dbc_event_authority: UncheckedAccount<'info>,
+    /// CHECK: §12 — CPI program IDs are hard-coded.
+    #[account(address = DBC_PROGRAM_ID)]
+    pub dbc_program: UncheckedAccount<'info>,
+    /// CHECK: SPL Token program.
+    #[account(address = TOKEN_PROGRAM_ID)]
+    pub token_program: UncheckedAccount<'info>,
+}
+
+#[derive(Accounts)]
+pub struct BurnLeftover<'info> {
+    #[account(
+        mut,
+        seeds = [b"launch", launch.base_mint.as_ref()],
+        bump = launch.bump,
+        has_one = class,
+    )]
+    pub launch: Box<Account<'info, Launch>>,
+    #[account(seeds = [b"class", class.dbc_config.as_ref()], bump = class.bump)]
+    pub class: Box<Account<'info, Class>>,
+    /// CHECK: the class's DBC `PoolConfig`; DBC re-checks it against the pool.
+    #[account(address = class.dbc_config)]
+    pub dbc_config: UncheckedAccount<'info>,
+    /// CHECK: the launch's DBC `VirtualPool`; owner, discriminator and cross-links checked in the handler.
+    #[account(mut, address = launch.dbc_pool)]
+    pub virtual_pool: UncheckedAccount<'info>,
+    /// CHECK: must be the pool's base vault (handler).
+    #[account(mut)]
+    pub base_vault: UncheckedAccount<'info>,
+    /// CHECK: must be the pool's quote vault (handler).
+    #[account(mut)]
+    pub quote_vault: UncheckedAccount<'info>,
+    /// CHECK: the launch's base mint; writable for the burn.
+    #[account(mut, address = launch.base_mint)]
+    pub base_mint: UncheckedAccount<'info>,
+    /// CHECK: SPL WSOL.
+    #[account(address = canon::QUOTE_MINT)]
+    pub quote_mint: UncheckedAccount<'info>,
+    /// CHECK: PDA with no data; DBC `leftover_receiver` and `fee_claimer`, burn authority.
+    #[account(seeds = [b"partner", class.dbc_config.as_ref()], bump = class.partner_auth_bump)]
+    pub partner_auth: UncheckedAccount<'info>,
+    /// CHECK: the launch's WSOL vault (§5) — derived, never caller-supplied.
+    #[account(mut, seeds = [b"vault", launch.key().as_ref()], bump = launch.vault_bump)]
+    pub vault: UncheckedAccount<'info>,
+    /// CHECK: `partner_auth`'s base-mint ATA (staging); address and fields checked in the handler.
+    #[account(mut)]
+    pub staging_base: UncheckedAccount<'info>,
+    /// CHECK: DBC's constant pool authority.
+    #[account(address = dbc_cpi::DBC_POOL_AUTHORITY)]
+    pub dbc_pool_authority: UncheckedAccount<'info>,
+    /// CHECK: DBC's `__event_authority` PDA.
+    #[account(address = dbc_cpi::DBC_EVENT_AUTHORITY)]
+    pub dbc_event_authority: UncheckedAccount<'info>,
+    /// CHECK: §12 — CPI program IDs are hard-coded.
+    #[account(address = DBC_PROGRAM_ID)]
+    pub dbc_program: UncheckedAccount<'info>,
+    /// CHECK: SPL Token program.
+    #[account(address = TOKEN_PROGRAM_ID)]
+    pub token_program: UncheckedAccount<'info>,
+}
+
 #[event]
 pub struct GlobalInitialized {
     pub admin: Pubkey,
@@ -785,4 +1300,26 @@ pub struct LaunchRegistered {
     pub slot: u64,
     pub dlmm_pair: Pubkey,
     pub creator_beneficiary: Pubkey,
+}
+
+#[event]
+pub struct GraduationSettled {
+    pub launch: Pubkey,
+    /// Partner migration fee → vault (§10: 15% of the threshold).
+    pub migration_fee: u64,
+    /// Partner DBC trading fees → vault.
+    pub partner_fees: u64,
+    /// Creator DBC trading fees → beneficiary.
+    pub creator_fees: u64,
+    /// Base fees burned from staging (0 under the class's QuoteToken fee mode).
+    pub base_burned: u64,
+}
+
+#[event]
+pub struct LeftoverBurned {
+    pub launch: Pubkey,
+    /// Base units burned (S falls by exactly this).
+    pub amount: u64,
+    /// Partner surplus → vault.
+    pub surplus: u64,
 }

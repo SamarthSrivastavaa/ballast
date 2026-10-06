@@ -477,6 +477,38 @@ bin step is refused. **The bin step must be correct the first time**, so it is a
 class, not of a launch: `create_class` validates `bid_bin_step` as one of its §7 rules, and
 `register_launch`'s introspection check (a) requires the pair creation to carry the class value.
 
+### D-016 — Graduation routing: DBC claims pay the vault and the beneficiary directly; `burn_leftover` requires `Funded`
+
+**Status: APPROVED 6 Oct 2026** (owner: "proceed" on the slice audit's option (b)). Amends §6
+`settle_graduation` and `burn_leftover`; spec marked `[D-016]`. Evidence:
+`evidence/program/part1/graduation.json`.
+
+1. **Direct destinations.** Q4 showed DBC's claims accept a destination the signer does not own.
+   `settle_graduation` sends `withdraw_migration_fee` (partner flag) and `claim_trading_fee` straight
+   to the **vault PDA**, and `claim_creator_trading_fee` straight to the **beneficiary's WSOL ATA**.
+   There is no WSOL staging ATA and no `creator_auth` WSOL ATA: one hop and one CPI fewer per flow,
+   nothing left in transit. Each amount is still a balance delta around its own CPI.
+2. **One staging account:** `partner_auth`'s base-mint ATA, required by address. It is the base
+   destination of both DBC claims and the `withdraw_leftover` destination. The partner claim's base
+   delta (0 under the class's QuoteToken fee mode) is burned in `settle_graduation`; a creator base
+   fee **fails closed** (`CreatorBaseFee`) instead of being burned.
+3. **The beneficiary is an outside account, paid only at `ATA(creator_beneficiary, WSOL)`.**
+   `register_launch` refuses `partner_auth`, `creator_auth`, `launch` or `vault` as the beneficiary
+   (`BeneficiaryIsBallastPda`). Slice audit, 6 Oct: with beneficiary = `partner_auth`, a caller could
+   pass a vault (this launch's — double-counting `creator_forwarded` — or another launch's) or the
+   class-wide `partner_auth` WSOL account as the creator-fee destination.
+4. **`burn_leftover` requires `Funded`.** From `Registered` it fails `LaunchWrongState`; a lagging
+   keeper sends `settle_graduation` first (the same transaction is fine — settle works after
+   migration). Accepting `Registered` without the settle CPIs would make settle unreachable (it
+   requires `Registered`) and strand the 15% migration fee in DBC.
+5. **Leftover front-run.** DBC's `withdraw_leftover` is permissionless, and on the mainnet binary it
+   pays only the leftover receiver's ATA (a `partner_auth`-owned non-ATA account is refused —
+   verified in the suite). `burn_leftover` skips the CPI when `is_withdraw_leftover == 1` and burns the
+   whole ATA balance. `settle_graduation` burns only its own claim's base delta, so a leftover
+   front-run **before** a late settle is still burned and recorded by `burn_leftover`
+   (`leftover_burned`, `LeftoverBurned.amount`). Between those two instructions staging can hold that
+   leftover; only `partner_auth` controls it and only `burn_leftover` moves it.
+
 ### D-001 — Fixtures and the local validator use mainnet binaries and mainnet accounts
 
 **Status: APPROVED. Exact wording, given by the owner on 2 Oct 2026:**
@@ -661,6 +693,15 @@ STEP 3 check (c).
 Amends D-007's 300 KB target; the rest of D-007 stands. The size-optimised settings stay
 (`opt-level = "z"`, `lto`, `codegen-units = 1`, manual CPI builders), and the `.so` size is reported
 after every program slice. Reason: STEP 2 finding T5 (Anchor baseline ≈ 210 KB).
+
+**Size log (`target/deploy/ballast.so`):**
+
+| Slice | Size | Note |
+|---|---|---|
+| `initialize_global` + `create_class` | 424,040 → 380,456 B | `[profile.release.package.ballast] opt-level = "z"` |
+| + `register_launch` | 380,456 B | |
+| + `settle_graduation`, `burn_leftover` | 440,528 → 379,624 B | Anchor's `Account<ProgramData>` decodes with bincode/serde, which linked serde and `f64` formatting (≈ 61 KB); the upgrade authority is now parsed by hand from the 45-byte header |
+| + slice-audit fixes (D-016) | **381,952 B** | Part 1 complete: 5 of 11 instructions |
 
 **CU targets until the devnet cross-check** (70% of each §26 budget, measured locally per finding T6):
 
