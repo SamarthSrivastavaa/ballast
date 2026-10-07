@@ -1,0 +1,202 @@
+{
+  "suite": "Program Part 2 — open, refresh_floor, redeem, floor, harvest, deposit (§6, §8, §9, §10)",
+  "ranAt": "2026-10-07T13:17:53.914Z",
+  "pass": 19,
+  "fail": 0,
+  "unreachable": 0,
+  "results": [
+    {
+      "name": "open: partner position from another launch's pool",
+      "status": "pass",
+      "expected": "PositionWrongPool",
+      "got": "PositionWrongPool",
+      "detail": {
+        "signature": "5CSF5Yd16P4tbJHAnQHZPzPMyXh9yAd6XEnoWQwi7s8DWag4Lx8NPqFQptiDeHx2BjkZUt6xcgbUNmKRYeVS8Rtt"
+      }
+    },
+    {
+      "name": "open: partner/creator positions swapped (NFT holder wrong)",
+      "status": "pass",
+      "expected": "PositionNftHolder",
+      "got": "PositionNftHolder",
+      "detail": {
+        "signature": "3XxHg6hxansm8A5Fjtsnfrh81r3CuvEYL4wVabe1Qa92BgXYzvCuQBvogjRxSMcrDZUun1K6Q7tFCsNtfbgzTwc8"
+      }
+    },
+    {
+      "name": "open: position owned by another program (the launch account)",
+      "status": "pass",
+      "expected": "PositionInvalid",
+      "got": "PositionInvalid",
+      "detail": {
+        "signature": "5g1dZHcK1weozWgnAa9NAH8DzZu6b16po4PbVTgbVHwZrCYkQLRdxcRgqYVaus92vR1vd37W94MzYduLfqJSi6yD"
+      }
+    },
+    {
+      "name": "open: the same position twice",
+      "status": "pass",
+      "expected": "PositionsNotDistinct",
+      "got": "PositionsNotDistinct",
+      "detail": {
+        "signature": "CtSM5jHhSG2VYSmXGHgHNH6Mvrsjd7zoPMrxdpTSKJTB6J919X4Gn4ankrjv1pu7cxbEYxKqn5ubKsREmViP48D"
+      }
+    },
+    {
+      "name": "open: creator NFT account is not the position's",
+      "status": "pass",
+      "expected": "PositionNftHolder",
+      "got": "PositionNftHolder",
+      "detail": {
+        "signature": "5qfq8CiR3HhtoeZzmSYekUAkgvc58JmW1wEVSsPjW9FxzVDgjQSgRr6uDZcARmgUbXw2up9HZdXosDz3UCYF5Eh4"
+      }
+    },
+    {
+      "name": "open: DAMM pool of another launch (not this launch's migrated pool)",
+      "status": "pass",
+      "expected": "DammPoolNotMigrated",
+      "got": "DammPoolNotMigrated",
+      "detail": {
+        "signature": "4dhVjXY46999ePYfjrF6xpyAgyiZtKpHfwFJ9oHDpVjJ1bztYfaY6naeqFXBarvnk4cjjoVge8GoqmAzqyv24CSr"
+      }
+    },
+    {
+      "name": "open: DAMM pool account owned by another program",
+      "status": "pass",
+      "expected": "DammPoolInvalid",
+      "got": "DammPoolInvalid",
+      "detail": {
+        "signature": "43f1xdKqdhP1un6BfaDp7y7r89oPKMs9MxEnduruoLNXMQ3YnabLLPa91ZZJKvQJtaETrgoWjYKjieS2hbQBfJ6B"
+      }
+    },
+    {
+      "name": "open: DLMM pair of another launch",
+      "status": "pass",
+      "expected": "PairAccountsInvalid",
+      "got": "PairAccountsInvalid",
+      "detail": {
+        "signature": "56J6cNBH6cEtJT1t87LrSaetShNnkY89qYQhChFJaZPv6QW4S9r9dDPR6adBdyo2cWcyNRah2Cmgxkwsm2EMs7tk"
+      }
+    },
+    {
+      "name": "open: reserve_y not the pair's",
+      "status": "pass",
+      "expected": "PairAccountsInvalid",
+      "got": "PairAccountsInvalid",
+      "detail": {
+        "signature": "9aPB6FKPDLR4qkeyHg1V9wqw1jS9dbEhaG5eDSgQFCfV31M7To4pYqC1vSe2jKfXy29LBQbduHg9QYrwRHya87A"
+      }
+    },
+    {
+      "name": "open: vault of another launch",
+      "status": "pass",
+      "expected": "ConstraintSeeds",
+      "got": "ConstraintSeeds",
+      "detail": {
+        "signature": "3r9VYubqa8gbTuzfiuTCXSmnCKFiJdM86CXZ5sWb6NSFTUg8x4cVCzCxvWdMUcNuHyzTjN5nLZG8bvMwq4RkGRym"
+      }
+    },
+    {
+      "name": "open: partner_auth not the class PDA (order owner ≠ partner_auth)",
+      "status": "pass",
+      "expected": "ConstraintSeeds",
+      "got": "ConstraintSeeds",
+      "detail": {
+        "signature": "5jmhvdtTtdBH1dBx3ZYVzG1s1t8zB4W6A3gvP867d22Y6KnG7ynZxdXiHLUzd21LLcXvZhVJJc2bS2UeXoHpg7aq"
+      }
+    },
+    {
+      "name": "open: bin hint one above the floor bin",
+      "status": "pass",
+      "expected": "BinHintNotAtFloor",
+      "got": "BinHintNotAtFloor",
+      "detail": {
+        "signature": "38BEiX5dn3ATBRwgxAU1jF9TrFS4Xa87WrcL5Tqx5qJm8U6My1YcT74k47APdRFUdA1EK2Kx1EYK8k7i9E82PiU3"
+      }
+    },
+    {
+      "name": "open: bin hint one below the floor bin",
+      "status": "pass",
+      "expected": "BinHintNotAtFloor",
+      "got": "BinHintNotAtFloor",
+      "detail": {
+        "signature": "4wvF4oSjfE392eeTQUKWwuVg6jAEjA3SEwEMr58sCrGJZo3gsXaqXdwC9HNQzw2U5Wt3tzy2edXuebSWD2uEJsyR"
+      }
+    },
+    {
+      "name": "open: bin array not passed (D-013)",
+      "status": "pass",
+      "expected": "BinArrayMissing",
+      "got": "BinArrayMissing",
+      "detail": {
+        "signature": "5aReB2QqshDWsz4o6SNg1H5PmhGVJWyGLmnHJzwiY616K9FExGRfzPgj259mGuKPzv2nnDsDuF54vX4eXXM9T8a5"
+      }
+    },
+    {
+      "name": "open: staging is not partner_auth's base ATA (D-012)",
+      "status": "pass",
+      "expected": "StagingNotPartnerAta",
+      "got": "StagingNotPartnerAta",
+      "detail": {
+        "signature": "5LJ4ExZ54xk4y4QR2McWXw98UVNZVoXpq5kZLtCyEC5ZbajRtbhPRBNFnjFKMcKRnkeY7PjefwyUqQCdCSj8JfCK"
+      }
+    },
+    {
+      "name": "refresh_floor before open (state Cleaned)",
+      "status": "pass",
+      "expected": "LaunchWrongState",
+      "got": "LaunchWrongState"
+    },
+    {
+      "name": "characterization: go_to_a_bin(F's bin) top-level, no signer, empty range",
+      "status": "pass",
+      "expected": "active -11906",
+      "got": "succeeded active -11906",
+      "detail": {
+        "from": -12645,
+        "to": -11906,
+        "signature": "2MaQnm5qtmeeBevaJhsDYr8TwKtA5i9UyM6nfmdXqSEGpajEcbXEGesc5EtzBZ5sa2irkPEi9aivggBkZgHJ8K8A",
+        "cu": 7034
+      }
+    },
+    {
+      "name": "open: launch D → Open; whole vault rests as one bid at the highest bin ≤ F",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "7chdrQDxBNYtPv264vg9HSuqgERYKrYoHWzwxehenGuyVRy2LU8Uubgw62BdpqtMREaf9Wz3yAAJfK7MHoo5Zru",
+        "txCu": 147288,
+        "openCu": 147138,
+        "sOpen": "48074410258902065",
+        "predicted": "47755047807748143",
+        "realisedOverPredicted": 1.0066875119137062,
+        "bin": -11906,
+        "binPrice": "125254475794835",
+        "vault": "1540404041",
+        "v": "1540404041",
+        "s": "865441059871809",
+        "l": "30702214157579652106863560058426",
+        "checks": {
+          "state": true,
+          "sOpenEqualsReference": true,
+          "sOpenAtLeastPredicted": true,
+          "sLast": true,
+          "vaultEmptied": true,
+          "committedIsWholeVault": true,
+          "binRecorded": true,
+          "orderRecorded": true,
+          "orderOwnerIsPartnerAuth": true,
+          "vendoredPriceEqualsStoredBinPrice": true,
+          "positionsRecorded": true,
+          "lOpen": true
+        }
+      }
+    },
+    {
+      "name": "open: second call refused (state Open)",
+      "status": "pass",
+      "expected": "LaunchWrongState",
+      "got": "LaunchWrongState"
+    }
+  ]
+}

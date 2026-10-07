@@ -1,7 +1,8 @@
 //! Ballast — a Meteora DBC launch class with an on-chain, executable buyback floor `F`.
 //!
 //! **Program Part 1 (§6):** `initialize_global`, `create_class`, `register_launch` (D-011),
-//! `settle_graduation`, `burn_leftover`.
+//! `settle_graduation`, `burn_leftover`. **Part 2** (`floor_ix`): `open`, `refresh_floor`, `redeem`,
+//! `floor`, `harvest`, `deposit`.
 //!
 //! The P0 gate (Q1–Q5) closed on 4 Oct 2026 against the mainnet Meteora binaries, which is what
 //! permits any of this to exist (`CLAUDE.md` § P0 gate rule, `evidence/p0/REPORT.md`).
@@ -17,11 +18,16 @@ use anchor_lang::solana_program::hash::hash;
 use anchor_lang::solana_program::program::{invoke, invoke_signed};
 
 pub mod curve;
+pub mod damm;
 pub mod dbc_cpi;
+pub mod dlmm;
 pub mod errors;
+pub mod floor_ix;
 pub mod introspect;
 pub mod spl;
 pub mod state;
+
+pub use floor_ix::*;
 
 use errors::BallastError;
 use state::{canon, launch_state, Class, ClassCanon, Global, Launch};
@@ -39,6 +45,8 @@ pub const DLMM_ILM_BASE: Pubkey = pubkey!("MFGQxwAmB91SwuYX36okv2Qmdc9aMuHTwWGUr
 
 /// SPL Token program, for validating the treasury without pulling in `anchor-spl`.
 pub const TOKEN_PROGRAM_ID: Pubkey = pubkey!("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+/// Token-2022: DAMM v2 position NFTs live in Token-2022 accounts (§8 "Ownership").
+pub const TOKEN_2022_PROGRAM_ID: Pubkey = pubkey!("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
 /// SPL Associated Token Account program: staging accounts are `partner_auth`'s ATAs (§5), and DBC's
 /// `withdraw_leftover` pays only the leftover receiver's ATA.
 pub const ATA_PROGRAM_ID: Pubkey = pubkey!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
@@ -190,7 +198,7 @@ fn read_launch_pool(
 
 /// Balance of a token account whose mint and authority must be exactly these (§5 rule 3).
 /// Missing, foreign or malformed accounts are an error, never 0 (D-012).
-fn token_balance(
+pub(crate) fn token_balance(
     info: &AccountInfo,
     mint: &Pubkey,
     owner: &Pubkey,
@@ -206,7 +214,7 @@ fn token_balance(
 /// The SPL associated token account of `owner` for `mint`. `partner_auth`'s base ATA is the only
 /// staging account and the only account DBC's `withdraw_leftover` can pay (so a third party
 /// front-running it can only fill this one); the beneficiary is paid only at its WSOL ATA (D-016).
-fn ata_of(owner: &Pubkey, mint: &Pubkey) -> Pubkey {
+pub(crate) fn ata_of(owner: &Pubkey, mint: &Pubkey) -> Pubkey {
     Pubkey::find_program_address(
         &[owner.as_ref(), TOKEN_PROGRAM_ID.as_ref(), mint.as_ref()],
         &ATA_PROGRAM_ID,
@@ -1061,6 +1069,46 @@ pub mod ballast {
             surplus,
         });
         Ok(())
+    }
+
+    /// §6 `open(bin_id_hint)` — see `floor_ix::handle_open`.
+    pub fn open<'info>(
+        ctx: Context<'_, '_, 'info, 'info, Open<'info>>,
+        bin_id_hint: i32,
+    ) -> Result<()> {
+        floor_ix::handle_open(ctx, bin_id_hint)
+    }
+
+    /// §6 `refresh_floor(bin_id_hint)` — see `floor_ix::handle_refresh_floor`.
+    pub fn refresh_floor<'info>(
+        ctx: Context<'_, '_, 'info, 'info, Refresh<'info>>,
+        bin_id_hint: i32,
+    ) -> Result<()> {
+        floor_ix::handle_refresh_floor(ctx, bin_id_hint)
+    }
+
+    /// §6 `redeem(amount, min_out)` — see `floor_ix::handle_redeem`.
+    pub fn redeem<'info>(
+        ctx: Context<'_, '_, 'info, 'info, Redeem<'info>>,
+        amount: u64,
+        min_out: u64,
+    ) -> Result<()> {
+        floor_ix::handle_redeem(ctx, amount, min_out)
+    }
+
+    /// §6 `floor()` view — see `floor_ix::handle_floor`.
+    pub fn floor(ctx: Context<FloorView>) -> Result<()> {
+        floor_ix::handle_floor(ctx)
+    }
+
+    /// §6 `harvest()` — see `floor_ix::handle_harvest`.
+    pub fn harvest(ctx: Context<Harvest>) -> Result<()> {
+        floor_ix::handle_harvest(ctx)
+    }
+
+    /// §6 `deposit(amount)` — see `floor_ix::handle_deposit`.
+    pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
+        floor_ix::handle_deposit(ctx, amount)
     }
 }
 

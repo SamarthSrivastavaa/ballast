@@ -202,4 +202,66 @@ pub enum BallastError {
     CreatorBaseFee,
     #[msg("creator_beneficiary is one of this program's PDAs")]
     BeneficiaryIsBallastPda,
+
+    // ---- Part 2: open, refresh_floor, redeem, floor, harvest, deposit (§6, §8, §9, §10) ----
+    #[msg("DAMM pool is not a DAMM v2 Pool for (base mint, WSOL)")]
+    DammPoolInvalid,
+    #[msg("DAMM pool is not the PDA under the DBC migration config (§8)")]
+    DammPoolNotMigrated,
+    #[msg("DAMM pool is not OnlyB / non-compounding (§8)")]
+    DammPoolMode,
+    #[msg("DAMM pool range is not full range (§8)")]
+    DammPoolRange,
+    #[msg("position is not a DAMM v2 Position at its canonical address")]
+    PositionInvalid,
+    #[msg("position is not in the launch's DAMM pool")]
+    PositionWrongPool,
+    #[msg("position liquidity is not fully permanent (§8)")]
+    PositionNotPermanent,
+    #[msg("position NFT is not held by the required Ballast PDA (§8)")]
+    PositionNftHolder,
+    #[msg("partner and creator positions are the same account")]
+    PositionsNotDistinct,
+    #[msg("position is not the one recorded at open")]
+    PositionNotRecorded,
+    #[msg("floor below the on-chain prediction (s_open < predicted_s)")]
+    FloorBelowPrediction,
+    #[msg("floor computation rejected its inputs (§4 bounds)")]
+    FloorInputsOutOfRange,
+    #[msg("monotone check failed: s_new < s_last (§4)")]
+    FloorDecreased,
+    #[msg("bin hint is not the highest bin at or below F (§9)")]
+    BinHintNotAtFloor,
+    #[msg("DLMM has no price for this bin")]
+    BinPriceUndefined,
+    #[msg("bin array for the bid bin does not exist; the keeper creates it (D-013)")]
+    BinArrayMissing,
+    #[msg("bitmap extension account is not the one DLMM requires for this bin")]
+    BitmapExtensionInvalid,
+    #[msg("DLMM pair accounts do not match the launch's pair")]
+    PairAccountsInvalid,
+    #[msg("limit order is not the launch's recorded bid order")]
+    BidOrderMismatch,
+    #[msg("partner_auth lacks lamports for the order account rent (keeper funds it, §5)")]
+    PartnerAuthUnfunded,
+    #[msg("vault holds nothing to bid")]
+    VaultEmpty,
+    #[msg("refresh_floor called again within the rate limit")]
+    RefreshRateLimited,
+    #[msg("F moved more bins than one call scans; run refresh_floor first")]
+    BidBinStale,
+    #[msg("redemption payout below the minimum (0.001 SOL, §10)")]
+    PayoutBelowMinimum,
+    #[msg("redemption payout below min_out")]
+    SlippageExceeded,
+    #[msg("redemption payout exceeds the vault")]
+    VaultExhausted,
+    #[msg("holder account is not the holder's token account for this mint")]
+    HolderAccountInvalid,
+    #[msg("treasury account is not global.treasury")]
+    TreasuryMismatch,
+    #[msg("a creator base-token LP fee would be burned; refusing (pool is OnlyB)")]
+    CreatorBaseLpFee,
+    #[msg("deposit amount is zero")]
+    DepositZero,
 }

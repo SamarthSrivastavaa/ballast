@@ -1763,3 +1763,216 @@
 {"label":"D-017 just inside probe 1e18: DBC create_config","at":"2026-10-06T13:46:04.876Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
 {"label":"D-017 just inside ΔL=11764705882352941: DBC create_config","at":"2026-10-06T13:46:05.496Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
 {"label":"D-017 just inside: create_class","at":"2026-10-06T13:46:05.906Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"payer WSOL ATA (treasury)","at":"2026-10-07T12:56:30.205Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"payer ATA of a non-WSOL mint","at":"2026-10-07T12:56:33.470Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"initialize_global: signer is not the upgrade authority","at":"2026-10-07T12:56:34.004Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"initialize_global: treasury is not a token account","at":"2026-10-07T12:56:34.509Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"initialize_global: treasury mint is not WSOL","at":"2026-10-07T12:56:35.406Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"initialize_global","at":"2026-10-07T12:56:36.356Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"initialize_global again","at":"2026-10-07T12:56:36.565Z","keys":6,"presentLocally":6,"absentBoth":0,"mainnetOnly":[]}
+{"label":"canonical Proof: DBC create_config","at":"2026-10-07T12:56:37.235Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"canonical: create_class","at":"2026-10-07T12:56:37.754Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"canonical again: create_class","at":"2026-10-07T12:56:37.806Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"canonical Proof #2: DBC create_config","at":"2026-10-07T12:56:38.550Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"not admin: create_class","at":"2026-10-07T12:56:38.861Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"unknown size: create_class","at":"2026-10-07T12:56:39.276Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"wrong owner: create_class","at":"2026-10-07T12:56:39.687Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"DBC partner metadata (wrong-type account)","at":"2026-10-07T12:56:40.188Z","keys":6,"presentLocally":4,"absentBoth":2,"mainnetOnly":[]}
+{"label":"wrong discriminator: create_class","at":"2026-10-07T12:56:40.597Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: quote_mint is not WSOL: DBC create_config","at":"2026-10-07T12:56:40.928Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: quote_mint is not WSOL: create_class","at":"2026-10-07T12:56:41.344Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: fee_claimer is not partner_auth: DBC create_config","at":"2026-10-07T12:56:41.828Z","keys":8,"presentLocally":6,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: fee_claimer is not partner_auth: create_class","at":"2026-10-07T12:56:42.241Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: leftover_receiver is not partner_auth: DBC create_config","at":"2026-10-07T12:56:42.608Z","keys":8,"presentLocally":6,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: leftover_receiver is not partner_auth: create_class","at":"2026-10-07T12:56:43.055Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: token_type Token-2022: DBC create_config","at":"2026-10-07T12:56:43.466Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: token_type Token-2022: create_class","at":"2026-10-07T12:56:43.874Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: token_decimal 9: DBC create_config","at":"2026-10-07T12:56:44.284Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: token_decimal 9: create_class","at":"2026-10-07T12:56:44.693Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: supply not fixed: DBC create_config","at":"2026-10-07T12:56:45.076Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: supply not fixed: create_class","at":"2026-10-07T12:56:45.518Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: pre_migration_token_supply 2·10^15: DBC create_config","at":"2026-10-07T12:56:46.024Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: pre_migration_token_supply 2·10^15: create_class","at":"2026-10-07T12:56:46.847Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: token_update_authority not Immutable: DBC create_config","at":"2026-10-07T12:56:47.561Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: token_update_authority not Immutable: create_class","at":"2026-10-07T12:56:48.108Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: collect_fee_mode OutputToken: DBC create_config","at":"2026-10-07T12:56:48.806Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: collect_fee_mode OutputToken: create_class","at":"2026-10-07T12:56:49.210Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: migration_fee_option FixedBps100: DBC create_config","at":"2026-10-07T12:56:49.614Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: migration_fee_option FixedBps100: create_class","at":"2026-10-07T12:56:50.018Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: migrated collect fee mode 1 (§7's old value, D-010): DBC create_config","at":"2026-10-07T12:56:50.404Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: migrated collect fee mode 1 (§7's old value, D-010): create_class","at":"2026-10-07T12:56:50.842Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: migrated dynamic fee on: DBC create_config","at":"2026-10-07T12:56:51.248Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: migrated dynamic fee on: create_class","at":"2026-10-07T12:56:51.758Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: migrated pool fee 200 bps: DBC create_config","at":"2026-10-07T12:56:52.081Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: migrated pool fee 200 bps: create_class","at":"2026-10-07T12:56:52.475Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: migrated pool base fee mode exponential: DBC create_config","at":"2026-10-07T12:56:52.989Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: migrated pool base fee mode exponential: create_class","at":"2026-10-07T12:56:53.397Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: compounding pool (masked: needs collect mode 2, rejected first): DBC create_config","at":"2026-10-07T12:56:53.726Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: compounding pool (masked: needs collect mode 2, rejected first): create_class","at":"2026-10-07T12:56:54.216Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: creator_trading_fee_percentage 40: DBC create_config","at":"2026-10-07T12:56:54.533Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: creator_trading_fee_percentage 40: create_class","at":"2026-10-07T12:56:54.952Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: migration_fee_percentage 10: DBC create_config","at":"2026-10-07T12:56:55.446Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: migration_fee_percentage 10: create_class","at":"2026-10-07T12:56:56.793Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: creator_migration_fee_percentage 10: DBC create_config","at":"2026-10-07T12:56:57.503Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: creator_migration_fee_percentage 10: create_class","at":"2026-10-07T12:56:58.308Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: partner permanent LP 40 (creator 60): DBC create_config","at":"2026-10-07T12:56:58.731Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: partner permanent LP 40 (creator 60): create_class","at":"2026-10-07T12:56:59.145Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: creator permanent LP 40 (+10 unlocked): DBC create_config","at":"2026-10-07T12:56:59.547Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: creator permanent LP 40 (+10 unlocked): create_class","at":"2026-10-07T12:56:59.953Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: LP vesting on: DBC create_config","at":"2026-10-07T12:57:00.361Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: token locked vesting on: DBC create_config","at":"2026-10-07T12:57:00.783Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: token locked vesting on: create_class","at":"2026-10-07T12:57:01.179Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: enable_first_swap_with_min_fee: DBC create_config","at":"2026-10-07T12:57:01.604Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: enable_first_swap_with_min_fee: create_class","at":"2026-10-07T12:57:02.002Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: base fee 2%: DBC create_config","at":"2026-10-07T12:57:02.409Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: base fee 2%: create_class","at":"2026-10-07T12:57:02.839Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: dynamic fee on: DBC create_config","at":"2026-10-07T12:57:03.327Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: dynamic fee on: create_class","at":"2026-10-07T12:57:03.638Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: threshold 11 SOL (curve rebuilt, same shape): DBC create_config","at":"2026-10-07T12:57:04.050Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: threshold 11 SOL (curve rebuilt, same shape): create_class","at":"2026-10-07T12:57:04.457Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 2: sqrt_start_price from p0 = 3.2473e-9: DBC create_config","at":"2026-10-07T12:57:04.877Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 2: sqrt_start_price from p0 = 3.2473e-9: create_class","at":"2026-10-07T12:57:05.276Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 4: two-point curve: DBC create_config","at":"2026-10-07T12:57:05.686Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 4: two-point curve: create_class","at":"2026-10-07T12:57:06.095Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 4: non-zero fourth point: DBC create_config","at":"2026-10-07T12:57:06.635Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 4: non-zero fourth point: create_class","at":"2026-10-07T12:57:07.325Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 4: migration price below the band (segment 3 liquidity +1%): DBC create_config","at":"2026-10-07T12:57:07.732Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 4: migration price below the band (segment 3 liquidity +1%): create_class","at":"2026-10-07T12:57:08.143Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"rule 3: curve off by one unit of liquidity (hash mismatch): DBC create_config","at":"2026-10-07T12:57:08.656Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"rule 3: curve off by one unit of liquidity (hash mismatch): create_class","at":"2026-10-07T12:57:09.018Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"D-017 just outside probe 0: DBC create_config","at":"2026-10-07T12:57:09.477Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"D-017 just outside probe 1e18: DBC create_config","at":"2026-10-07T12:57:09.884Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"D-017 just outside ΔL=35294117647058823: DBC create_config","at":"2026-10-07T12:57:10.207Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"D-017 just outside: create_class","at":"2026-10-07T12:57:10.704Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"D-017 just inside probe 0: DBC create_config","at":"2026-10-07T12:57:11.113Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"D-017 just inside probe 1e18: DBC create_config","at":"2026-10-07T12:57:11.531Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"D-017 just inside ΔL=11764705882352941: DBC create_config","at":"2026-10-07T12:57:11.896Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"D-017 just inside: create_class","at":"2026-10-07T12:57:12.259Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 class: DBC create_config","at":"2026-10-07T12:57:31.611Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2: create_class","at":"2026-10-07T12:57:31.979Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch D: create ALT","at":"2026-10-07T12:57:32.424Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch D: extend ALT","at":"2026-10-07T12:57:32.569Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch D: extend ALT","at":"2026-10-07T12:57:32.981Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch D","at":"2026-10-07T12:57:34.667Z","keys":32,"presentLocally":17,"absentBoth":15,"mainnetOnly":[]}
+{"label":"part2: payer WSOL for dust buys","at":"2026-10-07T12:58:16.943Z","keys":6,"presentLocally":6,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 class: DBC create_config","at":"2026-10-07T12:58:18.703Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2: create_class","at":"2026-10-07T12:58:19.712Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch D: create ALT","at":"2026-10-07T12:58:20.151Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch D: extend ALT","at":"2026-10-07T12:58:20.220Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch D: extend ALT","at":"2026-10-07T12:58:20.631Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch D","at":"2026-10-07T12:58:23.374Z","keys":32,"presentLocally":17,"absentBoth":15,"mainnetOnly":[]}
+{"label":"part2 launch D: buy to the threshold","at":"2026-10-07T12:58:35.600Z","keys":16,"presentLocally":14,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2 launch D: settle","at":"2026-10-07T12:58:36.112Z","keys":23,"presentLocally":19,"absentBoth":4,"mainnetOnly":[]}
+{"label":"part2 launch D: migrate","at":"2026-10-07T12:58:36.572Z","keys":27,"presentLocally":16,"absentBoth":11,"mainnetOnly":[]}
+{"label":"part2 launch D: burn_leftover","at":"2026-10-07T12:58:36.926Z","keys":20,"presentLocally":19,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch E: create ALT","at":"2026-10-07T12:58:37.441Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch E: extend ALT","at":"2026-10-07T12:58:37.507Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch E: extend ALT","at":"2026-10-07T12:58:37.919Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch E","at":"2026-10-07T12:58:39.685Z","keys":32,"presentLocally":17,"absentBoth":15,"mainnetOnly":[]}
+{"label":"part2 launch E: buy to the threshold","at":"2026-10-07T12:58:53.907Z","keys":16,"presentLocally":14,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2 launch E: settle","at":"2026-10-07T12:58:54.589Z","keys":23,"presentLocally":20,"absentBoth":3,"mainnetOnly":[]}
+{"label":"part2 launch E: migrate","at":"2026-10-07T12:58:55.013Z","keys":27,"presentLocally":16,"absentBoth":11,"mainnetOnly":[]}
+{"label":"part2 launch E: burn_leftover","at":"2026-10-07T12:58:55.429Z","keys":20,"presentLocally":19,"absentBoth":1,"mainnetOnly":[]}
+{"label":"keeper: fund partner_auth for order rent","at":"2026-10-07T12:58:55.890Z","keys":3,"presentLocally":2,"absentBoth":1,"mainnetOnly":[]}
+{"label":"keeper: initialize_bin_array (bid bin + next up)","at":"2026-10-07T12:58:56.360Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2: payer WSOL for dust buys","at":"2026-10-07T13:02:05.147Z","keys":6,"presentLocally":6,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 class: DBC create_config","at":"2026-10-07T13:02:06.744Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2: create_class","at":"2026-10-07T13:02:07.249Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch D: create ALT","at":"2026-10-07T13:02:07.844Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch D: extend ALT","at":"2026-10-07T13:02:08.216Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch D: extend ALT","at":"2026-10-07T13:02:08.626Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch D","at":"2026-10-07T13:02:10.329Z","keys":32,"presentLocally":17,"absentBoth":15,"mainnetOnly":[]}
+{"label":"part2 launch D: buy to the threshold","at":"2026-10-07T13:02:23.843Z","keys":16,"presentLocally":14,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2 launch D: settle","at":"2026-10-07T13:02:24.526Z","keys":23,"presentLocally":20,"absentBoth":3,"mainnetOnly":[]}
+{"label":"part2 launch D: migrate","at":"2026-10-07T13:02:24.925Z","keys":27,"presentLocally":16,"absentBoth":11,"mainnetOnly":[]}
+{"label":"part2 launch D: burn_leftover","at":"2026-10-07T13:02:25.379Z","keys":20,"presentLocally":19,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch E: create ALT","at":"2026-10-07T13:02:25.785Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch E: extend ALT","at":"2026-10-07T13:02:25.923Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch E: extend ALT","at":"2026-10-07T13:02:26.339Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch E","at":"2026-10-07T13:02:28.063Z","keys":32,"presentLocally":17,"absentBoth":15,"mainnetOnly":[]}
+{"label":"part2 launch E: buy to the threshold","at":"2026-10-07T13:02:42.076Z","keys":16,"presentLocally":14,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2 launch E: settle","at":"2026-10-07T13:02:42.685Z","keys":23,"presentLocally":20,"absentBoth":3,"mainnetOnly":[]}
+{"label":"part2 launch E: migrate","at":"2026-10-07T13:02:43.078Z","keys":27,"presentLocally":16,"absentBoth":11,"mainnetOnly":[]}
+{"label":"part2 launch E: burn_leftover","at":"2026-10-07T13:02:43.506Z","keys":20,"presentLocally":19,"absentBoth":1,"mainnetOnly":[]}
+{"label":"keeper: fund partner_auth for order rent","at":"2026-10-07T13:02:43.931Z","keys":3,"presentLocally":2,"absentBoth":1,"mainnetOnly":[]}
+{"label":"keeper: initialize_bin_array (bid bin + next up)","at":"2026-10-07T13:02:44.442Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2 bid accounts: create ALT","at":"2026-10-07T13:02:45.143Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 bid accounts: extend ALT","at":"2026-10-07T13:02:45.277Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 bid accounts: extend ALT","at":"2026-10-07T13:02:45.692Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"open: partner position from another launch's pool","at":"2026-10-07T13:02:47.349Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: partner/creator positions swapped (NFT holder wrong)","at":"2026-10-07T13:03:00.914Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: position owned by another program (the launch account)","at":"2026-10-07T13:03:01.628Z","keys":25,"presentLocally":23,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: the same position twice","at":"2026-10-07T13:03:02.045Z","keys":24,"presentLocally":22,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: creator NFT account is not the position's","at":"2026-10-07T13:03:02.465Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: DAMM pool of another launch (not this launch's migrated pool)","at":"2026-10-07T13:03:02.821Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: DAMM pool account owned by another program","at":"2026-10-07T13:03:03.290Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: DLMM pair of another launch","at":"2026-10-07T13:03:03.681Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: reserve_y not the pair's","at":"2026-10-07T13:03:04.088Z","keys":25,"presentLocally":23,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: vault of another launch","at":"2026-10-07T13:03:04.492Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: partner_auth not the class PDA (order owner ≠ partner_auth)","at":"2026-10-07T13:03:04.920Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: bin hint one above the floor bin","at":"2026-10-07T13:03:05.320Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: bin hint one below the floor bin","at":"2026-10-07T13:03:05.935Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: bin array not passed (D-013)","at":"2026-10-07T13:03:06.554Z","keys":25,"presentLocally":23,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: staging is not partner_auth's base ATA (D-012)","at":"2026-10-07T13:03:06.963Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"refresh before open","at":"2026-10-07T13:03:07.399Z","keys":23,"presentLocally":22,"absentBoth":1,"mainnetOnly":[]}
+{"label":"open D","at":"2026-10-07T13:03:07.875Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: open D again","at":"2026-10-07T13:03:08.186Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"char: bidder WSOL + base ATA","at":"2026-10-07T13:15:25.797Z","keys":9,"presentLocally":7,"absentBoth":2,"mainnetOnly":[]}
+{"label":"char: asker ATAs","at":"2026-10-07T13:15:26.391Z","keys":9,"presentLocally":7,"absentBoth":2,"mainnetOnly":[]}
+{"label":"char: init bin arrays","at":"2026-10-07T13:15:26.802Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"char: E1 bid at active − 1","at":"2026-10-07T13:15:27.208Z","keys":13,"presentLocally":12,"absentBoth":1,"mainnetOnly":[]}
+{"label":"char: E2 bid at active","at":"2026-10-07T13:15:27.614Z","keys":13,"presentLocally":12,"absentBoth":1,"mainnetOnly":[]}
+{"label":"char: E3 bid at active + 1","at":"2026-10-07T13:15:28.007Z","keys":13,"presentLocally":12,"absentBoth":1,"mainnetOnly":[]}
+{"label":"char: init bin arrays","at":"2026-10-07T13:15:28.402Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"char: E3b bid at the floor bin (above active)","at":"2026-10-07T13:15:28.846Z","keys":13,"presentLocally":12,"absentBoth":1,"mainnetOnly":[]}
+{"label":"char: E4 go_to_a_bin(floor bin + 1) by a non-signer, bids resting below","at":"2026-10-07T13:15:28.954Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"char: E5 bid at the floor bin after go_to_a_bin","at":"2026-10-07T13:15:29.631Z","keys":13,"presentLocally":12,"absentBoth":1,"mainnetOnly":[]}
+{"label":"char: E6 bid at the new active bin","at":"2026-10-07T13:15:30.017Z","keys":13,"presentLocally":12,"absentBoth":1,"mainnetOnly":[]}
+{"label":"char: init bin arrays","at":"2026-10-07T13:15:30.431Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"char: E7 go_to_a_bin down across the resting floor-bin bid","at":"2026-10-07T13:15:30.595Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"char: init bin arrays","at":"2026-10-07T13:15:31.278Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"char: E9 go_to_a_bin further up (no liquidity between)","at":"2026-10-07T13:15:31.424Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2: payer WSOL for dust buys","at":"2026-10-07T13:16:49.698Z","keys":6,"presentLocally":6,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 class: DBC create_config","at":"2026-10-07T13:16:51.267Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2: create_class","at":"2026-10-07T13:16:51.587Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch D: create ALT","at":"2026-10-07T13:16:52.025Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch D: extend ALT","at":"2026-10-07T13:16:52.185Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch D: extend ALT","at":"2026-10-07T13:16:52.596Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch D","at":"2026-10-07T13:16:54.267Z","keys":32,"presentLocally":17,"absentBoth":15,"mainnetOnly":[]}
+{"label":"part2 launch D: buy to the threshold","at":"2026-10-07T13:17:07.834Z","keys":16,"presentLocally":14,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2 launch D: settle","at":"2026-10-07T13:17:08.203Z","keys":23,"presentLocally":20,"absentBoth":3,"mainnetOnly":[]}
+{"label":"part2 launch D: migrate","at":"2026-10-07T13:17:08.617Z","keys":27,"presentLocally":16,"absentBoth":11,"mainnetOnly":[]}
+{"label":"part2 launch D: burn_leftover","at":"2026-10-07T13:17:09.023Z","keys":20,"presentLocally":19,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch E: create ALT","at":"2026-10-07T13:17:09.501Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 launch E: extend ALT","at":"2026-10-07T13:17:09.608Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch E: extend ALT","at":"2026-10-07T13:17:10.013Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 launch E","at":"2026-10-07T13:17:11.722Z","keys":32,"presentLocally":17,"absentBoth":15,"mainnetOnly":[]}
+{"label":"part2 launch E: buy to the threshold","at":"2026-10-07T13:17:26.117Z","keys":16,"presentLocally":14,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2 launch E: settle","at":"2026-10-07T13:17:26.501Z","keys":23,"presentLocally":20,"absentBoth":3,"mainnetOnly":[]}
+{"label":"part2 launch E: migrate","at":"2026-10-07T13:17:26.927Z","keys":27,"presentLocally":16,"absentBoth":11,"mainnetOnly":[]}
+{"label":"part2 launch E: burn_leftover","at":"2026-10-07T13:17:27.332Z","keys":20,"presentLocally":19,"absentBoth":1,"mainnetOnly":[]}
+{"label":"keeper: fund partner_auth for order rent","at":"2026-10-07T13:17:27.732Z","keys":3,"presentLocally":2,"absentBoth":1,"mainnetOnly":[]}
+{"label":"keeper: initialize_bin_array (bid bin + next up)","at":"2026-10-07T13:17:28.145Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"part2 bid accounts: create ALT","at":"2026-10-07T13:17:28.553Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"part2 bid accounts: extend ALT","at":"2026-10-07T13:17:28.650Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"part2 bid accounts: extend ALT","at":"2026-10-07T13:17:29.058Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"open: partner position from another launch's pool","at":"2026-10-07T13:17:30.804Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: partner/creator positions swapped (NFT holder wrong)","at":"2026-10-07T13:17:45.257Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: position owned by another program (the launch account)","at":"2026-10-07T13:17:45.877Z","keys":25,"presentLocally":23,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: the same position twice","at":"2026-10-07T13:17:46.372Z","keys":24,"presentLocally":22,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: creator NFT account is not the position's","at":"2026-10-07T13:17:46.782Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: DAMM pool of another launch (not this launch's migrated pool)","at":"2026-10-07T13:17:47.191Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: DAMM pool account owned by another program","at":"2026-10-07T13:17:47.606Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: DLMM pair of another launch","at":"2026-10-07T13:17:48.094Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: reserve_y not the pair's","at":"2026-10-07T13:17:48.837Z","keys":25,"presentLocally":23,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: vault of another launch","at":"2026-10-07T13:17:49.236Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: partner_auth not the class PDA (order owner ≠ partner_auth)","at":"2026-10-07T13:17:49.647Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: bin hint one above the floor bin","at":"2026-10-07T13:17:50.166Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: bin hint one below the floor bin","at":"2026-10-07T13:17:50.877Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: bin array not passed (D-013)","at":"2026-10-07T13:17:51.286Z","keys":25,"presentLocally":23,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: staging is not partner_auth's base ATA (D-012)","at":"2026-10-07T13:17:51.696Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"refresh before open","at":"2026-10-07T13:17:52.204Z","keys":23,"presentLocally":22,"absentBoth":1,"mainnetOnly":[]}
+{"label":"keeper: init the active bin's array","at":"2026-10-07T13:17:52.528Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"keeper: go_to_a_bin(F's bin)","at":"2026-10-07T13:17:52.673Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"open D","at":"2026-10-07T13:17:53.432Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}
+{"label":"open: open D again","at":"2026-10-07T13:17:53.852Z","keys":26,"presentLocally":24,"absentBoth":2,"mainnetOnly":[]}

@@ -33,7 +33,7 @@ const SUPPLY = 10n ** 15n;
 
 type Accts = Record<string, PublicKey>;
 
-function graduationAccounts(classConfig: PublicKey, l: Launch, beneficiary: PublicKey): Accts {
+export function graduationAccounts(classConfig: PublicKey, l: Launch, beneficiary: PublicKey): Accts {
   const base = l.baseMint.publicKey;
   const partner = pdas.partner(classConfig);
   return {
@@ -52,18 +52,18 @@ function burnAccounts(a: Accts): Accts {
 }
 
 /** The keeper's idempotent ATA creations (staging base for partner_auth, beneficiary WSOL), then the call. */
-async function settle(label: string, a: Accts, beneficiary: PublicKey, pre: TransactionInstruction[] = []): Promise<Landed> {
+export async function settle(label: string, a: Accts, beneficiary: PublicKey, pre: TransactionInstruction[] = []): Promise<Landed> {
   const ix = await ballast.methods.settleGraduation().accountsPartial(a).instruction();
   return send(label, [...pre, ensureAtaIx(a.baseMint, a.partnerAuth), ensureAtaIx(WSOL, beneficiary), ix], [], { cu: 400_000, expectFail: true });
 }
 
-async function burn(label: string, a: Accts, pre: TransactionInstruction[] = []): Promise<Landed> {
+export async function burn(label: string, a: Accts, pre: TransactionInstruction[] = []): Promise<Landed> {
   const ix = await ballast.methods.burnLeftover().accountsPartial(burnAccounts(a)).instruction();
   return send(label, [...pre, ensureAtaIx(a.baseMint, a.partnerAuth), ix], [], { cu: 400_000, expectFail: true });
 }
 
-const got = (l: Landed) => (l.err ? errorName(l.logs) ?? JSON.stringify(l.err) : "succeeded");
-const ballastCu = (l: Landed) => {
+export const got = (l: Landed) => (l.err ? errorName(l.logs) ?? JSON.stringify(l.err) : "succeeded");
+export const ballastCu = (l: Landed) => {
   const m = l.logs.map((x) => x.match(/^Program HSSv\w+ consumed (\d+)/)).find(Boolean);
   return m ? Number(m[1]) : null;
 };
@@ -72,7 +72,7 @@ async function ps(pool: PublicKey): Promise<Record<string, string>> {
   return (await virtualPool(pool)).poolState as Record<string, string>;
 }
 
-async function dbcConfig(label: string): Promise<PublicKey> {
+export async function dbcConfig(label: string): Promise<PublicKey> {
   const config = Keypair.generate();
   const partner = pdas.partner(config.publicKey);
   const ix = await dbc.methods

@@ -1,0 +1,83 @@
+{
+  "lbPair": "2a2hefNDdnoHEQPUvHLRUgcEKgYVQr19gNA8tTM3rY5a",
+  "activeAtStart": -12645,
+  "e1_bidBelowActive": {
+    "label": "E1 bid at active − 1",
+    "bin": -12646,
+    "ok": true,
+    "error": null,
+    "signature": "3iccXU3LvYKxSZCkbgjio1QFstgddCWq2yfB7ZwnMRaMRksMvGzMBXbQmcbNuAPJqwBgjQr79Mmcn7NFSVzvN9Kc",
+    "order": "32vRx7pP5AsZ5hvN4Fjog59yWwcP6yCN7nW6yNEp9kxm"
+  },
+  "e2_bidAtActive": {
+    "label": "E2 bid at active",
+    "bin": -12645,
+    "ok": true,
+    "error": null,
+    "signature": "3Xnp6dwhocNTbSt5dFa9EfzptcFtJYDn7of1ovC6hAwXCFmh7pjGy7qhem4XyBXmr5c93WHvrmrLT7ybjCpgobsg",
+    "order": "8YadgEH5T9j8fYuhDWtFrRTo3xDRPyGHyMGCHmeXbyJm"
+  },
+  "e3_bidAboveActive": {
+    "label": "E3 bid at active + 1",
+    "bin": -12644,
+    "ok": false,
+    "error": "InvalidPlaceLimitOrderParameters 6105",
+    "signature": "21QpQGt8m75qF5eWvxBzN5WkVcEsNb6X7fy2cWF3AWTuzbNtBRZvV2WPP4wwFeaQsoZqexwiSKcUFWYNy3cu6N3v",
+    "order": "B9voPLufVcj5EhV6kAPHTUHXGqVz4gG4GF7K2qCmLQDL"
+  },
+  "e3b_bidAtFloorBin": {
+    "label": "E3b bid at the floor bin (above active)",
+    "bin": -11920,
+    "ok": false,
+    "error": "InvalidPlaceLimitOrderParameters 6105",
+    "signature": "5eFzgTL4GHdF2EHNunNXqzjseSPLN19mjMqHGUUwfSrsFBKdiAUPJbDupNFjfBdXFeh7bhKuFgPgSf1UGFcJzzhR",
+    "order": "D7mkCe7yCn9nyU5n2m3xsyENCdwC4qx265Kj9BNiMQCk"
+  },
+  "e4_goToAboveFloor": {
+    "label": "E4 go_to_a_bin(floor bin + 1) by a non-signer, bids resting below",
+    "target": -11919,
+    "ok": false,
+    "error": "BinRangeIsNotEmpty 6056",
+    "activeAfter": -12645,
+    "signature": "2apj5mU6fqcMSUy1da2UxAX9Ab7omvYKxib6Loh2Ymp8MH3otKqC4C57B5LpbgdaTMxbB2gx3mnQxRY2ANFpACMY",
+    "cu": 5148
+  },
+  "e5_bidAtFloorBinAfterGoTo": {
+    "label": "E5 bid at the floor bin after go_to_a_bin",
+    "bin": -11920,
+    "ok": false,
+    "error": "InvalidPlaceLimitOrderParameters 6105",
+    "signature": "4sb1DiyVyquTTgXYWr6fZNg2FaG7yPzy7euhWkeDkC1Kerjr6ZtMoZvz4HeK4h61kemgJhnLtuGBAULCot5m8c9s",
+    "order": "FrgaJpWa9xUcATf89CQCDxbx3HvmpoisSguGxzEhejcY"
+  },
+  "e6_bidAtNewActive": {
+    "label": "E6 bid at the new active bin",
+    "bin": -11919,
+    "ok": false,
+    "error": "InvalidPlaceLimitOrderParameters 6105",
+    "signature": "3yBcApARGriWbwiq4QfTt3g4zgcVnQXZZJMN317i67nWCyksDioB8ocvr1sUDnP8kPpNCRpw2MSVSktnMQC3AEgw",
+    "order": "J2MVojYjVbKWyGKx7tswVmsc4S2RwXrUFPDwGCkmKMja"
+  },
+  "e7_goToDownAcrossBid": {
+    "label": "E7 go_to_a_bin down across the resting floor-bin bid",
+    "target": -12020,
+    "ok": false,
+    "error": "BinRangeIsNotEmpty 6056",
+    "activeAfter": -12645,
+    "signature": "5u2RGbpjttmW7tVbwkj3RBx5kV1eWn58Bz7N9hujVfYBAnxxKD6Z1TmugAyWEwynabDHJSPu75ta9MFLFBXLhoXJ",
+    "cu": 5150
+  },
+  "e8_askAboveActive": {
+    "skipped": "asker holds no base on this pair; see E9"
+  },
+  "e9_goToUpAgain": {
+    "label": "E9 go_to_a_bin further up (no liquidity between)",
+    "target": -11870,
+    "ok": false,
+    "error": "BinRangeIsNotEmpty 6056",
+    "activeAfter": -12645,
+    "signature": "zXhpFgXPyYPxER5sE493zjVRfAU66CMk7mWCJJDejWnoMLdRPrXzwWwRMAJsTG4X6gJmLgCRWuvaxCWgW5P35sn",
+    "cu": 5148
+  },
+  "bidderWsolLeft": "2980000000"
+}

@@ -106,6 +106,47 @@ it is fragile across DBC upgrades.
 **Recommendation:** approve the band + capacity form. Then mark §7 rule 4 with a `[D-015]`
 amendment marker and add a negative test for each side of the band.
 
+## OPEN DECISION — DLMM refuses a bid above the pair's active bin (raised 7 Oct 2026, Part 2)
+
+**Program Part 2 is STOPPED here** (CLAUDE.md: spec vs observed behaviour → record, propose, wait).
+Evidence: `evidence/program/part2/dlmm-active-bin.json` (wallet-level, top-level SDK transactions on
+the mainnet DLMM binary), `evidence/program/part2/results.json`.
+
+**Observed (mainnet binary):**
+
+| Experiment (pair active_id = −12,645) | Result |
+|---|---|
+| bid at active − 1 / at active | accepted (`3iccXU3L…`, `3Xnp6dwh…`) |
+| bid at active + 1; bid at the floor bin −11,920 | **refused `6105 InvalidPlaceLimitOrderParameters`** (`21QpQGt8…`, `5eFzgTL4…`) — `place_limit_order.rs:133` |
+| `go_to_a_bin` up while any order sits in the range, the active bin included | **refused `6056 BinRangeIsNotEmpty`** (`2apj5mU6…`) |
+| `go_to_a_bin` down across a resting bid | refused `6056` (`5u2RGbpj…`) — a resting bid protects itself |
+| `go_to_a_bin(F's bin)` on an empty range, **no signer** | accepted, 7034 CU (`2MaQnm5q…`) |
+| then Ballast `open` at F's bin | **passes every check**: bid from the vault via CPI (U1), vendored price = DLMM's stored bin price (U4), s_open = Python reference, realised/predicted = 1.0067, **147,138 CU** (`7chdrQDx…`) |
+
+**Why it bites:** a bid may sit only at or below the pair's active bin. The D-011 launch
+transaction creates the pair with active_id at the DBC start price p0 (bin −12,645), and F's bin is
+≈ −11,920 — 725 bins higher. Q5 never saw this because its pair was created at the DAMM price, above
+F. After launch, sells move the active bin down into the bid; F then rises, so every later re-place
+can again be "above active". `go_to_a_bin` fixes it permissionlessly — unless **anyone** parks an
+order (even dust) at or above the active bin below the target, which pins the active bin until a
+seller fills that order.
+
+**Proposed minimum correction (A, recommended):** before every placement (`open`, `refresh_floor`,
+`redeem`), if `pair.active_id < target`, Ballast CPIs `go_to_a_bin(target)` (permissionless, ≈ 7k
+CU, two optional bin-array accounts). If DLMM refuses because a third-party order sits in the range,
+place at `min(target, active_id)` — still a bid **at or below F** (rounding toward the protocol
+holds), but possibly below F's bin while that order stands; any seller clears it by filling it.
+§9's check becomes "bin = min(highest bin ≤ F, the active bin after the attempted move)", and the
+condition is emitted and shown. Redemption at F is unaffected. Disclosure: "the executable bid can
+sit below F's bin while a third-party order pins the DLMM active bin."
+
+**Alternative (B):** fail closed — if the move is refused, `open`/`refresh_floor` revert; `redeem`
+still pays and leaves the vault unplaced (V still counts it). Griefing then freezes the DLMM leg
+until someone sells into the blocking order.
+
+Not proposed: changing the pair's initial active_id in the D-011 launch transaction. Anyone can move
+an empty pair's active bin with `go_to_a_bin` before `open`, so the launch-time value protects nothing.
+
 ## OPEN QUESTION Q8-funding — RESOLVED by D-011 (option C), 4 Oct 2026
 
 *Kept as the reasoning behind D-011.* **Found 4 Oct 2026 by STEP 3 (Q8).**

@@ -64,6 +64,40 @@ pub fn burn(account: &Pubkey, mint: &Pubkey, authority: &Pubkey, amount: u64) ->
     }
 }
 
+/// SPL Token `Transfer` (tag 3): source, destination, authority; amount u64.
+pub fn transfer(
+    source: &Pubkey,
+    destination: &Pubkey,
+    authority: &Pubkey,
+    amount: u64,
+) -> Instruction {
+    let mut data = Vec::with_capacity(9);
+    data.push(3);
+    data.extend_from_slice(&amount.to_le_bytes());
+    Instruction {
+        program_id: TOKEN_PROGRAM_ID,
+        accounts: vec![
+            AccountMeta::new(*source, false),
+            AccountMeta::new(*destination, false),
+            AccountMeta::new_readonly(*authority, true),
+        ],
+        data,
+    }
+}
+
+/// An SPL Token mint's `supply` (offset 36: after the 36-byte `COption<Pubkey>` mint authority),
+/// checking owner program and the 82-byte length. `None` for anything else (D-012: never 0).
+pub fn read_mint_supply(info: &AccountInfo) -> Option<u64> {
+    if *info.owner != TOKEN_PROGRAM_ID {
+        return None;
+    }
+    let data = info.try_borrow_data().ok()?;
+    if data.len() != 82 {
+        return None;
+    }
+    Some(u64::from_le_bytes(data[36..44].try_into().ok()?))
+}
+
 /// Create a token account at a PDA (`account_seeds` sign the allocation) owned by the Token
 /// program, initialised for `mint` with `owner` as its authority.
 #[allow(clippy::too_many_arguments)]
@@ -116,6 +150,21 @@ pub fn read_token_account(info: &AccountInfo) -> Option<(Pubkey, Pubkey, u64)> {
 mod tests {
     use super::*;
     use anchor_lang::solana_program::system_instruction;
+
+    /// The hand-built SPL instructions match `spl-token`'s documented layouts (tag + LE amount).
+    #[test]
+    fn transfer_and_burn_layouts() {
+        let (a, b, c) = (
+            Pubkey::new_unique(),
+            Pubkey::new_unique(),
+            Pubkey::new_unique(),
+        );
+        let t = transfer(&a, &b, &c, 0x0102_0304_0506_0708);
+        assert_eq!(t.data, [3, 8, 7, 6, 5, 4, 3, 2, 1]);
+        assert!(t.accounts[0].is_writable && t.accounts[1].is_writable && t.accounts[2].is_signer);
+        let x = burn(&a, &b, &c, 5);
+        assert_eq!(x.data, [8, 5, 0, 0, 0, 0, 0, 0, 0]);
+    }
 
     /// D-018: the hand-built `CreateAccount` is byte-identical to the SDK's bincode encoding.
     #[test]

@@ -98,7 +98,13 @@ pub struct Launch {
     /// `burn_leftover`: leftover base units burned and partner surplus moved to the vault.
     pub leftover_burned: u64,
     pub surplus: u64,
-    pub reserved: [u8; 128],
+    /// `refresh_floor` rate limit (§6): slot of the last refresh.
+    pub last_refresh_slot: u64,
+    /// L at `open`. A later live read below it is §8's `BackingDecreased` fail-safe.
+    pub l_open: u128,
+    /// §8 fail-safe: set once L reads below `l_open`; the monotone check is then suspended.
+    pub degraded: bool,
+    pub reserved: [u8; 103],
 }
 
 /// The canonical parameters a class must match (§7). One per `size_tag`.
@@ -166,6 +172,14 @@ pub mod canon {
     /// hash, so a one-sided bound would leave it unpinned. `compiler --check` keeps it equal to
     /// the reference's value; the pinned prediction is taken at the lower-F band end (D-017).
     pub const MIGRATION_PRICE_TOLERANCE: u128 = 4_580_461;
+    /// §10 "Dust: minimum payout 0.001 SOL".
+    pub const MIN_PAYOUT: u64 = 1_000_000;
+    /// §6 `refresh_floor` "rate-limited to once per N slots per launch". The spec gives no N; 10
+    /// slots (≈ 4 s) bounds griefing to one cancel/re-place per 10 slots.
+    pub const REFRESH_MIN_SLOTS: u64 = 10;
+    /// `redeem` re-places at the highest bin ≤ F′ by scanning up from the old bid bin (F never
+    /// falls). One bin array's worth; beyond that the keeper's `refresh_floor` moves the bid.
+    pub const BID_SCAN_MAX: i32 = 70;
     /// Bin steps DLMM accepted for a customizable LimitOrder pair (Q9, measured by simulation).
     pub const DLMM_BIN_STEPS: [u16; 10] = [1, 2, 4, 5, 8, 10, 16, 20, 25, 50];
     /// The DBC `PoolConfig.version` validated on the mainnet binaries (Q12).

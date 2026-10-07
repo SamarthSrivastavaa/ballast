@@ -98,3 +98,26 @@ fn dbc_cpi_constants_match_the_vendored_idl() {
         Pubkey::find_program_address(&[b"__event_authority"], &ballast::DBC_PROGRAM_ID);
     assert_eq!(dbc_cpi::DBC_EVENT_AUTHORITY, event_authority);
 }
+
+/// Part 2 CPI builders (`dlmm.rs`, `damm.rs`) against the vendored IDLs.
+#[test]
+fn part2_cpi_discriminators_match_the_vendored_idls() {
+    let l = idl("lb_clmm.json");
+    assert_eq!(
+        ballast::dlmm::disc::PLACE_LIMIT_ORDER,
+        disc_of(&l, "place_limit_order")
+    );
+    assert_eq!(
+        ballast::dlmm::disc::CANCEL_LIMIT_ORDER,
+        disc_of(&l, "cancel_limit_order")
+    );
+    assert_eq!(
+        ballast::dlmm::disc::CLOSE_LIMIT_ORDER_IF_EMPTY,
+        disc_of(&l, "close_limit_order_if_empty")
+    );
+    let c = idl("cp_amm.json");
+    assert_eq!(
+        ballast::damm::CLAIM_POSITION_FEE,
+        disc_of(&c, "claim_position_fee")
+    );
+}
