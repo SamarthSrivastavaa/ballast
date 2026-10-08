@@ -1,0 +1,42 @@
+{
+  "lbPair": "E6YgCSC6c4shL4qcYtuh6cY8u7qVFHKcVnVzsSDsCfGE",
+  "activeAtLaunch": -12645,
+  "predictedFloorBin": -11920,
+  "pin": -35163,
+  "x1_bidAtPredictedFloorBin": {
+    "label": "X1 dust bid at the predicted floor's bin",
+    "bin": -11920,
+    "amount": "1000",
+    "result": "InvalidPlaceLimitOrderParameters",
+    "signature": "5TJJWDM2cqyiTM4d9fxPHcwbBhATb9rLYHsJT9cZ4cqs9bSxZSHsbgooWYN5J4iyczTHNMyzW1uYkVU2GGiP8vKe"
+  },
+  "x2_dustBidBelowActive": {
+    "label": "X2 dust bid one bin below the launch's active bin",
+    "bin": -12646,
+    "amount": "1000",
+    "result": "succeeded",
+    "signature": "2esfiNggpmzQmjCeZAvimAHY8ryjtPrbVTK8TVxgj3ZeABHQQTZmFKdQSRLTCGzS6ctuRRZSyk1NRXT2onWKLmV6"
+  },
+  "x2_pinAcrossDust": {
+    "label": "X2 go_to_a_bin(min bin) across the dust bid",
+    "from": -12645,
+    "to": -35163,
+    "result": "BinRangeIsNotEmpty",
+    "signature": "3yWm28JsFTFjBmDMVt8kaPoWzr1FrbFi4PTG2xULrMoLH1Xxy1rLBK4vgC45Badrcxt9j7tfHqv3Q4z1K9ediSjx",
+    "activeAfter": -12645
+  },
+  "x3_fillDust": {
+    "result": "succeeded",
+    "signature": "3G9SR3o8zVFExEKbZMfwuQHrbb6Rc1Mi5q9jzgjvgygkgb85KEZZYv8TMPQQ93kpPxnaRLthDCP5MjgdSZ9araKX",
+    "baseSold": "308562969"
+  },
+  "x3_pinAfterFill": {
+    "label": "X3 go_to_a_bin(min bin) after filling the dust bid",
+    "from": -12646,
+    "to": -35163,
+    "result": "succeeded",
+    "signature": "5fsjWWSnJRWwuf9nav1epcyospbwyeZpK8WsRAx2qYnFuLRw2d2d1732PjpD8qWvUUvXtVy8MBgRLPMNPt9yLcXK",
+    "activeAfter": -35163
+  },
+  "conclusion": "a dust bid does not stop the pin: at the predicted floor's bin DLMM refuses it outright (above the active bin); below the active bin anyone fills it with a few base units and then moves the active bin freely. Dropped; D-021's cap/suspend rule carries the guarantee."
+}

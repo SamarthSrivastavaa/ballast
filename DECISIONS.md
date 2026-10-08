@@ -666,7 +666,18 @@ bitmap extension if needed) and park a dust bid there, which stranded the vault 
   never depend on DLMM pair state.
 - Time-boxed experiment (45 min, non-blocking): a `partner_auth` dust bid at the predicted floor's bin
   in the D-011 launch transaction, to see whether DLMM then refuses `go_to_a_bin` past it. Kept only if
-  it blocks the pin. Result recorded below when run.
+  it blocks the pin. **Result (8 Oct 2026): DROPPED** — `evidence/program/part2/d021-dust-experiment.json`,
+  `tests/integration/program/tools/d021-dust-experiment.ts`, mainnet DLMM binary:
+  - X1, the dust bid **at the predicted floor's bin** in the launch transaction: refused,
+    `6105 InvalidPlaceLimitOrderParameters` (`5TJJWDM2…`) — at launch that bin is above
+    the pair's active bin (p0's), the D-020 rule.
+  - X2, a dust bid one bin **below** the launch's active bin: placed (`2esfiNgg…`), and it
+    does block the pin while it rests — `go_to_a_bin` down to −35,163 refused `6056` (`3yWm28Js…`).
+  - X3, a griefer buys ≈ 309 tokens on the curve, creates the bitmap extension (permissionless) and
+    sells exactly what the dust bid absorbs (308,562,969 base units, `3G9SR3o8…`); the pin then
+    succeeds — active bin −35,163 (`5fsjWWSn…`). The protection costs a griefer a few
+    lamports to remove, so it is not kept; D-021's cap/suspend rule (the floor exists and redemption
+    pays F regardless) carries the guarantee.
 
 ### D-022 — Creator flows are decoupled into `pay_creator` (amends D-016)
 

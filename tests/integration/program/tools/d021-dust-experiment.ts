@@ -18,7 +18,7 @@
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import BN from "bn.js";
-import { ComputeBudgetProgram, Keypair, PublicKey, SystemProgram, TransactionInstruction } from "@solana/web3.js";
+import { ComputeBudgetProgram, Keypair, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY, TransactionInstruction } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import DLMM, { binIdToBinArrayIndex, deriveBinArray } from "@meteora-ag/dlmm";
 import { conn, Landed, payer, REPO, send } from "../../p0/src/env";
@@ -90,21 +90,34 @@ async function main(): Promise<void> {
   out.x2_pinAcrossDust = await goTo("X2 go_to_a_bin(min bin) across the dust bid", PIN);
 
   // X3: the griefer buys a little base on the live curve, sells it into the dust bid, retries.
-  await send("x: griefer base ATA", [ensureAtaIx(l.baseMint.publicKey, griefer.publicKey)], [griefer], { feePayer: griefer });
+  await send("x: griefer base ATA", [ensureAtaIx(l.baseMint.publicKey, griefer.publicKey)]); // the payer funds and signs
   await buy("x: griefer buys base on the curve", griefer, l.pool, 10_000_000n);
   const base0 = await tokenBalanceStrict(ata(l.baseMint.publicKey, griefer.publicKey));
+  // A swap that searches past the internal bitmap needs the pair's bitmap extension (6036 without
+  // it); a griefer creates it permissionlessly, as for the deep pin.
   const p3 = await DLMM.create(conn, l.lbPair, OPT);
-  const sell = 1_000_000_000n; // 1,000 tokens: far more than a 1,000-lamport bid needs
-  const arrs = await p3.getBinArrayForSwap(true);
-  const q = p3.swapQuote(new BN(sell.toString()), true, new BN(10_000), arrs, true);
-  const sw = await p3.swap({ inToken: l.baseMint.publicKey, outToken: WSOL, inAmount: new BN(sell.toString()), minOutAmount: new BN(0), lbPair: l.lbPair, user: griefer.publicKey, binArraysPubkey: q.binArraysPubkey });
+  if (!(await conn.getAccountInfo(extOf(l.lbPair)))) {
+    await send("x: griefer creates the bitmap extension", [
+      await p3.program.methods.initializeBinArrayBitmapExtension()
+        .accountsPartial({ lbPair: l.lbPair, binArrayBitmapExtension: extOf(l.lbPair), funder: griefer.publicKey, rent: SYSVAR_RENT_PUBKEY } as never).instruction(),
+    ], [griefer], { feePayer: griefer });
+  }
+  const p4 = await DLMM.create(conn, l.lbPair, OPT);
+  // Sell exactly what the dust bid absorbs (partial-fill quote → consumed input).
+  const arrs = await p4.getBinArrayForSwap(true);
+  const q = p4.swapQuote(new BN(1_000_000_000), true, new BN(10_000), arrs, true);
+  const sell = BigInt(q.consumedInAmount.toString());
+  const sw = await p4.swap({ inToken: l.baseMint.publicKey, outToken: WSOL, inAmount: new BN(sell.toString()), minOutAmount: new BN(0), lbPair: l.lbPair, user: griefer.publicKey, binArraysPubkey: q.binArraysPubkey });
   const st = await send("x: griefer sells into the dust bid", noCb(sw.instructions), [griefer], { feePayer: griefer, cu: 400_000, expectFail: true });
   out.x3_fillDust = { result: code(st), signature: st.signature, baseSold: (base0 - (await tokenBalanceStrict(ata(l.baseMint.publicKey, griefer.publicKey)))).toString() };
   out.x3_pinAfterFill = await goTo("X3 go_to_a_bin(min bin) after filling the dust bid", PIN);
 
+  const filled = (out.x3_fillDust as { result: string }).result === "succeeded";
   const blocked = (out.x3_pinAfterFill as { result: string }).result !== "succeeded";
-  out.conclusion = blocked
-    ? "the dust bid blocks the pin even after a fill attempt — keep it (record in D-021)"
+  out.conclusion = !filled
+    ? "INCONCLUSIVE: the griefer's fill of the dust bid did not execute, so whether a filled dust order still blocks the pin is untested"
+    : blocked
+    ? "the dust bid blocks the pin even after a griefer fills it — keep it (record in D-021)"
     : "a dust bid does not stop the pin: at the predicted floor's bin DLMM refuses it outright (above the active bin); below the active bin anyone fills it with a few base units and then moves the active bin freely. Dropped; D-021's cap/suspend rule carries the guarantee.";
   void SystemProgram; void TOKEN_PROGRAM_ID;
   const path = resolve(REPO, "evidence/program/part2/d021-dust-experiment.json");

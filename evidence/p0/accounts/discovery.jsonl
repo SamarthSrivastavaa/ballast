@@ -9966,3 +9966,75 @@
 {"label":"g10: dust redeem","at":"2026-10-08T19:50:57.934Z","keys":26,"presentLocally":25,"absentBoth":1,"mainnetOnly":[]}
 {"label":"g10 WSOL ATA","at":"2026-10-08T19:50:58.224Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
 {"label":"g10: min_out above payout","at":"2026-10-08T19:50:58.943Z","keys":26,"presentLocally":25,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: WSOL","at":"2026-10-08T20:34:22.542Z","keys":6,"presentLocally":6,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: bidder WSOL","at":"2026-10-08T20:34:23.906Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: griefer WSOL","at":"2026-10-08T20:34:24.405Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x class: DBC create_config","at":"2026-10-08T20:34:24.848Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"x: create_class","at":"2026-10-08T20:34:25.216Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x launch: create ALT","at":"2026-10-08T20:34:25.677Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x launch: extend ALT","at":"2026-10-08T20:34:25.867Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x launch: extend ALT","at":"2026-10-08T20:34:26.281Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x launch","at":"2026-10-08T20:34:27.942Z","keys":32,"presentLocally":17,"absentBoth":15,"mainnetOnly":[]}
+{"label":"x: init bin array","at":"2026-10-08T20:34:44.072Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X1 dust bid at the predicted floor's bin","at":"2026-10-08T20:34:44.784Z","keys":12,"presentLocally":11,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: init bin array","at":"2026-10-08T20:34:45.316Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X2 dust bid one bin below the launch's active bin","at":"2026-10-08T20:34:45.614Z","keys":12,"presentLocally":11,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: init bin array","at":"2026-10-08T20:34:46.026Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X2 go_to_a_bin(min bin) across the dust bid","at":"2026-10-08T20:34:46.346Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: griefer base ATA","at":"2026-10-08T20:34:46.873Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: WSOL","at":"2026-10-08T20:35:10.230Z","keys":6,"presentLocally":6,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: bidder WSOL","at":"2026-10-08T20:35:10.658Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: griefer WSOL","at":"2026-10-08T20:35:11.063Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x class: DBC create_config","at":"2026-10-08T20:35:12.493Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"x: create_class","at":"2026-10-08T20:35:12.979Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x launch: create ALT","at":"2026-10-08T20:35:13.394Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x launch: extend ALT","at":"2026-10-08T20:35:13.582Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x launch: extend ALT","at":"2026-10-08T20:35:14.001Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x launch","at":"2026-10-08T20:35:15.650Z","keys":32,"presentLocally":17,"absentBoth":15,"mainnetOnly":[]}
+{"label":"x: init bin array","at":"2026-10-08T20:35:30.940Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X1 dust bid at the predicted floor's bin","at":"2026-10-08T20:35:31.536Z","keys":12,"presentLocally":11,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: init bin array","at":"2026-10-08T20:35:31.992Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X2 dust bid one bin below the launch's active bin","at":"2026-10-08T20:35:32.386Z","keys":12,"presentLocally":11,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: init bin array","at":"2026-10-08T20:35:32.822Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X2 go_to_a_bin(min bin) across the dust bid","at":"2026-10-08T20:35:33.038Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: griefer base ATA","at":"2026-10-08T20:35:33.738Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: griefer buys base on the curve","at":"2026-10-08T20:35:33.872Z","keys":15,"presentLocally":15,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: griefer sells into the dust bid","at":"2026-10-08T20:35:34.720Z","keys":17,"presentLocally":16,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X3 go_to_a_bin(min bin) after filling the dust bid","at":"2026-10-08T20:35:35.132Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: WSOL","at":"2026-10-08T20:37:05.958Z","keys":6,"presentLocally":6,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: bidder WSOL","at":"2026-10-08T20:37:06.372Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: griefer WSOL","at":"2026-10-08T20:37:07.601Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x class: DBC create_config","at":"2026-10-08T20:37:08.227Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"x: create_class","at":"2026-10-08T20:37:08.641Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x launch: create ALT","at":"2026-10-08T20:37:09.126Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x launch: extend ALT","at":"2026-10-08T20:37:09.278Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x launch: extend ALT","at":"2026-10-08T20:37:09.699Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x launch","at":"2026-10-08T20:37:11.330Z","keys":32,"presentLocally":17,"absentBoth":15,"mainnetOnly":[]}
+{"label":"x: init bin array","at":"2026-10-08T20:37:26.054Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X1 dust bid at the predicted floor's bin","at":"2026-10-08T20:37:26.674Z","keys":12,"presentLocally":11,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: init bin array","at":"2026-10-08T20:37:27.094Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X2 dust bid one bin below the launch's active bin","at":"2026-10-08T20:37:27.526Z","keys":12,"presentLocally":11,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: init bin array","at":"2026-10-08T20:37:27.948Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X2 go_to_a_bin(min bin) across the dust bid","at":"2026-10-08T20:37:28.167Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: griefer base ATA","at":"2026-10-08T20:37:28.760Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: griefer buys base on the curve","at":"2026-10-08T20:37:28.966Z","keys":15,"presentLocally":15,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: WSOL","at":"2026-10-08T20:37:55.747Z","keys":6,"presentLocally":6,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: bidder WSOL","at":"2026-10-08T20:37:56.199Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: griefer WSOL","at":"2026-10-08T20:37:57.462Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x class: DBC create_config","at":"2026-10-08T20:37:58.055Z","keys":7,"presentLocally":5,"absentBoth":2,"mainnetOnly":[]}
+{"label":"x: create_class","at":"2026-10-08T20:37:58.484Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x launch: create ALT","at":"2026-10-08T20:37:58.949Z","keys":4,"presentLocally":3,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x launch: extend ALT","at":"2026-10-08T20:37:59.141Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x launch: extend ALT","at":"2026-10-08T20:37:59.554Z","keys":4,"presentLocally":4,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x launch","at":"2026-10-08T20:38:01.233Z","keys":32,"presentLocally":17,"absentBoth":15,"mainnetOnly":[]}
+{"label":"x: init bin array","at":"2026-10-08T20:38:15.344Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X1 dust bid at the predicted floor's bin","at":"2026-10-08T20:38:15.804Z","keys":12,"presentLocally":11,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: init bin array","at":"2026-10-08T20:38:16.193Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X2 dust bid one bin below the launch's active bin","at":"2026-10-08T20:38:16.650Z","keys":12,"presentLocally":11,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: init bin array","at":"2026-10-08T20:38:17.048Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X2 go_to_a_bin(min bin) across the dust bid","at":"2026-10-08T20:38:17.269Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: griefer base ATA","at":"2026-10-08T20:38:17.970Z","keys":7,"presentLocally":6,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: griefer buys base on the curve","at":"2026-10-08T20:38:18.096Z","keys":15,"presentLocally":15,"absentBoth":0,"mainnetOnly":[]}
+{"label":"x: griefer creates the bitmap extension","at":"2026-10-08T20:38:18.737Z","keys":6,"presentLocally":5,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: griefer sells into the dust bid","at":"2026-10-08T20:38:19.336Z","keys":18,"presentLocally":17,"absentBoth":1,"mainnetOnly":[]}
+{"label":"x: X3 go_to_a_bin(min bin) after filling the dust bid","at":"2026-10-08T20:38:19.806Z","keys":7,"presentLocally":7,"absentBoth":0,"mainnetOnly":[]}

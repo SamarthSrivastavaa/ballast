@@ -9950,3 +9950,74 @@
 {"label":"g10: dust redeem","signature":"yiTbS9zp4EThD5xiLbdPZizUtT7FrGapRDzEji6FxRLJCc72wv2qa5W5Qzy8pKSUQsixtdg6LRBAN5o27s8uopM","slot":6089,"err":{"InstructionError":[1,{"Custom":6109}]},"cu":113029,"logLines":25}
 {"label":"g10 WSOL ATA","signature":"4bSm9wd5HTizmxyk11tsJsmPNGK5VBDwQvVrpSws1nfNFrkFysreHxvppkk6r3WR8bqVKj5rUgCFZ8AYeMxJSiib","slot":6090,"err":null,"cu":8938,"logLines":4}
 {"label":"g10: min_out above payout","signature":"3UmnJLQvKXr8xy9ZLZ2VJF2qfTfZFTGxR3PZKVi7oN8Cgo9mzwz27hLUnKuDPLXSrwbwJ1smc1uRfsr8NGG5phvv","slot":6091,"err":{"InstructionError":[1,{"Custom":6110}]},"cu":113336,"logLines":25}
+{"label":"x: WSOL","signature":"s1iNnibh3EfzwsvLBBwjj2Po5WmPbqqbk7tq9Kzo4DeQgjCWdkG7ANSHocRE8dMAiNBb8Anv27J9hbkb6mnrdtp","slot":12322,"err":null,"cu":7534,"logLines":10}
+{"label":"x: bidder WSOL","signature":"2UMDYngAnSWUxZxXuVmCmkUbFwfcJVsvAnVREVpW68o4dFrA5W9i4zbfSousPXfNU3W5eJXqFtE51K3hrTJqCLux","slot":12325,"err":null,"cu":22607,"logLines":27}
+{"label":"x: griefer WSOL","signature":"3PKx8aWGaMUjGgd2PV7sWdAxk8QQA86h1ywbPTh55EHBqnmrgFuWDKqRsnaDm7dLhQfHr3C3MXjEUSCasY61YsUr","slot":12326,"err":null,"cu":22607,"logLines":27}
+{"label":"x class: DBC create_config","signature":"4fRkodXDZwHZoT1zsk8UCXKi8n8aXMCsupyoMTDsQEwYXXfGMuJpGVG9kyTZrkLJxU9YWBD6RA9PA1EdXjQkHk9T","slot":12327,"err":null,"cu":45145,"logLines":12}
+{"label":"x: create_class","signature":"3xwKFbmdZ9vNNkY5CAqTTmJHxeKqgofLcSkvjoSqrXF5qjzA4VeBJT8oHYfCMfGhsd1dwopBwywtdoySZ8NJgzgb","slot":12328,"err":null,"cu":23538,"logLines":7}
+{"label":"x launch: create ALT","signature":"4ffy4WDwisSGZUPmWAdLeoTxWxuq84kqDaf7UVpUKvuVJvHoMiu6a1qWYvEXoxXvGatZjprCDUVDMAaoJYi3zgRs","slot":12329,"err":null,"cu":1200,"logLines":8}
+{"label":"x launch: extend ALT","signature":"2qo6LvboEEq1FxgquEniZxmC9J6Aw9kLqcqCGvd7jkKeED7Z4kWtc9CD8G5faJB5jqpcJcGCneUTFR9sWoBMFz6r","slot":12330,"err":null,"cu":900,"logLines":4}
+{"label":"x launch: extend ALT","signature":"5hE1efFsbyd3xojy3xNWpzgEDKMy64jXQFN1dutex8VtWHnEhxhB7iRxCMfSFxB5jBzmocNFdRifUHnm4EgLgKK8","slot":12331,"err":null,"cu":900,"logLines":4}
+{"label":"x launch","signature":"25DX6p7uBN4RqfcypQSA785XUgRq2okpViBnHvtEa6mLBUTiRGxgAJctH3d3UVTqSneDgUnRDjApZdpzisQ41qpB","slot":12370,"err":null,"cu":307330,"logLines":136}
+{"label":"x: init bin array","signature":"5GrBaccaGxVzHxL9ThhvebLwVx7Qhsg9mGDUH5nCn1gdXqWC7HSJstmS2bo3t9mkYaw8KgUoJkaMUSgy8dgpiFX7","slot":12373,"err":null,"cu":198731,"logLines":8}
+{"label":"x: X1 dust bid at the predicted floor's bin","signature":"2SPiJ1VNM2o2DjmBWmucCC3tBK2prad7VenVbb2Zs4ZLYNf6N2oQFZzVAAYxE4wJBo7whcp3Fk6cAu1NEwSeSTRM","slot":12374,"err":{"InstructionError":[1,{"Custom":6105}]},"cu":13257,"logLines":9}
+{"label":"x: init bin array","signature":"StYgLH2UqSjGr82jmVUhUUtAn9PGcyFwJYNcuYLR17WUARJh9ECzHGuJJUAmTFrw8TafKyhix2g3EVyG3NZGVoo","slot":12375,"err":null,"cu":203080,"logLines":8}
+{"label":"x: X2 dust bid one bin below the launch's active bin","signature":"2ajc8RzFEkgsCJATCZvGBJ4D669SYSxpJ2q6KZM5FyHdRX42mVoM8T5J7Pqs42AbHfxXXS6DgusssTBgyYeYg3N","slot":12376,"err":null,"cu":26998,"logLines":15}
+{"label":"x: init bin array","signature":"oSwooR9ybVWDLPtNRQjSvCFChE2fmUhMDb6dFoorzqSZVz8wnna513CWHm2VtbuB6G22VJj9MdX8LUnZXZenXqS","slot":12377,"err":null,"cu":198575,"logLines":8}
+{"label":"x: X2 go_to_a_bin(min bin) across the dust bid","signature":"3YGZ2GTSi2XfXHhCPTmtpgRXKfVrMLSSKcz7RT1ZC6Fp4BhEMegXacVnEb89NHybzJ5w6zMMnqnYwx8Wdr1ffFVo","slot":12378,"err":{"InstructionError":[1,{"Custom":6056}]},"cu":5594,"logLines":7}
+{"label":"x: WSOL","signature":"PCM79BUofvKXRBXd6JkKCKi74Vcdes5paVM4XmVFEKgg5hgASbgvxswEmRDWbcCGhfAHPxspB9kxzWhqttj4rVR","slot":12435,"err":null,"cu":7534,"logLines":10}
+{"label":"x: bidder WSOL","signature":"65ZnYgWsGq1pbw6AtVn7pMJjLtwA7byiGwTWn6Tcu2e7KhnD7WtuuDZ2W4txWcAPZYGFfpnk4RqQpAc67BvegaiQ","slot":12436,"err":null,"cu":7631,"logLines":10}
+{"label":"x: griefer WSOL","signature":"ufuVSJGjH6oL1tvxRC8tE8RVmVuRKCNRPqdHpiiFtwG4wTR5Li2pe3NdEwtdiHFzPvFyTnAtjuMGjiVrQbKEmKT","slot":12437,"err":null,"cu":7631,"logLines":10}
+{"label":"x class: DBC create_config","signature":"3NEiNUrTsgYrRLPKUErrdT3VL7a2YbfCw8bhXWs1tE3UsMxeNjqVJyEv7UMNMd9jsdfUbNUVyvfDkkFBd2Jg2cxh","slot":12440,"err":null,"cu":45145,"logLines":12}
+{"label":"x: create_class","signature":"2KisRSkhiTiPVQKyT5s3Nj3dPfEh2JYXTomGGSPx7aEahgVJnL4PZRLNpK1BgRifLLotxQjam6eZgVoRc8o9UAPN","slot":12441,"err":null,"cu":41538,"logLines":7}
+{"label":"x launch: create ALT","signature":"5geUoPaXmykfvXv1petXVUMxfp9zzRT52C9xYjwsznUQWBndcze43VD5QkUC3tnK2JBjwZmC114sGTPmApbm7VJE","slot":12442,"err":null,"cu":1200,"logLines":8}
+{"label":"x launch: extend ALT","signature":"rXLFvrgFhtM4JDBBcgTbUb55HHS8PBDtPzRF9UqvuJKuxjxsn6U62DdZpAvvfb4CY1nUpisUczSbhojJZEcqaEd","slot":12443,"err":null,"cu":900,"logLines":4}
+{"label":"x launch: extend ALT","signature":"5Tmwp7BYKqRFhiEknLTmrifyoV3MknZiypsRSvzbktHTxMgssJEvUrhJWfv18zTYJQWQvNqEG8fvAKQSjjQ1658v","slot":12444,"err":null,"cu":900,"logLines":4}
+{"label":"x launch","signature":"4wzgCAHzg8Si9VmNkwz55ysUGTG9NyeLVzvW6tGAzeg7JrW1LyZ28C7yFPrsdu197UgnSmKzXtdWtY4r98JR2mpp","slot":12481,"err":null,"cu":319347,"logLines":136}
+{"label":"x: init bin array","signature":"3HwFSAKRhA31eAUEmatcBpuEV33LVafdPZymb7hnxz3MgZdvbdHJQDM3UizYAJ9DwdLLkBBkoXRekM4h58SmcKNf","slot":12484,"err":null,"cu":198731,"logLines":8}
+{"label":"x: X1 dust bid at the predicted floor's bin","signature":"dczweSaitSNQg3u3tPxWoJwn1595VwyduB4TSNB1YBpL7swGgXm2svCPCHS4Rt53h4hyfJgy2SKgyrb3Bgd3MX3","slot":12485,"err":{"InstructionError":[1,{"Custom":6105}]},"cu":13257,"logLines":9}
+{"label":"x: init bin array","signature":"2opJY3jKpLczSXUAgLbnHYZNc3vcLbFpt7ph95pYR1MGd5vARLAWgUGv5hjKzDoodCBRDm1mpK85bkSdmXztMb8y","slot":12486,"err":null,"cu":198580,"logLines":8}
+{"label":"x: X2 dust bid one bin below the launch's active bin","signature":"2NHasGX3AcVXvZZb1QiovRLAt4NmMqLonujWdJqYvNGD9W3WMa5rfXtJNns1DtFdakpHMULV43cvuBNZwESTa4gc","slot":12487,"err":null,"cu":26998,"logLines":15}
+{"label":"x: init bin array","signature":"7w1sLcg2v6tfNjNUjeExDEzwXW2eU7VbAZUbwWxVDdAHzPKsTSLtbVrpMciEr5T4cQetVT3LD4CHHHNwDFFVXkD","slot":12488,"err":null,"cu":198575,"logLines":8}
+{"label":"x: X2 go_to_a_bin(min bin) across the dust bid","signature":"5mGHXkCYGqqUW9xzPwoum6RbjmUFP83chkXp1fGe7jDXABLQZQjzmJ7qyGTFyNgKCa2gGF4jNUNFV33AMUKi47AP","slot":12489,"err":{"InstructionError":[1,{"Custom":6056}]},"cu":5594,"logLines":7}
+{"label":"x: griefer base ATA","signature":"4ieko53JXoVZnFSAHk5yhkaEwz6YoZiVJNnZt8B2XD9QYvMHkUoYNG265HqC89m9YPdTCBo3troJrc4GvpsJxh6c","slot":12490,"err":null,"cu":21946,"logLines":21}
+{"label":"x: griefer buys base on the curve","signature":"2B4PTnWwASnsQGPkBAz4rxumwWkmpebgzPT4YGsHba8UHiW94A37XtEAo91gTSLZrZUehn3LzJ19G9WVSsLDeFxv","slot":12491,"err":null,"cu":48453,"logLines":30}
+{"label":"x: griefer sells into the dust bid","signature":"3iymeFjQURT7DAdExVBoxzwcm4E3tbfpj2oq55j3T8srDW9RGiSCNHRp6FsyEdC84hPnKthZof8UuJd633Hco9E","slot":12493,"err":{"InstructionError":[2,{"Custom":6036}]},"cu":46889,"logLines":28}
+{"label":"x: X3 go_to_a_bin(min bin) after filling the dust bid","signature":"4n3oQD8wuXzNiy1Fj23stvHrrdgN5XxzEX159Myf5Q3Vrr6hxMcP4xpGCqME3FnJgC5GLP6ZEArZsTw5yRctGGLt","slot":12494,"err":{"InstructionError":[1,{"Custom":6056}]},"cu":5594,"logLines":7}
+{"label":"x: WSOL","signature":"4NAp1fMmzPzG4HyYqgFvgwozafPFac5WKVM7d8NyjErXcWEgSciAUYJ6gz1Cqg9jdKS3aXVpJ5ko8h2e1asuQRQP","slot":12711,"err":null,"cu":7534,"logLines":10}
+{"label":"x: bidder WSOL","signature":"3s36y5CNLJkRsYCWndRFeTfT8aBZMFWEEsAGu929W3ZDC9FJnjc8ThxXssr5KbAETh2cfKx3o1GQ1y21G8aCgHPc","slot":12712,"err":null,"cu":7631,"logLines":10}
+{"label":"x: griefer WSOL","signature":"5Qboy4chp5yENhxjvt3369SE4eDK2J3sDq6D2imvUf9nGtEbLtzQVsezYbwn21XBz4Am9ZAerWB5zh3hozgZ5Zhs","slot":12715,"err":null,"cu":22607,"logLines":27}
+{"label":"x class: DBC create_config","signature":"4gvNATNG2y1ANQp3tLE3X26vA7fAzPja8vRqfj7DZuKQQeneK329uCTqEUTSbXFjc1uD2cenZ6G4t183YBPki9gv","slot":12716,"err":null,"cu":45145,"logLines":12}
+{"label":"x: create_class","signature":"5QVSpekC4KdYRWirVUnNhBGPSuQdchnawEiVW1PUg51AKMjHYv85pC687NXDjXeXFNAP3ow2ttg3vgDU53eL3NDz","slot":12717,"err":null,"cu":23538,"logLines":7}
+{"label":"x launch: create ALT","signature":"2oS6qUrD8pbu3fmHuzpAcp6JNpmrM2UYkufb7u5JFuoaJxbj21ZxxkzVyXGBZvJxjGHapGriJuxhTtwgW8aRaHKo","slot":12718,"err":null,"cu":1200,"logLines":8}
+{"label":"x launch: extend ALT","signature":"5GYLw2FLBizSwXTXCqc5GT4zGa3QfWxcMciFjzc9dGXLH1dF36WSdSsbrbQy2pxosSkpjEFd8wdu9fJyDFBRTJwK","slot":12719,"err":null,"cu":900,"logLines":4}
+{"label":"x launch: extend ALT","signature":"5zfEU4eC7nZVwzTW71L1nXiETPpMoTQyipk9aA9e87sfUp1vqpCsnjGpt69v7qN1nsfWK5h2arXds9AxDhmSm6iU","slot":12720,"err":null,"cu":900,"logLines":4}
+{"label":"x launch","signature":"3SVFEB3YDEEmbi24zqgForLusQ7sd5aWrokBVCxv2jFzuXtVM4Kee1LjXvrAfciHja2gfbHTyonKG7pYpESBhP8M","slot":12754,"err":null,"cu":319347,"logLines":136}
+{"label":"x: init bin array","signature":"43Fg8TtoXFn5SAzYAWqNcgGmoUXuFrBvtk1x3FrCXVzoxycnVKKTcjKxUh9azFo4DP56SzAA6E1t53DY81RsmCge","slot":12759,"err":null,"cu":204731,"logLines":8}
+{"label":"x: X1 dust bid at the predicted floor's bin","signature":"2EHWJpstRTAkQG2QTpZoPyFxddvqEDyXsYxBtnHjR1sCoR6EVe455tJij8yQYQ49XqfgnWYJAzFqFcGdv2mzXyH2","slot":12760,"err":{"InstructionError":[1,{"Custom":6105}]},"cu":13257,"logLines":9}
+{"label":"x: init bin array","signature":"4Qr6qfhsJ9CJofh1PtrzFipqfA7Rb9n8h4iHCqv3osBGdyP7ziFwukwzi8Yy7cbj9iSUG9uescg8dDQMf9srid6V","slot":12761,"err":null,"cu":203080,"logLines":8}
+{"label":"x: X2 dust bid one bin below the launch's active bin","signature":"3VbfmC9zhwe2ZcpFztZGm5K6UrfLGe6BRYjSg9Dy7kXMg5FPr3TXoLj5Xxq7GPmvJ6jDMiDZ1wrKHdPQNioNpWyP","slot":12762,"err":null,"cu":26998,"logLines":15}
+{"label":"x: init bin array","signature":"PWm1Go8wYDHfAcWVHhs7icEGbT4VMQcVp3b5j5WEpC47d7PtYu9c25f6XviXBgKccFbwGKTU7gFt1o8yrHBkCq4","slot":12763,"err":null,"cu":198575,"logLines":8}
+{"label":"x: X2 go_to_a_bin(min bin) across the dust bid","signature":"45PnRzFtEGq2iV4jQfZhPB7ARj7Rd1QeRTd6T8v5CREix3UEcKaZHrugjRowrLM3GuFLzdLv7tZkWbGx45M8ZbHi","slot":12764,"err":{"InstructionError":[1,{"Custom":6056}]},"cu":5594,"logLines":7}
+{"label":"x: griefer base ATA","signature":"53NBNFopVUdRbDDVLoYMgJji7ovPL8sArKLP8147Qr3RjfxNwPjWgMK6FEQBHKPBvosuyfonX9BVMnVT5st53cYd","slot":12765,"err":null,"cu":21946,"logLines":21}
+{"label":"x: griefer buys base on the curve","signature":"R35BPBuGfFjPocjjpLDmvntg5MAcxV6aAr2qxYNQvBF7Pm6xybajABwt236fCAfNVV5CJgXYLXsXLPj6NeyCTZC","slot":12766,"err":null,"cu":48453,"logLines":30}
+{"label":"x: WSOL","signature":"34rmuPuQLDV82qcytijaW7KGsHdgN5tV4oMUyp5ito3wgGEZ4TKfZFPnUTx9itE51pPGVVxyJR7VF2QUfQExQpLt","slot":12830,"err":null,"cu":7534,"logLines":10}
+{"label":"x: bidder WSOL","signature":"ub4YHpMpZAfCUJg1yQoQ2qJu9oX5d6sQUWirkQFVS2sbvmdpQ9tSe7wvNj8WAVcPQB3Sa6peT2KyK1PMw6jnYFt","slot":12831,"err":null,"cu":7631,"logLines":10}
+{"label":"x: griefer WSOL","signature":"9rbRCcQwTKZK9WYrvw8dHCxSuPX88ZiUTdkp8NwKSN9HBMFqn4NzCR3PdZtgDPKUpi3V54qMUTmWZFLiKLnWHxY","slot":12834,"err":null,"cu":22607,"logLines":27}
+{"label":"x class: DBC create_config","signature":"u5BqHkfbwqrhCBLUv4Zg65RVtALcPLhn5Gue26RMXrne55MvuP6FHQvq8XRJvyVTVPqw64jp6SZJRfM63i1Arcj","slot":12835,"err":null,"cu":45145,"logLines":12}
+{"label":"x: create_class","signature":"5sDPaZyrJmUJgt7p41WJD8cwT11hud5P4Qrs68RGBhxW8WemYSExLJTzSM8qjvsSvT8DfdEi2RuVdY8BNrrRBaNu","slot":12836,"err":null,"cu":29538,"logLines":7}
+{"label":"x launch: create ALT","signature":"EupHPKxjBpoSo5DSqyNCvNcYKRpxitmPK7q4PQguTwkrZmFPNXGpsLjKkiQqgZ8Std2dBuZ2CzshXKooFB5jPBb","slot":12837,"err":null,"cu":1200,"logLines":8}
+{"label":"x launch: extend ALT","signature":"5zLEn1BzXcUH7rYhFx2rCQLvM3FKige9bucM2QepuBArVZjbpn8EqP9kmWd9fRzAEHExFkAWdtbMo6de7xBxLD5C","slot":12838,"err":null,"cu":900,"logLines":4}
+{"label":"x launch: extend ALT","signature":"4qmz77sfD4MzsRdhVKyjCmafGop5oFPxTT5fxnMmNVm8hedvw9JVZhPQydSG8fs9jgY6NFdVzikFTpHdn9hn7y9N","slot":12839,"err":null,"cu":900,"logLines":4}
+{"label":"x launch","signature":"4r8rXjXTB6W3hVkgzW3kZcPGSn2qHnHP6SFwbA8ti7T6Jaiguo9YCFPBPoYb7GJ5uCS9T4R9TYsg977LWMNvvPCv","slot":12873,"err":null,"cu":305830,"logLines":136}
+{"label":"x: init bin array","signature":"4vbUJPum8RXpZDa7jh39zazLG7yX1fYP283Dhj2jXj56hiuYZmTohc5j6gQKF8Yg77WoAf5Qgo8X9fNai5SBeDpn","slot":12876,"err":null,"cu":198731,"logLines":8}
+{"label":"x: X1 dust bid at the predicted floor's bin","signature":"5TJJWDM2cqyiTM4d9fxPHcwbBhATb9rLYHsJT9cZ4cqs9bSxZSHsbgooWYN5J4iyczTHNMyzW1uYkVU2GGiP8vKe","slot":12877,"err":{"InstructionError":[1,{"Custom":6105}]},"cu":13257,"logLines":9}
+{"label":"x: init bin array","signature":"5yKWf4f2DwynNabkuyF54hE1XF2WqZMqSCm61aMvFSrx2rVaNWG3eVSeg59BrwxWMZF137uqMVDxR7WGJ2S4DpcM","slot":12878,"err":null,"cu":198580,"logLines":8}
+{"label":"x: X2 dust bid one bin below the launch's active bin","signature":"2esfiNggpmzQmjCeZAvimAHY8ryjtPrbVTK8TVxgj3ZeABHQQTZmFKdQSRLTCGzS6ctuRRZSyk1NRXT2onWKLmV6","slot":12879,"err":null,"cu":26998,"logLines":15}
+{"label":"x: init bin array","signature":"3m64k68F1TDnaAZtw4167vo2GukmqdZL9dk1qQCpCtLdUqSvmjFNgrCYzsdS49YKEqkQV35JT1bKh1iHhyzmmaAP","slot":12880,"err":null,"cu":198575,"logLines":8}
+{"label":"x: X2 go_to_a_bin(min bin) across the dust bid","signature":"3yWm28JsFTFjBmDMVt8kaPoWzr1FrbFi4PTG2xULrMoLH1Xxy1rLBK4vgC45Badrcxt9j7tfHqv3Q4z1K9ediSjx","slot":12881,"err":{"InstructionError":[1,{"Custom":6056}]},"cu":5594,"logLines":7}
+{"label":"x: griefer base ATA","signature":"3tL1wNAUJqFks4XK9DRGshgoQfbiRux8AdBfiT58gAHMmGyoaYpsv6CNrJ3T2XPKPki2t8wU7kxaDyWv3GomGNRH","slot":12882,"err":null,"cu":23446,"logLines":21}
+{"label":"x: griefer buys base on the curve","signature":"3qMepaC3QthDnpSibEw5EPapXjFDFkMbFDDj7UDTfNhCtirfjtyhdpWUMqGxBrR6m7HXLMYonHKGK6FTHXj7X1Q5","slot":12883,"err":null,"cu":48453,"logLines":30}
+{"label":"x: griefer creates the bitmap extension","signature":"4BSJ2csKk41qF9fhmcfM54JuURpscUV6hUWdBpjizKFnhQzcKXvgCsp36sNN3UTvchLPTkZKNAeSrn5etYL5BbQX","slot":12884,"err":null,"cu":12500,"logLines":6}
+{"label":"x: griefer sells into the dust bid","signature":"3G9SR3o8zVFExEKbZMfwuQHrbb6Rc1Mi5q9jzgjvgygkgb85KEZZYv8TMPQQ93kpPxnaRLthDCP5MjgdSZ9araKX","slot":12886,"err":null,"cu":68500,"logLines":45}
+{"label":"x: X3 go_to_a_bin(min bin) after filling the dust bid","signature":"5fsjWWSnJRWwuf9nav1epcyospbwyeZpK8WsRAx2qYnFuLRw2d2d1732PjpD8qWvUUvXtVy8MBgRLPMNPt9yLcXK","slot":12887,"err":null,"cu":7185,"logLines":9}
