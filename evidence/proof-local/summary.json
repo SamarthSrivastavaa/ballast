@@ -1,0 +1,751 @@
+{
+  "ranAt": "2026-10-08T19:50:59.260Z",
+  "cluster": "localnet",
+  "proof": {
+    "launch": "CDDXAFktQaueyXiu4EbhJxfDLdfozo4hZXDkcV2ngTCA",
+    "class": "Proof (10 SOL)",
+    "baseMint": "4sa5ojNwLk326xvJPCdvBAH8Jpt8xqNVaMWDCwRzt3f7",
+    "dbcPool": "5os6vAr3XG4QxmwdANgLnYbGWbn7aDCDhssKkJ4N2g5Y",
+    "dammPool": "Fr85a9b4FksHtMhigJwWoxGrkjzfBD7gHbQD159s6m7d",
+    "dlmmPair": "5xvGRY7Q7eWj2j3BfhDBpWcas4X3XBVvzuXewsBnnYqb",
+    "predicted": {
+      "s": "47755047807748143",
+      "solPerToken": 6.7019182091506225e-9
+    },
+    "realisedAtOpen": {
+      "s": "48074410258902109",
+      "solPerToken": 6.7918562535396e-9,
+      "vsPredictedPct": 1.3419746643010155
+    },
+    "afterSellout": {
+      "s": "48242454899310492",
+      "solPerToken": 6.8394212599700835e-9,
+      "fNotLower": true
+    },
+    "graduation": {
+      "quoteReserve": "10000000001",
+      "migrationFee": "1500000000",
+      "partnerFees": "40404041",
+      "leftoverBurned": "134558940128192"
+    },
+    "atOpen": {
+      "vLamports": "1540404041",
+      "sTokens": 865441059.871808,
+      "l": "30702214157579652106863560058426"
+    },
+    "sellout": {
+      "transactions": 72,
+      "toBid": 37,
+      "toDamm": 35,
+      "baseSold": 537931934.590083,
+      "lowestExecutionOverF": 1.017369
+    },
+    "afterSelloutBeforeHarvest": {
+      "vPlusCommittedLamports": "45844528"
+    },
+    "end": {
+      "vaultLamports": "15062311",
+      "committedLamports": "45844528",
+      "supplyTokens": 645320100.899527,
+      "burnedTokens": 354679899.100473,
+      "filledTokens": 220120958.972281,
+      "fillQuoteSpentSol": 1.494559513,
+      "creatorForwardedSol": 0.057139942,
+      "treasurySol": 0.00167359,
+      "harvestedSol": 0.015062311
+    },
+    "verifier": {
+      "pass": true,
+      "checks": [
+        {
+          "check": "Launch",
+          "detail": "owner Ballast, seeds [\"launch\", 4sa5ojNwLk326xvJPCdvBAH8Jpt8xqNVaMWDCwRzt3f7]",
+          "status": "PASS"
+        },
+        {
+          "check": "Class",
+          "detail": "proof (10 SOL); DBC config B6KQiRAiwuUMHETVg8YvaSuBii39n4JGyF9H7gTBwFW8",
+          "status": "PASS"
+        },
+        {
+          "check": "Config hash",
+          "detail": "sha256 over the curve fields recomputed from the DBC config (§7 rule 3)",
+          "status": "PASS"
+        },
+        {
+          "check": "Prediction",
+          "detail": "6.7019e-9 SOL/token recorded; independent derivation from the config 6.7178e-9 (band 6.7178e-9…6.7178e-9); a lower bound",
+          "status": "PASS"
+        },
+        {
+          "check": "DBC pool",
+          "detail": "config, base mint, and pool creator = creator_auth (D-011)",
+          "status": "PASS"
+        },
+        {
+          "check": "Recorded before trade",
+          "detail": "registered in the pool's first transaction, slot 5114 (ACZiuHjU7KbR)",
+          "status": "PASS"
+        },
+        {
+          "check": "DAMM pool",
+          "detail": "canonical migrated pool Fr85a9b4FksHtMhigJwWoxGrkjzfBD7gHbQD159s6m7d; OnlyB, no compounding, full range",
+          "status": "PASS"
+        },
+        {
+          "check": "Permanent",
+          "detail": "L = 3.0702e31 (both positions permanent, unlocked = vested = 0; ≥ L at open)",
+          "status": "PASS"
+        },
+        {
+          "check": "PDA owners",
+          "detail": "partner NFT held by partner_auth, creator NFT by creator_auth",
+          "status": "PASS"
+        },
+        {
+          "check": "Vault",
+          "detail": "WSOL account of partner_auth, 0.015062 SOL on hand",
+          "status": "PASS"
+        },
+        {
+          "check": "Supply",
+          "detail": "S = 645320101 tokens outstanding; mint authority None, freeze authority None",
+          "status": "PASS"
+        },
+        {
+          "check": "Invariant",
+          "detail": "V/F + L(1/√F − 1/√P_max) ≥ S at the recomputed F, and F ≥ the last recorded F",
+          "status": "PASS"
+        },
+        {
+          "check": "Realised ≥ predicted",
+          "detail": "+1.34% vs the prediction",
+          "status": "PASS"
+        },
+        {
+          "check": "Bid",
+          "detail": "0.045845 SOL resting @ bin -11906 = 6.7901e-9 SOL/token, owned by partner_auth; 7 bin(s) under F's bin — stale until the next refresh_floor (§9)",
+          "status": "PASS"
+        },
+        {
+          "check": "History",
+          "detail": "11 floor updates from program events, never decreasing; the last equals s_last",
+          "status": "PASS"
+        },
+        {
+          "check": "Sell-out",
+          "detail": "lowest execution 1.0174·F over 72 transaction(s) (gate 8: ≥ 0.99·F)",
+          "status": "PASS"
+        }
+      ],
+      "historyPoints": 11
+    },
+    "expected": {
+      "lowestExecutionAtLeast099F": true,
+      "vaultNearZero": true,
+      "fNotLower": true,
+      "realisedAtLeastPredicted": true,
+      "verifierPass": true
+    },
+    "steps": [
+      {
+        "step": "create_class(Proof) — every §7 rule checked on-chain",
+        "signature": "23oWiv2EmUaAMTYyvf2kbr12yrpsXFYaHBYYyFXem7ZqGu9DsScHq4Hba3ARZUSBcKc8v53j6UjaEQpMngH3Aydz"
+      },
+      {
+        "step": "launch (D-011: DBC pool + dust buy + DLMM pair + transfer_pool_creator + register_launch)",
+        "signature": "ACZiuHjU7KbREMrDvJCb5casA2E64QcMC9F3o3aqhS6z4zmXc8pH2CYwWkWx6Bb51RPDLUJHaX28vWhVMkSFdFp"
+      },
+      {
+        "step": "buy 1",
+        "signature": "4geCx3PJcz7wTSbx7apWEWXYGNqXwvfbgJChpcBpetr1cdyQh3uQyyrKov7upEgXdxnG8SUuMM4pruTSsp6Kwjy6"
+      },
+      {
+        "step": "buy 2",
+        "signature": "3gVNXh1jYJZzGAAPuRxX6fQZqEhiLFs9USQMXUmi16UGC6ReLFY9N4dSuGTJAaGs4V7A6ut4wGvD84a5hNPbHoT5"
+      },
+      {
+        "step": "buy 3",
+        "signature": "2kaexvNebqXDju4Du7BKTYqgVudnWM4Dkt2hxLRuRn2hopMAoCC5e9AGdP8aYygQuVArHGW3vnaartsRfpRq6H6X"
+      },
+      {
+        "step": "settle_graduation",
+        "signature": "2L2E9RA9Aeg5iPjKUSboNgVNdatShLDjBRsGGjbmavCqgyB27LTCudUiDX33QK3Y8Kpmvqhg7CbTy3nC7CVNfPBd"
+      },
+      {
+        "step": "migration_damm_v2 (top-level keeper)",
+        "signature": "66HE9BHzaj76MVbhXVE7PrJpjWnBZxpNFKjtUnPRR4SSz5eDv9jpAb873vBZwVGKJoYvmWSBMCqK5QXvw2ZBpjJG"
+      },
+      {
+        "step": "burn_leftover",
+        "signature": "24juvTPhaiB3yEYeJbKwGdpDhGHTdRgU5J5kgy4fT1LBh9fLqPbGyWSGwyviBxrmoH8DnVYbUVuUCYVfZtcDPTtA"
+      },
+      {
+        "step": "open — bid at F's bin, active bin moved up (D-020)",
+        "signature": "26vL3MsqCnwvmKUMYmA4ApuugbjrnEytB3QVuJG4wPpYUeoocjtoCyKNhxr6i6gQV3inXVjuQW6npwMdDYvoJYFS"
+      },
+      {
+        "step": "keeper: refresh_floor during the sell-out",
+        "signature": "4KSRpVyV7V3QqSnHbyNgy2hQj1vfoCAKPkiDTk1T5dVrXYeJGn1DCoctHCPqgXejZBw6SwJnkLmFKidUyaBPpdk3"
+      },
+      {
+        "step": "keeper: refresh_floor during the sell-out",
+        "signature": "4MumWeZs4a1oWg9QXYCJB8Mb8qSTzG2UYh9QtvXEM9H26k8iPFDk928DpyDncT6Sd9DsxsYF9vYkY7NDvgcV4UDo"
+      },
+      {
+        "step": "keeper: refresh_floor during the sell-out",
+        "signature": "3D9eX62CHKVtxiyNpXP7MapAo5trzi3ktQ4pHyTZ3hdLU8G5xd51Cw94oZcuRXHaw1tQVW6HNs6RwMWf4KxcS9id"
+      },
+      {
+        "step": "keeper: refresh_floor during the sell-out",
+        "signature": "2RiV6T98uGuE1KoTsNpb7uV9eL9QrSermbFaV5Tjh8XWwkuy56Vgsg87oxPSsiukc29MDotUj833YbPyQRDQdRof"
+      },
+      {
+        "step": "keeper: refresh_floor during the sell-out",
+        "signature": "3EH7XV824WPHX994V8oMncQucnzdavPBvMHAXM1GEiNjxCwyiH5P9BNZhLAukVgktKkqjpfMu7VyVz2J36c3TdMU"
+      },
+      {
+        "step": "keeper: refresh_floor during the sell-out",
+        "signature": "3Xb84N41YxVEL5yCsknXgBVrVeGboqFdPTwwCgx1vEUKTimLL8gmTftJ72HJqxUbgVTwwoQzhBT8VcRimFhigJVa"
+      },
+      {
+        "step": "keeper: refresh_floor during the sell-out",
+        "signature": "3TUFvvFTGu8Qcum656SYSX9sgpfQwZdh27B7PogQW44dMBQd7jaPf58xfwz4xnRqi3ckXxRZtWSevNmu7aWj4Lq4"
+      },
+      {
+        "step": "keeper: refresh_floor during the sell-out",
+        "signature": "2Cn2Bp7W4YYXjwdBmFvaCP5cbM3pZwj6UQK8iMbxY96RRNmthyhnWevUiDhpbF1n8SmZc838KETGSmpSuvZ7fLX2"
+      },
+      {
+        "step": "refresh_floor after the sell-out",
+        "signature": "oqCMdxD7j69tFJWFPcvv6gDf5DBBtCM1pFkavBTzo4aCPCJN68mdwBGTxwu3NQwJHVP2f3rjFTFCEeoiEo2yk45"
+      },
+      {
+        "step": "harvest",
+        "signature": "5uf9VQVw8fLXTYQHYdmni8FHnMXREqPy67uCj9YR6v2PwjJA1MwcUL6vtPBq84xU2B3wiMW8ZU342dKag9FhnzFH",
+        "note": "succeeded"
+      },
+      {
+        "step": "pay_creator",
+        "signature": "4C4Tp3baunNQUs8Vj8RRWJKUdfPhGDfBf6LFBf2Q4sMgVxA73SC6U6UK59egd6Dwpb1n9vViABEYRDXMbQJhAKQ5",
+        "note": "succeeded"
+      },
+      {
+        "step": "gate 9: open",
+        "signature": "2YamBEzewJgBWwHRuNLCDJHUzaDtxJgYAomTj575YK5XvgccQkrUQHyQzthf6rK78e9iDbea22o4FD7Pf5vf7pup"
+      }
+    ],
+    "sells": [
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "3qsgB9eGYEAUT8xf6kcFM1LBAQ21Y9JEFrRwg5T2DnmZApHKMvrDXrxkC3AMFE6D82HmpahAtegUoSDr35j7fRK8"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "5NtmtHxdh86cPWQPGXs5iQRVE8T1qhwwV5RAkiLdhVu932TJ8d3UVbXx3Gkj6iz1UosuRtm4AkUe3ddAQh2Eo6UR"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "9ZUHCW5Du3MPAY9am2r7YH4x9uy1jkAcMgy6Vt32zREJqSCUC6SqsU2Dd295kc2eabPnF3tkFLbPDpVhmikAx3Z"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "4xLdZvsw13aQo2KyaTZyx4FdqfextGRGuU5sshZpMwQzxSqJipV8nVUqaoZLRzcdmJZfvFho8CPVnugtKkvSHFEm"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "4xBDjerGgNLCtsne1KkZeZwNqLJSwFH2NXhboB5fPhM5Gfag3o21nCDPdAuhdRSNZoh7mhdHW1Pnzsay3QyJWCYQ"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "43U6t1KZAUpcVn24VZYHBfStP5WMXHCKsN1rWPDJGgeKAwJH3dPX5vLACpTf2uZ3XXKaxSQAq3nGLNkszn1c53Yg"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "4wnkgBr4rW9zHXoiYp2UxjsjpYGyuxkEG1XksvvDgkRp1GHYwEf8n6xnq2dRxzvEbQey4mcyyA5SRP6Cq7mHjRt"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "5sQYfXkFSc9y8qkQ7UMW5f94YS5Pv6y8oKHGwaR2nhh9DsJsQUYXQC4j9GybU4RcFiLDScXkR1fxbPQ9RhrSBCpU"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "PsTsSEDfoQCcrCEZwLU5kx3G8MvGSusHVfTdXJbzCZdj8kapoNuEAVqXxEBGXz8bH6Q63NJDscAe9drCLq8gSpK"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "88MCtHud293GUYSzAALaGWLQ8YDJJK6cPPWzdgeX7hycAnA7ZMXzgcd7qmX38CP8PmrrcZEbH33mmrqcyibeYxs"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "jbRUmwCVVvGHZSB4gPR3kpDsLuWc3J4o4cDoT2cUrUM6bTDiivLdCb65nKhLyMRRyHtCaZ8519LFqcCKyMyJguM"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "4VyDR5iv4DFUBv7qgQeYmpdor9YYS6L85PFByE3DQqzuM8A2ADf7Zg1Vy1VTyNQxZYK37hUx8nJeHLLxJokxEMXM"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "5MP4kYXpwMWESzrmXwd56jRFBLB6mw3K8ZmHAWWmE3H1av7LHhGznfkbBpyde5pTsSsiU5R6HGkLkfohquBAPThJ"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "4HAbPgNqND76c2wwVw36rMiQacqQ9WrYATek31fBnw5kUXNyydQw6cqBgh5B1WqmNr9QHcWH376MDqXKdc7i17Pb"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "8HFt9bhxnfJG42Kvok2Z5rrVj1JwECPcUFJfcqiLXs3WXFtEAwHwr9kzCB5grcAiJFWQRzxYbktnWo1FLhKjdVo"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "5BsbPiAeECAru5j2JctmMbnTGQvz42PE3KxdQKxCJx8SmqPgQCgSWDiah5py6vJNiM56iksLdNyoWauEXgTHJuvN"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "2DMPSL7CApyEY3qNcSjekmbevWEddQxjXNfWzVUuaH9cSes6HNYHy79X5iwAVPx2XyLjtd4C2mQjxTqKnn23P6Qn"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "5aKjkBjSJbeCmhuG3Y7HGoJ9zvsVgvwzZqHCXo4GjiSz3CpysgX3tMQ43VGydBdQkLvAXNwJjB7DNhxQMXk8GxhS"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "61hQfe5coY63LoyATdAdsC3AMyyEoPFmoVYe1iYThYYVs8qYeFs7L2ytKttLvp6DZB7MBifmNKJECHB6jR2qMzri"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "2g2furqghJGqtfZoLkLCHc9R2iPZKeJXzxfU72dDkhZPw7numiMLw7QwLyMWCo563r1Zs8RqLw695JYwYH7Czm9m"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "5n2cJdH1dv7zCQhmtqDYYMhXcfhK64Cdj8Vc3eb2yBVwsFzFU9PoHe72wmSA7iuChaipwCC14fX7SjjMQUhTAxJr"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "4wAr9R7RvmCSb1gpc5WEsHugRyN5BcvVTHBvGeZxd7Gpo3Y6XjefCEcSV6UpYgY1UJkZMyfxZrGPhJ1Pkq5YYA5G"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "9566518900966",
+        "signature": "pJEK4niEqdabBdNfGipFtPrDscEvAwEMqdQzgFPAzaPRP6QvLmXJiGRbCPiYXaBnKa8Q9daCrHjBbspgiVPD1Vw"
+      },
+      {
+        "wallet": 1,
+        "venue": "DAMM v2",
+        "base": "19133037801925",
+        "signature": "5DTD3FdUqZFFCHQAzy9w4S26QqeW6eUAWg55otNCAx6E79Apn1Bi3dNQQp7Shyr3g7y8GrN6bWRpp9GZdpJHvxf4"
+      },
+      {
+        "wallet": 2,
+        "venue": "DAMM v2",
+        "base": "6843310373726",
+        "signature": "5984c45Pe23G2LgYzhqNqcCgBMytppbdCqEehb3qhW6udkFiWXeUT3AqqciAMTpmn4iFGegwAJUxnDtrrFaRmuaw"
+      },
+      {
+        "wallet": 2,
+        "venue": "DAMM v2",
+        "base": "6843310373726",
+        "signature": "QCY2RuXTUKVwT3gKJg7TbH4jHsFZ7soFhs6WJVKoczQsobGBXJz8wLejNCQUo1i9Rjq5eRvAnAyNQgTJZJeC8J8"
+      },
+      {
+        "wallet": 2,
+        "venue": "DAMM v2",
+        "base": "6843310373726",
+        "signature": "3AK6kvp6pMiVNovEJuR5RFek2BRah4jZkwV9ECiJEeX5rzqYHvufX7ynV9WAfi7KWKZ6c9WeZeJsPj8V9rdso38a"
+      },
+      {
+        "wallet": 2,
+        "venue": "DAMM v2",
+        "base": "6843310373726",
+        "signature": "HWuUsWarCP9xhTmLBwNLCiiD7DDGiMAAkVhssDtEbCLU6QKXcGhv9H5nq3s5pYXmQzGXygGXtqSWhywByBuxgGH"
+      },
+      {
+        "wallet": 2,
+        "venue": "DAMM v2",
+        "base": "6843310373726",
+        "signature": "ZoPBXU6abAJGmk5nJXEJySXLhUN8YE21V9fXUCKB7JiyPU3JrW1a44JGp6qmGSsDgAHddXNHVrZFYWFExYCVCWs"
+      },
+      {
+        "wallet": 2,
+        "venue": "DAMM v2",
+        "base": "6843310373726",
+        "signature": "4wUh793fB9XsWveaDBXu3NSeLPrzJvmB7SVmqqsTinBp52EoXcWMeXnYA4k4qfWAfetmQm1qxLYyxei5cf1Qib7C"
+      },
+      {
+        "wallet": 2,
+        "venue": "DAMM v2",
+        "base": "6843310373726",
+        "signature": "3h6bGAC5uvDTGmZr5imaaXCPBPYpzQ7Nxa9okpnrdzAJxkdJuScbQX2FAvXseKweQhN1L98M1W4bwUt1fLLStB7b"
+      },
+      {
+        "wallet": 2,
+        "venue": "DAMM v2",
+        "base": "6843310373726",
+        "signature": "3p2irTutzjTw5jKKS8uFT1wNytwx99DWQpvEHoXu96MXyw4qyN5a5oF5K4Hna1e1jJMtzmUn3ZWWXRCF3mNbuhqp"
+      },
+      {
+        "wallet": 2,
+        "venue": "DAMM v2",
+        "base": "6843310373726",
+        "signature": "2tHV16WN1BENB8a1183tsvf5X58kn4CV5LNVY1bR2YtRSEXi56AU2j1JQ29ZTDZUyntNox3v5P9C6k721j39enS6"
+      },
+      {
+        "wallet": 2,
+        "venue": "DAMM v2",
+        "base": "6843310373726",
+        "signature": "3mHt4Y6k9pqvBkmwtUrv8M4KnZYjQeebFBC3mJgsu3h9DD3rkdXAx76v3EeBBaJ6wDSLeWE5zfxsYBbUMCmcaKJL"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "3NZEFw3b6a4qCNfZEEv6S2L1BJniUTQDECHbxM2DHfnRAkqKhC1poBxaigFbw5RNmS6yGg8N2SQrhhUmTz9DRz6f"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "3ykZGYc282xGgdeEpX5NjKUtJp9Y8wHbbngBWusiHfJXcsCiJyzpFcv6jqT9kPaWX1U2EaUcuPmDxKfCcf1DYMRi"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "3nU9YJKpi95j7XZcezy7Xcq2CgnsABm8czTVpGi7WAzSwxnbczEUA3Pmn4bqqnua9yXATjoGt87hFmo52BGmQbt2"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "5UkJY16L2eZjgWKUfTaiqRmGZdRiFcydGjzvauFY9g5z8K6mNf1RaE5MtkxedXLRyj55gtRepTvNnAa4p2nkkx9v"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "MJz9hoHVUXghUKGkZADqFKk3DeTVCPy3UbQjhEbHWdA3t8wPuWyG2PbxBvZ9JT28KW8VyPBKTNwCbKbCGFPC3Ce"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "2qgnkRbch62Rs4iGn3rEpCrN3ziuQr4buz9K4bPo5d6SHcQBfkiEcsM3p5Uzhri13EWFXmz2cAvCeRnCouCqQg1L"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "fcoc2KpLfYaVr5khrwt42NQE7DNt9LYxcZjuKNGfqXJTynkDNv5tqW8rtMCXJCqg5bnM7zMXAYRhCvEDV6bAPUc"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "2sqk2RxKDazmNuA8mFrTgjzsvp2wqw6x1pGFqVnSKZHXcDi2zh367Zum7517bYxzqAvbgSDh8zDaptHskRjGfa4Q"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "5vVMSZSQ8soedNe6groT76Zajr6e9nHMRwhHfJzyh1WgK5b31YbgzmoyX2DqZwKmngkz8L56YcFEbwYYS9ZCkrrb"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "4FnbkB1BuNvRkpYE6TVKNYo2WoL3y9LYrkFjM5UZqbs2NdRJSqyuGXNhQYgpUVqNKpKXTm7N8gQ9BZ9MA8zsdGKr"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "21ZZkd2SUsmXJamM88U5NDErTZKczupHVBHNhZ6QspSvaapxhRwxXxSFxNxcWMS8KtQtaVFKGdr1feBQub8pnZHN"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "2JU7FaGCpZW8nMfjfGxxf1QoTTyMfC7HkW3nwA47B2KoNLxavTjgmD8xQrzu2XRD5xqqjdMd8DEHC5vxF44ZF3Xf"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "6843310373726",
+        "signature": "4vZpkdadX8oThsddeWNJidGmz5Xf4BTpxv19BfencJj9VqF6rYPvsuUTLLg3bYvwVdobA1mTYbtXaR3TqA4xRhYJ"
+      },
+      {
+        "wallet": 2,
+        "venue": "DLMM bid",
+        "base": "13686620747427",
+        "signature": "osAer65u2miMDzdSv69tFhyM6xn39ZYeJiaW4MoGCCtJX2gZXe853FszMMKTNCuMFth6mPfXTBCtwZn6HpGYQPm"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "25z4XodjDdqg3RnC1F6ZW1Jz1XMJ5kAsp8BXFjFzUnBd5y8zz2RQSFqEtpE5URQq7u78yXWDxx9R6r8sFj7NiBjj"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "3jUuMUDHx3TK4LG9352zjjPdpLdkfPAGQ8k75EjgwJmNtVhWYxniXL5FznwEFTQc5vayXQJ8iKf9y9BD811bNF69"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "pWqH9JxWM6NsjWDeiW2f8Kp5oQYHiUGN1XBVxjDHkgiDdGpLnnzytMi387Xn8wFEDQicNvkPkPgmkZ6NFnt8kCV"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "56AMcBaLVs9jkwmc2FpDQJRrS5TaC4rZPd9X46QTqMt7L3RfnrhRULbu1DNqLLSfGhRh3awVQE7g29AxiA1efVvU"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "JUz3aLfPrkingXgPn4w6TLF4rtoeGMRwra4F2Wz4eGwweUS89qNzoFUEACziEKCphpcs7XqftuUbpdvdYCb6abm"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "3joi42ycfUeZovmfu2otHvAsdk5MiUtKaFSrqwQXCXWUCAxbHTvX58n9EMbs373D6BxNqrJPmYE9PRXhMPoyRbyH"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "49poKkB1eKVoLucedrTbz8W8UxFvR2fRcq88ifTb6Lx1VSFK23tK3SNVXhksWsZzJRHCUxqabtHVhH9VeU6NK8RU"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "MmrGUvezdKiJiDvQdiQxLwFvW4HDkYh5P2cpeBgS3sLTF9a9o7dSMzj9cEYSgAJ4uaSsRWYVgTST7cy5cRv7ccf"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "21ApgJaVUau3uspvyLdpZrHXRLJrLyPG8ucimkVykcvvN4m9KrsTWpBQv2tedPqvLKseaEvEzmeAFF9sBqp75YL5"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "38GRgD2WdC1kZxTE6QocoDMYNQMBz2ASAsiFWX1hM1jcGvUSv9UW7bottP1umXYxgRJj1EbhmFLZYZmrP4TP48J"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "4yQzUihUx3f3gn3rbbv4oaapnh5uuHzGVrsxf4932WApTFAyA94AcRokXPwUYsSV3h2YnHc99X7vqjoGjh7bm9YT"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "2xHtqGi65AZeHcdCfiojD8o27b6C8tmJyf7RfBbJg86fS42MWdwzjYohyvKibN8eAW1Tma9cCF52DFhBT5xmS1cS"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "2GWsAiCkg9cP1DeAp7yfuDN9AwbrMghBnv4oEqbzGMZoYPMi4iFb9XLBN6oBxRiZFuJRYxvJ1hfGZnP6ftNGmaMd"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "2hhDAMD71DQkRRSqyZga41fZtyntEUYJS2BeYr1Sw5zdRPjboa2BaHcCrUfNm1GuC2VToxbNNjqKn13XDwAtRrA6"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "3q5kYY2Rz5RZEqe4wGjiYKWjh3j4RrbTT7tyL3QuTzWQa1twX2CbrqfyUp7xaQbzhEaipqkikeQzQWsqCfB55vLg"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "2NrUSRnhrbVabRPuusDBmfzSrRR7YhQfNtHADXQPnZRTwx3GaRPpiEDYZBHEp1xkL7GQvj3cMwwBxB5ziCaBYcpT"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "2cidCz1P6sfn8XGXhy8cY5cLfnYFDTXsKxE5jA4K7G99goGVuj5eQKZMkDPKhUDebEzjrvVXxFjKkRHZGtTG34uQ"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "3bKZgp1QApWdbAqNu6VxFhuiJmLvGj58QTUVuNjuhPiECWPnu8nVo5JZgmAkcEzPykNNEEJ8j6ERSP15YTKJgewk"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "4v3r9j6j6nMFfSV7XYPpXd1vx7sCNBxsWkjK66vwFni4xHsaXEpwWHJ92yk3ZfviUsPhx92A63fEZyT16sjASJTA"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "5kRDmkzZzNe5qfwFcV6g2EiVausjBqBdgpN7w4z7DTcTa9AQLDVK15Pg5DgeeoA7QFLakX78gy2LUNmCbcnU1xWi"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "vYTky663UWvFb37EfcUh2w3VmwzuPWs43q7nK1SU53cRTE2c5LEhEZQSftxQJt6fwQsAtSoRkTvFQNoJUqNhGcf"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "4VJNC9ayiHpteJGQSg711LJ59P3wNQzCYjiBBFJrqcu6cQ3bpxdRsugpuBsCWSy2rZBadyEUzqXVz1iLgpd82ZdD"
+      },
+      {
+        "wallet": 3,
+        "venue": "DLMM bid",
+        "base": "5107448108913",
+        "signature": "22s34L9HCTEtezXkX9i9ZHwU8mntacW1mVGAcAgvwJYnY62eWMd6zbvv5sYh3JVrhvTUFSZaMM5padrVZXfCt72F"
+      },
+      {
+        "wallet": 3,
+        "venue": "DAMM v2",
+        "base": "10214896217816",
+        "signature": "naRjoq8rdb6mau6pmvc64sbD5gchWCeBNx8pM5PRiH6Zbr78c1gdCb45sf5Ma3bMH665ddv685bkg4Doy4SMmhu"
+      }
+    ]
+  },
+  "gate9": {
+    "launch": "8L5kdE3PY4QEj6JH7oVvybdz4nEDSdNJq5rtYg1JVSip",
+    "transactions": 200,
+    "byOperation": {
+      "redeem": {
+        "ok": 14,
+        "refused": {
+          "PayoutBelowMinimum": 3,
+          "VaultExhausted": 8
+        }
+      },
+      "damm_buy": {
+        "ok": 24,
+        "refused": {}
+      },
+      "pay_creator": {
+        "ok": 27,
+        "refused": {}
+      },
+      "harvest": {
+        "ok": 30,
+        "refused": {}
+      },
+      "bid_fill": {
+        "ok": 12,
+        "refused": {
+          "no bid liquidity for the chunk (SDK quote)": 15
+        }
+      },
+      "refresh": {
+        "ok": 23,
+        "refused": {
+          "RefreshRateLimited": 7
+        }
+      },
+      "damm_sell": {
+        "ok": 23,
+        "refused": {}
+      },
+      "deposit": {
+        "ok": 7,
+        "refused": {
+          "{\"InstructionError\":[1,{\"Custom\":1}]}": 22
+        }
+      }
+    },
+    "floorDecreasedReverts": 0,
+    "verifierPass": true,
+    "historyPoints": 75,
+    "pass": true
+  },
+  "gate10": [
+    {
+      "case": "keeper off for 60 slots after fills: redeem settles the stale bid and pays exactly",
+      "pass": true,
+      "detail": "3 fills; succeeded 2GgGG939K2HUcF6XfFsHdqPKfX5kHs6rWUQTZafz9a1NFpV7VrGQGJrJU2JHN9gHsqSuXyf3M8WCxvB3PwtPsVxS"
+    },
+    {
+      "case": "refresh with a stale bin hint is refused",
+      "pass": true,
+      "detail": "BinHintNotAtFloor"
+    },
+    {
+      "case": "dust redeem → PayoutBelowMinimum; min_out above payout → SlippageExceeded; s unchanged",
+      "pass": true,
+      "detail": "PayoutBelowMinimum, SlippageExceeded"
+    },
+    {
+      "case": "substituted accounts (fake position, pool, pair, order, vault, staging, beneficiary)",
+      "pass": true,
+      "detail": "one negative test per substitution: evidence/program/part1/*.json, part2/results.json, part2/audit.json"
+    },
+    {
+      "case": "verifier PASS after the injected failures",
+      "pass": true,
+      "detail": "78 floor updates, never decreasing"
+    }
+  ]
+}

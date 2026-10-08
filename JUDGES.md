@@ -32,7 +32,7 @@ local validator — never mocks (D-001).
 | Two audits (spec + security), every finding fixed or decided; 0 critical / 0 high | `DECISIONS.md` § Part 2 audit findings, § Part 2 re-audit; `evidence/program/part2/audit.json` |
 | The vault has exactly two exits — the DLMM bid it owns and a redeemer — structurally | `docs/security.md`, `evidence/program/part2/audit.json` ("harvest never transfers out of the vault") |
 | `ballast verify <launch> --rpc <url>` recomputes everything from raw accounts | `crates/verifier-core`, `verifier/`, `docs/verifier.md` |
-| `pnpm proof:local` — the full §22 Proof launch, sell-out included, on mainnet binaries | `scripts/proof/local.ts` → `evidence/proof-local/summary.md` |
+| `pnpm proof:local` — the full §22 Proof launch on mainnet binaries: realised F +1.34% over the prediction; 72-sell full sell-out, lowest execution 1.0174·F; F never lower; gates 8–10 PASS | `evidence/proof-local/summary.md`, `docs/demo.md` |
 
 ## 3. Originality and taste
 

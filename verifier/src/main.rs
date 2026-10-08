@@ -208,7 +208,7 @@ fn main() -> ExitCode {
             report.launch, report.class
         );
         println!(
-            "Prediction:        {:.4e} SOL/token  (recorded before trade 1)",
+            "Prediction:        {:.4e} SOL/token  (recorded in the pool-creation transaction, before any third-party trade)",
             f_sol(n.predicted_s)
         );
         if n.s_open > 0 {

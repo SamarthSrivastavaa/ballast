@@ -6,7 +6,7 @@
  *   pnpm proof:local
  *
  * Deterministic and rerunnable: every run creates its own class and launches on the running local
- * ledger. Sequence (§22): register (prediction on-chain before trade 1) → three team wallets buy to
+ * ledger. Sequence (§22): register (prediction on-chain in the pool-creation transaction, before any third-party trade) → three team wallets buy to
  * the threshold → keeper settles, migrates, burns the leftover → `open` → the team sells every token,
  * each chunk to the better of the DLMM bid and DAMM v2 (Jupiter does not exist locally; the choice
  * is the same best-price rule) with keeper refreshes in between → `refresh_floor` → harvest,
@@ -26,7 +26,7 @@ import { virtualPool } from "../../tests/integration/p0/src/flow";
 import { ata, ensureAtaIx, funded, tokenBalanceOrZero, tokenBalanceStrict, wrapIxs } from "../../tests/integration/p0/src/wallets";
 import { accounts, ballast, pdas } from "../../tests/integration/program/src/client";
 import {
-  activeOf, altFor, arrays, bidSellQuote, cleanedLaunch, creatorDammAccounts, dammBuy, dammSell, dammSellQuote,
+  activeOf, altFor, arrays, bidSellQuote, cleanedLaunch, creatorDammAccounts, dammBuy, dammSell, dammSellQuote, expectedAfterSettle,
   depositIx, events, expectedPayout, field, floorBinNow, harvestIx, keeperRefresh, liveInputs, Opened, openAtFloor,
   payCreatorIx, redeemIx, refreshIx, sellIntoBid, waitSlots,
 } from "../../tests/integration/program/src/fixture";
@@ -298,19 +298,40 @@ async function gate10(o: Opened, alt: Awaited<ReturnType<typeof altFor>>, wallet
     const fb = (await floorBinNow(o)).bin;
     return send(label, [await redeemIx(o, order, who.publicKey, amount, minOut, arrays(o, [r.bidBinId, fb, fb + 1, await activeOf(o)]))], [who, order], { feePayer: who, cu: 1_000_000, alts: [alt], expectFail: true });
   };
-  // Keeper off: fills land and nobody refreshes; a redemption settles the stale bid itself.
-  for (const x of wallets.slice(0, 3)) {
-    const b = (await tokenBalanceOrZero(ata(o.base, x.publicKey))) / 6n;
-    if (b > 0n) await sellIntoBid(o, x, b);
+  // Start from a vault worth settling, resting at F's bin: gate 9's random trading may have drained
+  // it, so a permissionless deposit (0.2 SOL) tops it up first, then the keeper re-places the bid.
+  const depositor = wallets[0];
+  await send("g10: depositor WSOL", wrapIxs(depositor, 200_000_000n), [depositor]);
+  await send("g10: deposit 0.2 SOL", [await depositIx(o, depositor.publicKey, 200_000_000n)], [depositor], { feePayer: depositor, cu: 400_000 });
+  await waitSlots(12);
+  await keeperRefresh(o, alt);
+  // Keeper off: fills land and nobody refreshes; a redemption settles the stale bid itself. Each fill
+  // takes at most a tenth of the resting quote, so the stale bid still holds most of the vault.
+  const rested = await accounts.launch.fetch(o.l.launch);
+  const sRest = BigInt(rested.sLast.toString());
+  const tenth = ((BigInt(rested.bidQuoteCommitted.toString()) / 10n) << 128n) / (sRest * sRest);
+  let fills = 0;
+  for (const x of wallets.slice(1, 4)) {
+    let b = (await tokenBalanceOrZero(ata(o.base, x.publicKey))) / 6n;
+    if (b > tenth) b = tenth;
+    // The DLMM SDK will not quote a sell larger than the bid can absorb: shrink to what it takes.
+    while (b > 0n && (await bidSellQuote(o, b)) === 0n) b /= 2n;
+    if (b > 0n && !(await sellIntoBid(o, x, b)).err) fills++;
   }
   await waitSlots(60);
   {
     const holder = wallets[4];
-    const amount = (await tokenBalanceStrict(ata(o.base, holder.publicKey))) / 5n;
+    // At most half of what the vault will hold once the stale bid is settled (vault + unfilled quote +
+    // fees, from the order's own state; reported V still counts the quote the fills spent), so the
+    // case tests settlement rather than VaultExhausted. payout ≈ amount·s²/2^128 at the settled s.
+    const settled = await expectedAfterSettle(o);
+    const fitsVault = ((settled.v / 2n) << 128n) / (settled.s * settled.s);
+    const held = (await tokenBalanceStrict(ata(o.base, holder.publicKey))) / 5n;
+    const amount = held < fitsVault ? held : fitsVault;
     const t = await redeemFrom("g10: redeem with the keeper off", holder, amount, 0n);
     const ev = events(t).find((e) => e.name.toLowerCase() === "redeemed");
     const exact = ev !== undefined && BigInt(String(field(ev.data, "payout"))) === expectedPayout(amount, BigInt(String(field(ev.data, "s_before"))));
-    out.push({ case: "keeper off for 60 slots after fills: redeem settles the stale bid and pays exactly", pass: !t.err && exact, detail: `${got(t)} ${t.signature}` });
+    out.push({ case: "keeper off for 60 slots after fills: redeem settles the stale bid and pays exactly", pass: fills > 0 && !t.err && exact, detail: `${fills} fills; ${got(t)} ${t.signature}` });
   }
   // A refresh naming a stale bin is refused.
   {
@@ -369,7 +390,7 @@ function markdown(all: Record<string, unknown>): string {
     "",
     "| Claim | Value | Result |",
     "|---|---|---|",
-    `| Prediction recorded before trade 1 | ${p.predicted.solPerToken.toExponential(4)} SOL/token | ${yes(true)} |`,
+    `| Prediction recorded in the pool-creation transaction, before any third-party trade (D-011) | ${p.predicted.solPerToken.toExponential(4)} SOL/token | ${yes(true)} |`,
     `| Realised F at open ≥ predicted | ${p.realisedAtOpen.solPerToken.toExponential(4)} (${p.realisedAtOpen.vsPredictedPct.toFixed(2)}%) | ${yes(p.expected.realisedAtLeastPredicted)} |`,
     `| Full sell-out: lowest execution ≥ 0.99·F (gate 8) | ${p.sellout.lowestExecutionOverF.toFixed(4)}·F over ${p.sellout.transactions} sells (${p.sellout.toBid} to the bid, ${p.sellout.toDamm} to DAMM v2) | ${yes(p.expected.lowestExecutionAtLeast099F)} |`,
     `| Vault ≈ 0 after the sell-out (≤ 0.05 SOL left in vault + bid) | ${Number(p.afterSelloutBeforeHarvest.vPlusCommittedLamports) / 1e9} SOL; harvest then added ${p.end.harvestedSol} SOL of LP fees | ${yes(p.expected.vaultNearZero)} |`,

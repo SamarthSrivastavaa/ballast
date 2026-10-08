@@ -50,7 +50,7 @@ evidence/
 
 ## The three things a judge must be able to do from this directory alone
 
-- Confirm the prediction was recorded **before trade 1** (`LaunchRegistered` signature + slot, vs the DBC
+- Confirm the prediction was recorded **in the pool-creation transaction, before any third-party trade** (D-011) (`LaunchRegistered` signature + slot, vs the DBC
   pool's first swap).
 - Confirm **realised F ≥ predicted F** on mainnet (`verifier/` output + `mainnet-proof/`).
 - Confirm the full sell-out executed at **≥ 0.99·F** (`sellout/` per-fill prices).
