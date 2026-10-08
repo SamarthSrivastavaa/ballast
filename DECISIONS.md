@@ -1126,7 +1126,7 @@ assumed. At the current `.so` (551,488 B):
 | Rents (DBC/DLMM/DAMM/Ballast accounts, bin arrays), keeper's `partner_auth` order-rent float, fees | ≤ 600,000,000 | ≤ 0.6 | mostly kept |
 
 - **Deploy: 2.806 SOL kept, 5.61 SOL at the peak.**
-- **9 Oct deploy + proof: minimum 13.5 SOL, recommended 16.5 SOL** (one upgrade buffer).
+- **9 Oct deploy + proof: minimum 14.2 SOL, recommended 17 SOL** (one upgrade buffer). *Refined 8 Oct from the script as run (`pnpm proof:devnet`): team buys 3.5 + 3.5 + 3.2 SOL (wallets funded 3.6 / 3.6 / 3.35), admin 0.05 for the class rent, keeper's `partner_auth` order-rent float 0.2, rents ≈ 0.6; the script refuses to start below 14.2 SOL.* **Fund the devnet payer `F1s4kPpt5LHNV98YhoWcSDUhqiPsZaw6W41MRYjGrUT1`** (`.keys/devnet/payer.json`, gitignored).
 - Net spent if nothing is reclaimed ≈ 7.8 SOL; ≈ 5.0 after `solana program close`.
 
 ---

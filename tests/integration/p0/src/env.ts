@@ -28,7 +28,16 @@ import {
 
 export const REPO = resolve(__dirname, "../../../..");
 export const EVIDENCE = resolve(REPO, "evidence/p0");
-export const LOCAL_RPC = process.env.LOCALNET_RPC_URL ?? "http://127.0.0.1:8899";
+/**
+ * `BALLAST_CLUSTER=devnet`: the §18 devnet proof (D-007: devnet is the public, secondary evidence;
+ * D-001: the mainnet-binary local validator governs). An explicit opt-in — without it every signing
+ * path stays loopback-only. Devnet uses its own payer key, pins devnet's genesis, never touches
+ * mainnet, and funds wallets by transfer from the payer (devnet airdrops are rate-limited).
+ */
+export const CLUSTER: "localnet" | "devnet" = process.env.BALLAST_CLUSTER === "devnet" ? "devnet" : "localnet";
+const DEVNET_GENESIS = "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG";
+export const LOCAL_RPC =
+  process.env.LOCALNET_RPC_URL ?? (CLUSTER === "devnet" ? "https://api.devnet.solana.com" : "http://127.0.0.1:8899");
 export const MAINNET_RPC = process.env.MAINNET_RPC_URL ?? "https://api.mainnet-beta.solana.com";
 const MAINNET_GENESIS = "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d";
 
@@ -38,10 +47,16 @@ export const mainnet = new Connection(MAINNET_RPC, "confirmed");
 export function loadKeypair(path: string): Keypair {
   return Keypair.fromSecretKey(Uint8Array.from(JSON.parse(readFileSync(resolve(REPO, path), "utf8"))));
 }
-export const payer = loadKeypair(".keys/devnet/localnet.json");
+export const PAYER_KEY = CLUSTER === "devnet" ? ".keys/devnet/payer.json" : ".keys/devnet/localnet.json";
+export const payer = loadKeypair(PAYER_KEY);
 
 /** This harness signs and sends: it may only ever talk to a loopback, non-mainnet validator (D-007). */
 export async function assertLocal(): Promise<void> {
+  if (CLUSTER === "devnet") {
+    const g = await conn.getGenesisHash();
+    if (g !== DEVNET_GENESIS) throw new Error(`refusing: BALLAST_CLUSTER=devnet but genesis is ${g}`);
+    return;
+  }
   const host = new URL(LOCAL_RPC).hostname;
   if (!["127.0.0.1", "localhost", "[::1]"].includes(host)) throw new Error(`refusing non-loopback RPC ${host}`);
   const g = await conn.getGenesisHash();
@@ -109,6 +124,8 @@ async function getMany(c: Connection, keys: PublicKey[], slice: boolean) {
 }
 
 export async function discover(label: string, keys: PublicKey[]): Promise<void> {
+  // The clone check names mainnet accounts to pin for the local validator; on devnet they already exist.
+  if (CLUSTER === "devnet") return;
   const uniq = [...new Map(keys.map((k) => [k.toBase58(), k])).values()];
   const local = await getMany(conn, uniq, true);
   const missing = uniq.filter((_, i) => local[i] === null);
@@ -187,13 +204,19 @@ export async function send(
       .compileToV0Message(opts.alts ?? []);
     const tx = new VersionedTransaction(msg);
     const needed = new Set(msg.staticAccountKeys.slice(0, msg.header.numRequiredSignatures).map((k) => k.toBase58()));
+    // A transaction missing a signature is dropped at verification and only "expires" — name it now.
+    const have = new Set(uniqSigners.map((s) => s.publicKey.toBase58()));
+    const missing = [...needed].filter((k) => !have.has(k));
+    if (missing.length) throw new Error(`${label}: missing signer(s) ${missing.join(", ")}`);
     tx.sign(uniqSigners.filter((s) => needed.has(s.publicKey.toBase58())));
     signature = await conn.sendRawTransaction(tx.serialize(), { skipPreflight: true });
     try {
       await conn.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, "confirmed");
       break;
     } catch (e) {
-      if (attempt >= 2 || !String((e as Error).message).includes("block height exceeded")) throw e;
+      if (attempt >= 2 || !String((e as Error).message).includes("block height exceeded")) {
+        throw new Error(`${label}: ${(e as Error).message}`);
+      }
     }
   }
   // A confirmed signature can lag in getTransaction on a busy validator; look again before failing.
@@ -238,6 +261,13 @@ export async function sendSdkTx(label: string, tx: Transaction, signers: Keypair
 }
 
 export async function airdrop(to: PublicKey, sol: number): Promise<void> {
+  if (CLUSTER === "devnet") {
+    // Devnet airdrops are rate-limited: wallets are funded from the payer instead.
+    await send(`fund ${to.toBase58().slice(0, 8)} ${sol} SOL`, [
+      SystemProgram.transfer({ fromPubkey: payer.publicKey, toPubkey: to, lamports: Math.round(sol * LAMPORTS_PER_SOL) }),
+    ]);
+    return;
+  }
   const sig = await conn.requestAirdrop(to, Math.round(sol * LAMPORTS_PER_SOL));
   await conn.confirmTransaction(sig, "confirmed");
 }

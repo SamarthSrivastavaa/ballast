@@ -40,9 +40,12 @@ export function resetKeys(prefix: string): void {
   writeFileSync(KEYS, JSON.stringify(keys));
 }
 
+/** A named wallet holding at least `sol` SOL: tops up only the shortfall, so reruns on a ledger whose
+ * wallets were partly spent still start funded (devnet transfers only what is missing). */
 export async function funded(name: string, sol: number): Promise<Keypair> {
   const w = wallet(name);
-  if ((await conn.getBalance(w.publicKey)) < sol * 1e9 * 0.5) await airdrop(w.publicKey, sol);
+  const shortfall = Math.round(sol * 1e9) - (await conn.getBalance(w.publicKey));
+  if (shortfall > 0) await airdrop(w.publicKey, shortfall / 1e9);
   return w;
 }
 

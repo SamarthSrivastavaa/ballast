@@ -20,10 +20,10 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
 import { getMint } from "@solana/spl-token";
-import { assertLocal, conn, Landed, payer, REPO, send } from "../../tests/integration/p0/src/env";
+import { assertLocal, CLUSTER, conn, Landed, LOCAL_RPC, payer, PAYER_KEY, REPO, send } from "../../tests/integration/p0/src/env";
 import { WSOL } from "../../compiler/src/canon";
 import { virtualPool } from "../../tests/integration/p0/src/flow";
-import { ata, ensureAtaIx, funded, tokenBalanceOrZero, tokenBalanceStrict, wallet, wrapIxs } from "../../tests/integration/p0/src/wallets";
+import { ata, ensureAtaIx, funded, tokenBalanceOrZero, tokenBalanceStrict, wrapIxs } from "../../tests/integration/p0/src/wallets";
 import { accounts, ballast, pdas } from "../../tests/integration/program/src/client";
 import {
   activeOf, altFor, arrays, bidSellQuote, cleanedLaunch, creatorDammAccounts, dammBuy, dammSell, dammSellQuote,
@@ -32,8 +32,15 @@ import {
 } from "../../tests/integration/program/src/fixture";
 import { dbcConfig, got, payCreator } from "../../tests/integration/program/src/part3";
 
-const OUT = resolve(REPO, "evidence/proof-local");
-const LOCAL = "http://127.0.0.1:8899";
+// `BALLAST_CLUSTER=devnet pnpm proof:devnet` runs the same §22 sequence on devnet (§18, D-007: public,
+// secondary evidence). Gates 9 and 10 (≈ 100 SOL of random-trade wallets) run locally only.
+const DEVNET = CLUSTER === "devnet";
+const OUT = resolve(REPO, DEVNET ? "evidence/proof-devnet" : "evidence/proof-local");
+const LOCAL = LOCAL_RPC;
+/** Wallet funding and the three team buys: devnet funds only what the curve needs (DECISIONS § Devnet). */
+const AMOUNTS = DEVNET
+  ? { creator: 0.05, team: [3.6, 3.6, 3.35], buys: [3_500_000_000n, 3_500_000_000n, 3_200_000_000n] }
+  : { creator: 5, team: [12, 12, 12], buys: [3_500_000_000n, 3_500_000_000n, 8_000_000_000n] };
 const SOL = (x: bigint) => Number(x) / 1e9;
 const TOK = (x: bigint) => Number(x) / 1e6;
 const F = (s: bigint) => (Number(s) / 2 ** 64) ** 2 * 1e-3; // SOL per token (display)
@@ -46,10 +53,19 @@ async function main(): Promise<void> {
   const record = (step: string, signature: string, note?: string) => steps.push({ step, signature, note });
   mkdirSync(OUT, { recursive: true });
 
+  // ---- devnet preflight: refuse to start a run the payer cannot finish (DECISIONS § Devnet budget) ----
+  if (DEVNET) {
+    const need = 14_200_000_000; // deploy 2.81 kept + 2.80 buffer, then team buys + rents (≈ 11.3)
+    const have = await conn.getBalance(payer.publicKey);
+    console.log(`devnet payer ${payer.publicKey.toBase58()}: ${have / 1e9} SOL (need ≥ ${need / 1e9})`);
+    if (have < need) throw new Error(`devnet payer underfunded: ${have / 1e9} SOL < ${need / 1e9} SOL`);
+  }
+
   // ---- program, global, class --------------------------------------------------------------------
-  execFileSync("solana", ["program", "deploy", "-u", "l", "-k", resolve(REPO, ".keys/devnet/localnet.json"),
+  execFileSync("solana", ["program", "deploy", "-u", LOCAL, "-k", resolve(REPO, PAYER_KEY),
     "--program-id", resolve(REPO, "target/deploy/ballast-keypair.json"), resolve(REPO, "target/deploy/ballast.so")], { stdio: ["ignore", "inherit", "inherit"] });
-  const admin = wallet("program.admin");
+  // The admin signs and pays for create_class; on a fresh ledger (local or devnet) it starts with nothing.
+  const admin = await funded("program.admin", DEVNET ? 0.05 : 1);
   if (!(await conn.getAccountInfo(pdas.global()))) {
     await send("payer WSOL ATA (treasury)", [ensureAtaIx(WSOL, payer.publicKey)]);
     const ix = await ballast.methods.initializeGlobal(admin.publicKey)
@@ -70,11 +86,12 @@ async function main(): Promise<void> {
   ]);
 
   // ---- §22: register → three team wallets buy → settle → migrate → burn ----------------------------
-  const creator = await funded("proof.creator", 5);
-  const team = await Promise.all([1, 2, 3].map((i) => funded(`proof.team${i}`, 12)));
+  const creator = await funded("proof.creator", AMOUNTS.creator);
+  const team = [];
+  for (const [i, sol] of AMOUNTS.team.entries()) team.push(await funded(`proof.team${i + 1}`, sol));
   await send("beneficiary WSOL ATA", [ensureAtaIx(WSOL, creator.publicKey)]);
   const P = await cleanedLaunch("proof launch", classConfig, creator, team[0], {
-    buys: [[team[0], 3_500_000_000n], [team[1], 3_500_000_000n], [team[2], 12_000_000_000n]],
+    buys: [[team[0], AMOUNTS.buys[0]], [team[1], AMOUNTS.buys[1]], [team[2], AMOUNTS.buys[2]]],
     record,
   });
   const rec0 = await accounts.launch.fetch(P.l.launch);
@@ -122,6 +139,8 @@ async function main(): Promise<void> {
   const fin = await keeperRefresh(P, alt);
   if (fin.err) throw new Error(`final refresh: ${got(fin)}`);
   record("refresh_floor after the sell-out", fin.signature);
+  // §22 "vault ≈ 0" is what the sell-out left behind: read now, before harvest adds new LP-fee income.
+  const afterSellout = await liveInputs(P);
   // Fees accrued by the sell-out: partner LP fees → vault/treasury; creator income → beneficiary.
   const hv = await send("harvest", [await harvestIx(P)], [], { cu: 600_000, alts: [alt], expectFail: true });
   record("harvest", hv.signature, got(hv));
@@ -147,6 +166,7 @@ async function main(): Promise<void> {
       transactions: sells.length, toBid: sells.filter((s) => s.venue === "DLMM bid").length, toDamm: sells.filter((s) => s.venue === "DAMM v2").length,
       baseSold: TOK(sells.reduce((a, s) => a + s.base, 0n)), lowestExecutionOverF: minExec,
     },
+    afterSelloutBeforeHarvest: { vPlusCommittedLamports: afterSellout.v.toString() },
     end: {
       vaultLamports: inEnd.vault.toString(), committedLamports: recEnd.bidQuoteCommitted.toString(), supplyTokens: TOK(mint.supply),
       burnedTokens: TOK(BigInt(recEnd.burned.toString())), filledTokens: TOK(BigInt(recEnd.filledTokens.toString())),
@@ -155,21 +175,22 @@ async function main(): Promise<void> {
     },
     verifier: { pass: verify.pass, checks: verify.checks, historyPoints: verify.history?.length },
     expected: {
-      lowestExecutionAtLeast099F: minExec >= 0.99, vaultNearZero: inEnd.vault + BigInt(recEnd.bidQuoteCommitted.toString()) < 50_000_000n,
+      // Declared tolerance: ≤ 0.05 SOL (≈ 3% of the 1.54 SOL vault) left after the sell-out.
+      lowestExecutionAtLeast099F: minExec >= 0.99, vaultNearZero: afterSellout.v < 50_000_000n,
       fNotLower: sEnd >= sOpen, realisedAtLeastPredicted: sOpen >= predicted, verifierPass: verify.pass === true,
     },
     steps, sells,
   };
 
   // ---- §18 gate 9: 200 random transactions from five wallets, on a second launch ---------------------
-  const g9 = await gate9(classConfig, creator, record);
+  const g9 = DEVNET ? null : await gate9(classConfig, creator, record);
   // ---- §18 gate 10: failure injection ---------------------------------------------------------------
-  const g10 = await gate10(g9.o, g9.alt, g9.wallets);
+  const g10 = g9 ? await gate10(g9.o, g9.alt, g9.wallets) : [];
 
-  const all = { ranAt: new Date().toISOString(), proof, gate9: g9.summary, gate10: g10 };
+  const all = { ranAt: new Date().toISOString(), cluster: CLUSTER, proof, gate9: g9?.summary ?? null, gate10: g10 };
   writeFileSync(resolve(OUT, "summary.json"), JSON.stringify(all, (_k, v) => (typeof v === "bigint" ? v.toString() : v), 2) + "\n");
   writeFileSync(resolve(OUT, "summary.md"), markdown(all));
-  const ok = Object.values(proof.expected).every(Boolean) && g9.summary.pass && g10.every((c) => c.pass);
+  const ok = Object.values(proof.expected).every(Boolean) && (g9 ? g9.summary.pass : true) && g10.every((c) => c.pass);
   console.log(markdown(all));
   process.exit(ok ? 0 : 1);
 }
@@ -186,21 +207,31 @@ async function gate9(classConfig: PublicKey, creator: Keypair, record: (s: strin
   const opened = await openAtFloor(o);
   if (opened.t.err) throw new Error(`gate 9 open: ${got(opened.t)}`);
   record("gate 9: open", opened.t.signature);
-  for (const w of wallets) await send("g9 WSOL", [...wrapIxs(w, 2_000_000_000n), ensureAtaIx(o.base, w.publicKey)], [w], { feePayer: w });
+  // The payer funds the ATAs (wrapIxs, ensureAtaIx), so it signs as fee payer alongside the wallet.
+  for (const w of wallets) await send("g9 WSOL", [...wrapIxs(w, 2_000_000_000n), ensureAtaIx(o.base, w.publicKey)], [w]);
   const counts: Record<string, { ok: number; refused: Record<string, number> }> = {};
+  let sent = 0;
   const note = (kind: string, t: Landed) => {
+    sent++;
     counts[kind] ??= { ok: 0, refused: {} };
     if (t.err) counts[kind].refused[got(t)] = (counts[kind].refused[got(t)] ?? 0) + 1;
     else counts[kind].ok++;
   };
-  let seed = 20261008;
+  // mulberry32: exact 32-bit integer steps (Math.imul), deterministic from the seed. The earlier
+  // LCG took `seed % n` from its weakest low bits and overflowed 2^53 in floating point, so it
+  // repeated after a few steps (198 of 200 operations were DAMM buys).
+  let seed = 20261008 >>> 0;
   const rnd = (n: number) => {
-    seed = (seed * 1103515245 + 12345) % 2 ** 31;
-    return seed % n;
+    seed = (seed + 0x6d2b79f5) >>> 0;
+    let t = seed;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return Math.floor((((t ^ (t >>> 14)) >>> 0) / 4294967296) * n);
   };
   let floorDecreased = 0;
   const kinds = ["damm_buy", "damm_sell", "bid_fill", "redeem", "refresh", "harvest", "deposit", "pay_creator"];
-  for (let i = 0; i < 200; i++) {
+  // §18 gate 9: 200 transactions actually sent (an attempt the SDK refuses to quote is not one).
+  for (let i = 0; sent < 200 && i < 600; i++) {
     const w = wallets[rnd(5)];
     const kind = kinds[rnd(kinds.length)];
     await send("g9 WSOL ATA", [ensureAtaIx(WSOL, w.publicKey)]);
@@ -215,6 +246,13 @@ async function gate9(classConfig: PublicKey, creator: Keypair, record: (s: strin
         t = await dammSell(o, w, part);
         break;
       case "bid_fill":
+        // The DLMM SDK will not quote a sell the bid cannot fill in full (an exhausted, capped or
+        // suspended bid): a market refusal, not the program's, counted without sending.
+        if ((await bidSellQuote(o, part)) === 0n) {
+          counts.bid_fill ??= { ok: 0, refused: {} };
+          counts.bid_fill.refused["no bid liquidity for the chunk (SDK quote)"] = (counts.bid_fill.refused["no bid liquidity for the chunk (SDK quote)"] ?? 0) + 1;
+          continue;
+        }
         t = await sellIntoBid(o, w, part);
         break;
       case "redeem": {
@@ -241,8 +279,8 @@ async function gate9(classConfig: PublicKey, creator: Keypair, record: (s: strin
   }
   const v = verifyJson(o.l.launch, []);
   const summary = {
-    launch: o.l.launch.toBase58(), transactions: 200, byOperation: counts, floorDecreasedReverts: floorDecreased,
-    verifierPass: v.pass, historyPoints: v.history?.length, pass: floorDecreased === 0 && v.pass === true,
+    launch: o.l.launch.toBase58(), transactions: sent, byOperation: counts, floorDecreasedReverts: floorDecreased,
+    verifierPass: v.pass, historyPoints: v.history?.length, pass: sent === 200 && floorDecreased === 0 && v.pass === true,
   };
   return { o, alt: opened.alt, wallets, summary };
 }
@@ -288,7 +326,9 @@ async function gate10(o: Opened, alt: Awaited<ReturnType<typeof altFor>>, wallet
     const w = wallets[4];
     const s0 = (await accounts.launch.fetch(o.l.launch)).sLast.toString();
     const t1 = await redeemFrom("g10: dust redeem", w, 1_000n, 0n);
-    const t2 = await redeemFrom("g10: min_out above payout", w, 10_000_000_000n, 10n ** 15n);
+    // 10M tokens pay ≈ 0.068 SOL at the Proof F — above §10's 0.001 SOL minimum, so the min_out check
+    // is what refuses it (10,000 tokens paid ≈ 0.00007 SOL and hit PayoutBelowMinimum first).
+    const t2 = await redeemFrom("g10: min_out above payout", w, 10_000_000_000_000n, 10n ** 15n);
     const s1 = (await accounts.launch.fetch(o.l.launch)).sLast.toString();
     out.push({
       case: "dust redeem → PayoutBelowMinimum; min_out above payout → SlippageExceeded; s unchanged",
@@ -332,11 +372,11 @@ function markdown(all: Record<string, unknown>): string {
     `| Prediction recorded before trade 1 | ${p.predicted.solPerToken.toExponential(4)} SOL/token | ${yes(true)} |`,
     `| Realised F at open ≥ predicted | ${p.realisedAtOpen.solPerToken.toExponential(4)} (${p.realisedAtOpen.vsPredictedPct.toFixed(2)}%) | ${yes(p.expected.realisedAtLeastPredicted)} |`,
     `| Full sell-out: lowest execution ≥ 0.99·F (gate 8) | ${p.sellout.lowestExecutionOverF.toFixed(4)}·F over ${p.sellout.transactions} sells (${p.sellout.toBid} to the bid, ${p.sellout.toDamm} to DAMM v2) | ${yes(p.expected.lowestExecutionAtLeast099F)} |`,
-    `| Vault ≈ 0 after the sell-out | ${(Number(p.end.vaultLamports) + Number(p.end.committedLamports)) / 1e9} SOL | ${yes(p.expected.vaultNearZero)} |`,
+    `| Vault ≈ 0 after the sell-out (≤ 0.05 SOL left in vault + bid) | ${Number(p.afterSelloutBeforeHarvest.vPlusCommittedLamports) / 1e9} SOL; harvest then added ${p.end.harvestedSol} SOL of LP fees | ${yes(p.expected.vaultNearZero)} |`,
     `| F not lower after the sell-out | ${p.afterSellout.solPerToken.toExponential(4)} SOL/token | ${yes(p.expected.fNotLower)} |`,
     `| Burned | ${p.end.burnedTokens.toLocaleString()} tokens (fills ${p.end.filledTokens.toLocaleString()}) | — |`,
     `| \`ballast verify --sellout\` | ${p.verifier.historyPoints} floor updates | ${yes(p.expected.verifierPass)} |`,
-    `| Gate 9: 200 random transactions, 5 wallets | ${g9.floorDecreasedReverts} monotone-check reverts | ${yes(g9.pass)} |`,
+    ...(g9 ? [`| Gate 9: 200 random transactions, 5 wallets | ${g9.floorDecreasedReverts} monotone-check reverts | ${yes(g9.pass)} |`] : ["| Gates 9–10 | run on the mainnet-binary local validator only (`evidence/proof-local/`) | — |"]),
     ...g10.map((c) => `| Gate 10: ${c.case} | ${c.detail.slice(0, 80)} | ${yes(c.pass)} |`),
     "",
     "## Transactions",

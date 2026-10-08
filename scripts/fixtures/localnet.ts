@@ -49,7 +49,10 @@ execFileSync(
 
 const manifest = loadManifest();
 const pins = loadPins();
-const args = ["--reset", "--ledger", resolve(REPO, ".localnet/ledger")];
+// Transaction history: the default (10,000 shreds) keeps only ~200 slots, after which
+// getSignaturesForAddress forgets a launch and `ballast verify` can no longer rebuild its history or
+// check that the prediction preceded any third-party trade. Retention cannot change what is loaded.
+const args = ["--reset", "--ledger", resolve(REPO, ".localnet/ledger"), "--limit-ledger-size", "50000000"];
 for (const p of manifest.programs) {
   const pin = pins.programs[p.name];
   args.push("--upgradeable-program", pin.id, resolve(REPO, pin.soFile), pin.upgradeAuthority);

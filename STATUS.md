@@ -29,7 +29,7 @@ Nothing new is built except these items.
 | Day | Work | Done when |
 |---|---|---|
 | **8 Oct** | Part 2 audit fixes closed (D-021, D-022, approved findings); then `pnpm proof:local` (full lifecycle on mainnet binaries) + the lifecycle fuzzer | Fresh ledger green; `/audit` 0 critical / 0 high; `evidence/proof-local/` summary table |
-| **9 Oct** | Verifier CLI (`ballast verify`) + devnet deploy and devnet proof | Verifier PASS locally and on devnet; `evidence/proof-devnet/`. **Devnet SOL: 13.5 minimum, 16.5 recommended** (DECISIONS § Devnet budget, corrected 8 Oct) |
+| **9 Oct** | Verifier CLI (`ballast verify`) + devnet deploy and devnet proof | Verifier PASS locally and on devnet; `evidence/proof-devnet/`. **Devnet SOL: 14.2 minimum, 17 recommended**, to `F1s4kPpt5LHNV98YhoWcSDUhqiPsZaw6W41MRYjGrUT1`; run `pnpm proof:devnet` (DECISIONS § Devnet budget) |
 | **10 Oct** | Floor Scanner CLI + README + `JUDGES.md` (+ a minimal token page only if time allows) | Wording gate green; every claim linked to evidence |
 | **11 Oct** | Video + **submit** | Submitted |
 | **12 Oct** | Buffer | — |

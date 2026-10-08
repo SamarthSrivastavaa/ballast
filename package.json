@@ -23,7 +23,8 @@
     "test:fuzz": "cargo run -p ballast-fuzz --release -- --steps 1000000 --runs 200 --seed 20261008 --out evidence/fuzz/model-1m.json",
     "test:wasm": "cargo build -p floor-wasm --target wasm32-unknown-unknown --release && tsx sdk/typescript/test/differential.ts",
     "verifier:build": "cargo build --release -p ballast-verifier",
-    "proof:local": "cargo build --release -p ballast-verifier && tsx scripts/proof/local.ts"
+    "proof:local": "cargo build --release -p ballast-verifier && tsx scripts/proof/local.ts",
+    "proof:devnet": "cargo build --release -p ballast-verifier && BALLAST_CLUSTER=devnet tsx scripts/proof/local.ts"
   },
   "devDependencies": {
     "@coral-xyz/anchor": "0.31.1",
