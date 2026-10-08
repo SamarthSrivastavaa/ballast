@@ -60,6 +60,19 @@ The verifier fetches the launch, the DBC config, the DAMM v2 pool and positions,
 order and the mint, recomputes the prediction and F with the same floor crate the program uses, and
 exits non-zero on any mismatch. See [`docs/verifier.md`](docs/verifier.md).
 
+### Token page
+
+```bash
+anchor build && cargo build -p floor-wasm --target wasm32-unknown-unknown --release
+pnpm -F app build && pnpm -F app exec vite preview      # open /?launch=<launch>&rpc=<url>
+```
+
+One page per launch (§21): market price, F and price ÷ F, the maximum loss if you buy now, how much
+of the supply the locked pool and the vault bid each absorb at F, the bid wall, redemption with an
+exact quote, and the proof transactions. F is shown only when the program's `floor()` view and the
+floor crate (compiled to WebAssembly) agree on the same live accounts; `pnpm -F app test` checks the
+page's numbers against `ballast verify`.
+
 ### Reproduce the whole proof on Meteora's mainnet binaries
 
 ```bash

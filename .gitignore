@@ -59,3 +59,7 @@ yarn-error.log*
 
 # P0 harness throwaway local-validator keys (never evidence)
 tests/integration/p0/.state/
+
+# app/: copied in at build by app/scripts/assets.mjs (target/idl, floor-wasm)
+app/src/ballast.json
+app/public/floor_wasm.wasm
