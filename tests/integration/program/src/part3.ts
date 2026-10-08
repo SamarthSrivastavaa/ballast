@@ -1,5 +1,6 @@
 /**
- * `settle_graduation` and `burn_leftover` (§6) on the mainnet-binary local validator.
+ * `settle_graduation`, `burn_leftover` (§6) and, before `open`, `pay_creator` (D-022) on the
+ * mainnet-binary local validator.
  *
  *   Launch A, normal order: register → buy to the threshold → settle → migrate → burn.
  *   Launch B, keeper lag (§5): register → buy → migrate → settle → a third party front-runs DBC's
@@ -11,7 +12,7 @@
  * error that check owns. Positive cases reconcile every lamport and base unit (§10, §18 gate 4).
  */
 import BN from "bn.js";
-import { Keypair, PublicKey, SystemProgram, TransactionInstruction } from "@solana/web3.js";
+import { AddressLookupTableAccount, Keypair, PublicKey, SystemProgram, TransactionInstruction } from "@solana/web3.js";
 import { createInitializeAccount3Instruction, getMint, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { deriveDbcTokenVaultAddress } from "@meteora-ag/dynamic-bonding-curve-sdk";
 import { conn, Landed, payer, send } from "../../p0/src/env";
@@ -24,8 +25,8 @@ import { launch, Launch } from "./launch";
 import { Suite } from "./runner";
 
 /** DBC's constant pool authority and its `__event_authority` PDA (vendored IDL, Q4). */
-const DBC_POOL_AUTHORITY = new PublicKey("FhVo3mqL8PW5pH5U2CN4XE33DokiyZnUwuGpH2hmHLuM");
-const DBC_EVENT_AUTHORITY = PublicKey.findProgramAddressSync([Buffer.from("__event_authority")], dbc.programId)[0];
+export const DBC_POOL_AUTHORITY = new PublicKey("FhVo3mqL8PW5pH5U2CN4XE33DokiyZnUwuGpH2hmHLuM");
+export const DBC_EVENT_AUTHORITY = PublicKey.findProgramAddressSync([Buffer.from("__event_authority")], dbc.programId)[0];
 const U64_MAX = new BN("18446744073709551615");
 const THRESHOLD = 10_000_000_000n; // Proof class (§7)
 const MIGRATION_FEE = (THRESHOLD * 15n) / 100n; // §7 migration_fee_percentage 15, creator share 0
@@ -51,10 +52,36 @@ function burnAccounts(a: Accts): Accts {
   return rest;
 }
 
-/** The keeper's idempotent ATA creations (staging base for partner_auth, beneficiary WSOL), then the call. */
-export async function settle(label: string, a: Accts, beneficiary: PublicKey, pre: TransactionInstruction[] = []): Promise<Landed> {
+/**
+ * The keeper's idempotent staging ATA creation, then the call. D-022: settlement no longer touches
+ * the beneficiary, so the keeper creates nothing of the creator's (`a` still names the D-020
+ * accounts, which the current IDL ignores, for the reproduction run).
+ */
+export async function settle(label: string, a: Accts, pre: TransactionInstruction[] = []): Promise<Landed> {
   const ix = await ballast.methods.settleGraduation().accountsPartial(a).instruction();
-  return send(label, [...pre, ensureAtaIx(a.baseMint, a.partnerAuth), ensureAtaIx(WSOL, beneficiary), ix], [], { cu: 400_000, expectFail: true });
+  return send(label, [...pre, ensureAtaIx(a.baseMint, a.partnerAuth), ix], [], { cu: 400_000, expectFail: true });
+}
+
+/**
+ * D-022 `pay_creator`. `damm` holds the DAMM v2 accounts required once `Open` (null before);
+ * `over` substitutes single accounts for the negative cases.
+ */
+export async function payCreatorIx(classConfig: PublicKey, l: Launch, beneficiary: PublicKey, damm: Record<string, PublicKey> | null, over: Record<string, PublicKey | null> = {}): Promise<TransactionInstruction> {
+  const acc = graduationAccounts(classConfig, l, beneficiary);
+  const none = {
+    dammPool: null, partnerPosition: null, creatorPosition: null, creatorNftAccount: null, tokenAVault: null, tokenBVault: null,
+    dammPoolAuthority: null, dammEventAuthority: null, dammProgram: null,
+  };
+  return ballast.methods.payCreator().accountsPartial({
+    launch: l.launch, class: acc.class, creatorAuth: l.creatorAuth, partnerAuth: acc.partnerAuth, stagingBase: acc.stagingBase,
+    beneficiaryQuote: acc.beneficiaryQuote, vault: l.vault, baseMint: acc.baseMint, quoteMint: WSOL, virtualPool: l.pool,
+    baseVault: acc.baseVault, quoteVault: acc.quoteVault, dbcPoolAuthority: DBC_POOL_AUTHORITY, dbcEventAuthority: DBC_EVENT_AUTHORITY,
+    dbcProgram: dbc.programId, tokenProgram: TOKEN_PROGRAM_ID, ...(damm ?? none), ...over,
+  } as never).instruction();
+}
+
+export async function payCreator(label: string, ix: TransactionInstruction, opts: { alts?: AddressLookupTableAccount[] } = {}): Promise<Landed> {
+  return send(label, [ix], [], { cu: 400_000, expectFail: true, alts: opts.alts });
 }
 
 export async function burn(label: string, a: Accts, pre: TransactionInstruction[] = []): Promise<Landed> {
@@ -101,7 +128,8 @@ export async function part3(): Promise<number> {
   const stranger = await funded("program.stranger", 10);
   const buyerA = await funded("program.buyerA", 30);
   const buyerB = await funded("program.buyerB", 30);
-  await send("ensure payer WSOL ATA", [ensureAtaIx(WSOL, payer.publicKey), ensureAtaIx(WSOL, stranger.publicKey)]);
+  // The beneficiary's WSOL ATA exists up front (the creator's own business since D-022).
+  await send("ensure payer/stranger/beneficiary WSOL ATAs", [ensureAtaIx(WSOL, payer.publicKey), ensureAtaIx(WSOL, stranger.publicKey), ensureAtaIx(WSOL, creator.publicKey)]);
 
   const classConfig = await dbcConfig("graduation suite class");
   await send("graduation suite: create_class", [
@@ -121,7 +149,7 @@ export async function part3(): Promise<number> {
 
   // ---- settle_graduation: before completion ----------------------------------------------------
   await suite.case("settle_graduation: curve not complete", async () => {
-    const r = await settle("settle A before completion", accA, creator.publicKey);
+    const r = await settle("settle A before completion", accA);
     return { status: got(r) === "CurveNotComplete" ? "pass" : "fail", expected: "CurveNotComplete", got: got(r), detail: { signature: r.signature } };
   });
 
@@ -133,21 +161,17 @@ export async function part3(): Promise<number> {
   // ---- settle_graduation: one substitution per case --------------------------------------------
   const strangerBase = ata(baseA, stranger.publicKey);
   const subs: { name: string; expected: string; over: Accts; pre?: TransactionInstruction[] }[] = [
-    { name: "beneficiary WSOL account owned by someone else", expected: "BeneficiaryAccountInvalid", over: { beneficiaryQuote: ata(WSOL, stranger.publicKey) } },
-    { name: "beneficiary's own WSOL account that is not its ATA (D-016)", expected: "BeneficiaryAccountInvalid", over: { beneficiaryQuote: beneficiaryNonAta } },
-    { name: "beneficiary account = this launch's vault", expected: "BeneficiaryAccountInvalid", over: { beneficiaryQuote: A.vault } },
     { name: "staging base account is not partner_auth's ATA", expected: "StagingNotPartnerAta", over: { stagingBase: strangerBase }, pre: [ensureAtaIx(baseA, stranger.publicKey)] },
     { name: "quote vault of another pool", expected: "PoolVaultMismatch", over: { quoteVault: accB.quoteVault } },
     { name: "base vault of another pool", expected: "PoolVaultMismatch", over: { baseVault: accB.baseVault } },
     { name: "substituted vault (another launch's)", expected: "ConstraintSeeds", over: { vault: B.vault } },
     { name: "virtual pool of another launch", expected: "ConstraintAddress", over: { virtualPool: B.pool } },
-    { name: "creator_auth of another launch", expected: "ConstraintSeeds", over: { creatorAuth: B.creatorAuth } },
     { name: "DBC config that is not the class's", expected: "ConstraintAddress", over: { dbcConfig: await dbcConfig("foreign config") } },
     { name: "fake DBC program", expected: "ConstraintAddress", over: { dbcProgram: SystemProgram.programId } },
   ];
   for (const c of subs) {
     await suite.case(`settle_graduation: ${c.name}`, async () => {
-      const r = await settle(`settle A: ${c.name}`, { ...accA, ...c.over }, creator.publicKey, c.pre);
+      const r = await settle(`settle A: ${c.name}`, { ...accA, ...c.over }, c.pre);
       return { status: got(r) === c.expected ? "pass" : "fail", expected: c.expected, got: got(r), detail: { signature: r.signature } };
     });
   }
@@ -158,30 +182,27 @@ export async function part3(): Promise<number> {
   });
 
   // ---- settle_graduation: positive (A, before migration) ---------------------------------------
-  await suite.case("settle_graduation: launch A → Funded; 15% + partner fees → vault, creator fees → beneficiary", async () => {
+  await suite.case("settle_graduation: launch A → Funded; 15% + partner fees → vault; creator fees stay in DBC (D-022)", async () => {
     const before = await ps(A.pool);
     const v0 = await tokenBalanceStrict(A.vault);
     const ben = ata(WSOL, creator.publicKey);
-    await send("beneficiary WSOL ATA", [ensureAtaIx(WSOL, creator.publicKey)]);
     const b0 = await tokenBalanceStrict(ben);
-    const r = await settle("settle A", accA, creator.publicKey);
+    const r = await settle("settle A", accA);
     if (r.err) return { status: "fail", expected: "ok", got: got(r), detail: { signature: r.signature, logs: r.logs.slice(-15) } };
     const after = await ps(A.pool);
     const v1 = await tokenBalanceStrict(A.vault);
     const b1 = await tokenBalanceStrict(ben);
     const rec = await accounts.launch.fetch(A.launch);
     const partnerFees = BigInt(before.partnerQuoteFee);
-    const creatorFees = BigInt(before.creatorQuoteFee);
     const checks = {
       state: rec.state === 2,
       vaultDelta: v1 - v0 === MIGRATION_FEE + partnerFees,
       migrationFeeRecorded: BigInt(rec.migrationFee.toString()) === MIGRATION_FEE,
       partnerFeesRecorded: BigInt(rec.partnerFees.toString()) === partnerFees,
       partnerFeesNonZero: partnerFees > 0n,
-      beneficiaryDelta: b1 - b0 === creatorFees,
-      creatorForwarded: BigInt(rec.creatorForwarded.toString()) === creatorFees,
       dbcPartnerFeeZero: after.partnerQuoteFee === "0",
-      dbcCreatorFeeZero: after.creatorQuoteFee === "0",
+      beneficiaryUntouched: b1 === b0 && rec.creatorForwarded.toString() === "0",
+      creatorFeesStillClaimable: after.creatorQuoteFee === before.creatorQuoteFee && BigInt(after.creatorQuoteFee) > 0n,
       noBaseFees: before.partnerBaseFee === "0" && before.creatorBaseFee === "0",
       stagingEmpty: (await tokenBalanceStrict(accA.stagingBase)) === 0n,
     };
@@ -190,15 +211,62 @@ export async function part3(): Promise<number> {
       status: ok ? "pass" : "fail", expected: "every check", got: ok ? "ok" : JSON.stringify(checks),
       detail: {
         signature: r.signature, txCu: r.cu, settleCu: ballastCu(r), migrationFee: (v1 - v0 - partnerFees).toString(),
-        partnerFees: partnerFees.toString(), creatorFees: creatorFees.toString(), quoteReserve: before.quoteReserve,
+        partnerFees: partnerFees.toString(), creatorFeesLeftInDbc: after.creatorQuoteFee, quoteReserve: before.quoteReserve,
         migrationFeeWithdrawStatus: after.migrationFeeWithdrawStatus, checks,
       },
     };
   });
 
   await suite.case("settle_graduation: second call refused (double settlement)", async () => {
-    const r = await settle("settle A again", accA, creator.publicKey);
+    const r = await settle("settle A again", accA);
     return { status: got(r) === "LaunchWrongState" ? "pass" : "fail", expected: "LaunchWrongState", got: got(r), detail: { signature: r.signature } };
+  });
+
+  // ---- pay_creator before open (D-022): creator income only, one substitution per case ---------
+  const payA = (over: Record<string, PublicKey | null> = {}) => payCreatorIx(classConfig, A, creator.publicKey, null, over);
+  const paySubs: { name: string; expected: string; over: Record<string, PublicKey | null> }[] = [
+    { name: "beneficiary WSOL account owned by someone else", expected: "BeneficiaryAccountInvalid", over: { beneficiaryQuote: ata(WSOL, stranger.publicKey) } },
+    { name: "beneficiary's own WSOL account that is not its ATA (D-016)", expected: "BeneficiaryAccountInvalid", over: { beneficiaryQuote: beneficiaryNonAta } },
+    { name: "beneficiary account = this launch's vault", expected: "BeneficiaryAccountInvalid", over: { beneficiaryQuote: A.vault } },
+    { name: "creator_auth of another launch", expected: "ConstraintSeeds", over: { creatorAuth: B.creatorAuth } },
+    { name: "virtual pool of another launch", expected: "ConstraintAddress", over: { virtualPool: B.pool } },
+    { name: "quote vault of another pool", expected: "PoolVaultMismatch", over: { quoteVault: accB.quoteVault } },
+    { name: "staging base account is not partner_auth's ATA", expected: "StagingNotPartnerAta", over: { stagingBase: strangerBase } },
+    { name: "fake DBC program", expected: "ConstraintAddress", over: { dbcProgram: SystemProgram.programId } },
+  ];
+  for (const c of paySubs) {
+    await suite.case(`pay_creator: ${c.name}`, async () => {
+      const r = await payCreator(`pay_creator A: ${c.name}`, await payA(c.over));
+      return { status: got(r) === c.expected ? "pass" : "fail", expected: c.expected, got: got(r), detail: { signature: r.signature } };
+    });
+  }
+  await suite.case("pay_creator: before open → DBC creator fees → ATA(beneficiary, WSOL), exactly; CreatorPaid", async () => {
+    const before = await ps(A.pool);
+    const ben = ata(WSOL, creator.publicKey);
+    const b0 = await tokenBalanceStrict(ben);
+    const v0 = await tokenBalanceStrict(A.vault);
+    const r = await payCreator("pay_creator A", await payA());
+    if (r.err) return { status: "fail", expected: "ok", got: got(r), detail: { signature: r.signature, logs: r.logs.slice(-15) } };
+    const after = await ps(A.pool);
+    const rec = await accounts.launch.fetch(A.launch);
+    const fees = BigInt(before.creatorQuoteFee);
+    const paid = (await tokenBalanceStrict(ben)) - b0;
+    const checks = {
+      paidExactly: paid === fees && fees > 0n,
+      dbcCreatorFeeZero: after.creatorQuoteFee === "0",
+      recorded: BigInt(rec.creatorForwarded.toString()) === fees,
+      vaultUntouched: (await tokenBalanceStrict(A.vault)) === v0,
+      stagingEmpty: (await tokenBalanceStrict(accA.stagingBase)) === 0n,
+      event: r.logs.some((l) => l.startsWith("Program data:")),
+    };
+    const ok = Object.values(checks).every(Boolean);
+    return { status: ok ? "pass" : "fail", expected: "every check", got: ok ? "ok" : JSON.stringify(checks), detail: { signature: r.signature, cu: ballastCu(r), fees: fees.toString(), checks } };
+  });
+  await suite.case("pay_creator: again with nothing accrued → succeeds, pays 0", async () => {
+    const b0 = await tokenBalanceStrict(ata(WSOL, creator.publicKey));
+    const r = await payCreator("pay_creator A again", await payA());
+    const ok = !r.err && (await tokenBalanceStrict(ata(WSOL, creator.publicKey))) === b0;
+    return { status: ok ? "pass" : "fail", expected: "succeeds, 0 paid", got: got(r), detail: { signature: r.signature } };
   });
 
   // ---- DBC itself refuses claims by anyone but the PDAs (§17 "claim by non-PDA") ----------------
@@ -294,7 +362,7 @@ export async function part3(): Promise<number> {
   await suite.case("settle_graduation: after migration (keeper lag, §5) → Funded", async () => {
     const before = await ps(B.pool);
     const v0 = await tokenBalanceStrict(B.vault);
-    const r = await settle("settle B after migration", accB, creator.publicKey);
+    const r = await settle("settle B after migration", accB);
     if (r.err) return { status: "fail", expected: "ok", got: got(r), detail: { signature: r.signature, logs: r.logs.slice(-15) } };
     const v1 = await tokenBalanceStrict(B.vault);
     const rec = await accounts.launch.fetch(B.launch);
@@ -338,7 +406,7 @@ export async function part3(): Promise<number> {
     const front = await send("DBC withdraw_leftover by a stranger → partner_auth ATA (before settle)", [ensureAtaIx(baseC, accC.partnerAuth), ix], [stranger, payer], { expectFail: true, feePayer: stranger });
     if (front.err) return { status: "fail", expected: "front-run lands", got: got(front), detail: { signature: front.signature } };
     const sitting = await tokenBalanceStrict(accC.stagingBase);
-    const s = await settle("settle C after the front-run", accC, creator.publicKey);
+    const s = await settle("settle C after the front-run", accC);
     if (s.err) return { status: "fail", expected: "settle ok", got: got(s), detail: { signature: s.signature, logs: s.logs.slice(-15) } };
     const afterSettle = await accounts.launch.fetch(C.launch);
     const stagingAfterSettle = await tokenBalanceStrict(accC.stagingBase);
@@ -362,7 +430,7 @@ export async function part3(): Promise<number> {
     return { status: ok ? "pass" : "fail", expected: "every check", got: ok ? "ok" : JSON.stringify(checks), detail: { migrate: migC.landed.signature, frontRun: front.signature, settle: s.signature, burn: b.signature, leftover: sitting.toString(), checks } };
   });
 
-  await suite.case("settle_graduation: CreatorBaseFee (creator base-token fee fails closed)", async () => ({
+  await suite.case("pay_creator: CreatorBaseFee (creator base-token fee fails closed)", async () => ({
     status: "unreachable", expected: "-",
     got: "§7 rule 2 (ConfigCollectFeeMode) pins DBC collect_fee_mode = QuoteToken, so creator_base_fee cannot accrue on any class pool",
   }));

@@ -1,7 +1,7 @@
 {
-  "suite": "Program Part 2 — open, refresh_floor, redeem, floor, harvest, deposit (§6, §8, §9, §10)",
-  "ranAt": "2026-10-07T13:17:53.914Z",
-  "pass": 19,
+  "suite": "Program Part 2 — open, refresh_floor, redeem, floor, harvest, deposit, pay_creator (§6, §8, §9, §10)",
+  "ranAt": "2026-10-08T18:08:42.272Z",
+  "pass": 46,
   "fail": 0,
   "unreachable": 0,
   "results": [
@@ -11,7 +11,7 @@
       "expected": "PositionWrongPool",
       "got": "PositionWrongPool",
       "detail": {
-        "signature": "5CSF5Yd16P4tbJHAnQHZPzPMyXh9yAd6XEnoWQwi7s8DWag4Lx8NPqFQptiDeHx2BjkZUt6xcgbUNmKRYeVS8Rtt"
+        "signature": "4aHBGbGU1aSATa9Pg2QAoZvKYVZ9mFhU3hcqJjLRGSG5h9sexU7HFQi2WgwLGQKCS8Mva1V9UtGexrtzTtbB6ZU4"
       }
     },
     {
@@ -20,7 +20,7 @@
       "expected": "PositionNftHolder",
       "got": "PositionNftHolder",
       "detail": {
-        "signature": "3XxHg6hxansm8A5Fjtsnfrh81r3CuvEYL4wVabe1Qa92BgXYzvCuQBvogjRxSMcrDZUun1K6Q7tFCsNtfbgzTwc8"
+        "signature": "4nbPMzTT6x8ZFTnULGYaXgaoSUKjv4UgmcJt6MzFDMFn37ZAzBYamcBCrRqyGRH9XfdNxdw6GhWgr9rPDeVUjbvy"
       }
     },
     {
@@ -29,7 +29,7 @@
       "expected": "PositionInvalid",
       "got": "PositionInvalid",
       "detail": {
-        "signature": "5g1dZHcK1weozWgnAa9NAH8DzZu6b16po4PbVTgbVHwZrCYkQLRdxcRgqYVaus92vR1vd37W94MzYduLfqJSi6yD"
+        "signature": "2NTYxzrVNo9Yur9iaMXGcgGyjyctYZzkH2VtqENN843YJWxeoDMKQQ45dss7n8MRzLK1GZ6VYRKqC7Hip4RzTpt1"
       }
     },
     {
@@ -38,7 +38,7 @@
       "expected": "PositionsNotDistinct",
       "got": "PositionsNotDistinct",
       "detail": {
-        "signature": "CtSM5jHhSG2VYSmXGHgHNH6Mvrsjd7zoPMrxdpTSKJTB6J919X4Gn4ankrjv1pu7cxbEYxKqn5ubKsREmViP48D"
+        "signature": "2AKPZL9aWn2ba4zcdJginL3gX6UKNf2WZfJjx52S2o5UFLFJj5TEF8B4k8DqkixdmAs5yHrnDt3jfAiMQecR2Vba"
       }
     },
     {
@@ -47,7 +47,7 @@
       "expected": "PositionNftHolder",
       "got": "PositionNftHolder",
       "detail": {
-        "signature": "5qfq8CiR3HhtoeZzmSYekUAkgvc58JmW1wEVSsPjW9FxzVDgjQSgRr6uDZcARmgUbXw2up9HZdXosDz3UCYF5Eh4"
+        "signature": "5yjrS9Ek7UUxZfpvmdP5yicnnEiMGmnW5Q6XxARGHTwukffPdktx8N1mCKGjuJuegATe8z2uUeFTUhuxWwwmBVqc"
       }
     },
     {
@@ -56,7 +56,7 @@
       "expected": "DammPoolNotMigrated",
       "got": "DammPoolNotMigrated",
       "detail": {
-        "signature": "4dhVjXY46999ePYfjrF6xpyAgyiZtKpHfwFJ9oHDpVjJ1bztYfaY6naeqFXBarvnk4cjjoVge8GoqmAzqyv24CSr"
+        "signature": "59NgPkGtoJPBKyKrBoLAZopChBXru5DiDvikD4xxQKKs2uGeks4RjFE4csWi1bxrNQmfRTxpc8xFtXkxfhYb5Dhb"
       }
     },
     {
@@ -65,7 +65,7 @@
       "expected": "DammPoolInvalid",
       "got": "DammPoolInvalid",
       "detail": {
-        "signature": "43f1xdKqdhP1un6BfaDp7y7r89oPKMs9MxEnduruoLNXMQ3YnabLLPa91ZZJKvQJtaETrgoWjYKjieS2hbQBfJ6B"
+        "signature": "22ZkeukHpTcgfUv3ye1CSGmi9yyMvVwPFCaPXnvdkwv6EpVWCEAC39tqA91H7e7ohCLSJFmnHewZ5M8FKt1xZqqq"
       }
     },
     {
@@ -74,7 +74,7 @@
       "expected": "PairAccountsInvalid",
       "got": "PairAccountsInvalid",
       "detail": {
-        "signature": "56J6cNBH6cEtJT1t87LrSaetShNnkY89qYQhChFJaZPv6QW4S9r9dDPR6adBdyo2cWcyNRah2Cmgxkwsm2EMs7tk"
+        "signature": "43wPiKxCRzRjZ57beBXY8SFSFPmhPPKuqtyRGTKUVRMem4CVCNckg8NuuS8DVqL992MyHSzxWiW75KEExwYsb7s5"
       }
     },
     {
@@ -83,7 +83,7 @@
       "expected": "PairAccountsInvalid",
       "got": "PairAccountsInvalid",
       "detail": {
-        "signature": "9aPB6FKPDLR4qkeyHg1V9wqw1jS9dbEhaG5eDSgQFCfV31M7To4pYqC1vSe2jKfXy29LBQbduHg9QYrwRHya87A"
+        "signature": "3JnTAybqAvh5VQnsTzFyMD3ULfwm14zFz7xQ3Xf7ZBgCij6rnPHXDJ4AGnfsBzoSfrWsTNkc3sFUaYK9JaZsefPC"
       }
     },
     {
@@ -92,7 +92,7 @@
       "expected": "ConstraintSeeds",
       "got": "ConstraintSeeds",
       "detail": {
-        "signature": "3r9VYubqa8gbTuzfiuTCXSmnCKFiJdM86CXZ5sWb6NSFTUg8x4cVCzCxvWdMUcNuHyzTjN5nLZG8bvMwq4RkGRym"
+        "signature": "65i9yGx3APup5q1aax7KX7vNo1Pk6dikgdiXixDsKeHjRd9FYikWEn3PEWay2QsEYtobgLbAwKAXYtb3Zy8VSF5U"
       }
     },
     {
@@ -101,25 +101,25 @@
       "expected": "ConstraintSeeds",
       "got": "ConstraintSeeds",
       "detail": {
-        "signature": "5jmhvdtTtdBH1dBx3ZYVzG1s1t8zB4W6A3gvP867d22Y6KnG7ynZxdXiHLUzd21LLcXvZhVJJc2bS2UeXoHpg7aq"
+        "signature": "2TE9HZnYX5qRYFLgwbDxK2jAtsyf4BqWthVB9vBJhn2ZcRXPwRizWiNA6PqigvL15W2igvNBRGJqFZpG9oTxGA6L"
       }
     },
     {
-      "name": "open: bin hint one above the floor bin",
+      "name": "open: bin hint one above F's bin",
       "status": "pass",
       "expected": "BinHintNotAtFloor",
       "got": "BinHintNotAtFloor",
       "detail": {
-        "signature": "38BEiX5dn3ATBRwgxAU1jF9TrFS4Xa87WrcL5Tqx5qJm8U6My1YcT74k47APdRFUdA1EK2Kx1EYK8k7i9E82PiU3"
+        "signature": "2PU8o3gf86NwXQo5AxLApcBTcHwDocM4iramjsddGEmef7LQoqdjcSNbvE3ccCqvPuFnhxDBwvDSH8B8gQd3rWBk"
       }
     },
     {
-      "name": "open: bin hint one below the floor bin",
+      "name": "open: bin hint one below F's bin (not the active bin)",
       "status": "pass",
       "expected": "BinHintNotAtFloor",
       "got": "BinHintNotAtFloor",
       "detail": {
-        "signature": "4wvF4oSjfE392eeTQUKWwuVg6jAEjA3SEwEMr58sCrGJZo3gsXaqXdwC9HNQzw2U5Wt3tzy2edXuebSWD2uEJsyR"
+        "signature": "4xd7WPyYiC2k1XmKGiXQ6jF98hvd9NZePsHP7XsoCX3VJgxbuQeLmhZso5U65DerKfdnHwhbT1PiktHeRz1W889P"
       }
     },
     {
@@ -128,7 +128,7 @@
       "expected": "BinArrayMissing",
       "got": "BinArrayMissing",
       "detail": {
-        "signature": "5aReB2QqshDWsz4o6SNg1H5PmhGVJWyGLmnHJzwiY616K9FExGRfzPgj259mGuKPzv2nnDsDuF54vX4eXXM9T8a5"
+        "signature": "3JgUoGQTjktthFynULw6hMvVefzDsmd5Z7mstENUiQ1xJaG1xVptyyWqSWHuYwjCq6iZLZUG2hcJj1KtVP8mvjdJ"
       }
     },
     {
@@ -137,7 +137,7 @@
       "expected": "StagingNotPartnerAta",
       "got": "StagingNotPartnerAta",
       "detail": {
-        "signature": "5LJ4ExZ54xk4y4QR2McWXw98UVNZVoXpq5kZLtCyEC5ZbajRtbhPRBNFnjFKMcKRnkeY7PjefwyUqQCdCSj8JfCK"
+        "signature": "4KJ4LJt82cpmQZTReXgi4WAxycAYesKQrC4dJ5hFiU81oEtMTo9nKbu4Lqr1RR5D9G865DjXcydQMPDsMgtaiCLW"
       }
     },
     {
@@ -147,29 +147,18 @@
       "got": "LaunchWrongState"
     },
     {
-      "name": "characterization: go_to_a_bin(F's bin) top-level, no signer, empty range",
-      "status": "pass",
-      "expected": "active -11906",
-      "got": "succeeded active -11906",
-      "detail": {
-        "from": -12645,
-        "to": -11906,
-        "signature": "2MaQnm5qtmeeBevaJhsDYr8TwKtA5i9UyM6nfmdXqSEGpajEcbXEGesc5EtzBZ5sa2irkPEi9aivggBkZgHJ8K8A",
-        "cu": 7034
-      }
-    },
-    {
-      "name": "open: launch D → Open; whole vault rests as one bid at the highest bin ≤ F",
+      "name": "open: launch D → Open; Ballast moves the active bin (D-020) and rests the whole vault at F's bin",
       "status": "pass",
       "expected": "every check",
       "got": "ok",
       "detail": {
-        "signature": "7chdrQDxBNYtPv264vg9HSuqgERYKrYoHWzwxehenGuyVRy2LU8Uubgw62BdpqtMREaf9Wz3yAAJfK7MHoo5Zru",
-        "txCu": 147288,
-        "openCu": 147138,
+        "signature": "dBg8F77Ee8FdbG84JjoLqptL9C2eqd6qjKCUwQVp55z6nvVrKxSagzquc8s5R9pMFeAR3cayeXbXKLm8W824Z9D",
+        "txCu": 145469,
+        "openCu": 145319,
         "sOpen": "48074410258902065",
         "predicted": "47755047807748143",
         "realisedOverPredicted": 1.0066875119137062,
+        "activeBefore": -12645,
         "bin": -11906,
         "binPrice": "125254475794835",
         "vault": "1540404041",
@@ -178,6 +167,8 @@
         "l": "30702214157579652106863560058426",
         "checks": {
           "state": true,
+          "activeMovedByProgram": true,
+          "goToABinCpi": true,
           "sOpenEqualsReference": true,
           "sOpenAtLeastPredicted": true,
           "sLast": true,
@@ -188,7 +179,9 @@
           "orderOwnerIsPartnerAuth": true,
           "vendoredPriceEqualsStoredBinPrice": true,
           "positionsRecorded": true,
-          "lOpen": true
+          "lOpen": true,
+          "perPositionL": true,
+          "eventOrder": true
         }
       }
     },
@@ -197,6 +190,305 @@
       "status": "pass",
       "expected": "LaunchWrongState",
       "got": "LaunchWrongState"
+    },
+    {
+      "name": "floor(): return data = Python reference on live V, S, L; bin price = DLMM's",
+      "status": "pass",
+      "expected": "every field",
+      "got": "ok",
+      "detail": {
+        "s": "48074410258902065",
+        "cu": 51472,
+        "checks": {
+          "s": true,
+          "v": true,
+          "sSupply": true,
+          "l": true,
+          "fQ64": true,
+          "sLast": true,
+          "bin": true,
+          "binPrice": true,
+          "placed": true
+        }
+      }
+    },
+    {
+      "name": "fill: a seller swaps base → WSOL on the pair and fills part of Ballast's bid",
+      "status": "pass",
+      "expected": "filled > 0",
+      "got": "succeeded filled 29999999977107",
+      "detail": {
+        "signature": "42LEoFd7g8fFraVu8yY8C9XBPcSkDP5yQDPhFfrGV4mLaHfSKkF34QhErsP6Q95BBbW4JQ7bpyMC5yTCvGmjHSox",
+        "filled": "29999999977107",
+        "back": "1336712464"
+      }
+    },
+    {
+      "name": "refresh_floor: inside the rate limit is refused",
+      "status": "pass",
+      "expected": "RefreshRateLimited",
+      "got": "RefreshRateLimited"
+    },
+    {
+      "name": "refresh_floor: a limit order owned by someone else (not launch.bid_order)",
+      "status": "pass",
+      "expected": "BidOrderMismatch",
+      "got": "BidOrderMismatch"
+    },
+    {
+      "name": "refresh_floor: bin hint too high",
+      "status": "pass",
+      "expected": "BinHintNotAtFloor",
+      "got": "BinHintNotAtFloor"
+    },
+    {
+      "name": "refresh_floor: bin hint too low",
+      "status": "pass",
+      "expected": "BinHintNotAtFloor",
+      "got": "BinHintNotAtFloor"
+    },
+    {
+      "name": "refresh_floor: cancel → burn the fill → F rises → whole vault re-placed at F's new bin",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "SF7yQYumWiYizVUzvGLMXUsmBkKfD8AVvSuvJ9Zyy9BiHMN3yhsMd3gjNaxUjyEW9bv32n8jsXHcB5SiBmNLDW3",
+        "refreshCu": 187542,
+        "filled": "29999999977107",
+        "sBefore": "48074410258902065",
+        "sNew": "48074849870641367",
+        "bin": -11906,
+        "checks": {
+          "fillBurned": true,
+          "filledRecorded": true,
+          "fillQuoteSpent": true,
+          "sEqualsReference": true,
+          "fRose": true,
+          "reweighted": true,
+          "newBin": true,
+          "newOrder": true,
+          "oldOrderClosed": true,
+          "stagingZero": true
+        }
+      }
+    },
+    {
+      "name": "refresh_floor: no change since the last refresh is harmless (same s, same bin)",
+      "status": "pass",
+      "expected": "succeeds, nothing moves",
+      "got": "succeeded",
+      "detail": {
+        "signature": "3pHTtkX1wucBjaj3G8rsRJfBacFw3Z8ttVVynnBve7EZbVRdQ4qCbGvgXjc6NS5SzcFerpNB3cRa4AwRNcRUpXxQ",
+        "cu": 170967
+      }
+    },
+    {
+      "name": "redeem: min_out above the payout",
+      "status": "pass",
+      "expected": "SlippageExceeded",
+      "got": "SlippageExceeded"
+    },
+    {
+      "name": "redeem: payout below 0.001 SOL",
+      "status": "pass",
+      "expected": "PayoutBelowMinimum",
+      "got": "PayoutBelowMinimum"
+    },
+    {
+      "name": "redeem: payout above the vault",
+      "status": "pass",
+      "expected": "VaultExhausted",
+      "got": "VaultExhausted"
+    },
+    {
+      "name": "redeem: holder WSOL account missing (D-012: an error, never 0)",
+      "status": "pass",
+      "expected": "HolderAccountInvalid",
+      "got": "HolderAccountInvalid"
+    },
+    {
+      "name": "redeem: the same redemption twice in one transaction",
+      "status": "pass",
+      "expected": "BidOrderMismatch, nothing moves",
+      "got": "BidOrderMismatch",
+      "detail": {
+        "signature": "5foBdWj4NxRWejWpH7BeUyuuJgS9BX6orgtYbg8H3NAZoFFGjpqJ5LhY73vnrtphh2qeu4RRVtQzSWbuKi3acMUL"
+      }
+    },
+    {
+      "name": "redeem: exact payout at s after settlement; holder burns; F rises; bid re-placed",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "2epnzCFfy8oiRsY4DSdomArME5tY3tEoxJrpiig9saGu97pChqXzM8E9VGY6ZFWaFVK48kZ2DcUZwQcjvZgnRFCW",
+        "txCu": 209173,
+        "redeemCu": 209023,
+        "payout": "67580205",
+        "s": "48074849870641367",
+        "sNew": "48077224436115584",
+        "checks": {
+          "payoutExact": true,
+          "holderBurned": true,
+          "supplyFell": true,
+          "sNewEqualsReference": true,
+          "fRose": true,
+          "recorded": true,
+          "replacedAtFloorBin": true,
+          "event": true
+        }
+      }
+    },
+    {
+      "name": "harvest: treasury account is not global.treasury",
+      "status": "pass",
+      "expected": "TreasuryMismatch",
+      "got": "TreasuryMismatch"
+    },
+    {
+      "name": "harvest: WSOL staging is not partner_auth's WSOL ATA",
+      "status": "pass",
+      "expected": "StagingQuoteInvalid",
+      "got": "StagingQuoteInvalid"
+    },
+    {
+      "name": "harvest: partner LP fees via WSOL staging: 10% → treasury, rest → vault; vault never a source; F rises",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "2UedziiTqwBhsUGtA5bQijnB87ZDquZn9JKwKmrNG2E8opwJFkHsVirjaXTeDfotCxWHpB1AWEPkBhmimxravjLU",
+        "harvestCu": 114184,
+        "toVault": "5400000",
+        "toTreasury": "599999",
+        "checks": {
+          "partnerSplit": true,
+          "feesNonZero": true,
+          "creatorPositionUntouched": true,
+          "noTransferOutOfVault": true,
+          "stagingZero": true,
+          "recorded": true,
+          "fRose": true,
+          "lUnchanged": true
+        }
+      }
+    },
+    {
+      "name": "pay_creator: Open without the DAMM v2 accounts",
+      "status": "pass",
+      "expected": "PositionNotRecorded",
+      "got": "PositionNotRecorded"
+    },
+    {
+      "name": "pay_creator: the partner position passed as the creator's",
+      "status": "pass",
+      "expected": "PositionNotRecorded",
+      "got": "PositionNotRecorded"
+    },
+    {
+      "name": "pay_creator: Open → DBC creator fees + creator LP fees → beneficiary; floor untouched; CreatorPaid",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "3a5mH4Sr6ikh7vtLUycSUGusCMkejqVRvnsAKxhxAJxtEt3X1yGYRNX3LD7s5hvRkqoLZcG14U6nwKZPfeFuhFCK",
+        "cu": 126129,
+        "dbcFees": "40404041",
+        "lpFees": "5999999",
+        "checks": {
+          "paidExactly": true,
+          "event": true,
+          "recorded": true,
+          "vaultUntouched": true,
+          "floorUntouched": true
+        }
+      }
+    },
+    {
+      "name": "deposit: zero amount",
+      "status": "pass",
+      "expected": "DepositZero",
+      "got": "DepositZero"
+    },
+    {
+      "name": "deposit: depositor account of another mint (§5 rule 3)",
+      "status": "pass",
+      "expected": "DepositorAccountInvalid",
+      "got": "DepositorAccountInvalid"
+    },
+    {
+      "name": "deposit: WSOL account not the depositor's (§5 rule 3)",
+      "status": "pass",
+      "expected": "DepositorAccountInvalid",
+      "got": "DepositorAccountInvalid"
+    },
+    {
+      "name": "deposit: WSOL → vault; F rises; no claim created",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "3wDyJDWFecEZUkUgaE4b7UbspDoGkgSrxpTKR1huceb8LvxPP76Fa6ZBvkQTKVN7Ju1Hap49KWqJHYCSXVJu3faB",
+        "depositCu": 58686,
+        "checks": {
+          "vault": true,
+          "recorded": true,
+          "fRose": true
+        }
+      }
+    },
+    {
+      "name": "D-020: open at F's bin while a third-party order pins the active bin → DLMM refuses the move (6056)",
+      "status": "pass",
+      "expected": "BinRangeIsNotEmpty",
+      "got": "BinRangeIsNotEmpty",
+      "detail": {
+        "signature": "4yKMKPTwvwnod73U5HHF9G1qhQMjnHrcvnf1Yzc5HXB6UW14bnZG268X8HPaPnJZ2Zb1FKn8kQkPe9jdVGrf2aiu",
+        "activeE": -12645,
+        "hintE": -11906
+      }
+    },
+    {
+      "name": "D-020: a 'cap' one below the active bin is refused",
+      "status": "pass",
+      "expected": "BinHintNotAtFloor",
+      "got": "BinHintNotAtFloor"
+    },
+    {
+      "name": "D-021: pinned 725 bins under F's bin → Open with the vault unplaced; V counted; BidSuspended",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "3MxbgThRaDejbifGGUz7v4aJbjquQTb6MkCzvLjf2nRvsYze6xaTtysepAvCPC2sC3iJGFa6r4DfDWLwhq9K2f79",
+        "cu": 104930,
+        "activeE": -12645,
+        "hintE": -11906,
+        "checks": {
+          "state": true,
+          "suspended": true,
+          "unplaced": true,
+          "vCounted": true,
+          "sOpenAtLeastPredicted": true,
+          "event": true
+        }
+      }
+    },
+    {
+      "name": "D-021: once the blocker is gone, refresh_floor (rate limit skipped while suspended) moves the active bin and places at F's bin",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "fLqNa29DuvfF9HYhcstB8oZot9YmN91NvUa2n8eCDvTGtiK3E9jw5FvUXAo92nLdhoEmrtgzWGw9GiGf6PZ3yu9",
+        "cu": 147100,
+        "checks": {
+          "placed": true,
+          "active": true,
+          "goTo": true
+        }
+      }
     }
   ]
 }

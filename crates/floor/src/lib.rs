@@ -183,6 +183,47 @@ pub fn bin_at_or_below(bin_price_q64: u128, next_bin_price_q64: u128, s: u128) -
     lo <= f_scaled && f_scaled < hi
 }
 
+/// True iff `price(bin) ≤ F` (§9, D-021), with DLMM's price possibly undefined (`None`).
+///
+/// DLMM's price function has no value where its fixed-point result underflows to 0 (far below
+/// bin 0) or overflows (far above it). The bin's sign decides those cases: an undefined price at a
+/// negative bin is ≈ 0, at or below any F; at a non-negative bin it is above any F. This is the one
+/// place the rule lives, so the program, the verifier and the app classify every bin a third party
+/// can pin the active bin to in exactly the same way (§4 rule 1).
+#[allow(clippy::arithmetic_side_effects)]
+pub fn price_at_or_below(price_q64: Option<u128>, bin_id: i32, s: u128) -> bool {
+    match price_q64 {
+        Some(p) => (U256::from(p) << 64) <= U256::from(s).saturating_mul(U256::from(s)),
+        None => bin_id < 0,
+    }
+}
+
+/// True iff `bin` is the highest bin at or below F: `price(bin) ≤ F < price(bin + 1)` (§9), with
+/// undefined prices classified as in [`price_at_or_below`]. With both prices defined this is
+/// exactly [`bin_at_or_below`].
+pub fn is_floor_bin(
+    price_q64: Option<u128>,
+    next_price_q64: Option<u128>,
+    bin_id: i32,
+    s: u128,
+) -> bool {
+    match (price_q64, next_price_q64) {
+        (Some(p), Some(n)) => bin_at_or_below(p, n, s),
+        _ => {
+            price_at_or_below(price_q64, bin_id, s)
+                && !price_at_or_below(next_price_q64, bin_id.saturating_add(1), s)
+        }
+    }
+}
+
+/// F as a Q64.64 price, `⌊s² / 2^64⌋` — the unit of DLMM bin prices (§6 `floor()`, §9). Saturates
+/// at `u128::MAX`, which no reachable `s` produces (F would exceed 2^64 lamports per base unit).
+#[allow(clippy::arithmetic_side_effects)]
+pub fn f_q64(s: u128) -> u128 {
+    let f = U256::from(s).saturating_mul(U256::from(s)) >> 64;
+    u128::try_from(f).unwrap_or(u128::MAX)
+}
+
 /// Sign of `P(s) = A·s² − B·s − C`, for invariant tests and the verifier (§11).
 ///
 /// [`Ordering::Less`] below the root, [`Ordering::Equal`] exactly on it, [`Ordering::Greater`]

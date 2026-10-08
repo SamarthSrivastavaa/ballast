@@ -1,0 +1,20 @@
+{
+  "lbPair": "HkzWaEoKXsRXHb656TwEwdwvBXTXSoarFczgbFi5bK7U",
+  "binStep": 10,
+  "activeId": -12645,
+  "minBinId": -35163,
+  "maxBinId": 35163,
+  "internalBitmapBins": [
+    -35840,
+    35839
+  ],
+  "initializeBinArrayProbes": {
+    "bin -35163 (array -503)": "ok",
+    "bin -35233 (array -504)": "Program log: AnchorError thrown in programs/lb_clmm/src/state/bin.rs:1266. Error Code: InvalidStartBinIndex. Error Number: 6000. Error Message: Invalid start bin index.",
+    "bin 35163 (array 502)": "{\"InstructionError\":[0,\"ProgramFailedToComplete\"]}",
+    "bin 35233 (array 503)": "Program log: AnchorError thrown in programs/lb_clmm/src/state/bin.rs:1266. Error Code: InvalidStartBinIndex. Error Number: 6000. Error Message: Invalid start bin index.",
+    "bin -35840 (array -512)": "Program log: AnchorError thrown in programs/lb_clmm/src/state/bin.rs:1266. Error Code: InvalidStartBinIndex. Error Number: 6000. Error Message: Invalid start bin index.",
+    "bin -35841 (array -513)": "Program log: AnchorError thrown in programs/lb_clmm/src/state/bin.rs:1266. Error Code: InvalidStartBinIndex. Error Number: 6000. Error Message: Invalid start bin index.",
+    "bin -40000 (array -572)": "Program log: AnchorError thrown in programs/lb_clmm/src/state/bin.rs:1266. Error Code: InvalidStartBinIndex. Error Number: 6000. Error Message: Invalid start bin index."
+  }
+}

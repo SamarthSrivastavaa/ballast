@@ -1,6 +1,6 @@
 {
   "suite": "Program Part 1 — initialize_global, create_class",
-  "ranAt": "2026-10-07T12:57:12.418Z",
+  "ranAt": "2026-10-08T18:19:54.044Z",
   "pass": 43,
   "fail": 0,
   "unreachable": 10,
@@ -11,7 +11,7 @@
       "expected": "NotUpgradeAuthority",
       "got": "NotUpgradeAuthority",
       "detail": {
-        "signature": "34ciAKZTtbNnz8rnSen6eXQQammyDsFQEmMxAAyy6NnHZCiPYdvhPcxT5DZoTW6dqGwWeYnkFk5Ceco1kPerKxUs"
+        "signature": "5gHTsjqHzdC17qXcBzh8t6EHPBgWdKeTxSYWNNwHmYb2TdEBZ1TKjZFAbwmAtdNtwtRdeEjtBtxowKpcbAzUEYh7"
       }
     },
     {
@@ -20,7 +20,7 @@
       "expected": "TreasuryNotTokenAccount",
       "got": "TreasuryNotTokenAccount",
       "detail": {
-        "signature": "371Cmsc7ZqVHo4bpVytZZqCLwEeh8jWRMbmnkYom1w696XmbsCxRkgZyRFTzsgPeHp9s4b94kc8z2mifPKfx3WJK"
+        "signature": "577ydhJBWPtZoXCXoXtXxHKiWJKDyoc6ABaeZvhohCHRTt3jjopQapmRD4w3LQq12mFCZnRqkRWxCMBPSZy7Ks2W"
       }
     },
     {
@@ -29,7 +29,7 @@
       "expected": "TreasuryWrongMint",
       "got": "TreasuryWrongMint",
       "detail": {
-        "signature": "3HvMeauanjKAFVs7fy9eVpJqpNU3spj1fn8uLWJn7C6CE2oaSUBPnMxg2joaMprQtFgpWyRcrhLQjYXdFuk9JdzD"
+        "signature": "Epuv34KE71duMokcxDu41fY6NrSCTRM5P3Gi1p391pLGqQE1V6mCgaNW8uHKQsQ558w7FAMxVWyiQZpCjhUbgC8"
       }
     },
     {
@@ -38,7 +38,7 @@
       "expected": "ok",
       "got": "ok",
       "detail": {
-        "signature": "2Cq8A2FiiPbpzUfqAQqhHgdhExbCDw7vp72UNjkE1Szu5B5tCUqy1P5KrQNVet4zns7wgUvYfnbotgPfGmtcJEJb",
+        "signature": "4NGnnzFrbbUdVANgboKJFaWsNfsVmRAD3irZgqA3jFo6qnaqoLBeDmVNEdiS9hzrSkgkbLzedHZW41B2W8PysMbp",
         "global": {
           "admin": "EjqP97TZMY6P45eXPVUsxqdBrZ336vpiQVctTPBmjnwE",
           "treasury": "CCnGiVQBFiMraGvVoBK8ewgnbxjsAopPJLcFQ8mT7ujh",
@@ -120,7 +120,7 @@
       "expected": "refused (account in use)",
       "got": "{\"InstructionError\":[0,{\"Custom\":0}]}",
       "detail": {
-        "signature": "3p4mJhxbXSzAMpZ7oe5Q3Kj1tsUnryjckxMTerck7sLgvyAKezfzFhsnEVeYseysa6icHqGZYsbmFj27nACaCLXf"
+        "signature": "5wT9xmAFN7fzUSGE1mCYhTdLHfdqxdUfqZmCFaBqrpnkRVSZzkLWKC3wKU1WAhS7QLbE9ifM55RdcoEWLwVJKt7V"
       }
     },
     {
@@ -129,8 +129,8 @@
       "expected": "Class fields per §5",
       "got": "ok",
       "detail": {
-        "signature": "xszNzuSS2afNarvqXBeJPMKKYf3gLTePBBx3NtbU3XnkAEfBQeJnPZiEJcoUpjwcs2FXcRQDPNErHTk3vzDuk1z",
-        "cu": 26785
+        "signature": "5scd2nv1CsjwtKngsrB5sKHxH5XJPC212qTNzUBhvscJiuF9gGB56tqMT95hV6nkB9xWnh8FzhUP96jf6PJjoXLB",
+        "cu": 23538
       }
     },
     {
@@ -169,8 +169,8 @@
       "expected": "ConfigQuoteMint",
       "got": "ConfigQuoteMint",
       "detail": {
-        "dbcSignature": "7AM3XkxdajSuPQpCQdtdykTuCVX9ZXe6sNxBjoKdXqCUeZCQYeZYz8RYRs4zRhHVduSe5unGoqfXjsXcCzMEXtV",
-        "signature": "47zwtjSun2AGieyzoYnLzBFiMu7rQrYr3BThov8JADsjtozaV6QFTF3eVRmrLCbr5EKDp6ZjspZSvmoPV3DgxMPq"
+        "dbcSignature": "3okiniQd7MNcPdxRtvvWnLcMz13mqsRN4sa9X1E2tRYuuZJikoCP4ijVWT1iQz7Tc82qMTMd8coAagj5wyDdmK4p",
+        "signature": "3L41vxQw2h17mfxX5x2TW1GVqTnrmcarLPHpSy3mTwB22gvpvCT46sk3uUszQxUU4yqkD9B82ykHPaRsLs3ayCsQ"
       }
     },
     {
@@ -179,8 +179,8 @@
       "expected": "ConfigFeeClaimer",
       "got": "ConfigFeeClaimer",
       "detail": {
-        "dbcSignature": "4RRr7B8ee1VEPgntcRvkix5NAAXoMqTzrbYN9eNjcmbUCT1EsWLnBhV8cYiNt6sDxNG7BkrcN5981yHy8aBwS1Wu",
-        "signature": "2f2FmADtUbByWnJdpWpQhComwFswYEDWc1oWSQq3JDJwXKvMFnhCiUTe4GQCrSmTMF7ND5EaHstqgNsMy9AdvGHZ"
+        "dbcSignature": "2ZR8bGCrgSB8m9Vdo77tQTkLcMKJp9fpuzro23jEjNmTHtPLAReYFUF69pRAbEwNfSBQjeJh1sDF4UawcQfmGCwm",
+        "signature": "zUmqzn1ReV124L3ZqSWjFkND61gkFsxVXx4i52xrEDJQN8PGrLLxqcgGcqLFFCHrM21CsPpVWXB31phVKno3RHt"
       }
     },
     {
@@ -189,8 +189,8 @@
       "expected": "ConfigLeftoverReceiver",
       "got": "ConfigLeftoverReceiver",
       "detail": {
-        "dbcSignature": "22YRc2D3NoJLrgCcW5w3Enwx5UiULRafXHRwbdVT4TdZiLZiLqGhhviiUzaPx6s92GkAgXov8VP5t1H6uLhbvNbq",
-        "signature": "624Vo625LAqoE1VrFask1dhP8J6DE4GvTYUs8HjdYgB5TLwDEuHfhV3ugb8agdb74pazaAUpabDRVSGh8iCKKJYB"
+        "dbcSignature": "4ZJznv6beDGfFxn61ZoJ549jfvBqxuTXD6d5v63cRK8M2L35u6e8Cmq7Eq2L83NWtEzYCjLaKJXdVUMt9T49bz8x",
+        "signature": "aQbiZt4GuWru5kBLeRcPG9owaru11Re46oHw2aJ5AHs1jjk1YVW3hsD4ubx5AWvcE9AaZaqSYCTdXhfaz4LPwd1"
       }
     },
     {
@@ -199,8 +199,8 @@
       "expected": "ConfigTokenType",
       "got": "ConfigTokenType",
       "detail": {
-        "dbcSignature": "3VeLgZ9hjtZ7rhqBfCzR8o5ACLnYYCgtZUxZ1NPFR39xfn2edNKJnkrm24CZoJPH6a2mPxQkTUvuM1bZdh8P6sLb",
-        "signature": "2EE3uFeoewqaVotELQHFPK77nnPoRwjfnVMT9GnnPeSntcjS9zRnGphJSe9cYdKZE57ub88EepGxoMQttG1vbr6f"
+        "dbcSignature": "rK1YG7i2fbX3QvqhuKGvb5HrQTWPHaqGT5812LkaMqNz1Jr1Bt8RVGDGWnAzsRk7S4V4WuLBz7Eosi3pk3ahPvY",
+        "signature": "5vWhwYNAkWb5rVxQ4kQuY2JXb4LDPn2E1GFMpZvi93rdt6Yw8itiKWjGEsNQ949K8frNz4DYNwqYXJCm14ze8Qgp"
       }
     },
     {
@@ -209,8 +209,8 @@
       "expected": "ConfigTokenDecimal",
       "got": "ConfigTokenDecimal",
       "detail": {
-        "dbcSignature": "3Q5jA8uWJKWV85t5Ds4J5TcyubJPeshUoy66u2DZYjXrdzDFnRcuAcron5DXFUwuQddcUSvb5aHcGbWeypyWJfa",
-        "signature": "3iX2XfNrfByc86hEBmnrx9u5ERg2Y4nD1AKDpKvKFEFizR8kDVww8yqr5SrXAFFa1TymMkQeM6MtwCcZZHin9b3R"
+        "dbcSignature": "66uaZyszek9E2mEV3pyRFiQnCTLVAx6AsFp85rcLKK9VD4w4DwQSoHEzNKDKKwAXVswBwAiN4nsV9CEgUgCqw9Fo",
+        "signature": "rFDDyGtEEHxfEpThhGgMaWXT8ySiCngs2tDaHENqR61vKwy6CKjPupZR3cHzUfYjK87GRPtxFMJViPce61QNTkk"
       }
     },
     {
@@ -219,8 +219,8 @@
       "expected": "ConfigFixedSupplyFlag",
       "got": "ConfigFixedSupplyFlag",
       "detail": {
-        "dbcSignature": "3TKexCoz7ZLeDRraBsioRS26iKGF2RS4C4JTHpJS7hHM5t86zzT6cATvM2drP46nVXgPwStHub93Msn5AVJqfdJE",
-        "signature": "41GPXfQDFH3tM9fLQUAFdx8Ta7vnHF43X67hD2NMbyyjGuUBtrNHTxbTCTnCkGxsJ13yjSJKyDfRHka8bDex533W"
+        "dbcSignature": "581ZL1tojJC7VboDtNMEi24gJ4CXaUt1xxmuqMuzVj7hbYWfkpgPuZ3h9FhkNcd5NPWufNNFdaAsMuhLs9ZXt7BR",
+        "signature": "3phaJYtANTkwaVoubhWCvuiuWKxSJKWxnb3dcLUdiuwzn5AF4fpUv7QnNRXTTkgRFjdRxb7opsoxRWJJE6VuRUTT"
       }
     },
     {
@@ -229,8 +229,8 @@
       "expected": "ConfigPreMigrationSupply",
       "got": "ConfigPreMigrationSupply",
       "detail": {
-        "dbcSignature": "2CdsYLfj1yFuQKQfyecx9HQvcPybmFXgAu3FLiscpBuj15QGTbweY8c8S54TpWugQyQMwqtZ2VXkCgy8ThmBdfE5",
-        "signature": "5k1AuyxqG3bZmjZu8Xke7FyhtbaCXNa5Vf4aMTfUB3STkjf1qc3T1C5hXg6eCMW8k1NzjojzMXwNmdKAJNNLzBfH"
+        "dbcSignature": "5GcwDg9sVxKQLPazWhLHwkf24V1GMAQBBLhRHdQg1LxsVxQLhMSKUi3W26MRimG8EX1BFfFRgBgUqaRftne7nTA9",
+        "signature": "2N3j9a5zxQ21jRZZtV5RGgNbETRBTtzYHpyDgWzzcXfC7w5SmCSNvAAPFevvhMygHe5WgtzAymoX2vwLiZPftnhA"
       }
     },
     {
@@ -239,8 +239,8 @@
       "expected": "ConfigTokenUpdateAuthority",
       "got": "ConfigTokenUpdateAuthority",
       "detail": {
-        "dbcSignature": "4iLDGv2sJ27Qjz6m9AEgo8LKcgqohJKd6K2m1XZGrcLgeQEKDGUiCy1mWFJ5Pf8e158sSxfHaXfi944FVmwxgB6u",
-        "signature": "2J4tudRSzo9jeLeJMV8ba4Qxy8sULZRZBd6FduEFzZkyqv7k4eJwZcZzMkyaxJsUZ2aZPpLfjJ4UmzbGykR4Tqrv"
+        "dbcSignature": "3zWiS7aVLt9AcF1rZc5HfhX41m7TbUbVyUzQXqHRKUq3jub91FoENeQRX2yirRnQMypuxwK2u199w3W2kZRAVyWc",
+        "signature": "2zEJS298eTbDxCWwWBbKXWxFXSi7hhPRpukQNmc5s5HWaxJqdM2JPQxWNAfSakxXCDB3DLTiU5DqDDPuNrAegVwM"
       }
     },
     {
@@ -249,8 +249,8 @@
       "expected": "ConfigCollectFeeMode",
       "got": "ConfigCollectFeeMode",
       "detail": {
-        "dbcSignature": "3cqDv5FzJskpCNSQ13WhoiNt4rN1gccoLGDsYV2dAtcwrMvAt16aAT7g2Ja7PMt5HNuGraitJqdnwyppJrnka6aZ",
-        "signature": "5wQDTBdvkSiHkPne21Qza1WxskiUT2YspcyxmZ1gE2XqPdctSHXNLDyLh5qVPX342hKs9uJkCvvGLXRwaoQ7muYH"
+        "dbcSignature": "51DwVqtoy3kdZpN9oBJVgKRbChwtCxrRWR9VdbZDjfZywDUBFZi7Hiw6Gr796m5RkHNaYbL2ip7VVTHPAL9WqQQB",
+        "signature": "KMD9ePPfyokx6z6AGs448c4JLDNb6wF37MiKG7TTGybcdqeZctX5F7UN2bLv7UbuAxAkvdZxnCnuQfzChzUdvhM"
       }
     },
     {
@@ -259,8 +259,8 @@
       "expected": "ConfigMigrationFeeOption",
       "got": "ConfigMigrationFeeOption",
       "detail": {
-        "dbcSignature": "4UTtwzEGAiSPjYdHYcRFUVCsU2egUddLFrnYHy9z5FKXqYjemRsemYzmMxBuFghzb8sSQJYPWDbwZWEYQGG16AUx",
-        "signature": "2onJ7JJ3sfdK23ShfZtcjLHcvo9SKDtVK8YGsSohT4vSNDjn1BiKfkb1Ue98CdQsaDWeLQvLcWWtptKXKqoANGQS"
+        "dbcSignature": "4vURgqB8Bhu3fy6pz1xSRdWGJ5QNRCPx6vdfuy2U4Ve5ZidgvtfnoE41Jdv3GCLQh19ZvCXFHUh6YSy1D38ZBMNA",
+        "signature": "3qsbpS1aUregqVd4NaYxSZgvD2mNG4LjP64Ew2dCf6fVitvBxh4vRutz8XWMULbEuWHXiPMoMedwGzdRuJYEhhb9"
       }
     },
     {
@@ -269,8 +269,8 @@
       "expected": "ConfigMigratedCollectFeeMode",
       "got": "ConfigMigratedCollectFeeMode",
       "detail": {
-        "dbcSignature": "3nEHzGGp8jahxRKLkVda2TCBxhkv9WeTx32xTLghnn3mDNoexH8cd8Rsnnk18SFbSd3S1JAKxVRutpHWxvdWWxSF",
-        "signature": "3b4MyekuYdKgaPNSDRLThx1sq1KRHTDPhxYmjFigneVFUovCdiKuJafHLXEVh9SVF1zLZQxcfveGn1x91X2MiRyj"
+        "dbcSignature": "2kDBzKkBG4RKcNbp9Na2pAzgQKqBcprrLrBxWakiQVWYQbRqZZthc8ovZPKT6VTpv1dJYvR737XHJs8hyuAYLdG8",
+        "signature": "ePnDcejSbEd1UMSQeBiFqiGABAgr9gwo2Cz3iS5CHxUrXVp6ajfL1jpWVEYU89KwaiXYCN9Ln1DYpZsGk68T8hT"
       }
     },
     {
@@ -279,8 +279,8 @@
       "expected": "ConfigMigratedDynamicFee",
       "got": "ConfigMigratedDynamicFee",
       "detail": {
-        "dbcSignature": "2SeX5FdUq6TpZZfirBG3WxkRwqEcmVzFHdwDdSrVtFkbXjWRbsF3nBaPMCUS8MQuSRxuytbg5BVLLuqZVkMd4ebb",
-        "signature": "5xH2yRLFsUWV5LgDws9pg3ddG98pkHYxjqY5BWtBAvV46xYf9AAUL3cGFMt43xGuCuMtxafQoMdF2tqMs87jpCTZ"
+        "dbcSignature": "5vNYBvSw4yfzAHkcVccb64CqAVdRUAT7o8DWRMYkeUT5SachfPvZtc7oHNhmWw5mQC1JRgq1hUySXRA2PyyvSmtH",
+        "signature": "JW5wrmHvUggpMkLNSmzDuRruD1G9bRvWypPqxRprW8Qcu4koq4avM3D2BfhdZVtqg4PXsBfPKo2maaCfmG84tGt"
       }
     },
     {
@@ -289,8 +289,8 @@
       "expected": "ConfigMigratedPoolFeeBps",
       "got": "ConfigMigratedPoolFeeBps",
       "detail": {
-        "dbcSignature": "RiMFNtBqfnze8aVLQFZLtV52gtumw1EAZSeQ7DtEUyZTQ9bWHLWLES3sjpHApqYN1AsiSUaXbr5HdTXkPDxJayS",
-        "signature": "61HNK8HABP7XbyVtDktNpbWuhBCNm3Lufbaps8jtADJNjCn5pKMyF9zyKh52pZtEZh7YJowLwNNzXR1V937BLStV"
+        "dbcSignature": "4GjQpwt1W9qMccZUFHwNvvfmThYy5hf2dcZjckqjqEZ7RYmHNAWhhbRW9b5SGTqH5MAEXeExTmyXgt7wTnifcrVJ",
+        "signature": "5KR8Ky1CW5jbqTwu53mzXjwWhgtZqDsFJYGU1ehfuNS86Dni1Txa3Lw8VHNEhEuwtsvb4bv1pkNqTNRDXfWJJVN4"
       }
     },
     {
@@ -299,8 +299,8 @@
       "expected": "ConfigMigratedBaseFeeMode",
       "got": "ConfigMigratedBaseFeeMode",
       "detail": {
-        "dbcSignature": "2JyTSX3vfTNxrQJ3gTJQ9ECop9TzP7Vm4h5t2a4qjTJPHS5Agjqq1UYwPedCM5e9wuvxmNu8syevxKpm1tmAzJJD",
-        "signature": "42LY4My6cPoQ5jcjpEdVPTGpHQ7wquN7bGNT8uZxiPoUerr2iYgnYWw2rPB8pVDQdJyJTJNYRGcuCm7qqhmxZf4C"
+        "dbcSignature": "4QMV8iKWMsntWy5GZucTQWkpdjy6tgJQkd979Ejnpo3nJUYo13Ac9JxEQvABZaVXnEp7ek3rctRgVahmdpjW1U79",
+        "signature": "4UHJ7MqjBeWS49MhPWneJXfbtkVSauto8aD19jwfAceixnGt38ojYviuHJDSy4GrmpeXy4ZUh2Mb2y6BXktpVoxi"
       }
     },
     {
@@ -309,8 +309,8 @@
       "expected": "ConfigMigratedCollectFeeMode",
       "got": "ConfigMigratedCollectFeeMode",
       "detail": {
-        "dbcSignature": "5zDvo7XVLt7FeQVaCk1zD6WcKnXgY8qet4T3pE9PZr3HuGgwTAk5PjzJ5eAjRpRKqJrbtYua87NUS7vvJLd7u33E",
-        "signature": "4pV6Ctkvd8ZizrTTMtk38xuD6ELgWwceJh6SoLH8fmjJvAYAeGpHRGUYm2RtJYZMm6twko6JEEbmZcpTzNfm9AKm"
+        "dbcSignature": "g7rqJsXmX83ZYZtM18R9m2woevEBRb4hrs6fzUjitGJj1byU9srTjo5PkckD4DcJ6Mio9ULnmu8ajrd6Y3fkpNG",
+        "signature": "3EqitepKgrMHWJe8SXeBgDAXeyqPqnHqQcQWXXeaAd9t8wMQntkcvXSPYafnYwsq2R6aeXpLoXG1Zbg979LPh2V7"
       }
     },
     {
@@ -319,8 +319,8 @@
       "expected": "ConfigCreatorTradingFee",
       "got": "ConfigCreatorTradingFee",
       "detail": {
-        "dbcSignature": "3YxEX5WEZKjjGvuFkAbUCStcszUen4SuPxbX4Hq8p4ugLoxnETrNCzCHzm2bjbrTqKKKiF4vyqKCWxXKNVhvGXfD",
-        "signature": "jLR9BfSwZCXu4Q6ggGQnXDQCrxTXDQEy9cMJnH7JBvKLh2pHHVcwepTyPE5bpS1hHPXzAYnQxSMYpuZGNvodhqa"
+        "dbcSignature": "4hcXxQR61b6yxxacrBaNHwRB6cNmR9Jvgc3XZWv6xstkahPYCjNy8usQjTUnLerQe5VY4ihAoBt1ig7jXLUyhovt",
+        "signature": "PLQ43xrWNmJ5i6csRZr4YeP8VPA43Q3sGTFzLj3acfAf97HECBZsukAUJqp2BEqCi8aYZsUFuQ8W4dpT7qQ4G3M"
       }
     },
     {
@@ -329,8 +329,8 @@
       "expected": "ConfigMigrationFeePercentage",
       "got": "ConfigMigrationFeePercentage",
       "detail": {
-        "dbcSignature": "5A7DozF7X5zd5tsisMwgKnaahS2n5qHTDTHi7SinCo6AHYhHauHgVcn8ckvmrBBiiD97dZHNnAYh2UfRevyszATN",
-        "signature": "4ppRLwp9oqS393miJoLX8p2R7P4E98v7VxaRKhro2n7ddcx9678415EDtYRC9XuVMmpeF1FD6TCzcemmQUHjE8KD"
+        "dbcSignature": "2K8EJ3LuFGLYu2PirBUArY5E3nqHseDyCJyKKP4iXwxd1ADdqgSqiptsj25KZ6moFPqUJCvC58eh6pMP1Vs1FQFx",
+        "signature": "3TFi8z2QSiBChtnVn5PpnKJKvkkvDNGimc48Ln1PvygbkjZaAVDMn1gxhqSYrWTuoqgjTRnkVnpSu3hQtwFdAUpj"
       }
     },
     {
@@ -339,8 +339,8 @@
       "expected": "ConfigCreatorMigrationFeePercentage",
       "got": "ConfigCreatorMigrationFeePercentage",
       "detail": {
-        "dbcSignature": "DaxU6RmVvgTbdV4GJFsPASfqAb4Tk3C3HKMzLWoKz26tjQUUgi2zFMu6mWgvkDv2NxJ254Nfi663pW3Skxk255Q",
-        "signature": "4gusktA6zXrxJ26C44eXAKUSaAVznwS5R2hsNYuhg56jbCKJpY9qHkVXNTpxWN2hsRtThXLUdZerrNt8PnFyn17h"
+        "dbcSignature": "29fuFWcfWoft3DE8RfVqoc19NGQBEViDfxohKfccr5nix1yGo97ZwuYDXarrfLM6UBQ9Dpq7NESPDybrPZ2MBbbS",
+        "signature": "29smR5cQJiAdfjP4pW4hSxpuZ1CT1E9XtnDM3MGpKpeodsPA56CaVw5gwCgdEit98QaZZXq8reHMWT8yZWbUQHmD"
       }
     },
     {
@@ -349,8 +349,8 @@
       "expected": "ConfigPartnerPermanentLp",
       "got": "ConfigPartnerPermanentLp",
       "detail": {
-        "dbcSignature": "4gg6Ex1bwqrB3PYhpGu1rVityQL7KcgHf3k6gXTGWmYdV59rEuLeW61owEUJBzv8Z1ybaap4z9zqDaHJdCkmYLhU",
-        "signature": "3eddLab5dPv9A1S9mit3rjwJGEkHYLsKYv3Mn9obHqnDxDxXC3pBjyTxcknRj3et48eRK6x9zVKeDFNqrpUQvTVq"
+        "dbcSignature": "Ec81K9YdtMxUT9KwvYqeWjtFwExMgMM8ypY7Ru7eKbjvRBygAwv5iqahZgTUanMkUvV3cXTKAxVrwH6yWPmZzFM",
+        "signature": "2X6aFZEjj6wocF2yJSZh2NNoDih6qSZwDB3zcch5MNPxPMoLJ8oMuF45fe5qSms2C1BzpWmYEvv1RnSQb3xWoqwt"
       }
     },
     {
@@ -359,8 +359,8 @@
       "expected": "ConfigCreatorPermanentLp",
       "got": "ConfigCreatorPermanentLp",
       "detail": {
-        "dbcSignature": "48Qfq98DbNNVjMeXnEyyLZCmaMF8wrpEK2aPNpftMZvYHm8wFAk9kZLKBQfYTviFTdFeN25zLsqcaPHF9zU6oLN1",
-        "signature": "YGwAreZZ1NuNSdyZ9Vpt6xbXevAsmhX1zchtX15W21N7Sv23qVXfFyTWEfg3bRZkxdS1Fs3cVjqdiatUd7K9GFR"
+        "dbcSignature": "2xhHaUtZZYHLmrJ3XDoBDimUjPuaXi3mB9k7V6YoKQWLTwc4T79Exm3NaxUh5eEVL8tXpVHXwZJrZQRUT8xmF3WV",
+        "signature": "33j2roRU8jxnqB8YRKmB1hDe9yCHHtawmNH3e7JbQAQvHyzRP4GiiPcqwFyvbeGma5M7q3qSG2dcmUJWV9K2muGb"
       }
     },
     {
@@ -369,7 +369,7 @@
       "expected": "ConfigLpVesting",
       "got": "DBC rejects this config itself: InvalidFeePercentage",
       "detail": {
-        "dbcSignature": "DCZG8vfoto8xELT3jzmdFPU3PaJZf3uEsXK7uxkVMBzi34FPghyU6eNWqLcFESdzdTznxeyCZEEARn5AHrFTnGx"
+        "dbcSignature": "2FxgVEzgcJKMo8cu19vQJx6WYY6Fpi6wBZNaWs8efKgdd8GYJ9mZ7wkKpnRHuNJsZumd71NhLiECkXeyDNjzdj7L"
       }
     },
     {
@@ -378,8 +378,8 @@
       "expected": "ConfigLockedVesting",
       "got": "ConfigLockedVesting",
       "detail": {
-        "dbcSignature": "2ELCAZPsYxf2x3839NLLCUXMgt4vnduyZEonnpoKVxphgAyFxaswnXhYdgu7N1Vm5k4HhtSeZ4HJhKLCTc6MepoQ",
-        "signature": "3kW98yJjZLRLekGqsJkz1pq1gYJwHA1mb5VNkmcG4SQpNS6nH4SpfP3iVdgyhvWYnh6np76ckKEofFHUgFVLRnwC"
+        "dbcSignature": "38GGQDs2XUtLn2S1W26emNgNSoijLdhDpwKQ5APVFvWniLgiZyJsiwLycxafWgP3hcKkeBZ1xSMZMv2BD8RVPJy1",
+        "signature": "QLKgQPGzTqjFa5LMqf82x9wGsa1dkSs6wpSo6xo6NLS5MePCT46bZJo9FAGF56AsZZoW2uXXaLri1NHgkcRYsVt"
       }
     },
     {
@@ -388,8 +388,8 @@
       "expected": "ConfigFirstSwapMinFee",
       "got": "ConfigFirstSwapMinFee",
       "detail": {
-        "dbcSignature": "51rHMQx67o9kkXYgKGm1uoaXnGczBe4ydVg8iBkuXppbrooGDbYGLt8Fgcz3xKZoBFmJ9SdSLBTYgQvCGiYkJsCC",
-        "signature": "2FTxyEkWnFiiQfaBF5pYYEvBoRj1Fw7c9dvkG4Yfgp1mWTntk23UhkPvwYFszt5BkckCc3RBjBCogQpAtiaKCvUz"
+        "dbcSignature": "ouKSg1oMbfiNJoVJW3GnR6fxfXBb9YtkXnPS4zpa6iGiqva4HAEnFDF69uuiFmwD32jkenAeUGXWChFfRgdCTJm",
+        "signature": "5svn9FD2tLzYTFnXvm9Uht2KDFT2C19SUQ99s1VC3Qze2pqA9QYpFsWYmdi2DG5FYL8NnexQBUB9uhyxsDZNoewV"
       }
     },
     {
@@ -398,8 +398,8 @@
       "expected": "ConfigBaseFee",
       "got": "ConfigBaseFee",
       "detail": {
-        "dbcSignature": "2kXX15qxHj8Q21eohvXtggoV8RsSSm7VfSUXZHYLkFSsGReCtiVA2BwiX9jBxkkCy3RnWeX3pB5DnrdBUby3eiFq",
-        "signature": "2dwAYY1RSVkBo6RpKHQps5LMcNDon6Y3eEL22DW1DArEP3uDAE7jVDDve7TAKabtgzzcHGLA3HpkToEmD8QxJ2Rv"
+        "dbcSignature": "3QXKRdJXxtHSx8tcsfP589oDe2UDAWCnzoYnLGqnbzbJXUb8s3NnEN78p5y7q5uQuuiMjbFtBeaCoVuTzTKdgNsa",
+        "signature": "5zHrszSSi1oDQuQhS3kffPxZq6BMhKyyV3f9BzgMayCb6qMvvb7Mwxt4o6YeqQ4BskyuHAaogkxMCcfX8m7mmR4Q"
       }
     },
     {
@@ -408,8 +408,8 @@
       "expected": "ConfigDynamicFee",
       "got": "ConfigDynamicFee",
       "detail": {
-        "dbcSignature": "574URs19933e5Eox2DuToK1y9CUBCqMeyXoJCZXE5F6A94H64vx3jmxSTs8jqDT8oNNAAKfRbghWCwVKEymG9Zdr",
-        "signature": "46xGof9wQcWnhhFtJcfEgxym8tYDw6AJqcD1jgSozrXuZijsQ3GMaJDQ4as339hMUYpZ73txxu2PM6qbEGCzm31h"
+        "dbcSignature": "vuTZDgoju9HHNmFTsziHsaybmdvFwxeZhmTcTUQzSR9wsHWbqqqzprbjrSXyvXcpmzgYjHZyK6a5DbU2T4c2Krn",
+        "signature": "5WkMFfNYkTcQSGLsSjdaJiacWxSHd8ebPzM3dQyBCMQ4SRunVknyryUx8cQ5hU5XyJkiHoGdwodhHHBMEXoSVthP"
       }
     },
     {
@@ -418,8 +418,8 @@
       "expected": "ConfigThreshold",
       "got": "ConfigThreshold",
       "detail": {
-        "dbcSignature": "XQyLkUZzLtVgoiZwabB1JMeHXmemLytB2585xrJt3ua7dqq4c14jkjEraHm51UDGBSaiKjNGMrCCTH1tqpR5KLw",
-        "signature": "SNCRiSZqhVbmV96LKZaGyzKjyYZGx9P4DD77tJcB2qnryNjGXQReTfvMuz4PMyYsLk68XJbaGQGynMTmxjqfs1H"
+        "dbcSignature": "5YtfN7v1wFTT4ADcJahbrGrYBZet8M6Kt3E3c4vtxSMFUQYgi3Zr7fCpujLaiTRxbMoWPG6gmg4RssjTJfLhqaBz",
+        "signature": "3Z2Ln3HGLZBNE8fACUhm92an5KthMmPn95GbEKYBLgbKJaiaCg9BjDKYkvUFPDM3kMRhbHWeoCZeMEN2AYztoPat"
       }
     },
     {
@@ -428,8 +428,8 @@
       "expected": "ConfigStartPrice",
       "got": "ConfigStartPrice",
       "detail": {
-        "dbcSignature": "i3bP8VpRY7fbQqyYQZZULk13Yx1SmqkwaSfdQyxZMKwPzigkLVdC8PG78BsLNe4s1edWXNsLb6mZQB1d5Nm4cHj",
-        "signature": "2S34Qvpzj23fZqNeCM5bFs7EerYyYusvogu1enbozTr7vPg7oREso1qMwKbnQzAV4pfU5sLtWmtmGP5WQqbug6hq"
+        "dbcSignature": "KwfMGBarqEPvZzmfNsda6kodLYWKmU7zt6sd1NjaACiBNg9VVssv5gAtY943w5SnRV4vaXgvJ8zR4FsBJ5oiDBK",
+        "signature": "2dv18FbZ29ZSNvX4EX1euqEef5PR6v9Z6GirNqDqNMdSUNjruwSUEkFSqxZa9CzMpM86ar5Zd6URHeTNGkM7ve7G"
       }
     },
     {
@@ -438,8 +438,8 @@
       "expected": "ConfigCurvePointCount",
       "got": "ConfigCurvePointCount",
       "detail": {
-        "dbcSignature": "5u6BJi2pPFfWviJhwMwT8ULb5DuYgYwP1Ka6Wa37Uwyx4j1YPnH5xGJYYTm8rfa1FgHKEHzkJxwGY8ePedYL1AHT",
-        "signature": "4hTKxR1Ma1cTVPGYpTHFdaptrFgwbmAeFVzcY64MDQAB2KiPUX73yyKvDzHxCAD8y1hn9BtSbL1sGhqMBGBuTc4P"
+        "dbcSignature": "5mgk5dcxTaUC1pHwvfh7YnNL1NKU3irzifniwnGwwEgwLcaYSECqQk3gGtaCtoKKXfEGoxgSRfCZM3k7g1MPxLsQ",
+        "signature": "25bVvXDw4mD1EkUANVodE9LrV71pjFgak7bY7X9kQ2oBDQfmeFwmkyJrZ1oWgJQ35xBkWELXWETW319sg3dVXwx4"
       }
     },
     {
@@ -448,8 +448,8 @@
       "expected": "ConfigCurveTailNotZero",
       "got": "ConfigCurveTailNotZero",
       "detail": {
-        "dbcSignature": "5zPhnX1B7Xtq2HSWw3Kh3vQATy6jx77MSbXfSau4wwpDqN29j9G44ysiRnBQtw7ejdysddNn4cAgCrJ1WCN8HaPW",
-        "signature": "5P4dEkxvs93R7j812yQpcmKWxfZnP2SfNh6SYDLpCaUw5dvnBbvD6rTW3VXnSZuiL1LTdbm9htm2nbdag1NNtdqp"
+        "dbcSignature": "44mZhhSHgFd4mdixRg2w7NBqsyCvaRi9zHrMDDyB6mYASHbXkibfJqL5ex1mSDA9bkXdzReSVzTwJ4RSZHZ3w2BN",
+        "signature": "4i2sqP2aGmQaXoCNnHBaHRw5TQQfZrHuFW3Qz31Lg8qQ2BGuGPDCqDrmuWXSWxkBLd4UKCCbeVMWimqjdNrrX2QA"
       }
     },
     {
@@ -458,8 +458,8 @@
       "expected": "ConfigMigrationPriceOutOfBand",
       "got": "ConfigMigrationPriceOutOfBand",
       "detail": {
-        "dbcSignature": "3ecDEVwMEe1eSwymjbyhHXbgvcuyVbp2KGgKcShd9RgZbqa5JGttRECwkPxGQ6AhKSwppdti757HMXoEDgP2czzJ",
-        "signature": "F7JzH1fj7uFN9YATiCFRWudbi8AymcvtKFm6UmUJhuGQtaa3bFJYdjYDcg5HZGZMJHHz11YqU9kBBAoDqro7HiJ"
+        "dbcSignature": "zM4DYBYxFsxd79FX8ajsJXBdwtztvstqTL5KB6eYDCrYdX8NeDzgrC7Ek9R1fUCrctYPrHMiCKq6GZ2ZRpiw4w3",
+        "signature": "546qzkKaPn1FsdJEs2yBmzPDDDfUNhBdjJkQhUtXjLBtkGDtrKeizhmeDyASEWimrWRubk2HFnTKcJegwH5kV9nX"
       }
     },
     {
@@ -468,8 +468,8 @@
       "expected": "ConfigHashMismatch",
       "got": "ConfigHashMismatch",
       "detail": {
-        "dbcSignature": "4dTA2zqn6wzCUuKyogkL5XVZAGrPXpjyt7qtqmEgbfjwsQ8zhr76v72kRRZzCXrHhtFjAL6VmdexJTKQ2iZvPR1b",
-        "signature": "3nLeHrHSm8UcTJqu89m6S1GoFKbMbtcRoxF4CQdKEfLzfTMZ2jqA1jgASnZxMV1YXUpcqAgoAEGoQ6UwQ3heooAD"
+        "dbcSignature": "2m7cJgu14KYcoaBYEqWccbZjq5UqqzRTv5ZvFdyigNvQVt4mW3xysHma1HESANDcf3aqJqpep3Y4fagRagi9pzBF",
+        "signature": "75xm84P4F33LuRX4AwVFrG336myp6567yByBDFaLsZfgwFDhCht1tUrgM2AswUvni9sYL6qvUksqRe2zNFpmAG8"
       }
     },
     {
@@ -481,8 +481,8 @@
         "shortfall": "4580462",
         "tolerance": "4580461",
         "seg3DeltaL": "35294117647058823",
-        "dbcSignature": "57YXAYzNnoPpgphJwKeP1shn6AJP999TjZRSjCnYRQaEUMS4pryp5NyzZMPDF53Wx7ayzZcWSRpCz3BpjXTYcadP",
-        "signature": "51dCfnido2KKqH7YWAKVVH1uLRWQS5tVGZn9NAYhda8mbN1cxXMz1p3S6rYcEEbu8SUpLFNmh7SmannqDpJmaC6H"
+        "dbcSignature": "5L6DwdMZFim3KeFpqkYFhNM56SZnpK6PA3zohyn2QCzRVE4mxaT4y61RA84zQ4JzPUrtiivTE1AvTsJSdBSxbyQP",
+        "signature": "3312b7Nw2fuqSKizRRK6mjhnWWN8E7oETisWy7FRx7av8Kh233Q9WdtXWVzG2s9wXxD73Nz6Y1vGsuYd1AzXA1Dh"
       }
     },
     {
@@ -494,8 +494,8 @@
         "shortfall": "4580460",
         "tolerance": "4580461",
         "seg3DeltaL": "11764705882352941",
-        "dbcSignature": "4242v9E9o3NxtLMnUkYTCD7s4wfJNQzTTBUv69uTJqH835T4xQxVtWwtG1EFeYUfP6B8oocgwVhWxT8mF1phDEGK",
-        "signature": "4bCcLpTGtBNfE7RQRjNN6v7oeMCHZCPfvFe3tXBEUhgZWwfPAxMx3UdBcAaXnfyDdWv1ymFSviK8qMAJ6CcLVdi6"
+        "dbcSignature": "3kMP2R6zKFbsKJWMGWcMYcK7PqDpvmmXDeqXrPbewvQGhnX4s7qZdPt8QmWMwRWd36QvxqjiuLZdt1uUtEz9Xuzy",
+        "signature": "2Yk47DxNHQUVPHba4qwGSVCP1FH2sHbNofNAexUSxiZknXspZu4cZ6Fi9zWMBtUGwnsEZNh3b8uAnHqnEex5chVw"
       }
     },
     {

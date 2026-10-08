@@ -1,0 +1,39 @@
+{
+  "suite": "Keeper (§31) — launches driven by cranks alone, on mainnet binaries",
+  "ranAt": "2026-10-08T18:17:44.998Z",
+  "pass": 5,
+  "fail": 0,
+  "unreachable": 0,
+  "results": [
+    {
+      "name": "keeper: Registered → Funded → (migrated) → Cleaned → Open by cranks alone",
+      "status": "pass",
+      "expected": "Open with the bid at F's bin",
+      "got": "{\"end\":5,\"bin\":-11906,\"trail\":[\"settle_graduation\",\"migration_damm_v2\",\"create lookup table\",\"burn_leftover\",\"initialize_bin_array\",\"open_floor(hint -11906)\"]}"
+    },
+    {
+      "name": "keeper: after a fill, the next crank settles it and re-places the vault at F's new bin",
+      "status": "pass",
+      "expected": "refresh after the fill; F rose",
+      "got": "[\"refresh_floor(hint -11906)\"]"
+    },
+    {
+      "name": "keeper: harvest and pay_creator on schedule",
+      "status": "pass",
+      "expected": "harvest + pay_creator",
+      "got": "[\"harvest\",\"pay_creator\"]"
+    },
+    {
+      "name": "keeper: a pin before open — F's bin refused (6056), the keeper opens at the active bin instead (D-020/D-021)",
+      "status": "pass",
+      "expected": "open refused at F's bin, then capped at the pin",
+      "got": "{\"t\":[\"open_floor(hint -11906) ✗BinRangeIsNotEmpty\",\"open_floor(hint -11945)\"],\"capped\":true,\"bin\":-11945,\"pin\":-11945}"
+    },
+    {
+      "name": "keeper: once the pin is gone, the next crank lifts the capped bid to F's bin",
+      "status": "pass",
+      "expected": "uncapped at F's bin",
+      "got": "{\"t\":[\"refresh_floor(hint -11906)\"],\"bin\":-11906}"
+    }
+  ]
+}

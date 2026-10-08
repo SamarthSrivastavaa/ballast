@@ -2,7 +2,8 @@
 //!
 //! **Program Part 1 (§6):** `initialize_global`, `create_class`, `register_launch` (D-011),
 //! `settle_graduation`, `burn_leftover`. **Part 2** (`floor_ix`): `open`, `refresh_floor`, `redeem`,
-//! `floor`, `harvest`, `deposit`.
+//! `floor`, `harvest`, `deposit`. **D-022** (`creator_ix`): `pay_creator` — creator income, kept off
+//! the floor's critical path.
 //!
 //! The P0 gate (Q1–Q5) closed on 4 Oct 2026 against the mainnet Meteora binaries, which is what
 //! permits any of this to exist (`CLAUDE.md` § P0 gate rule, `evidence/p0/REPORT.md`).
@@ -17,6 +18,7 @@ use anchor_lang::solana_program::bpf_loader_upgradeable;
 use anchor_lang::solana_program::hash::hash;
 use anchor_lang::solana_program::program::{invoke, invoke_signed};
 
+pub mod creator_ix;
 pub mod curve;
 pub mod damm;
 pub mod dbc_cpi;
@@ -27,6 +29,7 @@ pub mod introspect;
 pub mod spl;
 pub mod state;
 
+pub use creator_ix::*;
 pub use floor_ix::*;
 
 use errors::BallastError;
@@ -140,19 +143,21 @@ fn upgrade_authority(info: &AccountInfo) -> Result<Option<Pubkey>> {
     Ok(Some(Pubkey::new_from_array(key)))
 }
 
-/// The `VirtualPool` fields `settle_graduation` and `burn_leftover` act on.
-struct PoolView {
-    base_vault: Pubkey,
-    quote_vault: Pubkey,
-    quote_reserve: u64,
-    migration_progress: u8,
-    is_withdraw_leftover: u8,
-    is_partner_withdraw_surplus: u8,
+/// The `VirtualPool` fields `settle_graduation`, `burn_leftover` and `pay_creator` act on.
+pub(crate) struct PoolView {
+    pub base_vault: Pubkey,
+    pub quote_vault: Pubkey,
+    pub quote_reserve: u64,
+    pub migration_progress: u8,
+    pub is_withdraw_leftover: u8,
+    pub is_partner_withdraw_surplus: u8,
+    pub creator_base_fee: u64,
+    pub creator_quote_fee: u64,
 }
 
 /// Decode the launch's DBC pool and re-check its cross-links (§5 rules 1–2): owner, discriminator,
 /// `config == class.dbc_config`, `base_mint == launch.base_mint`, and the passed vaults are its own.
-fn read_launch_pool(
+pub(crate) fn read_launch_pool(
     info: &AccountInfo,
     class: &Class,
     launch: &Launch,
@@ -188,6 +193,8 @@ fn read_launch_pool(
         migration_progress: s.migration_progress,
         is_withdraw_leftover: s.is_withdraw_leftover,
         is_partner_withdraw_surplus: s.is_partner_withdraw_surplus,
+        creator_base_fee: s.creator_base_fee,
+        creator_quote_fee: s.creator_quote_fee,
     };
     require!(
         view.base_vault == *base_vault && view.quote_vault == *quote_vault,
@@ -633,6 +640,7 @@ pub mod ballast {
 
         // ---- the DBC pool (§5 rules 1–2) ----
         let pool_info = &ctx.accounts.virtual_pool;
+        let pool_key = pool_info.key();
         require_keys_eq!(
             *pool_info.owner,
             DBC_PROGRAM_ID,
@@ -796,13 +804,15 @@ pub mod ballast {
             slot,
             dlmm_pair: expected_pair,
             creator_beneficiary,
+            dbc_pool: pool_key,
         });
         Ok(())
     }
 
     /// §6 `settle_graduation()`: once the curve is complete, move the partner migration fee and the
-    /// partner trading fees into the vault and the creator trading fees to the beneficiary, each
-    /// measured as a balance delta. Valid before or after migration (§5 keeper lag).
+    /// partner trading fees into the vault, each measured as a balance delta. Valid before or after
+    /// migration (§5 keeper lag). Partner flows only (D-022): the creator's trading fees stay in DBC
+    /// for `pay_creator`, so nothing the creator controls can block graduation.
     pub fn settle_graduation(ctx: Context<SettleGraduation>) -> Result<()> {
         let a = &ctx.accounts;
         require!(
@@ -824,21 +834,6 @@ pub mod ballast {
         let base_mint = a.launch.base_mint;
         let vault = a.vault.key();
         let st0 = staging_balance(&a.staging_base, &partner, &base_mint)?;
-        let beneficiary = a.launch.creator_beneficiary;
-        require_keys_eq!(
-            a.beneficiary_quote.key(),
-            ata_of(&beneficiary, &canon::QUOTE_MINT),
-            BallastError::BeneficiaryAccountInvalid
-        );
-        let ben_bal = || {
-            token_balance(
-                &a.beneficiary_quote,
-                &canon::QUOTE_MINT,
-                &beneficiary,
-                BallastError::BeneficiaryAccountInvalid,
-            )
-        };
-        ben_bal()?;
         let sub = |x: u64, y: u64| {
             x.checked_sub(y)
                 .ok_or_else(|| error!(BallastError::Overflow))
@@ -867,13 +862,11 @@ pub mod ballast {
             a.virtual_pool.to_account_info(),
             a.vault.to_account_info(),
             a.staging_base.to_account_info(),
-            a.beneficiary_quote.to_account_info(),
             a.base_vault.to_account_info(),
             a.quote_vault.to_account_info(),
             a.base_mint.to_account_info(),
             a.quote_mint.to_account_info(),
             a.partner_auth.to_account_info(),
-            a.creator_auth.to_account_info(),
             a.token_program.to_account_info(),
             a.dbc_event_authority.to_account_info(),
             a.dbc_program.to_account_info(),
@@ -884,11 +877,6 @@ pub mod ballast {
             &[a.class.partner_auth_bump],
         ];
         let launch_key = a.launch.key();
-        let creator_seeds: &[&[u8]] = &[
-            b"creator",
-            launch_key.as_ref(),
-            &[a.launch.creator_auth_bump],
-        ];
 
         invoke_signed(
             &dbc_cpi::withdraw_migration_fee(
@@ -908,25 +896,7 @@ pub mod ballast {
         )?;
         let v2 = vault_bal()?;
         let st1 = staging_balance(&a.staging_base, &partner, &base_mint)?;
-        // Read after the partner claims, so the delta is the creator claim alone.
-        let ben0 = ben_bal()?;
-        invoke_signed(
-            &dbc_cpi::claim_creator_trading_fee(
-                &pool,
-                a.staging_base.key,
-                a.beneficiary_quote.key,
-                a.creator_auth.key,
-            ),
-            &infos,
-            &[creator_seeds],
-        )?;
-        let ben1 = ben_bal()?;
         // §7 rule 2 pins DBC collect_fee_mode = QuoteToken, so no base fee accrues to anyone.
-        // A creator base fee would belong to the beneficiary: fail closed rather than burn it.
-        require!(
-            staging_balance(&a.staging_base, &partner, &base_mint)? == st1,
-            BallastError::CreatorBaseFee
-        );
         // Partner base fees from this instruction's own claim are burned (S falls, so F can only
         // rise). Only this delta: a leftover a third party already withdrew into staging stays
         // there for `burn_leftover` to burn and record (D-016).
@@ -941,14 +911,9 @@ pub mod ballast {
 
         let migration_fee = sub(v1, v0)?;
         let partner_fees = sub(v2, v1)?;
-        let creator_fees = sub(ben1, ben0)?;
         let l = &mut ctx.accounts.launch;
         l.migration_fee = migration_fee;
         l.partner_fees = partner_fees;
-        l.creator_forwarded = l
-            .creator_forwarded
-            .checked_add(creator_fees)
-            .ok_or_else(|| error!(BallastError::Overflow))?;
         l.burned = l
             .burned
             .checked_add(stray)
@@ -958,7 +923,6 @@ pub mod ballast {
             launch: launch_key,
             migration_fee,
             partner_fees,
-            creator_fees,
             base_burned: stray,
         });
         Ok(())
@@ -1110,6 +1074,11 @@ pub mod ballast {
     pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
         floor_ix::handle_deposit(ctx, amount)
     }
+
+    /// D-022 `pay_creator()` — see `creator_ix::handle_pay_creator`.
+    pub fn pay_creator(ctx: Context<PayCreator>) -> Result<()> {
+        creator_ix::handle_pay_creator(ctx)
+    }
 }
 
 #[derive(Accounts)]
@@ -1239,18 +1208,12 @@ pub struct SettleGraduation<'info> {
     /// CHECK: PDA with no data; DBC `fee_claimer`, signs the partner CPIs.
     #[account(seeds = [b"partner", class.dbc_config.as_ref()], bump = class.partner_auth_bump)]
     pub partner_auth: UncheckedAccount<'info>,
-    /// CHECK: PDA with no data; DBC pool creator, signs the creator fee claim.
-    #[account(seeds = [b"creator", launch.key().as_ref()], bump = launch.creator_auth_bump)]
-    pub creator_auth: UncheckedAccount<'info>,
     /// CHECK: the launch's WSOL vault (§5) — derived, never caller-supplied.
     #[account(mut, seeds = [b"vault", launch.key().as_ref()], bump = launch.vault_bump)]
     pub vault: UncheckedAccount<'info>,
     /// CHECK: `partner_auth`'s base-mint ATA (staging); address and fields checked in the handler.
     #[account(mut)]
     pub staging_base: UncheckedAccount<'info>,
-    /// CHECK: a WSOL token account owned by `launch.creator_beneficiary` (handler).
-    #[account(mut)]
-    pub beneficiary_quote: UncheckedAccount<'info>,
     /// CHECK: DBC's constant pool authority.
     #[account(address = dbc_cpi::DBC_POOL_AUTHORITY)]
     pub dbc_pool_authority: UncheckedAccount<'info>,
@@ -1342,6 +1305,8 @@ pub struct LaunchRegistered {
     pub slot: u64,
     pub dlmm_pair: Pubkey,
     pub creator_beneficiary: Pubkey,
+    /// §25: the launch's DBC pool.
+    pub dbc_pool: Pubkey,
 }
 
 #[event]
@@ -1349,10 +1314,8 @@ pub struct GraduationSettled {
     pub launch: Pubkey,
     /// Partner migration fee → vault (§10: 15% of the threshold).
     pub migration_fee: u64,
-    /// Partner DBC trading fees → vault.
+    /// Partner DBC trading fees → vault. (The creator's fees are `pay_creator`'s, D-022.)
     pub partner_fees: u64,
-    /// Creator DBC trading fees → beneficiary.
-    pub creator_fees: u64,
     /// Base fees burned from staging (0 under the class's QuoteToken fee mode).
     pub base_burned: u64,
 }

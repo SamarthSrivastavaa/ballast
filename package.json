@@ -18,7 +18,12 @@
     "reference:emit": "python tests/reference/floor.py --emit 10000 > crates/floor/vectors.json",
     "test:rust": "cargo test --workspace --all-targets",
     "test:property": "cross-env PROPTEST_CASES=100000 cargo test -p ballast-floor --test properties",
-    "lint:rust": "cargo fmt --all --check && cargo clippy --all-targets -- -D warnings"
+    "lint:rust": "cargo fmt --all --check && cargo clippy --all-targets -- -D warnings",
+    "test:program": "tsx tests/integration/program/run.ts",
+    "test:fuzz": "cargo run -p ballast-fuzz --release -- --steps 1000000 --runs 200 --seed 20261008 --out evidence/fuzz/model-1m.json",
+    "test:wasm": "cargo build -p floor-wasm --target wasm32-unknown-unknown --release && tsx sdk/typescript/test/differential.ts",
+    "verifier:build": "cargo build --release -p ballast-verifier",
+    "proof:local": "cargo build --release -p ballast-verifier && tsx scripts/proof/local.ts"
   },
   "devDependencies": {
     "@coral-xyz/anchor": "0.31.1",

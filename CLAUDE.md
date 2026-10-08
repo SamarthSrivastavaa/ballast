@@ -71,6 +71,11 @@ to the vault.
 4. Redemption pays at s computed **after** settlement and **before** the burn; the post-state check must then pass.
 5. Bounds asserts precede all arithmetic.
 
+## Principles from the Part 2 audit (D-021, D-022)
+
+- **No outside actor can prevent the floor from existing; F and redemption never depend on DLMM pair state.**
+- **Nothing the creator controls is on the floor's critical path.**
+
 ## The six corrections to the canon (§1) — non-negotiable
 
 1. **Bounded range.** The equation carries the `−L·(1/√P_max)` term; L is permanent-only, DAMM Q64 units.

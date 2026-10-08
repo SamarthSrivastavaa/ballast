@@ -224,7 +224,7 @@ If migration happens before `settle_graduation` (keeper lag), `settle_graduation
 | `vault` | `["vault", launch]` | SPL Token | WSOL token account, authority `partner_auth` | Never closed |
 | `partner_auth` | `["partner", dbc_config]` | System (no data) | Holds lamports for order rent | Kept funded by keeper |
 | `creator_auth` | `["creator", launch]` | System (no data) | — | — |
-| Staging accounts | ATAs of `partner_auth` (WSOL, base mint) and `creator_auth` (WSOL) | SPL Token | Transit only; zero balance at the end of every instruction | Never closed |
+| Staging accounts | ATAs of `partner_auth` (WSOL, base mint) and `creator_auth` (WSOL) | SPL Token | Transit only; zero balance at the end of every instruction `[audit 7 Oct: open, refresh_floor, redeem and harvest burn the whole base staging balance (fills and anything sent there from outside) and record it in burned; harvest sends the whole WSOL staging balance on (10% of the claimed fees → treasury, the rest → vault). D-016's exception stands: settle_graduation leaves a leftover a third party front-ran into staging for burn_leftover to burn and record. D-022: no creator_auth staging account exists]` | Never closed |
 
 ### Account-substitution rules (applied in every instruction)
 
@@ -264,7 +264,7 @@ If migration happens before `settle_graduation` (keeper lag), `settle_graduation
 - **Preconditions:** curve complete; state `Registered`.
 - **CPI:** `withdraw_migration_fee` (partner flag; signer `partner_auth`), `claim_trading_fee` (partner; max amounts), `claim_creator_trading_fee` (signer `creator_auth`).
 - **Effect:** partner flows → staging → `vault`; creator trading fees → beneficiary. Amounts measured as balance deltas. State → `Funded`. `[D-016: no WSOL staging and no creator_auth WSOL ATA — the partner flows go straight to the vault and the creator's quote fees straight to ATA(creator_beneficiary, WSOL), which register_launch requires to be an outside account; the only staging account is partner_auth's base ATA, whose partner-claim delta is burned; a creator base fee fails closed]`
-- **Errors:** curve not complete; already settled (status bitmask). **Event:** `GraduationSettled{migration_fee, partner_fees, creator_fees}`.
+- **Errors:** curve not complete; already settled (status bitmask). **Event:** `GraduationSettled{migration_fee, partner_fees, creator_fees}`. `[D-022: partner flows only — the creator claim and the beneficiary account move to pay_creator, so nothing the creator controls can block graduation; creator_fees is no longer reported here]`
 - **Re-entry:** DBC's withdraw bitmask makes a repeat a no-op; Ballast checks state first.
 
 ### `burn_leftover()`
@@ -279,27 +279,35 @@ If migration happens before `settle_graduation` (keeper lag), `settle_graduation
 - **Signers:** any payer; fresh limit-order keypair. **Accounts:** `launch` (w), `class`, DAMM `pool`, partner and creator `position`s + NFT accounts, `base_mint`, `vault` (w), DLMM pair (w), bin arrays (w), bitmap extension, order account (w, s), DLMM program, event authority.
 - **Preconditions:** state `Cleaned`; both positions: `pool == damm_pool`, owner/NFT holder ∈ {`partner_auth`, `creator_auth`}, `unlocked_liquidity == 0`, `vested_liquidity == 0`, `permanent_locked_liquidity > 0`; pool `collect_fee_mode == 1`, non-compounding.
 - **Effect:** records positions; computes `s_open`; requires `s_open ≥ predicted_s`; verifies `price(bin_id_hint) ≤ F < price(bin_id_hint + 1)`; CPI `place_limit_order` (bid, one bin, entire vault); `bid_quote_committed = amount`; `s_last = s_open`. State → `Open`.
-- **Event:** `FloorOpened{s_open, predicted_s, L, V, S, bin_id}`.
+- **Event:** `FloorOpened{s_open, predicted_s, L, V, S, bin_id}`. `[§25 + audit 7 Oct: also committed and order (default while the DLMM leg is suspended, D-021)]`
 
 ### `refresh_floor(bin_id_hint)`
 
 - **Signers:** any payer; new order keypair. **Accounts:** as `open` plus the current order account and `partner_auth` base ATA.
 - **CPI:** `cancel_limit_order` (returns unfilled WSOL, filled base, fees), SPL `burn` of all base received, `place_limit_order` at the new highest bin ≤ F with the whole vault.
-- **Effect:** fills settled and burned; F recomputed; bid moved up. **Event:** `FloorRefreshed{filled, burned, s_new, bin_id}`.
-- **Re-entry:** harmless; with no fills and no new quote it re-places at the same bin. Rate-limited to once per N slots per launch to bound griefing cost.
+- **Effect:** fills settled and burned; F recomputed; bid moved up. **Event:** `FloorRefreshed{filled, burned, s_new, bin_id}`. `[§25 + audit 7 Oct: FloorRefreshed{filled_tokens, burned, quote_returned, s_new, bin_id, order}; Launch.fill_quote_spent += committed − quote_returned]`
+- **Re-entry:** harmless; with no fills and no new quote it re-places at the same bin. Rate-limited to once per N slots per launch to bound griefing cost. `[audit 7 Oct: N = 10 slots; while the bid is capped (D-020) or suspended (D-021), a refresh that lifts it to F's bin skips the limit, so a griefer cannot hold the bid down by spending the window on caps]`
 
 ### `harvest()`
 
+`[D-022 + audit 7 Oct: partner position only. Fees are claimed into partner_auth's WSOL staging ATA; 10% (rounded down) goes staging → treasury and the rest staging → vault, so staging ends at zero and the vault is never a source. The creator position's fees move to pay_creator]`
+
 - **Signers:** any payer. **Accounts:** DAMM pool, both positions + NFT accounts, staging WSOL ATAs (w), `vault` (w), treasury WSOL account (w), beneficiary WSOL ATA (w), DAMM program + event authority.
 - **CPI:** `claim_position_fee` on the partner position (signer `partner_auth`) and creator position (signer `creator_auth`).
-- **Effect:** partner fees: 90% → `vault`, 10% → treasury; creator fees → beneficiary. F rises. **Event:** `Harvested{to_vault, to_treasury, to_creator}`.
+- **Effect:** partner fees: 90% → `vault`, 10% → treasury; creator fees → beneficiary. F rises. **Event:** `Harvested{to_vault, to_treasury, to_creator}`. `[D-022: Harvested{to_vault, to_treasury, base_burned, s_new}; creator fees are pay_creator's]`
 
 ### `redeem(amount, min_out)`
 
 - **Signers:** holder; fresh order keypair. **Accounts:** holder base ATA (w), holder WSOL ATA (w), plus every `refresh_floor` account.
 - **Preconditions:** state `Open`; `amount ≥ min_redeem`.
 - **Sequence:** cancel order → burn filled base → compute s → payout = ⌊amount·s²·(1 − φ)/2¹²⁸⌋ → require payout ≥ `min_out` and ≤ vault → transfer payout → burn holder tokens → recompute s′ → require s′ ≥ s\_last → re-place bid.
-- **Event:** `Redeemed{holder, amount, payout, s, s_new}`. **Fallback if CU is too high (Q18):** two-step redeem from a small on-hand reserve plus `refresh_floor`.
+- **Event:** `Redeemed{holder, amount, payout, s, s_new}`. `[§25 + audit 7 Oct: Redeemed{holder, amount, payout, s_before, s_after, filled_tokens, quote_returned}; BidCapped / BidSuspended when the re-placement is capped or suspended (D-020, D-021)]` **Fallback if CU is too high (Q18):** two-step redeem from a small on-hand reserve plus `refresh_floor`.
+
+### `pay_creator()` `[D-022]`
+
+- **Signers:** any payer. **Accounts:** `launch`, `creator_auth`, the DBC pool accounts, partner_auth's base staging ATA, `ATA(creator_beneficiary, WSOL)`, and once `Open` the creator position + NFT account and the DAMM pool vaults.
+- **CPI:** DBC `claim_creator_trading_fee` and, once `Open`, DAMM `claim_position_fee` on the creator position, both signed by `creator_auth`, quote straight to the beneficiary's WSOL ATA (validated: address, mint, owner); a creator base fee fails closed.
+- **Effect:** creator income only. Nothing on the floor's critical path depends on it: if the beneficiary account is invalid, only this instruction fails and the fees stay claimable. **Event:** `CreatorPaid{dbc_fees, lp_fees}`.
 
 ### `deposit(amount)`
 
@@ -307,7 +315,7 @@ If migration happens before `settle_graduation` (keeper lag), `settle_graduation
 
 ### `floor()` (view)
 
-- **Signers:** none. **Effect:** returns `{s, F_raw, V, S, L, s_last, bin_id, bin_price}` via `set_return_data`; used by the verifier, the app and the challenge.
+- **Signers:** none. **Effect:** returns `{s, F_raw, V, S, L, s_last, bin_id, bin_price}` via `set_return_data` `[D-020/D-021: then capped, suspended (bool each); while suspended bin_id is the pinned active bin]`; used by the verifier, the app and the challenge.
 
 ## 7. DBC Integration
 
@@ -387,7 +395,7 @@ In OnlyB mode fees accrue to positions as claimable amounts, so swaps and claims
 
 ### Fail-safe
 
-If a later read shows L below the recorded value (a Meteora change), Ballast emits `BackingDecreased`, marks the launch degraded, and keeps redemption open at the lower F (still solvent); only the monotone check is suspended for that launch. If Meteora ever disables the pool, the vault leg (bids and redemption) still works.
+If a later read shows L below the recorded value (a Meteora change), Ballast emits `BackingDecreased`, marks the launch degraded, `[audit 7 Oct: after open the positions are checked for identity only (owner, discriminator, pool, PDA) so a decrease can never abort an instruction; each position keeps its own recorded L, and every decrease of either emits its own BackingDecreased{position, L_recorded, L_read}]` and keeps redemption open at the lower F (still solvent); only the monotone check is suspended for that launch. If Meteora ever disables the pool, the vault leg (bids and redemption) still works.
 
 ## 9. DLMM Integration
 
@@ -416,7 +424,7 @@ price(id) = (1 + bin\_step/10⁴)^id lamports per base unit, as DLMM's own Q64 `
 | Fill | Any swap crossing the bin (any router) | Reported V and S unchanged; true F rises |
 | Partial fill | Same | Same |
 | Settle | CPI `cancel_limit_order` → unfilled WSOL to vault, filled base to staging, fees to vault; order closed | V falls by quote spent, S falls by tokens burned; reported F rises |
-| Re-place | New order at the new highest bin ≤ F | V unchanged |
+| Re-place | New order at the new highest bin ≤ F `[D-020: DLMM accepts a bid only at or below the pair's active bin. open/refresh_floor CPI go_to_a_bin(F's bin) when the active bin is below it; if a third-party order blocks the move, the bid is capped at the active bin (still ≤ F), recorded as bid_capped and emitted. redeem never moves the active bin]` `[D-021: the cap is allowed only within 70 bins under F's bin; further down (or where DLMM's price is undefined) the vault stays unplaced — bid_order = default, V still counted, redemption live, BidSuspended emitted. The bitmap-extension account is supported for go_to_a_bin]` | V unchanged |
 | Stale order | F rose above the next bin | `refresh_floor` moves it; permissionless, rate-limited |
 
 ### The six prices, kept distinct everywhere
@@ -433,6 +441,8 @@ price(id) = (1 + bin\_step/10⁴)^id lamports per base unit, as DLMM's own Q64 `
 ## 10. Vault / Redemption System
 
 **The vault can pay only three destinations — the DLMM bid it owns, a redeemer at the floor, and nobody else — and every lamport that enters or leaves is reconciled in the ledger below.**
+
+`[D-022 + audit 7 Oct: this holds structurally — the program has exactly two token transfers out of the vault (the DLMM bid it owns, via place_limit_order; a redeemer, via redeem). The treasury's 10% of partner LP fees is paid from partner_auth's WSOL staging account before anything reaches the vault, and creator fees never touch it (pay_creator)]`
 
 ### `redeem(T, min_out)` exactly
 
@@ -756,7 +766,7 @@ anchor test                                     # local validator with real DBC 
 
 ### Can anyone withdraw user backing?
 
-No instruction in the program transfers from `vault` except (1) into a DLMM limit order owned by `partner_auth` and (2) to a redeemer, in the same instruction that burns their tokens at F. The LP positions are permanently locked, owned by PDAs, and the program contains no CPI to any liquidity-removal endpoint. The only path is a malicious program upgrade by the multisig, which is disclosed.
+No instruction in the program transfers from `vault` except (1) into a DLMM limit order owned by `partner_auth` and (2) to a redeemer, in the same instruction that burns their tokens at F. `[D-022: still exact — harvest's treasury share is paid from staging, not the vault]` The LP positions are permanently locked, owned by PDAs, and the program contains no CPI to any liquidity-removal endpoint. The only path is a malicious program upgrade by the multisig, which is disclosed.
 
 ### Incident handling
 
@@ -881,14 +891,17 @@ The Proof and Public classes differ only in threshold, start price and curve liq
 | --- | --- |
 | `ClassCreated` | config, size, hash, predicted\_s\_open |
 | `LaunchRegistered` | mint, pool, predicted\_s, slot, beneficiary |
-| `GraduationSettled` | migration\_fee, partner\_fees, creator\_fees |
+| `GraduationSettled` | migration\_fee, partner\_fees, creator\_fees `[D-022: creator_fees → base_burned; creator fees are reported by CreatorPaid]` |
 | `LeftoverBurned` | amount, surplus |
 | `FloorOpened` | s\_open, predicted\_s, V, S, L, bin\_id, order |
 | `FloorRefreshed` | filled\_tokens, burned, quote\_returned, s\_new, bin\_id, order |
-| `Harvested` | to\_vault, to\_treasury, to\_creator, s\_new |
-| `Redeemed` | holder, amount, payout, s\_before, s\_after |
+| `Harvested` | to\_vault, to\_treasury, to\_creator, s\_new `[D-022: to_creator → base_burned]` |
+| `Redeemed` | holder, amount, payout, s\_before, s\_after `[audit 7 Oct: + filled_tokens, quote_returned]` |
 | `Deposited` | from, amount, s\_new |
 | `BackingDecreased` | position, L\_recorded, L\_read |
+| `BidCapped` `[D-020]` | launch, bin |
+| `BidSuspended` `[D-021]` | launch, active_bin |
+| `CreatorPaid` `[D-022]` | dbc\_fees, lp\_fees |
 
 **State views:** `floor()`; the `Launch` account counters.
 

@@ -1,7 +1,7 @@
 {
   "suite": "Program Part 1 — settle_graduation, burn_leftover (§6)",
-  "ranAt": "2026-10-06T13:43:37.970Z",
-  "pass": 26,
+  "ranAt": "2026-10-08T18:06:46.178Z",
+  "pass": 32,
   "fail": 0,
   "unreachable": 1,
   "results": [
@@ -11,34 +11,7 @@
       "expected": "CurveNotComplete",
       "got": "CurveNotComplete",
       "detail": {
-        "signature": "5wA8i6kVwGh1esBFB6pk28uzn6H3zZ26RiKFKDNVm8dHP25PRz5MwB7gTKDsfqZ5w3J9H21m1SYngdCfE9Eizc9w"
-      }
-    },
-    {
-      "name": "settle_graduation: beneficiary WSOL account owned by someone else",
-      "status": "pass",
-      "expected": "BeneficiaryAccountInvalid",
-      "got": "BeneficiaryAccountInvalid",
-      "detail": {
-        "signature": "3nc8mCii71bNQ5XenoNr9kavP65ZumevRsGD3Dj3oTwoBhasiMaiHao5KzsPqGwExZGGArjNiGo4PnwSficBjxqb"
-      }
-    },
-    {
-      "name": "settle_graduation: beneficiary's own WSOL account that is not its ATA (D-016)",
-      "status": "pass",
-      "expected": "BeneficiaryAccountInvalid",
-      "got": "BeneficiaryAccountInvalid",
-      "detail": {
-        "signature": "5gchJet5MpNdqcY32ztga9dUjXYg2GBEetH4HbjQc2ErbCrGNQMPJAEYx2zoKqULRER8FXXDhPmj3bj7GeSR9pBA"
-      }
-    },
-    {
-      "name": "settle_graduation: beneficiary account = this launch's vault",
-      "status": "pass",
-      "expected": "BeneficiaryAccountInvalid",
-      "got": "BeneficiaryAccountInvalid",
-      "detail": {
-        "signature": "3Q3oDQrDyiGniMCNNssi2wwirpHVmn3BrMPw3vypJwjoJfyFXkn4R5dZ4VNrZrKUh3FYcHKLpybYEUbqpZEyYVcs"
+        "signature": "2Rc61mkyWkNotX3k3xCvyhVoiCpZiDLayDbzNdzpv73nJ5iZX99DA4wrZKfD7hhLAxDDi3WpVSdGEMmhbeENNKxG"
       }
     },
     {
@@ -47,7 +20,7 @@
       "expected": "StagingNotPartnerAta",
       "got": "StagingNotPartnerAta",
       "detail": {
-        "signature": "fzRc2ywSRZfLBQARbm8c6KeDcimZKwmSf7hAmLiWcsoSMTwwXp5orWJDfsEhCYyUmjRLyDiJ7CfrUFnfwqaBDFK"
+        "signature": "27xrfjim3Vs1LyJmWmDnZjy2nubZYEurZ3QJXf8M6a8WjEMJpTdBH61DkfgsVJKJXzJorQ5Kw7mXuMSfBqKmRGhX"
       }
     },
     {
@@ -56,7 +29,7 @@
       "expected": "PoolVaultMismatch",
       "got": "PoolVaultMismatch",
       "detail": {
-        "signature": "3q5pS4jMwXMDEj2ofoRXQkEz6qQaJ8NNih3zZzhkFTLreW663rYmURG2BKN6nCVzeUWt8gSyMr2hQmDUYA4ACXq9"
+        "signature": "mPjMyDiWFddiMEK14s1nfpbrzRdy2Dmrtn31Jp7EdDbaiYko1DX8MuaLQjsRzGbGYYD6mPrYWtNUifJ3hbYmv7b"
       }
     },
     {
@@ -65,7 +38,7 @@
       "expected": "PoolVaultMismatch",
       "got": "PoolVaultMismatch",
       "detail": {
-        "signature": "3MLNSzz7z4Rv3HYtoyLkxjarDscBqTtfr6FYRK2z52FYVjKXrRU3pjcEkFF93gezhNLYg5YVqkv7GP35gFAMHYFg"
+        "signature": "4R5GFQEmetJuUMNxu9VcYi3j5CG1Nce8umR1QQzQ6L9XP9jtEgxGNRVztNrWbSfwtXAZkXSnXUHJ95BgkyK5WNxF"
       }
     },
     {
@@ -74,7 +47,7 @@
       "expected": "ConstraintSeeds",
       "got": "ConstraintSeeds",
       "detail": {
-        "signature": "3vJ5PGRxgKzyxNyCGQi43UTMHYKfsSwkXy28JNDBgeCtJazHgbnKAkCkM3xcKZW9eWntPSsBtC1okkG9ZtkP5L8X"
+        "signature": "4eE4ifr62oxgWbnxT7pMvMxncoXFgVQ5Xnnr8tRabUTyNPrCPt8zxoV4YjDzjGrRq8m9ABCWwJYMvBuebgyP2Lgw"
       }
     },
     {
@@ -83,16 +56,7 @@
       "expected": "ConstraintAddress",
       "got": "ConstraintAddress",
       "detail": {
-        "signature": "5dpfcAFukiNHBhHrF6HU7sJNwLyqbmbUiLeKPeqbJDF1yrNrnhaCWD41DvdSVZ9fivfU7KVFHVR1EPF2CGqYVWs9"
-      }
-    },
-    {
-      "name": "settle_graduation: creator_auth of another launch",
-      "status": "pass",
-      "expected": "ConstraintSeeds",
-      "got": "ConstraintSeeds",
-      "detail": {
-        "signature": "5vYZk7bCDMBJzpUe2k5jmZ2YAJeysS8UHhEjpydiuQPPqYj7WAC2JJWBRXJLL54vBxakqtjJKYb6VbYZXPeduK35"
+        "signature": "4eUsTNoSr8fQ9xYXZFgyKnJHfRZDVEB8dw7mwkFLSHbGZGuGDNK8AsLaWdRMSuFEe9j7m9ySELetaffwx6sPC8kx"
       }
     },
     {
@@ -101,7 +65,7 @@
       "expected": "ConstraintAddress",
       "got": "ConstraintAddress",
       "detail": {
-        "signature": "aKwsTU7FH7eon13i51fRGPhbfDNFs1jtLWhG5dycBmmqXGx8viCsgvSUrATDBHreR52YUfU6eyTUZRoWsdaxNDv"
+        "signature": "4jgDsnPsrCj7tdmWfty2M3ukJPNtddJ7L3QDMCXtZyKpouSoSkySB898Z9HbkzrzYaVSRWoMoKpjbM85N8qqogzq"
       }
     },
     {
@@ -110,7 +74,7 @@
       "expected": "ConstraintAddress",
       "got": "ConstraintAddress",
       "detail": {
-        "signature": "4YPvyVHgSCXVfTJuwwvPRzpzHKMgHk98KhZLMFzQXojV7v8Hqxa7zdCfEbRGFr99EWadJggdQa2g7bNF8WQqzKRD"
+        "signature": "2i8Fec9B7JRpddTNvQAhuFUDdt27NzY2qYAkvQmWdprFaZfWNWD2JSun9uUg7dsi9h8UnupzUp4WK4CzEMSekEJn"
       }
     },
     {
@@ -119,21 +83,21 @@
       "expected": "LaunchWrongState",
       "got": "LaunchWrongState",
       "detail": {
-        "signature": "2cChgQdw6nQt2V138WefnXmX1rMMRzNLJT75L5SATQgCUncvYA2gpKw4b78ueC7kRcQSU7CG9oswCJ2zf3TaF2uS"
+        "signature": "593hhtTfZ9nMwKtmaahbQk2a21rMbpTbsTjphRzaPpkM5AYsr7hQ2pjePErLc94qNz3CcmcRFmSiqNfX9kHQVSJS"
       }
     },
     {
-      "name": "settle_graduation: launch A → Funded; 15% + partner fees → vault, creator fees → beneficiary",
+      "name": "settle_graduation: launch A → Funded; 15% + partner fees → vault; creator fees stay in DBC (D-022)",
       "status": "pass",
       "expected": "every check",
       "got": "ok",
       "detail": {
-        "signature": "5PjFc87MDqJy74tCfvgmnZegt1zwMighWLiy9vb8u8rqFgo8kkFF3vECqsbJYAjZ2H5FDiN9RhbwciYy3FGBkhAb",
-        "txCu": 140841,
-        "settleCu": 115810,
+        "signature": "3fUk3c8DXCYXR8xB5qo5Mxf8Cy3Fz5q2YT7g2VeKAnXAoS215nhm55FQiv7eu7XnvfwsUYNNJirxBJTxDw8x4i7Z",
+        "txCu": 115667,
+        "settleCu": 90574,
         "migrationFee": "1500000000",
         "partnerFees": "40404041",
-        "creatorFees": "40404041",
+        "creatorFeesLeftInDbc": "40404041",
         "quoteReserve": "10000000000",
         "migrationFeeWithdrawStatus": 4,
         "checks": {
@@ -142,10 +106,9 @@
           "migrationFeeRecorded": true,
           "partnerFeesRecorded": true,
           "partnerFeesNonZero": true,
-          "beneficiaryDelta": true,
-          "creatorForwarded": true,
           "dbcPartnerFeeZero": true,
-          "dbcCreatorFeeZero": true,
+          "beneficiaryUntouched": true,
+          "creatorFeesStillClaimable": true,
           "noBaseFees": true,
           "stagingEmpty": true
         }
@@ -157,7 +120,107 @@
       "expected": "LaunchWrongState",
       "got": "LaunchWrongState",
       "detail": {
-        "signature": "3CmBeZAxrpFKMKZveap8m54WUe8UUdXXkcdHXtDGkFubpq2GYU7Rh8JTKPk9qy8qfNeg9PkbDkVDRzQddQoWytu7"
+        "signature": "5Ek9VrnuRwRWAJSgLbNb8vfjYCbN17RxmirZXgjC1JWXNWGAFvnery5WYc2wGaiqYqAW8Howp3ZpcPyPKTBsr8it"
+      }
+    },
+    {
+      "name": "pay_creator: beneficiary WSOL account owned by someone else",
+      "status": "pass",
+      "expected": "BeneficiaryAccountInvalid",
+      "got": "BeneficiaryAccountInvalid",
+      "detail": {
+        "signature": "2nenPDZUb4vWp5icQ4oGhBoGvYw3ZPPjw5A55dAnuBdNkJTNjB9ExjBfQbAxqMA67hJexqD6L3n9WDMJgEAbbxVh"
+      }
+    },
+    {
+      "name": "pay_creator: beneficiary's own WSOL account that is not its ATA (D-016)",
+      "status": "pass",
+      "expected": "BeneficiaryAccountInvalid",
+      "got": "BeneficiaryAccountInvalid",
+      "detail": {
+        "signature": "2XmrFpYEU67pUKuhP9RgvHfyqQdH9EMUVFeHdy4qWz3eNRVvbDNqmhTWQx5bZGzYcu4hHGSm9eVxAHYPasrfgdkU"
+      }
+    },
+    {
+      "name": "pay_creator: beneficiary account = this launch's vault",
+      "status": "pass",
+      "expected": "BeneficiaryAccountInvalid",
+      "got": "BeneficiaryAccountInvalid",
+      "detail": {
+        "signature": "2DX4jqPRgujQNdBn3qKh4gr91FEykV5MAka9bShL5dW4MH94V6UcBcRVsCNJojTCgGc2ayJDj9jMfFmGvGM6Za2P"
+      }
+    },
+    {
+      "name": "pay_creator: creator_auth of another launch",
+      "status": "pass",
+      "expected": "ConstraintSeeds",
+      "got": "ConstraintSeeds",
+      "detail": {
+        "signature": "4fF4DVzXXMWwVQig5eST9C7DbMFNuPBnPiSup6LpjiCekxjuHvqnL4HRBBjaCkX1bycdr7Q1nbJ3j9zxkcVNWfmU"
+      }
+    },
+    {
+      "name": "pay_creator: virtual pool of another launch",
+      "status": "pass",
+      "expected": "ConstraintAddress",
+      "got": "ConstraintAddress",
+      "detail": {
+        "signature": "3aASz1Abmjy1TR8Moqg7rUmDUPxMzYHSjaLYK5HUkfXEaHjFHtg64AT1MCg7KmZhLpZso7t5xTJFxkVjhw4NKH2K"
+      }
+    },
+    {
+      "name": "pay_creator: quote vault of another pool",
+      "status": "pass",
+      "expected": "PoolVaultMismatch",
+      "got": "PoolVaultMismatch",
+      "detail": {
+        "signature": "7LLpyzij2SY2F84uojDseTZvQexDT9QgFK6rxjfo2c2ViTReWzheVCJp5nabgb3DR4R3PcH5rEHRyvRiARCFmvw"
+      }
+    },
+    {
+      "name": "pay_creator: staging base account is not partner_auth's ATA",
+      "status": "pass",
+      "expected": "StagingNotPartnerAta",
+      "got": "StagingNotPartnerAta",
+      "detail": {
+        "signature": "25hjMJCnfEvcWzpwyWcYfNLSVvKgH8K4JMbURUmD2sRajx8hHQtnL3MBnUWjDqYxrcHDq4KYqsB29tFbcHZKzxD5"
+      }
+    },
+    {
+      "name": "pay_creator: fake DBC program",
+      "status": "pass",
+      "expected": "ConstraintAddress",
+      "got": "ConstraintAddress",
+      "detail": {
+        "signature": "5tA4bwgrpTzikPEbq6LCURi5mpGPZU9b8zkXgNf3dGCtXPuQhMRbqwMEVi9QwRZA56gCQ91WTmnyDwE9g1pfoV8M"
+      }
+    },
+    {
+      "name": "pay_creator: before open → DBC creator fees → ATA(beneficiary, WSOL), exactly; CreatorPaid",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "5mG8yRiC7SohsoqDkXe7FtFFjBNYFu6r9owiiELWyggLb2xj4YmmgkosHmP49SDoTvekqyos9faCrftEzkg4stUd",
+        "cu": 73137,
+        "fees": "40404041",
+        "checks": {
+          "paidExactly": true,
+          "dbcCreatorFeeZero": true,
+          "recorded": true,
+          "vaultUntouched": true,
+          "stagingEmpty": true,
+          "event": true
+        }
+      }
+    },
+    {
+      "name": "pay_creator: again with nothing accrued → succeeds, pays 0",
+      "status": "pass",
+      "expected": "succeeds, 0 paid",
+      "got": "succeeded",
+      "detail": {
+        "signature": "2VDVw1XvdsdAZAXLq1LU8m58184Y6vMu9TRkvD58iaYTmg9Hz9Li1mhMD1gNFKvcQUBCdkWTZNkyYLwa9oaqEHxi"
       }
     },
     {
@@ -166,7 +229,7 @@
       "expected": "refused by DBC",
       "got": "Unauthorized",
       "detail": {
-        "signature": "53BHCgZG2rLUjWzMjkF98SM7SqYTW1os8fWTahLaEmhnZrcjjUsnZEx8Cw3L8FySSyybmrNpLR6DAdugP94YrGVb"
+        "signature": "3qVqYTMbVTRat7iNXwsfEZD3WXYXfZTEQtLBmMGhC6S4WQJs1tURjQLX9gAMSXLdXtC6i5mRoLVhGRz946Vh5kME"
       }
     },
     {
@@ -175,7 +238,7 @@
       "expected": "refused by DBC",
       "got": "Unauthorized",
       "detail": {
-        "signature": "4ied8zYTet95grDC5tizLLJHBLmjbwH8yKLb8dn8aroA715Qs4uuBFhPeQMSZSeAut8qtb9hwdkAqj3aFJb1wKVy"
+        "signature": "2Nr7QhsMMTJqZoWsQaG7F3Kbhk9EMQFe8Pp6G4nV8WcaS2i5tu3fYijtQS56zcKT6AF8ZaaaMuSYSv5qHc4NRYXt"
       }
     },
     {
@@ -184,7 +247,7 @@
       "expected": "refused by DBC",
       "got": "NotPermitToDoThisAction",
       "detail": {
-        "signature": "5T2CqKZDE79m9r19inwrQGy7PEninEMvXfcXmtHzfLsUZMmy1BoY9osc7j1i16YQ86KtWRD4GHqhq1AmeedT9yqh"
+        "signature": "2TSFyDh4pLSRqAHpMjGT2ZLsrYjY9E985XeUF2VyNyV2LkbCz4nLobYFr24cFc6bZL3aMLSrTmj289KCDbSKDRoU"
       }
     },
     {
@@ -193,7 +256,7 @@
       "expected": "PoolNotMigrated",
       "got": "PoolNotMigrated",
       "detail": {
-        "signature": "3TTNAGnZHgva4RvGifSYQejm5bht3rP3eaQbsv1P9uNnk4YfGHcwcEyvojujRLB1GFjdbXcKDQNWNPpFg2EHhKFt",
+        "signature": "3xkZme7idWVd3UWA2G9zso6M6Tm5f9hDkHn7orWD9rpWYUjeTKKsJTdy2gyNPDSxNRq7WC11vsbF6UfCZTEJj3xE",
         "migrationProgress": 2
       }
     },
@@ -203,7 +266,7 @@
       "expected": "StagingNotPartnerAta",
       "got": "StagingNotPartnerAta",
       "detail": {
-        "signature": "PEb82F5vQCEMWVCFcNSRovgcvRRuexDTzGGt1Hx28JRxr6YmJ7vG5nXu7oVLpK2H8MbcF4rcumERAyQkXCbpmis"
+        "signature": "36aEYipjY3qGmGmVUHkp9aY7LSrVmAomUxmxqTMGZiBh9zDjiQD35LkgKLg97ukm2zEYaGXbr8RoZicNmV9FZCH3"
       }
     },
     {
@@ -212,7 +275,7 @@
       "expected": "refused by DBC",
       "got": "ConstraintAssociated",
       "detail": {
-        "signature": "y5PFeq7g81yqBszDzGdRLMEr6jqpSVzoejVgCCRBF3eTVMUu3rVNmmWcH9vVB2TGsyeZXhZ53Td44ckRJvympCf",
+        "signature": "1bdiWDkZaWxo7wGAaQX4Fx3p7m6Qz5PkX5UAUJFiwZd7uh8CQqdWkLdKvudNtXiFcT2z7Ssv6EEy822mzWUzinY",
         "received": "0"
       }
     },
@@ -222,10 +285,10 @@
       "expected": "every check",
       "got": "ok",
       "detail": {
-        "signature": "4cCQdSeecPcQ9nKijrWkNgjzsTJJiJZAaGPeR9yY79L4RrgCyBsSvRksKFFri486gt6uuaRzDzp9WagWK3hqdAjd",
-        "txCu": 86869,
-        "burnCu": 82283,
-        "migrateSignature": "29d1QUFDK51gU3KogpUo427uXB2RGQP5NvMxRJC8F3gkCQBsGYqZVZ27PQykmL2wjSQYvDkBnciiG5jpUaGCEWhD",
+        "signature": "3XyJTvHiXHD3K3NhJnDF7hb8JF7xBsWgvdYwUT7zMNfSxvwvhezKC5d37Ss99NUf4Bfef892XYJ62jUzDiZxMUnw",
+        "txCu": 105970,
+        "burnCu": 96884,
+        "migrateSignature": "5MSN8p5eQ4nMhizUDX8o8RBZVojm2BusHJDPKgMEhVQrVAKJo2zZvZ1k2qsrkTC1GhjAs948A1Cq7b3DDeaatAyi",
         "leftover": "134558940128191",
         "surplus": "0",
         "quoteReserve": "10000000000",
@@ -255,7 +318,7 @@
       "expected": "LaunchWrongState",
       "got": "LaunchWrongState",
       "detail": {
-        "signature": "4nYcxM21wh2QEj9UPoWkpAB24ENBEHuciPkK4aifhUxGXAYW4W64DUntiCTZUZChJtR1vdHryVXdbY3bDxgvWHyb"
+        "signature": "Bh8pp4VuftTYGRKhFoHzy3aSzw4hjb1gkKC8tDLgTM4J5M5Bsg8uccuefrLkjNsCBkUVkNrRAF5ybowRWEMSs36"
       }
     },
     {
@@ -264,8 +327,8 @@
       "expected": "Funded, vault += 15% + partner fees",
       "got": "state 2, vault +1540404041",
       "detail": {
-        "signature": "2rhJANqoQ7sUsjCW9DFFusYL75kNnN2o2KTo9cmTiqEt7His2dR23aovZZWCnx75Jv4YQNcmcWSpLiFfJuNPoTrR",
-        "migrateSignature": "424Wcd7cYPSg5hZ1kQSe4EnfdaHCevBCK7ugBA2jSog8aMAYS5PevRxt7e3umxusbL78wNwW1SJoqiuBq6A7X2bz",
+        "signature": "5i4rjnE69fjRk9udn4UULmUN7zji3TdQaJtb8KEK1z9sbmSKP4FrVQaq1yoApGokgn2d4hm8vQeBE2Pr1tby1t77",
+        "migrateSignature": "5cgCD6zUTbeUDwUcom3LTgYg4wRmjMnBmiZpEaAgKXbRTBuKMosRwQ1BsDQqnn3Z23smAdvMuYKG5RXrenBMJyUW",
         "migrationProgress": 3
       }
     },
@@ -275,9 +338,9 @@
       "expected": "every check",
       "got": "ok",
       "detail": {
-        "frontRun": "5sYSDukkEQ54VNe7kpvvfyRz8ybNmAvNyFHmsEVDjDHw9rJJ7RxSxJs8d3v4pQzbwgmpVvKgjLjPw2xqe5mNzH3S",
-        "signature": "ScBsyt3UiDkWwwdNeabWbF38jxEQkBJ2UN4Uf1kL8guF5UEpba7nfd1BsQ7DJVU829XZCaAWkgM8bsWSdkVPo5J",
-        "burnCu": 59048,
+        "frontRun": "U28yCTpLPovj7pSH82dT1y8bEreYRqT6UZfbpdtpfzRcVhiUHseuAW6iWF97R8qDDJfxR4oWhwMAEQLjWL8wxFa",
+        "signature": "3NC6G5tKvfm2gaJUdqnuhf5uWjZFyDLb3XHoRNYM65Vr2LewL4swrFnHpqZf6CdbFddn2exe9CViB37RPRSbbFXv",
+        "burnCu": 60149,
         "leftover": "134558940128191",
         "checks": {
           "state": true,
@@ -294,10 +357,10 @@
       "expected": "every check",
       "got": "ok",
       "detail": {
-        "migrate": "5GjfrzcYiYVKd7ds9nwq7JdBGaVJQSn6Di5pgvdW3UUdjMELibDvoUnjfirj3oW9hW1akwDRJAgQGFQs4jYwDQ6G",
-        "frontRun": "2bh8b9npBW8aALm3ZryQLNQLPCp3HhyhWNWoTSd1jwqe2mAKDavHeijGUdW9pYhcPFmXJroBza1VSt9BAzwyuCnr",
-        "settle": "4p1ZuTtbDDaADcsyZTGmvkFoYGh1MhfZDrvYQSr56JLLwi7o5NLcHkif28RKECrPBJJmAww3rcZ9JjJ6LkMMD8d4",
-        "burn": "2XGRUQqg3SbxiGXCPBnEfsRQPNmtJfTixpQ94s3Yb8cvsvaGiZqAAS49Hfcyhf1PnctAWxvXwhfkkpZ68Z64z1Kw",
+        "migrate": "4DoHdpJW98AkLNUmAcwdpPPyCowFYW1WoNzf4LHpV5aNo1nYMHgRoW5okj7sReUKwYp6qnuir7gpEiu6vgn5Wkfr",
+        "frontRun": "5nWCsFqJ7SZzBtYVAP9niz7cthjsozrvun86a9M9rWyZS3qLPBdChn6SNBR9vzJET2jMd3uxxtuNMjmxuiWLRJwU",
+        "settle": "ho5WsbTS39fZkBeNCeFHyx8ZcLr3roThF8FvSoakjZJdb9kw95WD3xuizfmr3L7qoWZkjseucnEnQKeT9zgm2gU",
+        "burn": "M3BNjBimfLUUu4XMLckfsVXebr9QFV5sPU14JGnwrsDMKSUhTb9zccmczNJP5gXjSDewasJ3vkkEYToiXrzYQpc",
         "leftover": "134558940128191",
         "checks": {
           "settleBurnedNothing": true,
@@ -313,7 +376,7 @@
       }
     },
     {
-      "name": "settle_graduation: CreatorBaseFee (creator base-token fee fails closed)",
+      "name": "pay_creator: CreatorBaseFee (creator base-token fee fails closed)",
       "status": "unreachable",
       "expected": "-",
       "got": "§7 rule 2 (ConfigCollectFeeMode) pins DBC collect_fee_mode = QuoteToken, so creator_base_fee cannot accrue on any class pool"

@@ -9,4 +9,6 @@
 # range. Recorded in DECISIONS.md § Toolchain with this evidence.
 channel = "1.85.0"
 components = ["rustfmt", "clippy", "rust-analyzer"]
+# crates/floor-wasm: the floor crate for the browser and Node (§14 differential, §21).
+targets = ["wasm32-unknown-unknown"]
 profile = "minimal"

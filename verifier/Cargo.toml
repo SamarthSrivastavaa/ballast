@@ -1,0 +1,16 @@
+[package]
+name = "ballast-verifier"
+description = "The `ballast` CLI: `ballast verify <launch> --rpc <url>` checks a launch from raw chain data (§20)."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[[bin]]
+name = "ballast"
+path = "src/main.rs"
+
+[dependencies]
+verifier-core = { path = "../crates/verifier-core" }
+anchor-lang = "=0.31.1"
+serde_json = "1"

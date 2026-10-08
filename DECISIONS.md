@@ -106,9 +106,9 @@ it is fragile across DBC upgrades.
 **Recommendation:** approve the band + capacity form. Then mark §7 rule 4 with a `[D-015]`
 amendment marker and add a negative test for each side of the band.
 
-## OPEN DECISION — DLMM refuses a bid above the pair's active bin (raised 7 Oct 2026, Part 2)
+## ~~OPEN DECISION~~ — DLMM refuses a bid above the pair's active bin (raised 7 Oct 2026, Part 2)
 
-**Program Part 2 is STOPPED here** (CLAUDE.md: spec vs observed behaviour → record, propose, wait).
+*RESOLVED 7 Oct 2026 by D-020 (owner chose option A). Kept as the evidence behind D-020.*
 Evidence: `evidence/program/part2/dlmm-active-bin.json` (wallet-level, top-level SDK transactions on
 the mainnet DLMM binary), `evidence/program/part2/results.json`.
 
@@ -626,6 +626,189 @@ The check now parses the arrays. It is not in CI — see STATUS risks.
   section); Lite launch form (→ scripts).
 - **NEVER CUT:** verifier, fuzzer, `proof:local`, devnet proof, scanner CLI, `JUDGES.md`.
 
+### D-020 — The bid moves the DLMM active bin up, else caps at it (option A)
+
+**Status: APPROVED 7 Oct 2026** (owner: "A: move, else cap"). Amends §6 `open` / `refresh_floor` /
+`redeem` and §9 "Order lifecycle"; spec marked `[D-020]`. Evidence: § OPEN DECISION (active bin),
+`evidence/program/part2/dlmm-active-bin.json`.
+
+DLMM accepts a bid only at or below the pair's active bin (6105 above it); `go_to_a_bin` moves the
+active bin permissionlessly but is refused (6056) while any order sits in the range. A failed CPI
+aborts the whole transaction on Solana, so "try, else cap" cannot happen inside one instruction.
+Implemented as:
+
+- **`open` / `refresh_floor(bin_id_hint)`:** the hint is either **F's bin** — then, if the active bin
+  is below it, Ballast CPIs `go_to_a_bin(F's bin)` first — or **the active bin**, accepted only when
+  F's bin is above it (`price(active + 1) ≤ F`): the cap. Any other hint is `BinHintNotAtFloor`. The
+  keeper tries F's bin and, on 6056, calls again with the active bin.
+- **`redeem`:** never moves the active bin, so no third party can block a redemption: F's bin when
+  the active bin allows it (found by binary search between the old bid bin and the active bin), else
+  the active bin.
+- A capped bid is still **at or below F** (rounding toward the protocol holds). `Launch.bid_capped`
+  records it and `BidCapped{launch, bin}` is emitted; the next `refresh_floor` lifts it once the
+  blocking order is filled or cancelled. Redemption at F is unaffected.
+- **Disclosure (README, app, `JUDGES.md`):** "the executable bid can sit below F's bin while a
+  third-party order pins the DLMM active bin; redemption still pays F."
+
+### D-021 — Extreme-bin pin: cap within 70 bins, else suspend the DLMM leg (amends D-020)
+
+**Status: APPROVED 7 Oct 2026** (owner). Raised by the Part 2 `/audit` (security review): before
+`open` the pair is empty, so anyone can move its active bin far down (`go_to_a_bin`, with the
+bitmap extension if needed) and park a dust bid there, which stranded the vault under D-020.
+
+- The bid may be capped at the active bin only within **70 bins under F's bin**. Further down — or
+  where DLMM's price is undefined — `open`, `refresh_floor` and `redeem` leave the vault **unplaced**:
+  `bid_order = default`, V still counts the vault, redemption stays live, the DLMM leg is suspended,
+  `bid_suspended` is recorded and `BidSuspended` emitted. `open` still enters `Open`.
+- The bitmap-extension account is supported (`["bitmap", lb_pair]` under DLMM) for `go_to_a_bin`
+  from or to an array outside the internal bitmap.
+- **Principle (CLAUDE.md):** no outside actor can prevent the floor from existing; F and redemption
+  never depend on DLMM pair state.
+- Time-boxed experiment (45 min, non-blocking): a `partner_auth` dust bid at the predicted floor's bin
+  in the D-011 launch transaction, to see whether DLMM then refuses `go_to_a_bin` past it. Kept only if
+  it blocks the pin. Result recorded below when run.
+
+### D-022 — Creator flows are decoupled into `pay_creator` (amends D-016)
+
+**Status: APPROVED 7 Oct 2026** (owner: "decouple, don't skip"). Raised by the Part 2 `/audit`: a
+creator who reassigns the owner of their own `ATA(beneficiary, WSOL)` (SPL Token `SetAuthority`)
+made `settle_graduation` and `harvest` revert forever.
+
+- `settle_graduation` and `harvest` handle **partner flows only** (vault; treasury via staging).
+- New permissionless `pay_creator`: claims the DBC creator trading fees and, once `Open`, the creator
+  position's LP fees via `creator_auth`, and pays `ATA(creator_beneficiary, WSOL)` after full
+  validation. If that account is invalid, only `pay_creator` fails; the fees stay claimable.
+- **Principle (CLAUDE.md):** nothing the creator controls is on the floor's critical path.
+
+### Part 2 audit findings — approved fixes (7 Oct 2026)
+
+Approved by the owner exactly as reported by `/audit` on 7 Oct: the treasury share is paid from a
+`partner_auth` WSOL staging ATA, never from the vault, and staging ends at zero (§10's two exits now
+hold structurally); identity-only position checks after `open`, with L decreases routed through
+`note_backing` (one `BackingDecreased` per position, on every decrease); `bin_step ==
+class.bid_bin_step` in every pair read; the resting order fully decoded (DLMM owner, `LimitOrder`
+discriminator, `owner == partner_auth`, `lb_pair`); the whole staging base balance burned and
+recorded; an uncapped `refresh_floor` that raises the bid bin skips the rate limit while the bid is
+capped or suspended; `BidCapped` emitted by `redeem`; `order` in `FloorOpened`, `quote_returned` and
+`order` in `FloorRefreshed`; a `fill_quote_spent` counter; the `BinArray` discriminator check;
+`deposit` checks the depositor account's mint and authority.
+
+### Part 2 audit — implementation (7–8 Oct 2026)
+
+Work resumed after the 7 Oct crash (C: full, WSL down; `evidence/phases/RECONCILE-2026-10-07.md`).
+Test-first: `tests/integration/program/src/part5.ts` holds one "(repro)" case per reproducible
+finding. It runs first against the saved D-020 build (`BALLAST_SO` / `BALLAST_IDL` →
+`~/ballast-d020/`, sha256 `d51e099d…` / `2b5616a8…`) to show each finding failing, then against the
+fix. Evidence: `evidence/program/part2/audit-repro-d020.json` (D-020 build) and
+`evidence/program/part2/audit.json` (fixed build).
+
+**A premise of D-021, corrected by observation.** The audit's extreme pin parked the active bin at
+−40,000, beyond the internal bitmap. On the mainnet DLMM binary a class pair (bin step 10) confines
+bins to its own `min_bin_id` / `max_bin_id` = **±35,163**, inside the internal bitmap (±35,840).
+`initialize_bin_array` at −40,000 is refused with `6000 InvalidStartBinIndex`
+(`evidence/program/part2/dlmm-bin-range.json`). So the bitmap extension is never needed at bin step
+10; support for it stays, as D-021 approved, for other bin steps. The deep pin itself is real at
+−35,163, about 23,000 bins under F's bin. D-020 would have capped the whole vault there at a price
+near zero; D-021's suspension is what prevents that.
+
+**D-021, as built** (`floor_ix.rs`):
+- `open` / `refresh_floor(hint)`: a hint at F's bin places there, CPI-ing `go_to_a_bin` first when the
+  active bin is below it. A hint equal to the active bin, with F's bin above it, caps there if F's bin
+  is at most `MAX_CAP_DEPTH = 70` bins up, else **suspends**. Anything else is `BinHintNotAtFloor`.
+- `redeem` never moves the active bin and never fails on pair state. It places at F's bin when the
+  active bin allows it, else caps within 70, else suspends. F's bin is found by binary search from the
+  old bid bin, or, when that bin no longer qualifies, by doubling steps down from the active bin.
+- Where DLMM has no price (`price_q64` → `None`), the sign of the bin decides: far below is ≤ F, far
+  above is > F. So no active bin a third party can reach turns a comparison into an error. Unit tests:
+  `undefined_prices_compare_by_sign`, `deep_pins_suspend`, `redeem_placement_rules`,
+  `floor_bin_search_matches_scan`.
+- While suspended: `bid_order = default`, `bid_quote_committed = 0`, `bid_bin_id` = the pinned active
+  bin, and V = the vault. `floor()` appends `capped` and `suspended` to its return data.
+- `require_internal_bitmap` is gone. `place`, `cancel` and `go_to_a_bin` pass the pair's
+  `["bitmap", lb_pair]` account whenever a bin's array lies outside ±512, checked DLMM-owned
+  (`BitmapExtensionMismatch`).
+- Rate limit (10 slots): while the bid is capped or suspended, only a refresh that lifts it to F's bin
+  may skip the window. Cap → cap and suspended → suspended wait like any other refresh.
+
+**D-022, as built** (`creator_ix.rs`, `lib.rs`):
+- `settle_graduation` no longer takes `creator_auth` or `beneficiary_quote`. `GraduationSettled` drops
+  `creator_fees`.
+- `harvest` claims the partner position only, into `partner_auth`'s WSOL staging ATA
+  (`StagingQuoteInvalid` if it is wrong or missing). 10% of the claimed fees, rounded down, goes →
+  treasury. The whole remaining staging balance goes → vault. `Harvested{to_vault, to_treasury,
+  base_burned, s_new}`.
+- `pay_creator()` is permissionless in any state. If DBC holds creator quote fees, it claims them,
+  signed by `creator_auth`, with `partner_auth`'s base ATA as the base sink, which must not move
+  (`CreatorBaseFee`). Once `Open`, it also runs the DAMM `claim_position_fee` on the recorded creator
+  position (passed as optional accounts) and the §4 monotone check. Creator flows touch none of V, S,
+  L, so that check holds.
+- Both claims pay `ATA(creator_beneficiary, WSOL)` after full validation. `CreatorPaid{dbc_fees,
+  lp_fees}`; `creator_forwarded` is incremented.
+
+**The approved findings, as built:**
+- identity-only position reads after `open` (`damm::read_position_identity`), with per-position
+  `partner_l_recorded` / `creator_l_recorded`, so each decrease emits its own
+  `BackingDecreased{position, l_recorded, l_read}` (unit test `backing_decrease_is_per_position`);
+- `bin_step == class.bid_bin_step` in `read_pair`;
+- the resting order decoded before the cancel (`check_bid_order`: DLMM owner, `LimitOrder`
+  discriminator on the header, `owner == partner_auth`, `lb_pair`, else `BidOrderInvalid`);
+- `open`, `refresh_floor`, `redeem` and `harvest` burn the **whole** base staging balance and add it
+  to `burned`;
+- `BidCapped` / `BidSuspended` on every placement, `redeem` included;
+- `FloorOpened.order`;
+- `FloorRefreshed{filled_tokens, burned, quote_returned, s_new, bin_id, order}`;
+- `Redeemed{…, s_before, s_after, filled_tokens, quote_returned}`;
+- `fill_quote_spent += committed − quote_returned` (saturating);
+- `is_bin_array` checks the `BinArray` discriminator;
+- `deposit` checks the depositor's WSOL account (`DepositorAccountInvalid`).
+
+**Interpretations, flagged for the owner (none changes the mechanism):**
+1. "Staging zero at the end of every instruction" is enforced in `open`, `refresh_floor`, `redeem` and
+   `harvest`. `settle_graduation` keeps D-016's approved exception: it leaves a front-run leftover in
+   staging for `burn_leftover` to burn and record as leftover. `deposit` and `floor` never touch
+   staging, and S excludes it, so anything sitting there cannot affect F.
+2. WSOL sent to the WSOL staging account goes to the vault (raising F), not the treasury: the
+   treasury takes exactly 10% of the claimed fees.
+
+**Program size:** 551,488 B (D-020 build: 531,800 B), over D-018's ≈ 500 KB. Owner decision pending.
+
+### Part 2 re-audit (8 Oct 2026) — closed, one item for the owner
+
+**CU (local, mainnet binaries, fresh ledger 8 Oct; D-009 targets in brackets):** `open` 145,319
+(156,615 when it first moves the active bin ≈ 23,000 bins) [≤ 420k] · `refresh_floor` 187,542
+[≤ 560k] · atomic `redeem` 209,023–209,061 [≤ 840k — no two-step fallback] · `harvest` 114,184 ·
+`pay_creator` 126,129 · `deposit` 58,686 · `floor()` 51,472. Fresh-ledger run 8 Oct: Part 1
+43/0/10 · 19/0/1 · 32/0/1; Part 2 46/0; audit suite 22/0/5 (after a test-only signer fix, rerun with
+Part 1 on a fresh ledger); keeper 5/0.
+
+
+
+`/audit` re-run on the program after D-021/D-022 and the approved fixes: **0 critical · 0 high**
+once the items below were fixed. Every D-020/D-021/D-022 rule and approved finding was confirmed
+implemented; §19's "can anyone withdraw user backing?" holds literally (the vault's only outflows
+are the bid it owns and a redeemer).
+
+Fixed 8 Oct (spec conformance, no new decision):
+- **§4 rule 1 (was CRITICAL):** the one-sided `price ≤ F` rule — including D-021's classification of
+  bins where DLMM has no price (by sign) — `is_floor_bin` and `F_q64 = ⌊s²/2^64⌋` now live in
+  `ballast-floor` (`price_at_or_below`, `is_floor_bin`, `f_q64`; `crates/floor/tests/bin_rules.rs`),
+  so the program, verifier and app share one implementation.
+- **Redemption never depends on DLMM pair state (CLAUDE.md principle):** if `redeem`'s chosen bin
+  lies in a bin array nobody created, the vault stays unplaced (`BidSuspended`) instead of the
+  redemption reverting; the derived address must still be passed, and a real array cannot be
+  faked. Reproduction: part5 "audit 8 Oct (repro)". *Order note: this fix was written before its
+  test; the pre-fix failure (`BinArrayMissing`) is from code reading, not a run.*
+- §5 rule 1: the bitmap extension's discriminator is checked. §5 staging: `deposit` and (once
+  `Open`) `pay_creator` burn the staging base balance and record it. §25: `LaunchRegistered` carries
+  `dbc_pool`.
+
+**Open for the owner (MEDIUM, before the upgrade authority is frozen):** `harvest` needs
+`global.treasury` to be a live WSOL token account. If the treasury key holder closes it (or
+recreates a keypair account with another mint), every harvest with a treasury share reverts, for
+every launch, and `global.treasury` has no setter. Proposed fix: if the treasury account is not a
+valid SPL WSOL account, `harvest` sends the treasury's share to the vault as well (F rises; nothing
+is stranded). This changes who is paid, so it is the owner's call.
+
 ### D-001 — Fixtures and the local validator use mainnet binaries and mainnet accounts
 
 **Status: APPROVED. Exact wording, given by the owner on 2 Oct 2026:**
@@ -819,7 +1002,9 @@ after every program slice. Reason: STEP 2 finding T5 (Anchor baseline ≈ 210 KB
 | + `register_launch` | 380,456 B | |
 | + `settle_graduation`, `burn_leftover` | 440,528 → 379,624 B | Anchor's `Account<ProgramData>` decodes with bincode/serde, which linked serde and `f64` formatting (≈ 61 KB); the upgrade authority is now parsed by hand from the 45-byte header |
 | + slice-audit fixes (D-016) | 381,952 B | Part 1 complete: 5 of 11 instructions |
-| D-018: `no-idl` + hand-built `CreateAccount` | **339,216 B** | −42,736 B; same 5 instructions |
+| D-018: `no-idl` + hand-built `CreateAccount` | 339,216 B | −42,736 B; same 5 instructions |
+| Part 2 at D-020 (11 instructions) | 531,800 B | |
+| + D-021, D-022 (`pay_creator`), audit fixes, re-audit fixes (8 Oct) | **553,456 B** | ≈ 11% over D-018's "≈ 500 KB"; reported, no size work (D-018) |
 
 **CU targets until the devnet cross-check** (70% of each §26 budget, measured locally per finding T6):
 
@@ -922,6 +1107,27 @@ Rent-exempt minimum = (128 + bytes) × 6,960 lamports. Proof class = 10 SOL thre
 - **Net spent if nothing is reclaimed:** ≈ 8.4 SOL (3.48 program + 4.4 locked + ≤ 0.5). Closing the
   program afterwards brings it to ≈ 4.9 SOL.
 - At the current 339 KB the program items fall to 2.36 SOL each (peak 13.0 / 15.3 SOL).
+
+---
+
+### Devnet SOL budget — corrected 8 Oct 2026 (supersedes the 6 Oct table above)
+
+Devnet's rent-exempt minimum is **5,080 lamports/byte** (`getMinimumBalanceForRentExemption`, read
+8 Oct: 551,533 B → 2,802,437,880; 36 B → 833,120 = (36 + 128) × 5,080), not the 6,960 the 6 Oct table
+assumed. At the current `.so` (551,488 B):
+
+| Item | Lamports | SOL | |
+|---|---|---|---|
+| ProgramData (45 + 551,488 B) | 2,802,437,880 | 2.8024 | kept; `solana program close` refunds it |
+| Program account (36 B) | 833,120 | 0.0008 | kept |
+| Deploy buffer (37 + 551,488 B) | 2,802,397,240 | 2.8024 | transient, refunded at finalize |
+| Write-transaction fees (≈ 545 × 5,000) | ≈ 2,725,000 | ≈ 0.003 | spent |
+| Proof buys to the 10 SOL threshold incl. 1% fee + dust | 10,102,010,102 | 10.102 | ≈ 5.7 back on the sell-out; ≈ 4.4 stays locked (§22) |
+| Rents (DBC/DLMM/DAMM/Ballast accounts, bin arrays), keeper's `partner_auth` order-rent float, fees | ≤ 600,000,000 | ≤ 0.6 | mostly kept |
+
+- **Deploy: 2.806 SOL kept, 5.61 SOL at the peak.**
+- **9 Oct deploy + proof: minimum 13.5 SOL, recommended 16.5 SOL** (one upgrade buffer).
+- Net spent if nothing is reclaimed ≈ 7.8 SOL; ≈ 5.0 after `solana program close`.
 
 ---
 

@@ -1,0 +1,10 @@
+{
+  "name": "@ballast/keeper",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ballast keeper: permissionless cranks only (§31) — settle, migrate, burn, open, refresh, harvest, pay_creator.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "start": "tsx src/main.ts"
+  }
+}

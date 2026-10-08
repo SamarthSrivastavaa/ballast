@@ -264,4 +264,12 @@ pub enum BallastError {
     CreatorBaseLpFee,
     #[msg("deposit amount is zero")]
     DepositZero,
+    #[msg("depositor account is not the depositor's WSOL token account")]
+    DepositorAccountInvalid,
+    #[msg("resting order is not a DLMM LimitOrder of partner_auth on the launch's pair")]
+    BidOrderInvalid,
+    #[msg("bitmap extension account is not the pair's")]
+    BitmapExtensionMismatch,
+    #[msg("partner_auth's WSOL staging account is invalid (D-012)")]
+    StagingQuoteInvalid,
 }

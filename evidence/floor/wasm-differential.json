@@ -1,0 +1,8 @@
+{
+  "wasmBytes": 45988,
+  "cases": 10014,
+  "matched": 10014,
+  "mismatches": [],
+  "payoutMatchesFormula": true,
+  "pass": true
+}

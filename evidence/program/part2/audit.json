@@ -1,0 +1,372 @@
+{
+  "suite": "Part 2 audit fixes — D-021, D-022 and the approved findings (§5, §8, §9, §10, §12, §25)",
+  "ranAt": "2026-10-08T18:24:07.473Z",
+  "pass": 22,
+  "fail": 0,
+  "unreachable": 5,
+  "results": [
+    {
+      "name": "D-022 (repro): the creator reassigns their WSOL ATA's owner (SetAuthority) → settle_graduation still succeeds",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "launch": "6ayLjv1uRw7sHnzgaeV9r6NnB5BxzvZpj9iSpfLcJa6h",
+        "checks": {
+          "bricked": true,
+          "cleaned": true
+        }
+      }
+    },
+    {
+      "name": "D-022: with the beneficiary bricked, open, refresh, redeem and harvest are unaffected",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "open": "tyukJrxtcLznikeX7eJymkzKJmdMc1JAKcuLipTeD4kAGcWGxJEG7SrV2SFt3cowNw15BncfAKBNetnyDAA2HZo",
+        "refresh": "3TxissXmSJFbiVpCSqH6aAmVe59KZ1o4yjMoaNb14LNgoVnQYVgdBwQav4ue1vH22UP4B9XXJxFTcZr56Gf4mDQE",
+        "redeem": "3AoKsQXrjNEecYzDZ49WVaLJaFufExxRdF8YfRWG3jhwzQXWaLeS2cYoyB6rdFu81MUrmi2c5Canmwkht7PsJib3",
+        "harvest": "4kyH1KrmPKtby7H4NShB2MMSHo1RiFVHsaYqBfhXX1tVgg29hgKgxix81FCuR9uBc6ufUJG4hUZVjQXSsTCZgJPi",
+        "errors": [
+          "succeeded",
+          "succeeded",
+          "succeeded"
+        ],
+        "checks": {
+          "open": true,
+          "fill": true,
+          "refresh": true,
+          "redeem": true,
+          "harvest": true
+        }
+      }
+    },
+    {
+      "name": "D-022: pay_creator alone fails (BeneficiaryAccountInvalid); the creator's fees stay claimable in DBC",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "4tcsC1QvwC5GT2qGRmNyuFeFWnDEzjTK4bSPmmCsK9JZgRHkN9uSvSjy9wfv63yH4MhaGEQ7BNYxNuFGxpb3qXy4",
+        "got": "BeneficiaryAccountInvalid",
+        "creatorQuoteFee": "40404041",
+        "checks": {
+          "refused": true,
+          "stillClaimable": true
+        }
+      }
+    },
+    {
+      "name": "D-021: a third party moves the active bin to the pair's minimum bin and parks a dust bid there",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "pin": -35163,
+        "goTo": {
+          "signature": "4vTonTUGyTHxub7JdJPPy8VDfHHrzDzemR9DH8i2KML3MHuM2WrRod6mG8i35qMe1R3XSNWk5kzPkZZs2jYV8Jo1",
+          "err": "succeeded",
+          "active": -35163
+        },
+        "order": "74M5mwpvYkXHV1xQgVQhtghx8j4f6NNabpQa6oz7Ebgu",
+        "activeG": -35163,
+        "floorBin": -11906,
+        "checks": {
+          "moved": true,
+          "ordered": true,
+          "deep": true
+        }
+      }
+    },
+    {
+      "name": "D-021: open at F's bin while pinned → DLMM refuses the move; the launch stays Cleaned",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "HutfuCZorSiHJgmppxsR9evmDJzGpMaQKfSJAoJJ2SCUHgfn4jxY84BAVGfapYumi6eoF28q7AN7CENizUQ97yv",
+        "got": "BinRangeIsNotEmpty",
+        "checks": {
+          "refused": true,
+          "cleaned": true
+        }
+      }
+    },
+    {
+      "name": "D-021 (repro): open with the pinned active bin as the hint → Open, vault unplaced, BidSuspended (D-020: the whole vault capped ≈ 23,000 bins under F)",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "2waRVeRptEJ9i27mLo9ZPdetNkQTz2vuDPniKNGJ7oftXVMLaq3acVNaWcHRSHdJW1PFajuPebgAbXnJQwR2vTEW",
+        "cu": 103623,
+        "checks": {
+          "open": true,
+          "suspended": true,
+          "unplaced": true,
+          "noOrder": true,
+          "sOpen": true,
+          "event": true
+        }
+      }
+    },
+    {
+      "name": "D-021: floor() while suspended — V is the whole vault, F from it",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "s": "48074410258902065",
+        "checks": {
+          "v": true,
+          "s": true,
+          "suspended": true
+        }
+      }
+    },
+    {
+      "name": "D-021: redemption stays live while suspended — exact payout from the unplaced vault",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "55JMjqkyJti5pj8tRTJsUkdf3cXnwNqYygiFjS94q1TsEKG6suQ5ZBb3k78J6HWZfj4bzm2fdrhceaUZWPpwncFe",
+        "cu": 116798,
+        "payout": "67578969",
+        "checks": {
+          "payoutExact": true,
+          "vaultPaidOnly": true,
+          "stillSuspended": true,
+          "fRose": true,
+          "event": true
+        }
+      }
+    },
+    {
+      "name": "D-021: refresh while still pinned — F's bin is refused by DLMM, the active-bin hint stays suspended (rate limit not a lever)",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "t1": "2roswQRnFmWugbA634VhUDJKtmVTjUvMCz7K2hrVcUjsHbwikA7c4oQWbTLkWed3JnJbBwAkGkCCpd1ieDBEa9ms",
+        "t2": "7EKeirwrCZSpvrZwpS1HgWaQ4bHCqKSWYjy31x9U5PTm2uEu8mQxqzmVhN6ogSqpV66U9FjgM2NJvykLAes7LVL",
+        "got1": "BinRangeIsNotEmpty",
+        "got2": "succeeded",
+        "checks": {
+          "floorBinRefused": true,
+          "suspendedAgain": true
+        }
+      }
+    },
+    {
+      "name": "audit 8 Oct (repro): a pin into a bin array nobody created cannot block redemption — the vault stays unplaced",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "v4WcDKVT13cTGS3CPF2uhXuu2oBtvP8Z2k2qkawWTZXGjET9PiJyf7zBRXbQw8FJrfQDyrfeygh93AYpEJT7NhF",
+        "cu": 119570,
+        "active": -11971,
+        "floorBin": -11906,
+        "checks": {
+          "moved": true,
+          "capDepth": true,
+          "arrayMissing": true,
+          "payoutExact": true,
+          "unplaced": true,
+          "event": true
+        }
+      }
+    },
+    {
+      "name": "D-020/D-021: open at F's bin moves the active bin up from the pair's minimum bin (≈ 23,000 bins)",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "4yuCJ2fNFdtyWRp9Nxn6D17zUTEZfeKU93TPDMjrPUmydEF4HwmR7U1kxLz6wsMmC6CH4fx9AJHzQgU6YLjdGGSm",
+        "cu": 156615,
+        "from": -35163,
+        "to": -11906,
+        "checks": {
+          "startedFar": true,
+          "open": true,
+          "atFloorBin": true,
+          "activeMoved": true,
+          "goTo": true
+        }
+      }
+    },
+    {
+      "name": "D-020/D-021: pinned 30 bins under F's bin → open caps at the active bin (within 70), BidCapped",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "3YUv2FN6RYzwhB3fr2ELYrqesWaTp6mu6G3zi2PdAuvQky6zwQUPHFD9XtjjBfjf4MT3HRikYeT7PbiU9o5yUy7N",
+        "checks": {
+          "capped": true,
+          "withinDepth": true,
+          "event": true
+        }
+      }
+    },
+    {
+      "name": "D-020 (repro): redeem while capped re-places at the cap and emits BidCapped",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "658XyB45pADyLsvuMSDtSZ2fypKTriPUMENgAUHgEGSLUMK5uDS5t8wGPeZYKTawkjpRHFZoCaSEUqVMWkXsb32V",
+        "cu": 209061,
+        "checks": {
+          "stillCapped": true,
+          "event": true
+        }
+      }
+    },
+    {
+      "name": "audit (repro): one transaction — a capped refresh, the blocker cancels, then a refresh that lifts the bid to F's bin inside the rate-limit window",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "2VCC2KVZrfqZa2WL2zBiGLUq6ytyZev5vnRXeMacLZrb5wNVG6n9xqmMaoowb1WpMB72W5PQ3NE4pZBMAusKspSG",
+        "checks": {
+          "lifted": true,
+          "order": true,
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "audit: only a lift skips the rate limit — two plain refreshes in one transaction are refused",
+      "status": "pass",
+      "expected": "RefreshRateLimited, nothing moves",
+      "got": "RefreshRateLimited"
+    },
+    {
+      "name": "§25 (repro): FloorOpened carries the resting order",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "2VtSNswSW3sCux4MLWD5Czcaj2KyLV5RPq71ASMF28tQQwiCr5K8eaSc6HKgwJFhektAFTqoa9xPZVg2D3H3isNq",
+        "checks": {
+          "event": true,
+          "order": true
+        }
+      }
+    },
+    {
+      "name": "§5/§10 (repro): refresh burns the whole staging balance — fills plus the donation — and records it; staging ends at zero",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "xEpRZbsG58xBn1JkcFXmeQ7eLRRvYLb5oqoAQPM1x9ENe9arMRseWYmvDLqEpPpHwMNaSHVoUiM764514FvVB2o",
+        "filled": "29999999977107",
+        "donation": "1000000",
+        "checks": {
+          "stagingZero": true,
+          "supplyFell": true,
+          "burnedRecorded": true,
+          "fEqualsReference": true
+        }
+      }
+    },
+    {
+      "name": "§25 (repro): FloorRefreshed carries quote_returned and the new order",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "checks": {
+          "event": true,
+          "quoteReturned": true,
+          "order": true,
+          "burned": true
+        }
+      }
+    },
+    {
+      "name": "§10 ledger (repro): fill_quote_spent = quote committed − quote returned",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "spent": "203691577",
+        "checks": {
+          "recorded": true
+        }
+      }
+    },
+    {
+      "name": "§10 (repro): harvest never transfers out of the vault — the treasury's 10% leaves from WSOL staging",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "4zrWRdWPxPhxu9VDWkhFDSQf3WstPCagqg6sn5CHkH7Hgg7t7xoCRM3bT5cfgtAUooQjLsYiwRzonjAzNaAuXTmH",
+        "outOfVault": [],
+        "checks": {
+          "noTransferOutOfVault": true,
+          "stagingZero": true
+        }
+      }
+    },
+    {
+      "name": "§5 staging: WSOL sent to partner_auth's staging ATA is swept into the vault by harvest",
+      "status": "pass",
+      "expected": "every check",
+      "got": "ok",
+      "detail": {
+        "signature": "5yaM24JZkk9sNDvrQoc3xF1xAM6TP7r2kJ1yKSbYsAU6zX9jg2HTEFqjPp3TDCe6hm4Xv8ENfQAQPjeLPX5XbrqL",
+        "toVault": "7000000",
+        "toTreasury": "0",
+        "checks": {
+          "stagingZero": true,
+          "vaultGotGift": true,
+          "treasuryOnlyFromFees": true
+        }
+      }
+    },
+    {
+      "name": "§5 rule 3 (repro): deposit from an account of another mint → DepositorAccountInvalid",
+      "status": "pass",
+      "expected": "DepositorAccountInvalid",
+      "got": "DepositorAccountInvalid"
+    },
+    {
+      "name": "§5 rules 1–2: the resting order is decoded (DLMM owner, LimitOrder discriminator, owner == partner_auth, lb_pair)",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "its key must first equal launch.bid_order, which only Ballast writes with an order it placed itself (floor_ix::check_bid_order)"
+    },
+    {
+      "name": "§5 rule 2: the pair's bin step equals the class bin step",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "the pair address is recorded at registration with the class bin step verified (D-014) and DLMM never changes a pair's bin step (floor_ix::read_pair)"
+    },
+    {
+      "name": "§8: an L decrease emits BackingDecreased per position, degrades the launch, keeps redemption open",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "permanent liquidity cannot decrease on Meteora's binaries; unit test floor_ix::tests::backing_decrease_is_per_position, identity-only reads after open (damm::read_position_identity)"
+    },
+    {
+      "name": "§5 rule 1: bin arrays carry the BinArray discriminator",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "only DLMM can create an account at the bin-array PDA, and only as a BinArray (floor_ix::is_bin_array)"
+    },
+    {
+      "name": "D-021: go_to_a_bin / place / cancel through the bitmap extension",
+      "status": "unreachable",
+      "expected": "-",
+      "got": "at the classes' bin step 10 DLMM confines bins to ±35,163, inside the internal bitmap (±35,840): −40,000 is refused with 6000 (evidence/program/part2/dlmm-bin-range.json). Support is kept for other bin steps; unit test dlmm::tests::bitmap_extension_boundary"
+    }
+  ]
+}

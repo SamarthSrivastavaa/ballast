@@ -1,0 +1,18 @@
+[package]
+name = "ballast-fuzz"
+description = "§14 stateful model fuzzer: V, S, L, the DLMM bid and the DAMM v2 pool under random operation sequences — F never falls, the floor equation holds, SOL and tokens are conserved, and a full sell-out always clears at ≥ 0.99·F."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+# §4 rule 1: F, payouts and bin checks come from the one floor crate.
+ballast-floor = { path = "../../crates/floor" }
+# DLMM's own bin price (vendored in the program, proven equal to the price DLMM stores, Part 2).
+ballast = { path = "../../programs/ballast" }
+ruint = { workspace = true }
+
+[[bin]]
+name = "ballast-fuzz"
+path = "src/main.rs"

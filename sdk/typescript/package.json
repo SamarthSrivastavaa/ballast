@@ -1,0 +1,11 @@
+{
+  "name": "@ballast/sdk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ballast TypeScript SDK: the floor crate via WebAssembly (§4 rule 1), PDAs and account readers (§15).",
+  "license": "Apache-2.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "tsx test/differential.ts"
+  }
+}

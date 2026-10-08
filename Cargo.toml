@@ -1,11 +1,18 @@
 [workspace]
 resolver = "2"
 
-# §15 lists programs/ballast, crates/meteora-types, crates/verifier-core and verifier/ as
-# workspace members too. They are added as their slices land, so that `cargo test` stays
-# meaningful and green in the meantime. crates/floor needs no network and no Anchor, so it
-# is first (§33: "the floor crate needs no network, do it first").
-members = ["crates/floor", "crates/meteora-types", "programs/ballast"]
+# §15's members, added as their slices landed so `cargo test` stayed meaningful and green.
+# crates/floor needs no network and no Anchor, so it came first (§33). tests/fuzz is the §14 model
+# fuzzer; crates/floor-wasm the floor crate for WebAssembly; verifier/ the `ballast` CLI (§20).
+members = [
+  "crates/floor",
+  "crates/floor-wasm",
+  "crates/meteora-types",
+  "crates/verifier-core",
+  "programs/ballast",
+  "tests/fuzz",
+  "verifier",
+]
 # The toolchain probe is its own workspace: it pulls the whole Anchor/Solana tree, which
 # should not be resolved here while the P0 gate is closed.
 exclude = ["tests/toolchain-probe"]

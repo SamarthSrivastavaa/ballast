@@ -98,8 +98,29 @@ pub fn read_pool(info: &AccountInfo, base_mint: &Pubkey, quote_mint: &Pubkey) ->
     })
 }
 
+/// After `open` (§8 fail-safe, audit 7 Oct): identity only — owner, discriminator, `pool`, canonical
+/// address — and `permanent_locked_liquidity` as read, 0 allowed. A decrease must degrade the launch
+/// (`BackingDecreased`), never abort redemption, so open's "fully permanent" checks are not reapplied.
+pub fn read_position_identity(info: &AccountInfo, pool: &Pubkey) -> Result<u128> {
+    require_keys_eq!(*info.owner, DAMM_PROGRAM_ID, BallastError::PositionInvalid);
+    let data = info.try_borrow_data()?;
+    let p = meteora_types::decode::<Position>(&data, &Position::DISCRIMINATOR)
+        .ok_or_else(|| error!(BallastError::PositionInvalid))?;
+    require_keys_eq!(
+        Pubkey::new_from_array(p.pool),
+        *pool,
+        BallastError::PositionWrongPool
+    );
+    require_keys_eq!(
+        info.key(),
+        position_address(&Pubkey::new_from_array(p.nft_mint)),
+        BallastError::PositionInvalid
+    );
+    Ok(p.permanent_locked_liquidity)
+}
+
 /// A position's `permanent_locked_liquidity` after §8's checks: owner, discriminator, `pool`,
-/// `unlocked == vested == 0`, `permanent > 0`. Returns `(nft_mint, permanent)`.
+/// `unlocked == vested == 0`, `permanent > 0`. Returns `(nft_mint, permanent)`. Used by `open`.
 pub fn read_position(info: &AccountInfo, pool: &Pubkey) -> Result<(Pubkey, u128)> {
     require_keys_eq!(*info.owner, DAMM_PROGRAM_ID, BallastError::PositionInvalid);
     let data = info.try_borrow_data()?;

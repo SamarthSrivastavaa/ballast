@@ -61,7 +61,8 @@ pub struct Launch {
     pub class: Pubkey,
     pub dbc_pool: Pubkey,
     pub base_mint: Pubkey,
-    /// Receives creator income (§6 `settle_graduation`, `harvest`). Set by the signing creator.
+    /// Receives creator income at its WSOL ATA, through `pay_creator` only (D-022) — never on the
+    /// floor's critical path. Set by the signing creator.
     pub creator_beneficiary: Pubkey,
     pub state: u8,
     pub bump: u8,
@@ -104,7 +105,21 @@ pub struct Launch {
     pub l_open: u128,
     /// §8 fail-safe: set once L reads below `l_open`; the monotone check is then suspended.
     pub degraded: bool,
-    pub reserved: [u8; 103],
+    /// D-020: the resting bid sits at the DLMM active bin, below F's bin, because a third-party order
+    /// pinned the active bin. Still a bid at or below F; any `refresh_floor` lifts it once cleared.
+    pub bid_capped: bool,
+    /// D-021: the vault rests unplaced because the DLMM active bin is pinned more than 70 bins under
+    /// F's bin (or where DLMM has no price). V still counts the vault; redemption stays live. While
+    /// set, `bid_bin_id` is the pinned active bin and `bid_order` is default.
+    pub bid_suspended: bool,
+    /// §10 ledger (audit 7 Oct): quote the bid spent on fills, net of the fees DLMM credits back
+    /// (committed − returned on each cancel).
+    pub fill_quote_spent: u64,
+    /// §8 fail-safe (audit 7 Oct): each recorded position's L, lowered when a decrease is observed so
+    /// every further decrease emits its own `BackingDecreased`.
+    pub partner_l_recorded: u128,
+    pub creator_l_recorded: u128,
+    pub reserved: [u8; 61],
 }
 
 /// The canonical parameters a class must match (§7). One per `size_tag`.
@@ -177,9 +192,9 @@ pub mod canon {
     /// §6 `refresh_floor` "rate-limited to once per N slots per launch". The spec gives no N; 10
     /// slots (≈ 4 s) bounds griefing to one cancel/re-place per 10 slots.
     pub const REFRESH_MIN_SLOTS: u64 = 10;
-    /// `redeem` re-places at the highest bin ≤ F′ by scanning up from the old bid bin (F never
-    /// falls). One bin array's worth; beyond that the keeper's `refresh_floor` moves the bid.
-    pub const BID_SCAN_MAX: i32 = 70;
+    /// D-021: the bid may be capped at the DLMM active bin only within this many bins under F's
+    /// bin; further down, the vault stays unplaced (the DLMM leg is suspended).
+    pub const MAX_CAP_DEPTH: i32 = 70;
     /// Bin steps DLMM accepted for a customizable LimitOrder pair (Q9, measured by simulation).
     pub const DLMM_BIN_STEPS: [u16; 10] = [1, 2, 4, 5, 8, 10, 16, 20, 25, 50];
     /// The DBC `PoolConfig.version` validated on the mainnet binaries (Q12).

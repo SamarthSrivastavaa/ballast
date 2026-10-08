@@ -112,7 +112,22 @@ export async function discover(label: string, keys: PublicKey[]): Promise<void> 
   const uniq = [...new Map(keys.map((k) => [k.toBase58(), k])).values()];
   const local = await getMany(conn, uniq, true);
   const missing = uniq.filter((_, i) => local[i] === null);
-  const onMainnet = missing.length ? await getMany(mainnet, missing, false) : [];
+  // The public mainnet RPC drops connections under load. Retry with backoff; if it stays down, the
+  // clone check (which only names accounts to pin) is skipped with a warning rather than failing a run.
+  let onMainnet: ({ owner: PublicKey; data: Buffer } | null)[] = [];
+  for (let attempt = 0; missing.length; attempt++) {
+    try {
+      onMainnet = await getMany(mainnet, missing, false);
+      break;
+    } catch (e) {
+      if (attempt >= 5) {
+        console.warn(`discover(${label}): mainnet RPC unreachable (${(e as Error).message}); clone check skipped`);
+        onMainnet = missing.map(() => null);
+        break;
+      }
+      await new Promise((r) => setTimeout(r, 500 * 2 ** attempt));
+    }
+  }
   const needs = missing
     .map((k, i) => ({ k, m: onMainnet[i] }))
     .filter((x) => x.m !== null)
@@ -162,17 +177,31 @@ export async function send(
   const keys = [feePayer.publicKey, ...all.flatMap((ix) => [ix.programId, ...ix.keys.map((k) => k.pubkey)])];
   await discover(label, keys);
 
-  const { blockhash, lastValidBlockHeight } = await conn.getLatestBlockhash("confirmed");
-  const msg = new TransactionMessage({ payerKey: feePayer.publicKey, recentBlockhash: blockhash, instructions: all })
-    .compileToV0Message(opts.alts ?? []);
-  const tx = new VersionedTransaction(msg);
-  const needed = new Set(msg.staticAccountKeys.slice(0, msg.header.numRequiredSignatures).map((k) => k.toBase58()));
   const uniqSigners = [...new Map([feePayer, ...signers].map((s) => [s.publicKey.toBase58(), s])).values()];
-  tx.sign(uniqSigners.filter((s) => needed.has(s.publicKey.toBase58())));
-
-  const signature = await conn.sendRawTransaction(tx.serialize(), { skipPreflight: true });
-  await conn.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, "confirmed");
-  const t = await conn.getTransaction(signature, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
+  let signature = "";
+  // A transaction whose blockhash expired before it confirmed can no longer land, so resending it
+  // with a fresh blockhash is safe; the local validator occasionally drops one under load.
+  for (let attempt = 0; ; attempt++) {
+    const { blockhash, lastValidBlockHeight } = await conn.getLatestBlockhash("confirmed");
+    const msg = new TransactionMessage({ payerKey: feePayer.publicKey, recentBlockhash: blockhash, instructions: all })
+      .compileToV0Message(opts.alts ?? []);
+    const tx = new VersionedTransaction(msg);
+    const needed = new Set(msg.staticAccountKeys.slice(0, msg.header.numRequiredSignatures).map((k) => k.toBase58()));
+    tx.sign(uniqSigners.filter((s) => needed.has(s.publicKey.toBase58())));
+    signature = await conn.sendRawTransaction(tx.serialize(), { skipPreflight: true });
+    try {
+      await conn.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, "confirmed");
+      break;
+    } catch (e) {
+      if (attempt >= 2 || !String((e as Error).message).includes("block height exceeded")) throw e;
+    }
+  }
+  // A confirmed signature can lag in getTransaction on a busy validator; look again before failing.
+  let t = await conn.getTransaction(signature, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
+  for (let i = 0; i < 40 && !t?.meta; i++) {
+    await new Promise((r) => setTimeout(r, 250));
+    t = await conn.getTransaction(signature, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
+  }
   if (!t?.meta) throw new Error(`${label}: ${signature} not found after confirmation`);
   const landed: Landed = {
     label,

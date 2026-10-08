@@ -1,0 +1,20 @@
+{
+  "gate": "§14 stateful model fuzz: 1M steps, zero failures",
+  "steps": 10000000,
+  "runs": 2000,
+  "seed": 7,
+  "sellout_every": 2500,
+  "result": "PASS",
+  "seconds": 21.0,
+  "applied_ops": { "damm_buy": 1799858, "damm_sell": 1398814, "bid_fill": 621263, "refresh_floor": 1000063, "redeem": 478480, "harvest": 399920, "deposit": 300011, "pay_creator": 299829, "staging_donation": 299154, "pin_active_bin": 236626, "unpin": 235811, "move_active_up": 366022, "sellout": 4000 },
+  "refused_by_program_or_market": 2564149,
+  "redemptions": 478480,
+  "steps_with_bid_capped": 1827988,
+  "steps_with_bid_suspended": 2432067,
+  "sellouts": 4000,
+  "lowest_sellout_execution_ppm_of_F": 990009,
+  "lowest_sellout_pool_end_ppm_of_F": 999948,
+  "sellouts_with_dust_holders": 6,
+  "lowest_dust_execution_ppm_of_F_reported_not_gated": 990012,
+  "largest_rise_of_s_in_a_run_ppm": 175800804
+}

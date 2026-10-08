@@ -1,0 +1,13 @@
+[package]
+name = "floor-wasm"
+description = "ballast-floor compiled to WebAssembly with plain extern \"C\" exports (no wasm-bindgen): the same F, payout and bin check in the browser and Node (§11, §14 differential, §21)."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+ballast-floor = { path = "../floor" }

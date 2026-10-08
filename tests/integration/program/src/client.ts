@@ -8,7 +8,8 @@ import { AnchorProvider, Program, Wallet } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
 import { conn, payer, REPO } from "../../p0/src/env";
 
-export const IDL = JSON.parse(readFileSync(resolve(REPO, "target/idl/ballast.json"), "utf8"));
+/** `BALLAST_IDL` points the suites at another build's IDL (the audit reproduction runs on D-020's). */
+export const IDL = JSON.parse(readFileSync(resolve(REPO, process.env.BALLAST_IDL ?? "target/idl/ballast.json"), "utf8"));
 export const BALLAST_ID = new PublicKey(IDL.address);
 export const ballast = new Program(IDL, new AnchorProvider(conn, new Wallet(payer), { commitment: "confirmed" }));
 /** Typed view of the account namespace (the IDL is loaded as JSON, so Anchor cannot type it). */

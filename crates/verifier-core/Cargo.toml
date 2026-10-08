@@ -1,0 +1,23 @@
+[package]
+name = "verifier-core"
+description = "§20: fetch a Ballast launch's raw accounts over plain JSON-RPC, re-derive every number with ballast-floor, and check each claim — never through a Ballast app or API."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+# §4 rule 1: F, payouts and bin checks come from the one floor crate.
+ballast-floor = { path = "../floor" }
+# Vendored Meteora layouts, proven field-for-field against real accounts (Q12).
+meteora-types = { path = "../meteora-types" }
+# Ballast's account and event types (Anchor/borsh), the DLMM price function and the class canon.
+ballast = { path = "../../programs/ballast", features = ["no-entrypoint"] }
+anchor-lang = "=0.31.1"
+ruint = { workspace = true }
+bytemuck = "1"
+sha2 = "0.10"
+base64 = "0.21"
+bs58 = "0.5"
+serde_json = "1"
+ureq = { version = "2", default-features = false, features = ["tls", "json"] }

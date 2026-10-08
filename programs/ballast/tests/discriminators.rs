@@ -115,9 +115,44 @@ fn part2_cpi_discriminators_match_the_vendored_idls() {
         ballast::dlmm::disc::CLOSE_LIMIT_ORDER_IF_EMPTY,
         disc_of(&l, "close_limit_order_if_empty")
     );
+    assert_eq!(ballast::dlmm::disc::GO_TO_A_BIN, disc_of(&l, "go_to_a_bin"));
     let c = idl("cp_amm.json");
     assert_eq!(
         ballast::damm::CLAIM_POSITION_FEE,
         disc_of(&c, "claim_position_fee")
+    );
+}
+
+fn account_disc(idl: &serde_json::Value, name: &str) -> [u8; 8] {
+    let a = idl["accounts"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|a| a["name"] == name)
+        .unwrap_or_else(|| panic!("{name} not in IDL accounts"));
+    let v: Vec<u8> = a["discriminator"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|b| b.as_u64().unwrap() as u8)
+        .collect();
+    v.try_into().unwrap()
+}
+
+/// The DLMM account discriminators the bid checks read (audit 7 Oct).
+#[test]
+fn dlmm_account_discriminators_match_the_vendored_idl() {
+    let l = idl("lb_clmm.json");
+    assert_eq!(
+        ballast::dlmm::BIN_ARRAY_DISCRIMINATOR,
+        account_disc(&l, "BinArray")
+    );
+    assert_eq!(
+        ballast::dlmm::LIMIT_ORDER_DISCRIMINATOR,
+        account_disc(&l, "LimitOrder")
+    );
+    assert_eq!(
+        ballast::dlmm::BITMAP_EXTENSION_DISCRIMINATOR,
+        account_disc(&l, "BinArrayBitmapExtension")
     );
 }

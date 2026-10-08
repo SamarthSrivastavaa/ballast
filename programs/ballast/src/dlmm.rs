@@ -27,7 +27,13 @@ pub mod disc {
     pub const PLACE_LIMIT_ORDER: [u8; 8] = [108, 176, 33, 186, 146, 229, 1, 197];
     pub const CANCEL_LIMIT_ORDER: [u8; 8] = [132, 156, 132, 31, 67, 40, 232, 97];
     pub const CLOSE_LIMIT_ORDER_IF_EMPTY: [u8; 8] = [57, 124, 36, 155, 126, 249, 93, 171];
+    pub const GO_TO_A_BIN: [u8; 8] = [146, 72, 174, 224, 40, 253, 84, 174];
 }
+
+/// Account discriminators (IDL `accounts`); `tests/discriminators.rs` re-derives them.
+pub const BIN_ARRAY_DISCRIMINATOR: [u8; 8] = [92, 142, 92, 220, 5, 148, 70, 181];
+pub const LIMIT_ORDER_DISCRIMINATOR: [u8; 8] = [137, 183, 212, 91, 115, 29, 141, 227];
+pub const BITMAP_EXTENSION_DISCRIMINATOR: [u8; 8] = [80, 111, 124, 113, 55, 237, 18, 5];
 
 /// `AccountsType` variant indices (IDL enum order).
 const TRANSFER_HOOK_X: u8 = 0;
@@ -88,19 +94,17 @@ pub fn bin_array_address(lb_pair: &Pubkey, index: i64) -> Pubkey {
     .0
 }
 
-/// The `bin_array_bitmap_extension` argument for a bin: the `["bitmap", lb_pair]` PDA when the
-/// bin's array lies outside the pair's internal bitmap, else the DLMM program id (Anchor's encoding
-/// of an absent optional account) — SDK `getBinArrayInfoForNonContiguousBinIds`.
-pub fn bitmap_extension_for(lb_pair: &Pubkey, ids: &[i32]) -> Pubkey {
-    let overflow = ids.iter().any(|&id| {
-        let idx = bin_array_index(id);
-        !(-BIN_ARRAY_BITMAP_SIZE..=BIN_ARRAY_BITMAP_SIZE - 1).contains(&idx)
-    });
-    if overflow {
-        Pubkey::find_program_address(&[b"bitmap", lb_pair.as_ref()], &DLMM_PROGRAM_ID).0
-    } else {
-        DLMM_PROGRAM_ID
-    }
+/// `["bitmap", lb_pair]` under DLMM: the pair's bin-array bitmap extension (D-021). A CPI passes it
+/// as `bin_array_bitmap_extension` when a bin's array lies outside the internal bitmap, else the
+/// DLMM program id (Anchor's "None") — SDK `getBinArrayInfoForNonContiguousBinIds`.
+pub fn bitmap_extension_address(lb_pair: &Pubkey) -> Pubkey {
+    Pubkey::find_program_address(&[b"bitmap", lb_pair.as_ref()], &DLMM_PROGRAM_ID).0
+}
+
+/// True when the bin's array lies outside the pair's internal bitmap (index beyond ±512).
+pub fn needs_bitmap_extension(id: i32) -> bool {
+    let idx = bin_array_index(id);
+    !(-BIN_ARRAY_BITMAP_SIZE..=BIN_ARRAY_BITMAP_SIZE - 1).contains(&idx)
 }
 
 /// The pair accounts every bid CPI needs.
@@ -214,6 +218,33 @@ pub fn cancel(
     }
 }
 
+/// `go_to_a_bin(bin_id)` (D-020, D-021): moves the pair's active bin when no liquidity lies in between.
+/// Permissionless (no signer). The bin arrays are optional: pass the ones that exist, as the SDK's
+/// `syncWithMarketPrice` does; an absent one is "None" (the program id, read-only).
+pub fn go_to_a_bin(
+    lb_pair: &Pubkey,
+    bitmap_extension: Option<Pubkey>,
+    from_bin_array: Option<Pubkey>,
+    to_bin_array: Option<Pubkey>,
+    bin_id: i32,
+) -> Instruction {
+    let opt = |k: Option<Pubkey>| AccountMeta::new_readonly(k.unwrap_or(DLMM_PROGRAM_ID), false);
+    let mut data = disc::GO_TO_A_BIN.to_vec();
+    data.extend_from_slice(&bin_id.to_le_bytes());
+    Instruction {
+        program_id: DLMM_PROGRAM_ID,
+        accounts: vec![
+            AccountMeta::new(*lb_pair, false),
+            opt(bitmap_extension), // D-021: the pair's extension when an array lies outside the bitmap
+            opt(from_bin_array),
+            opt(to_bin_array),
+            AccountMeta::new_readonly(DLMM_EVENT_AUTHORITY, false),
+            AccountMeta::new_readonly(DLMM_PROGRAM_ID, false),
+        ],
+        data,
+    }
+}
+
 /// `close_limit_order_if_empty`: closes the cancelled order, rent to `rent_receiver`.
 pub fn close_if_empty(limit_order: &Pubkey, owner: &Pubkey, rent_receiver: &Pubkey) -> Instruction {
     Instruction {
@@ -304,14 +335,22 @@ mod tests {
         }
     }
 
+    /// Class bins (≈ −12,000 at 10 bps) sit inside the internal bitmap (array index ±512 = bins
+    /// −35,840 … 35,839); the D-021 pin at −40,000 needs the extension.
     #[test]
-    fn launch_bins_need_no_bitmap_extension() {
+    fn bitmap_extension_boundary() {
+        assert!(!needs_bitmap_extension(-11_920));
+        assert!(!needs_bitmap_extension(-11_003));
+        assert!(!needs_bitmap_extension(-35_840));
+        assert!(!needs_bitmap_extension(35_839));
+        assert!(needs_bitmap_extension(-35_841));
+        assert!(needs_bitmap_extension(35_840));
+        assert!(needs_bitmap_extension(-40_000));
         let pair = Pubkey::new_unique();
         assert_eq!(
-            bitmap_extension_for(&pair, &[-11920, -11003]),
-            DLMM_PROGRAM_ID
+            bitmap_extension_address(&pair),
+            Pubkey::find_program_address(&[b"bitmap", pair.as_ref()], &DLMM_PROGRAM_ID).0
         );
-        assert_ne!(bitmap_extension_for(&pair, &[-40_000]), DLMM_PROGRAM_ID);
     }
 
     #[test]
