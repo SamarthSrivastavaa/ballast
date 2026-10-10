@@ -53,12 +53,20 @@ mainnet DLMM binary (`evidence/program/part2/dlmm-active-bin.json`, `dlmm-bin-ra
   deployment of the Ballast program exists unless and until it is funded and approved
   transaction by transaction (D-007).
 - **Compute units are local measurements** (Agave 2.1.21, finding T6). Mainnet cost models can differ;
-  every budget keeps headroom (`open` 139k of 400k, atomic `redeem` ≈ 200k of 1.2M).
+  every budget keeps headroom (`open` 145k, `refresh_floor` 188k, atomic `redeem` 209k, against a
+  1.4M limit; `evidence/program/part2/results.json`).
 - **Open questions** from the Top-20 that no run has answered: Q7 (can a creator-owned permanent
   position be split — moot while `creator_auth` holds it), Q10 (Jupiter), Q17 (Meteora keeper latency),
   Q19 (admin powers), Q20 (Token-2022 WSOL handling, excluded by the class rules).
 
 ## Trust that remains
+
+- **`harvest` needs the treasury's WSOL account to exist.** 10% of harvested partner LP fees go to
+  `global.treasury`, which has no setter. If its holder closes that account, every `harvest` with a
+  treasury share reverts until an account exists at that address again: LP fees stop reaching the
+  vault, so F stops rising from them. F does not fall, and the bid, redemption and `pay_creator` do
+  not depend on it. Open for the owner before the upgrade authority is frozen (`DECISIONS.md`
+  § Part 2 re-audit).
 
 - **The program upgrade authority** can replace the code, and with it every rule here. §19's runbook
   puts it and `global.admin` on a 2-of-3 multisig and discloses it; a frozen, verified build is

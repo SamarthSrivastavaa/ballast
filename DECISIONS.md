@@ -44,7 +44,7 @@ P0 = could invalidate the mechanism · P1 = could invalidate a subsystem · P2 =
 | 15 | P1 | Overshoot: can the completing swap exceed the threshold; when is partner surplus withdrawable; `swap2` partial-fill behaviour | Surplus exists; withdrawable after completion | LEAD → mostly VERIFIED | `evidence/p0/Q15/result.json` | §7 curve: ExactIn overshoot reverts 6033; swap2 PartialFill completes to threshold+1 and refunds the rest; later buy reverts 6013. Open: overshoot on a curve with capacity past the threshold |
 | 16 | P2 | Is `withdraw_leftover` permissionless, to `leftover_receiver`'s token account, only after `CreatedPool`? | Yes | VERIFIED | `evidence/p0/Q16/` | Refused before migration (6022). After: permissionless (third wallet); destination must be owned by leftover_receiver (2015 otherwise); paid 134,558,940,128,194 |
 | 17 | P2 | Meteora keeper latency for 10 SOL pools; manual migration via SDK | Seconds to minutes | UNKNOWN | | |
-| 18 | P2 | Compute units and accounts for `open` and an atomic `redeem` (cancel + burn + pay + re-place) | < 1.4M CU with a lookup table | UNKNOWN | | |
+| 18 | P2 | Compute units and accounts for `open` and an atomic `redeem` (cancel + burn + pay + re-place) | < 1.4M CU with a lookup table | **VERIFIED (local, 8 Oct)** | `open` `dBg8F77E…` 145,319 CU; atomic `redeem` `2epnzCFf…` 209,023 CU (`evidence/program/part2/results.json`) | Atomic redemption fits with 6× headroom; the two-step fallback is not needed. A wallet's redeem transaction is 995 bytes without a lookup table (`app/test/model.test.ts`). Devnet cross-check pending (finding T6) |
 | 19 | P2 | Meteora admin powers: DAMM v2 `update_pool_fees`, pool status, DLMM pool status, upgrade authorities | Fees and status adjustable by operators; locked liquidity untouchable | UNKNOWN | | |
 | 20 | P2 | WSOL handling across DBC, DAMM v2 and DLMM (SPL WSOL only; Token-2022 WSOL rejected) | SPL WSOL everywhere | UNKNOWN | | |
 
@@ -184,16 +184,16 @@ evidence, secondary). The heading was "§18 Devnet gates" until 2 Oct 2026.
 
 | Gate | Phase | Pass criterion | Status | Tag | Evidence |
 |---|---|---|---|---|---|
-| 1 | Config validation | Byte-identical decode; class created; each single-field mutation rejected by its rule | NOT RUN | | |
-| 2 | Graduation and migration | States advance; migration fee lands in vault to the lamport | NOT RUN | | |
-| 3 | **P0** Permanent lock | Both positions fully permanent and PDA-owned; L mapping within 2 units; L unchanged after swaps | NOT RUN | | |
-| 4 | Vault funding | Exact SOL and token conservation against the §10 ledger | NOT RUN | | |
-| 5 | **P0** DLMM bid | Fills persist; cancel returns unfilled + filled + fees | NOT RUN | | |
-| 6 | F | Identical s across `floor()`, Rust, WASM, Python; realised ≥ predicted | NOT RUN | | |
-| 7 | Redemption | Exact payout; F rises; CU within limit (else two-step redeem) | NOT RUN | | |
-| 8 | Full sell-out | Lowest execution ≥ 0.99·F; vault ≈ 0; F not lower | NOT RUN | | |
-| 9 | Invariant run | 200 random txs, no monotone-check failure; verifier PASS | NOT RUN | | |
-| 10 | Failure injection | All fail safe as in §26 | NOT RUN | | |
+| 1 | Config validation | Byte-identical decode; class created; each single-field mutation rejected by its rule | PASS (local, by suite; not run as one gate procedure) | | `evidence/program/part1/results.json` (43 pass / 10 unreachable), `cargo test -p meteora-types` |
+| 2 | Graduation and migration | States advance; migration fee lands in vault to the lamport | PASS (local, by suite) | | `evidence/program/part1/graduation.json` (migration fee exactly 1,500,000,000), `evidence/proof-local/summary.md` |
+| 3 | **P0** Permanent lock | Both positions fully permanent and PDA-owned; L mapping within 2 units; L unchanged after swaps | PASS (local, P0 + suites) | | Q1, Q2, Q3 above; `open` §8 checks (`evidence/program/part2/results.json`); verifier "Permanent" PASS |
+| 4 | Vault funding | Exact SOL and token conservation against the §10 ledger | **PASS (local, 10 Oct)** | `gate-4-pass` | `ballast verify` line "Ledger" (`crates/verifier-core/src/ledger.rs`, `evidence/proof-local/verify.txt`): live V = recorded inflows − fills − redemptions to the lamport, supply = minted − burned exactly, every counter = the sum of its events — on the Proof launch (1.555466352 in − 1.494559513 out) and on the gate 9 launch after 200 random transactions (1.774977782 − 1.759670834, incl. 0.516360664 of redemptions). Not covered: the curve-phase split between traders, Meteora's protocol fee and the creator (DBC's own accounting) |
+| 5 | **P0** DLMM bid | Fills persist; cancel returns unfilled + filled + fees | PASS (local, P0 + suites) | | Q5 above; `refresh_floor` case in `evidence/program/part2/results.json` (fill burned exactly) |
+| 6 | F | Identical s across `floor()`, Rust, WASM, Python; realised ≥ predicted | PASS (local, by tests) | | `floor()` = WASM = `ballast verify` (`app/test/model.test.ts`), Rust = Python = WASM on 10,014 vectors, realised +1.34% (`evidence/proof-local/`) |
+| 7 | Redemption | Exact payout; F rises; CU within limit (else two-step redeem) | PASS (local, by suite) | | redeem case in `evidence/program/part2/results.json` (209,023 CU); Q18 |
+| 8 | Full sell-out | Lowest execution ≥ 0.99·F; vault ≈ 0; F not lower | **PASS (local, 8 Oct; rerun 10 Oct)** | `gate-8-pass` | `evidence/proof-local/summary.md`: 72 sells, lowest 1.0173·F; 0.0458 SOL left; F 6.7919e-9 → 6.8394e-9 |
+| 9 | Invariant run | 200 random txs, no monotone-check failure; verifier PASS | **PASS (local, 8 Oct)** | `gate-9-pass` | `evidence/proof-local/summary.json` gate9: 200 transactions, 0 monotone reverts, verifier PASS |
+| 10 | Failure injection | All fail safe as in §26 | **PASS (local, 8 Oct)** | `gate-10-pass` | `evidence/proof-local/summary.json` gate10: keeper off + stale bid settled by redemption, stale bin hint refused, dust and slippage refused, verifier PASS; substitution negatives in the suites |
 
 ---
 
@@ -820,6 +820,30 @@ every launch, and `global.treasury` has no setter. Proposed fix: if the treasury
 valid SPL WSOL account, `harvest` sends the treasury's share to the vault as well (F rises; nothing
 is stranded). This changes who is paid, so it is the owner's call.
 
+### 10 Oct 2026 — gate 4, token page in a real browser
+
+- **Gate 4 closed.** `ballast verify` gained a "Ledger" line (§10: "the verifier can re-run this
+  table from chain data"): `vault + bid = migration_fee + partner_fees + surplus + harvested +
+  deposited − fill_quote_spent − redeemed_lamports`; `supply = pre_migration_token_supply − burned`;
+  and, where the RPC holds the whole history, each counter = the sum of its events. Quote that
+  reaches the vault outside an instruction shows as an excess and is not a failure; a missing
+  lamport is. Tests first (`crates/verifier-core/tests/ledger.rs`, 7 cases). `pnpm proof:local`
+  rerun on a fresh ledger: every claim PASS, both launches close with excess 0.
+- **The token page was blank in a browser.** Its tests ran in Node only. In Chrome: (1) `Buffer is
+  not defined` — the global was set in `main.tsx` after its imports had already evaluated; now set
+  by `app/src/polyfills.ts`, imported first. (2) `read "publicKey" on a WalletContext without
+  providing one` — the bundle held two copies of `@solana/wallet-adapter-react` (0.15.35 pinned,
+  0.15.40 via `wallet-adapter-react-ui`'s range); Vite `resolve.dedupe` keeps one. Guard:
+  `pnpm -F app smoke` loads the built page in Chrome and fails on a console error or a missing
+  element. Screenshots: `evidence/app/`.
+- **DLMM fee on the page.** The class's pair has a 1 bps base fee (`base_factor` 1000 × bin step
+  10; §9, Q9) plus DLMM's variable fee. The page now nets the fee in force (`getDynamicFee`) and
+  says it rises with volatility; `app/test/model.test.ts` compares "you receive at least" with a
+  real DLMM sell quote (within 1 ppm; the quote is 1–2 lamports lower from DLMM's own rounding).
+- **Not run on this diff:** `/audit`. The diff touches the verifier, the proof script, the app and
+  docs; `programs/ballast` is unchanged (`ballast.so` sha256 `fc09a069…5abb`, the binary the 8 Oct
+  suites and re-audit ran against).
+
 ### D-001 — Fixtures and the local validator use mainnet binaries and mainnet accounts
 
 **Status: APPROVED. Exact wording, given by the owner on 2 Oct 2026:**
@@ -1139,6 +1163,12 @@ assumed. At the current `.so` (551,488 B):
 - **Deploy: 2.806 SOL kept, 5.61 SOL at the peak.**
 - **9 Oct deploy + proof: minimum 14.2 SOL, recommended 17 SOL** (one upgrade buffer). *Refined 8 Oct from the script as run (`pnpm proof:devnet`): team buys 3.5 + 3.5 + 3.2 SOL (wallets funded 3.6 / 3.6 / 3.35), admin 0.05 for the class rent, keeper's `partner_auth` order-rent float 0.2, rents ≈ 0.6; the script refuses to start below 14.2 SOL.* **Fund the devnet payer `F1s4kPpt5LHNV98YhoWcSDUhqiPsZaw6W41MRYjGrUT1`** (`.keys/devnet/payer.json`, gitignored).
 - Net spent if nothing is reclaimed ≈ 7.8 SOL; ≈ 5.0 after `solana program close`.
+- **Size correction, 10 Oct:** the table above used 551,488 B. The `.so` as built since the 8 Oct
+  re-audit fixes is **553,456 B** (sha256 `fc09a069…5abb`), so ProgramData is (45 + 553,456 + 128) ×
+  5,080 = **2,812,435,320 lamports** and the transient buffer 2,812,394,680: **deploy 2.816 SOL kept,
+  5.63 SOL at the peak**. The 14.2 SOL minimum and 17 SOL recommendation stand (2.82 + ≈ 11.3).
+- **10 Oct: the devnet payer holds 0 SOL.** Five `solana airdrop` requests (5, 5, 5, 2, 1 SOL) were all
+  refused by the faucet's rate limit, so the devnet deploy and `pnpm proof:devnet` have not run.
 
 ---
 

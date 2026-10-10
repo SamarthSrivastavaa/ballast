@@ -32,7 +32,9 @@ local validator — never mocks (D-001).
 | Two audits (spec + security), every finding fixed or decided; 0 critical / 0 high | `DECISIONS.md` § Part 2 audit findings, § Part 2 re-audit; `evidence/program/part2/audit.json` |
 | The vault has exactly two exits — the DLMM bid it owns and a redeemer — structurally | `docs/security.md`, `evidence/program/part2/audit.json` ("harvest never transfers out of the vault") |
 | `ballast verify <launch> --rpc <url>` recomputes everything from raw accounts | `crates/verifier-core`, `verifier/`, `docs/verifier.md` |
-| `pnpm proof:local` — the full §22 Proof launch on mainnet binaries: realised F +1.34% over the prediction; 72-sell full sell-out, lowest execution 1.0174·F; F never lower; gates 8–10 PASS | `evidence/proof-local/summary.md`, `docs/demo.md` |
+| `pnpm proof:local` — the full §22 Proof launch on mainnet binaries: realised F +1.34% over the prediction; 72-sell full sell-out, lowest execution 1.0173·F; F never lower; gates 8–10 PASS | `evidence/proof-local/summary.md`, `docs/proof.md`, `docs/demo.md` |
+| The §10 ledger closes to the lamport from chain data: live V = recorded inflows − fills − redemptions, supply = minted − burned, every counter = the sum of its events (gate 4) — on the Proof launch and again after 200 random transactions | `ballast verify` line "Ledger" (`evidence/proof-local/verify.txt`), `crates/verifier-core/src/ledger.rs` |
+| The token page renders in a real browser and its numbers equal the verifier's and a real DLMM quote | `evidence/app/`, `app/test/model.test.ts` (13 checks), `app/test/smoke.mjs` |
 
 ## 3. Originality and taste
 
@@ -58,8 +60,9 @@ local validator — never mocks (D-001).
 ## 5. Traction
 
 Honest status: no mainnet deployment yet (D-007: no mainnet spend without per-transaction approval;
-the Full tier deploys only if funded). The public evidence is the devnet proof
-(`evidence/proof-devnet/`, when run) and `ballast scan` over existing DBC → DAMM v2 launches
+the Full tier deploys only if funded). No devnet deployment either yet (the devnet payer is
+unfunded as of 10 Oct; `pnpm proof:devnet` is ready). The public evidence today is the reproducible
+local proof on Meteora's mainnet binaries and `ballast scan` over existing DBC → DAMM v2 launches
 (`evidence/scanner/scan-100-2026-10-08.json`).
 
 ## Limits you should know

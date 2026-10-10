@@ -71,6 +71,37 @@ jobs:
           fi
           echo "vectors.json reproducible ($(wc -c < crates/floor/vectors.json) bytes)"
 
+  node:
+    name: WASM differential · compiler check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.85.0"
+          targets: wasm32-unknown-unknown
+
+      - uses: Swatinem/rust-cache@v2
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # §4 rule 1: the SDK and the token page call the floor crate compiled to WebAssembly; it must
+      # return the same s as the Rust crate and the Python reference on every published vector.
+      - name: floor-wasm = vectors.json
+        run: pnpm test:wasm
+
+      # §7: the compiler's classes.json and the constants programs/ballast pins must agree.
+      - name: compiler check
+        run: pnpm -F compiler test
+
   wording:
     name: banned wording (§21)
     runs-on: ubuntu-latest
@@ -79,14 +110,14 @@ jobs:
 
       # §21 bans these in anything user-facing. Scoped to app/, README and the SDK so that
       # spec text and security docs can discuss what is *not* safe without tripping the gate.
-      # D-006: app/ and README.md carry the full list, including bare "safe" and "protected".
+      # D-006: app/, README.md and JUDGES.md carry the full list, including bare "safe" and "protected".
       # sdk/ keeps the narrower list because `protected` is a TypeScript keyword.
       # ('|’) rather than a bracket class: the curly apostrophe is 3 bytes, and this matches in any locale.
       - name: grep for banned wording
         run: |
           set +e
           hits=$(grep -rniE "\b(safe|insured|protected|guaranteed profit)\b|can('|’)?t lose|cannot lose|price can never go below|risk[- ]free" \
-            app/ README.md 2>/dev/null)
+            app/ README.md JUDGES.md 2>/dev/null)
           sdk_hits=$(grep -rniE "\b(insured|guaranteed profit)\b|can('|’)?t lose|cannot lose|price can never go below|risk[- ]free" \
             sdk/ 2>/dev/null)
           hits=$(printf '%s\n%s\n' "$hits" "$sdk_hits" | sed '/^$/d')

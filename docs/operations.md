@@ -39,11 +39,15 @@ and redemption settles the bid itself (§26; gate 10 in `evidence/proof-local/`)
 ## Deploying
 
 - **Local** (authoritative proof, D-001/D-007): `pnpm proof:local`.
-- **Devnet** (public cross-check): `solana program deploy -u devnet --program-id target/deploy/ballast-keypair.json target/deploy/ballast.so`, then the same proof sequence against devnet.
-  Rent for the program at its current size (551,488 B): ProgramData (128 + 45 + 551,488) × 6,960 =
-  3,839,560,560 lamports ≈ **3.84 SOL** (kept while deployed; `solana program close` returns it), plus a
-  transient buffer of the same size during the deploy. The proof itself needs the 10 SOL threshold
-  (10.10 with the 1% fee) and ≈ 0.5 SOL of rents and fees.
+- **Devnet** (public cross-check, D-001: the local result governs): fund the devnet payer
+  (`.keys/devnet/payer.json`, gitignored) and run `pnpm proof:devnet`. It checks the cluster's genesis
+  hash, deploys with `solana program deploy` under `target/deploy/ballast-keypair.json`, runs the same
+  §22 sequence, and writes `evidence/proof-devnet/`. Gates 9 and 10 run locally only.
+  Cost at the current size (553,456 B; devnet rent is 5,080 lamports per byte, read 8 Oct): ProgramData
+  2,812,435,320 lamports ≈ **2.81 SOL** (kept while deployed; `solana program close` returns it), a
+  transient deploy buffer of the same size, the 10 SOL threshold (10.10 with the 1% fee; about 5.7
+  comes back on the sell-out) and ≤ 0.6 SOL of rents and fees. **Minimum 14.2 SOL, recommended 17**;
+  the script refuses to start below 14.2 (`DECISIONS.md` § Devnet SOL budget).
 - **Mainnet**: §19's runbook — verifiable build, upgrade authority and admin moved to a 2-of-3 multisig
   immediately, `initialize_global(admin = multisig, treasury = multisig WSOL account)`, then classes
   from the multisig. No mainnet transaction is sent without the owner's approval of that transaction
