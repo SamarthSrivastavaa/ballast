@@ -14,7 +14,7 @@ export function rpcFromUrl(): string {
   return new URLSearchParams(window.location.search).get("rpc") ?? "http://127.0.0.1:8899";
 }
 
-const sol = (x: number) => (x < 1e-6 ? x.toExponential(4) : x.toLocaleString(undefined, { maximumFractionDigits: 9 }));
+const sol = (x: number) => (x === 0 ? "0" : x < 1e-6 ? x.toExponential(4) : x.toLocaleString(undefined, { maximumFractionDigits: 9 }));
 const pct = (x: number) => `${(x * 100).toFixed(2)}%`;
 
 function Price({ label, value, note }: { label: string; value: number | null; note?: string }) {
@@ -142,7 +142,7 @@ export function App() {
                 )}
                 <div className="grid">
                   <Price label="Bid bin price" value={model.prices.bidBin} note={`bin ${model.bid.binId}, ${sol(model.bid.restingSol)} SOL resting`} />
-                  <Price label="You receive at least (executable bid, net)" value={model.prices.bidNet} note={`after the ${model.bid.dlmmFeeBps} bps DLMM fee`} />
+                  <Price label="You receive at least (executable bid, net)" value={model.prices.bidNet} note={`after DLMM's fee, ${model.bid.dlmmFeeBps} bps now (${model.bid.dlmmBaseFeeBps} bps base; it rises with volatility)`} />
                   <Price label="DAMM v2 sell, net" value={model.prices.dammSellNet} note="at the current pool price, after the 1% pool fee" />
                 </div>
               </>

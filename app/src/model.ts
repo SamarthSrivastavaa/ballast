@@ -36,7 +36,8 @@ export interface Model {
   maxLossIfBuyNow: number;
   /** Share of outstanding supply each leg absorbs at F (§21 "floor composition"). */
   composition: { lockedPool: number; vaultBid: number };
-  bid: { binId: number; restingSol: number; capped: boolean; suspended: boolean; dlmmFeeBps: number };
+  /** `dlmmFeeBps` is DLMM's fee in force now (base + variable); `dlmmBaseFeeBps` its fixed part. */
+  bid: { binId: number; restingSol: number; capped: boolean; suspended: boolean; dlmmFeeBps: number; dlmmBaseFeeBps: number };
   inputs: { v: bigint; sSupply: bigint; l: bigint };
   proof: { predictionTx: string | null; openTx: string | null; addresses: Record<string, string> };
   predictedF: number;
@@ -92,7 +93,10 @@ export async function loadModel(conn: Connection, idl: { address: string }, laun
   const sqrtPrice = BigInt(pool.sqrtPrice.toString());
   const damm = solPerToken((Number(sqrtPrice) / Q64) ** 2);
   const pair = await DLMM.create(conn, v.lbPair, { cluster: "mainnet-beta" });
-  const dlmmFeeBps = Number(pair.getFeeInfo().baseFeeRatePercentage.toString()) * 100;
+  // DLMM's fee on a sell into the bid is its base fee (1 bps for the class, §9) plus a variable part
+  // that rises with the pair's volatility. The page nets the fee in force now, and says so.
+  const dlmmFeeBps = Number(pair.getDynamicFee().toString()) * 100;
+  const dlmmBaseFeeBps = Number(pair.getFeeInfo().baseFeeRatePercentage.toString()) * 100;
   const resting = BigInt(rec.bidQuoteCommitted.toString());
   const binId: number = rec.bidBinId;
   const bidBin = resting > 0n ? solPerToken(Number(binPriceQ64(binId, v.binStep)) / Q64) : null;
@@ -118,7 +122,7 @@ export async function loadModel(conn: Connection, idl: { address: string }, laun
     s: sUsed, floorMatches,
     maxLossIfBuyNow: Math.max(0, 1 - F / damm),
     composition: { lockedPool: lockedBase / Number(sSupply), vaultBid: vaultBase / Number(sSupply) },
-    bid: { binId, restingSol: Number(resting) / 1e9, capped: !!rec.bidCapped, suspended: !!rec.bidSuspended, dlmmFeeBps },
+    bid: { binId, restingSol: Number(resting) / 1e9, capped: !!rec.bidCapped, suspended: !!rec.bidSuspended, dlmmFeeBps, dlmmBaseFeeBps },
     inputs: { v: vTotal, sSupply, l },
     proof: {
       predictionTx: await oldestSignature(conn, launch),

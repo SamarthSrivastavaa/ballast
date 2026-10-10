@@ -1,7 +1,8 @@
 /**
  * The token page's numbers against independent sources, on the local proof ledger (mainnet binaries):
  * F against `ballast verify --json`, the redemption payout against §10's formula, the bid bin price
- * against the price DLMM stores in the bin, and the proof transactions against their own logs.
+ * against the price DLMM stores in the bin, the executable bid net against a DLMM sell quote, and
+ * the proof transactions against their own logs.
  *
  *   source ~/.ballast-env && pnpm localnet --quiet & ... && pnpm proof:local   # a launch to read
  *   pnpm -F app test
@@ -42,8 +43,16 @@ async function main(): Promise<void> {
 
   const v = await client.view(launch);
   let storedBinPrice: bigint | null = null;
+  // "You receive at least" against a real DLMM quote: sell a twentieth of what the bid can absorb
+  // (so the whole sell fills in the bid's bin) and compare lamports per base unit, within 1 ppm.
+  let bidQuote: { sold: string; out: string; pageNet: number; quoteNet: number } | null = null;
   if (m.bid.restingSol > 0) {
     const pair = await DLMM.create(conn, v.lbPair, { cluster: "mainnet-beta" });
+    if (pair.lbPair.activeId === m.bid.binId && m.prices.bidNet !== null) {
+      const sold = new BN(Math.floor((m.bid.restingSol * 1e9) / (m.prices.bidBin! * 1e3) / 20));
+      const q = pair.swapQuote(sold, true, new BN(0), await pair.getBinArrayForSwap(true, 6));
+      bidQuote = { sold: sold.toString(), out: q.outAmount.toString(), pageNet: m.prices.bidNet, quoteNet: (Number(q.outAmount.toString()) / Number(sold.toString())) * 1e-3 };
+    }
     const arr = deriveBinArray(v.lbPair, binIdToBinArrayIndex(new BN(m.bid.binId)), pair.program.programId)[0];
     const binArr = (await pair.program.account.binArray.fetch(arr)) as { bins: { price: BN }[] };
     const lower = Number(binIdToBinArrayIndex(new BN(m.bid.binId)).toString()) * 70;
@@ -62,13 +71,14 @@ async function main(): Promise<void> {
     redemptionBelowF: m.prices.redemption < m.prices.F,
     bidBinPriceEqualsDlmm: storedBinPrice === null || storedBinPrice === binPriceQ64(m.bid.binId, v.binStep),
     bidAtOrBelowF: m.prices.bidBin === null || m.prices.bidBin <= m.prices.F,
+    bidNetEqualsDlmmQuote: bidQuote === null || Math.abs(bidQuote.quoteNet / bidQuote.pageNet - 1) < 1e-6,
     compositionCoversSupply: shareSum >= 0.999999 && shareSum < 1.001,
     predictionTxIsRegistration: (await logs(m.proof.predictionTx)).some((l) => l.includes("Instruction: RegisterLaunch")),
     openTxIsOpen: (await logs(m.proof.openTx)).some((l) => l.includes("Instruction: Open")),
     realisedAtLeastPredicted: m.prices.F >= m.predictedF,
     redeemTxFitsWithoutLookupTable: redeemTx.size <= 1232,
   };
-  console.log(JSON.stringify({ launch: launch.toBase58(), redeemTxBytes: redeemTx.size, F: m.prices.F, s: m.s.toString(), prices: m.prices, composition: m.composition, bid: m.bid, checks }, (_k, x) => (typeof x === "bigint" ? x.toString() : x), 2));
+  console.log(JSON.stringify({ launch: launch.toBase58(), redeemTxBytes: redeemTx.size, F: m.prices.F, s: m.s.toString(), prices: m.prices, composition: m.composition, bid: m.bid, bidQuote, checks }, (_k, x) => (typeof x === "bigint" ? x.toString() : x), 2));
   const failed = Object.entries(checks).filter(([, ok]) => !ok).map(([k]) => k);
   if (failed.length) {
     console.error(`FAIL: ${failed.join(", ")}`);

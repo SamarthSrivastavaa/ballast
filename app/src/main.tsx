@@ -1,5 +1,4 @@
-import { Buffer } from "buffer";
-(globalThis as unknown as { Buffer: typeof Buffer }).Buffer ??= Buffer;
+import "./polyfills";
 
 import { StrictMode, useMemo } from "react";
 import { createRoot } from "react-dom/client";
