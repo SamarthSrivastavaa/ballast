@@ -154,6 +154,9 @@ async function main(): Promise<void> {
   const sEnd = BigInt(recEnd.sLast.toString());
   const mint = await getMint(conn, P.base);
   const minExec = Math.min(...(verify.sellout as { execution_ppm_of_F: number }[]).map((x) => x.execution_ppm_of_F)) / 1e6;
+  // §18 gate 4 / §10: the verifier's ledger line — live V and supply against the launch's counters,
+  // and the counters against the program's events over the whole history.
+  const ledger = ledgerOf(verify);
   const proof = {
     launch: P.l.launch.toBase58(), class: "Proof (10 SOL)", baseMint: P.base.toBase58(), dbcPool: P.l.pool.toBase58(),
     dammPool: P.dammPool.toBase58(), dlmmPair: P.l.lbPair.toBase58(),
@@ -174,7 +177,10 @@ async function main(): Promise<void> {
       treasurySol: SOL(BigInt(recEnd.treasuryFees.toString())), harvestedSol: SOL(BigInt(recEnd.harvested.toString())),
     },
     verifier: { pass: verify.pass, checks: verify.checks, historyPoints: verify.history?.length },
+    ledger,
     expected: {
+      // No quote reaches this launch's vault outside an instruction, so the ledger must close exactly.
+      ledgerReconcilesToTheLamport: ledger.pass && ledger.excessLamports === 0,
       // Declared tolerance: ≤ 0.05 SOL (≈ 3% of the 1.54 SOL vault) left after the sell-out.
       lowestExecutionAtLeast099F: minExec >= 0.99, vaultNearZero: afterSellout.v < 50_000_000n,
       fNotLower: sEnd >= sOpen, realisedAtLeastPredicted: sOpen >= predicted, verifierPass: verify.pass === true,
@@ -280,7 +286,7 @@ async function gate9(classConfig: PublicKey, creator: Keypair, record: (s: strin
   const v = verifyJson(o.l.launch, []);
   const summary = {
     launch: o.l.launch.toBase58(), transactions: sent, byOperation: counts, floorDecreasedReverts: floorDecreased,
-    verifierPass: v.pass, historyPoints: v.history?.length, pass: sent === 200 && floorDecreased === 0 && v.pass === true,
+    verifierPass: v.pass, historyPoints: v.history?.length, ledger: ledgerOf(v), pass: sent === 200 && floorDecreased === 0 && v.pass === true,
   };
   return { o, alt: opened.alt, wallets, summary };
 }
@@ -363,7 +369,7 @@ async function gate10(o: Opened, alt: Awaited<ReturnType<typeof altFor>>, wallet
     detail: "one negative test per substitution: evidence/program/part1/*.json, part2/results.json, part2/audit.json",
   });
   const v = verifyJson(o.l.launch, []);
-  out.push({ case: "verifier PASS after the injected failures", pass: v.pass === true, detail: `${v.history?.length} floor updates, never decreasing` });
+  out.push({ case: "verifier PASS after the injected failures", pass: v.pass === true, detail: `${v.history?.length} floor updates, never decreasing; ledger ${ledgerOf(v).pass ? "reconciles" : "DOES NOT reconcile"} (excess ${ledgerOf(v).excessLamports} lamports)` });
   return out;
 }
 
@@ -376,6 +382,12 @@ function verifyJson(launch: PublicKey, sellout: string[]) {
     raw = String((e as { stdout?: Buffer }).stdout ?? "{}");
   }
   return JSON.parse(raw || "{}");
+}
+
+/** The verifier's §10 ledger line: PASS/FAIL, the V its counters account for, and live V less that. */
+function ledgerOf(v: { checks?: { check: string; status: string; detail: string }[]; ledger_v_lamports?: number | null; ledger_excess_lamports?: number | null }) {
+  const line = v.checks?.find((c) => c.check === "Ledger");
+  return { pass: line?.status === "PASS", detail: line?.detail ?? "no ledger line", expectedVLamports: v.ledger_v_lamports ?? null, excessLamports: v.ledger_excess_lamports ?? null };
 }
 
 function markdown(all: Record<string, unknown>): string {
@@ -397,8 +409,9 @@ function markdown(all: Record<string, unknown>): string {
     `| F not lower after the sell-out | ${p.afterSellout.solPerToken.toExponential(4)} SOL/token | ${yes(p.expected.fNotLower)} |`,
     `| Burned | ${p.end.burnedTokens.toLocaleString()} tokens (fills ${p.end.filledTokens.toLocaleString()}) | — |`,
     `| \`ballast verify --sellout\` | ${p.verifier.historyPoints} floor updates | ${yes(p.expected.verifierPass)} |`,
+    `| Gate 4: §10 ledger from chain data (after the whole lifecycle) | ${p.ledger.detail} | ${yes(p.expected.ledgerReconcilesToTheLamport)} |`,
     ...(g9 ? [`| Gate 9: 200 random transactions, 5 wallets | ${g9.floorDecreasedReverts} monotone-check reverts | ${yes(g9.pass)} |`] : ["| Gates 9–10 | run on the mainnet-binary local validator only (`evidence/proof-local/`) | — |"]),
-    ...g10.map((c) => `| Gate 10: ${c.case} | ${c.detail.slice(0, 80)} | ${yes(c.pass)} |`),
+    ...g10.map((c) => `| Gate 10: ${c.case} | ${c.detail.slice(0, 120)} | ${yes(c.pass)} |`),
     "",
     "## Transactions",
     "",

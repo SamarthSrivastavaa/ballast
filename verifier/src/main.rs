@@ -196,6 +196,7 @@ fn main() -> ExitCode {
             "vault_lamports": n.vault, "bid_committed_lamports": n.committed, "s_supply": n.s_supply,
             "l": n.l.to_string(), "bid_bin": n.bid_bin, "floor_bin": n.floor_bin,
             "pool_share_of_floor_ppm": n.pool_share_ppm,
+            "ledger_v_lamports": n.ledger_v, "ledger_excess_lamports": n.ledger_excess,
             "at_slot": at_slot.map(|sl| json!({ "slot": sl, "s": report.s_at(sl).map(|s| s.to_string()) })),
             "history": report.history.iter().map(|(sl, sig, s)| json!({ "slot": sl, "signature": sig, "s": s.to_string() })).collect::<Vec<_>>(),
             "sellout": report.sellout.iter().map(|(sig, ppm)| json!({ "signature": sig, "execution_ppm_of_F": ppm })).collect::<Vec<_>>(),

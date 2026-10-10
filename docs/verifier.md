@@ -35,7 +35,14 @@ ballast verify <launch-address> --rpc <url> --at-slot <slot>          # F in for
    ever emitted (`FloorOpened`, `FloorRefreshed`, `Redeemed`, `Harvested`, `Deposited`), decoded from
    the launch's transactions — only lines logged while Ballast itself executes — must never decrease
    and must end at `s_last`. Any `BackingDecreased` event fails the check.
-7. **Sell-out replay** (`--sellout`) — for each transaction, the signer's base sold and quote received
+7. **The ledger** (§10) — live V equals the launch's recorded inflows (migration fee, partner fees,
+   surplus, harvested LP fees, deposits) less its recorded outflows (quote the bid spent on fills,
+   redemption payouts): the vault's only two exits. Quote that reached the vault outside any
+   instruction is reported as an excess, never a failure; a missing lamport fails. The mint's supply
+   equals the minted supply less everything the program burned (less anything holders burned
+   themselves). Where the RPC holds the launch's whole history, each counter must also equal the sum
+   of its events. Pure arithmetic: `crates/verifier-core/src/ledger.rs`, tests in `tests/ledger.rs`.
+8. **Sell-out replay** (`--sellout`) — for each transaction, the signer's base sold and quote received
    (WSOL and lamports, fee added back), compared with F in force at that slot; the lowest execution
    must be ≥ 0.99·F (§18 gate 8).
 

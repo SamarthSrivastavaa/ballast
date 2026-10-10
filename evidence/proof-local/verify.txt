@@ -1,0 +1,25 @@
+Launch:            HE5uHyPiVP2FiLbVWJQ2Vo17kjxWvZDfihxMoYTmsY5D   class: proof (10 SOL)
+Prediction:        6.7019e-9 SOL/token  (recorded in the pool-creation transaction, before any third-party trade)
+Realised at open:  6.7919e-9 SOL/token  (+1.34% vs prediction)
+Recomputed F now:  6.8394e-9 SOL/token  (theoretical floor F)
+Backing:           L = 3.0702e31 (locked pool absorbs 98.6% of S at F)   V = 0.060907 SOL (vault 0.015062 + resting bid 0.045845)
+Outstanding S:     645320101 tokens
+
+PASS  Launch                 owner Ballast, seeds ["launch", 4gxuHirJ6ai4kM4iRubdYwF5z5yCUDNrKT14kssfPAh9]
+PASS  Class                  proof (10 SOL); DBC config 96xaawsHcayVS4tsNLtY4L6Y8SMSod7znsqq1jqwrzqS
+PASS  Config hash            sha256 over the curve fields recomputed from the DBC config (§7 rule 3)
+PASS  Prediction             6.7019e-9 SOL/token recorded; independent derivation from the config 6.7178e-9 (band 6.7178e-9…6.7178e-9); a lower bound
+PASS  DBC pool               config, base mint, and pool creator = creator_auth (D-011)
+PASS  Recorded before trade  registered in the pool's first transaction, slot 95 (4sm5FvS8quQS)
+PASS  DAMM pool              canonical migrated pool Eg6UiufotSGnjA2UCqKjWDtmbNA62fhYFSEj57gtDkoL; OnlyB, no compounding, full range
+PASS  Permanent              L = 3.0702e31 (both positions permanent, unlocked = vested = 0; ≥ L at open)
+PASS  PDA owners             partner NFT held by partner_auth, creator NFT by creator_auth
+PASS  Vault                  WSOL account of partner_auth, 0.015062 SOL on hand
+PASS  Supply                 S = 645320101 tokens outstanding; mint authority None, freeze authority None
+PASS  Invariant              V/F + L(1/√F − 1/√P_max) ≥ S at the recomputed F, and F ≥ the last recorded F
+PASS  Realised ≥ predicted   +1.34% vs the prediction
+PASS  Bid                    0.045845 SOL resting @ bin -11906 = 6.7901e-9 SOL/token, owned by partner_auth; 7 bin(s) under F's bin — stale until the next refresh_floor (§9)
+PASS  History                12 floor updates from program events, never decreasing; the last equals s_last
+PASS  Ledger                 V = 1.555466352 in − 1.494559513 out (fills 1.494559513, redemptions 0.000000000), to the lamport; supply = minted − burned exactly; counters = event sums
+
+RESULT: PASS

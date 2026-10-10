@@ -11,6 +11,7 @@ use ruint::aliases::U256;
 
 use crate::events::{self, Event};
 use crate::layout::{self, pk, WSOL};
+use crate::ledger::{event_totals_match, EventTotals, QuoteLedger};
 use crate::predict;
 use crate::rpc::{Rpc, Tx};
 use crate::Error;
@@ -49,6 +50,9 @@ pub struct Numbers {
     pub bid_bin: Option<i32>,
     pub floor_bin: Option<i32>,
     pub pool_share_ppm: u64,
+    /// §10 ledger: the V the launch's counters account for, and live V less that (`None`: missing).
+    pub ledger_v: Option<u64>,
+    pub ledger_excess: Option<u64>,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -440,13 +444,36 @@ pub fn verify(rpc: &Rpc, launch_key: &Pubkey, opts: &Options) -> Result<Report, 
     let mut prev: Option<u128> = None;
     let mut monotone = true;
     let mut decreases = 0;
+    let mut totals = EventTotals::default();
+    let mut complete = false;
     for sig in sigs.iter().filter(|s| !s.failed) {
         let Some(tx) = rpc.transaction(&sig.signature)? else {
             continue;
         };
         for e in events::parse(&tx.logs, &PROGRAM, launch_key) {
-            if let Event::BackingDecreased { .. } = e {
-                decreases += 1;
+            match e {
+                Event::BackingDecreased { .. } => decreases += 1,
+                Event::Registered { .. } => complete = true,
+                Event::Settled {
+                    migration_fee,
+                    partner_fees,
+                } => {
+                    totals.migration_fee = totals.migration_fee.saturating_add(migration_fee);
+                    totals.partner_fees = totals.partner_fees.saturating_add(partner_fees);
+                }
+                Event::LeftoverBurned { surplus, .. } => {
+                    totals.surplus = totals.surplus.saturating_add(surplus)
+                }
+                Event::Harvested { to_vault, .. } => {
+                    totals.harvested = totals.harvested.saturating_add(to_vault)
+                }
+                Event::Deposited { amount, .. } => {
+                    totals.deposited = totals.deposited.saturating_add(amount)
+                }
+                Event::Redeemed { payout, .. } => {
+                    totals.redeemed_lamports = totals.redeemed_lamports.saturating_add(payout)
+                }
+                _ => {}
             }
             if let Some(sv) = e.s() {
                 if prev.map(|p| sv < p).unwrap_or(false) {
@@ -477,6 +504,42 @@ pub fn verify(rpc: &Rpc, launch_key: &Pubkey, opts: &Options) -> Result<Report, 
             format!("{decreases} BackingDecreased event(s); launch degraded (§8 fail-safe)"),
         );
     }
+
+    // ---- §10 ledger: V and the supply against the launch's counters, the counters against events
+    let ledger = QuoteLedger::from_launch(&launch);
+    let quote = ledger.quote_excess(v);
+    let minted = cfg.pre_migration_token_supply;
+    let tokens = QuoteLedger::token_excess(minted, mint.supply, launch.burned);
+    let events_ok = !complete || event_totals_match(&ledger, &totals);
+    r.numbers.ledger_v = ledger.expected_v();
+    r.numbers.ledger_excess = quote;
+    let sol = |x: u64| x as f64 / 1e9;
+    let quote_text = match quote {
+        Some(0) => "to the lamport".to_string(),
+        Some(x) => format!("plus {x} lamports received outside any instruction"),
+        None => "QUOTE MISSING".to_string(),
+    };
+    let token_text = match tokens {
+        Some(0) => "supply = minted − burned exactly".to_string(),
+        Some(x) => format!("supply = minted − burned − {x} base units holders burned themselves"),
+        None => "SUPPLY ABOVE minted − burned".to_string(),
+    };
+    let event_text = match (complete, events_ok) {
+        (true, true) => "counters = event sums",
+        (true, false) => "COUNTERS ≠ EVENT SUMS",
+        (false, _) => "event history incomplete on this RPC: counters only",
+    };
+    r.push(
+        "Ledger",
+        quote.is_some() && tokens.is_some() && events_ok,
+        format!(
+            "V = {:.9} in − {:.9} out (fills {:.9}, redemptions {:.9}), {quote_text}; {token_text}; {event_text}",
+            sol(ledger.inflows().unwrap_or(u64::MAX)),
+            sol(ledger.outflows().unwrap_or(u64::MAX)),
+            sol(ledger.fill_quote_spent),
+            sol(ledger.redeemed_lamports),
+        ),
+    );
 
     // ---- 7. Sell-out replay -----------------------------------------------------------------------
     for sig in &opts.sellout {
