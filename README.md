@@ -72,8 +72,9 @@ One page per launch (§21): market price, F and price ÷ F, the maximum loss if 
 of the supply the locked pool and the vault bid each absorb at F, the bid wall, redemption with an
 exact quote, and the proof transactions. F is shown only when the program's `floor()` view and the
 floor crate (compiled to WebAssembly) agree on the same live accounts. `pnpm -F app test` checks the
-page's numbers against `ballast verify` and a real DLMM sell quote; `pnpm -F app smoke` loads the built
-page in Chrome and checks that it renders ([`evidence/app/`](evidence/app/)).
+page's numbers against `ballast verify` and a real DLMM sell quote; `pnpm -F app test:redeem` lands the
+Redeem button's transaction and checks the payout against the page's quote; `pnpm -F app smoke` loads
+the built page in Chrome and checks that it renders ([`evidence/app/`](evidence/app/)).
 
 ### Reproduce the whole proof on Meteora's mainnet binaries
 

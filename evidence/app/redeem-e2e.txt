@@ -1,0 +1,29 @@
+
+> app@0.1.0 test:redeem /home/hp/ballast/app
+> tsx test/redeem.e2e.ts
+
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+{
+  "launch": "Bg85caXmbWdxQCEeiEtRzQW3JkrMHxPNz4xyAQsrs9tw",
+  "holder": "EoV7YzfgvbYt7d5jBrUiCuaYHmFN2ChJmFJq78XSXwBF",
+  "signature": "2VKY5MEkjVHG8Q6cGDTb1KqzUY8n6APEYgo2ZqUitNDVHSsuu6WuzCGLHEB7CBLrzvMkEJpbL5JyazT24qJuayH1",
+  "txBytes": 1059,
+  "cu": 206340,
+  "amountBaseUnits": "1385644685943",
+  "pageQuoteLamports": "11131776",
+  "paidLamports": "11131776",
+  "sPage": "52416072862625123",
+  "sBefore": "52416072862625123",
+  "sAfter": "52416667523927402",
+  "checks": {
+    "fitsWithoutLookupTable": true,
+    "tokensBurnedExactly": true,
+    "wsolReceivedEqualsEvent": true,
+    "payoutEqualsFormulaAtSettledS": true,
+    "payoutAtLeastPageQuote": true,
+    "floorDidNotFall": true,
+    "pageAfterShowsTheNewFloor": true,
+    "supplyFellByAmount": true
+  }
+}
+PASS: 8 checks

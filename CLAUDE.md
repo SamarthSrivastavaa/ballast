@@ -8,7 +8,8 @@ program-owned vault; the other 85% migrates into a DAMM v2 pool as two permanent
 PDA-owned positions. The whole vault rests as one DLMM limit order in the highest bin at or below F.
 F is the price at which locked liquidity plus the vault bid can absorb the entire outstanding supply,
 so every holder token can be sold at ≥ F. The claim is falsifiable: the floor is predicted on-chain
-before trade 1, and `ballast verify` recomputes it from raw accounts. Deadline 13 Oct 2026 06:59 UTC;
+in the pool-creation transaction, before any third-party trade (D-011), and `ballast verify`
+recomputes it from raw accounts. Deadline 13 Oct 2026 06:59 UTC;
 **we submit 11 Oct.** Two tiers, one mechanism (D-008): **Lite** (DBC config only, V = 0) and **Full**.
 
 **Environment:** every shell command runs after `source ~/.ballast-env`; work only in /home/hp/ballast
@@ -80,7 +81,7 @@ to the vault.
 
 1. **Bounded range.** The equation carries the `−L·(1/√P_max)` term; L is permanent-only, DAMM Q64 units.
 2. **Exact floor of the root** in integer arithmetic, so "F never falls" holds bit for bit across Rust, TS, verifier.
-3. **Both migrated positions are PDA-owned.** DBC pool-creator role transfers to `creator_auth` before trade 1.
+3. **Both migrated positions are PDA-owned.** DBC pool-creator role transfers to `creator_auth` in the pool-creation transaction, before any third-party trade (D-011).
 4. **Fills are collected only by cancelling.** "Settle" = cancel → burn → re-place. There is no claim endpoint.
 5. **100% of the vault sits in the DLMM bid.** Redemption is atomic cancel → burn → pay → re-place.
 6. **The prediction is a lower bound.** The claim is "realised F ≥ predicted F", with a declared upper tolerance.

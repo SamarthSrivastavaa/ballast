@@ -102,6 +102,10 @@ export function App() {
           {!model.floorMatches && (
             <p className="error">The program's floor() and the floor crate disagree on these accounts — F is not shown as verified.</p>
           )}
+          <p className="token">
+            Token: <b>{model.token ? `${model.token.name} (${model.token.symbol})` : "unnamed"}</b>{" "}
+            <a href={explorerUrl(rpc, "address", model.baseMint.toBase58())} target="_blank" rel="noreferrer">{model.baseMint.toBase58()}</a>
+          </p>
           <section className="grid">
             <Price label="Market price (DAMM v2 price)" value={model.prices.damm} />
             <Price label="Floor F (theoretical floor)" value={model.prices.F} note={`Predicted before any third-party trade: ${sol(model.predictedF)}`} />

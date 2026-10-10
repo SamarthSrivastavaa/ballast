@@ -24,6 +24,7 @@ const text = html.replace(/<[^>]+>/g, " ");
 const errors = (dom.stderr ?? "").split("\n").filter((l) => /CONSOLE.*(Uncaught|Error:)/.test(l));
 const must = [
   "This is an executable buyback floor on Meteora, not a promise about prices elsewhere.",
+  "Token:",
   "Floor F (theoretical floor)",
   "Market price (DAMM v2 price)",
   "Redemption (F less 0.5%)",

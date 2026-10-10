@@ -76,9 +76,10 @@ async function main(): Promise<void> {
     predictionTxIsRegistration: (await logs(m.proof.predictionTx)).some((l) => l.includes("Instruction: RegisterLaunch")),
     openTxIsOpen: (await logs(m.proof.openTx)).some((l) => l.includes("Instruction: Open")),
     realisedAtLeastPredicted: m.prices.F >= m.predictedF,
+    tokenNamedFromMetadata: m.token !== null && m.token.name.length > 0 && m.token.symbol.length > 0,
     redeemTxFitsWithoutLookupTable: redeemTx.size <= 1232,
   };
-  console.log(JSON.stringify({ launch: launch.toBase58(), redeemTxBytes: redeemTx.size, F: m.prices.F, s: m.s.toString(), prices: m.prices, composition: m.composition, bid: m.bid, bidQuote, checks }, (_k, x) => (typeof x === "bigint" ? x.toString() : x), 2));
+  console.log(JSON.stringify({ launch: launch.toBase58(), token: m.token, redeemTxBytes: redeemTx.size, F: m.prices.F, s: m.s.toString(), prices: m.prices, composition: m.composition, bid: m.bid, bidQuote, checks }, (_k, x) => (typeof x === "bigint" ? x.toString() : x), 2));
   const failed = Object.entries(checks).filter(([, ok]) => !ok).map(([k]) => k);
   if (failed.length) {
     console.error(`FAIL: ${failed.join(", ")}`);

@@ -34,7 +34,7 @@ local validator — never mocks (D-001).
 | `ballast verify <launch> --rpc <url>` recomputes everything from raw accounts | `crates/verifier-core`, `verifier/`, `docs/verifier.md` |
 | `pnpm proof:local` — the full §22 Proof launch on mainnet binaries: realised F +1.34% over the prediction; 72-sell full sell-out, lowest execution 1.0173·F; F never lower; gates 8–10 PASS | `evidence/proof-local/summary.md`, `docs/proof.md`, `docs/demo.md` |
 | The §10 ledger closes to the lamport from chain data: live V = recorded inflows − fills − redemptions, supply = minted − burned, every counter = the sum of its events (gate 4) — on the Proof launch and again after 200 random transactions | `ballast verify` line "Ledger" (`evidence/proof-local/verify.txt`), `crates/verifier-core/src/ledger.rs` |
-| The token page renders in a real browser and its numbers equal the verifier's and a real DLMM quote | `evidence/app/`, `app/test/model.test.ts` (13 checks), `app/test/smoke.mjs` |
+| The token page renders in a real browser, its numbers equal the verifier's and a real DLMM quote, and its Redeem transaction lands and pays exactly the quote shown | `evidence/app/`, `app/test/model.test.ts` (14 checks), `app/test/redeem.e2e.ts`, `app/test/smoke.mjs` |
 
 ## 3. Originality and taste
 

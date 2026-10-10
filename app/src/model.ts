@@ -24,10 +24,30 @@ export const solPerToken = (lamportsPerBaseUnit: number) => lamportsPerBaseUnit 
 /** F in SOL per token from s = ⌊√F·2^64⌋. Display only. */
 export const fFromS = (s: bigint) => solPerToken((Number(s) / Q64) ** 2);
 
+const TOKEN_METADATA = new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s");
+
+/** The token's name and symbol from its Metaplex metadata account (DBC creates it); null if unreadable. */
+async function tokenLabel(conn: Connection, mint: PublicKey): Promise<{ name: string; symbol: string } | null> {
+  const [pda] = PublicKey.findProgramAddressSync([Buffer.from("metadata"), TOKEN_METADATA.toBuffer(), mint.toBuffer()], TOKEN_METADATA);
+  const acc = await conn.getAccountInfo(pda, "confirmed");
+  if (!acc || !acc.owner.equals(TOKEN_METADATA) || acc.data.length < 69) return null;
+  // key (1) · update authority (32) · mint (32) · name (u32 length + bytes) · symbol (u32 length + bytes)
+  const text = (at: number): [string, number] | null => {
+    const len = acc.data.readUInt32LE(at);
+    if (len > 64 || at + 4 + len > acc.data.length) return null;
+    return [acc.data.subarray(at + 4, at + 4 + len).toString("utf8").replace(/\0/g, "").trim(), at + 4 + len];
+  };
+  const name = text(65);
+  const symbol = name && text(name[1]);
+  return name && symbol ? { name: name[0], symbol: symbol[0] } : null;
+}
+
 export interface Model {
   launch: PublicKey;
   state: number;
   baseMint: PublicKey;
+  /** §21 header "Token": name and symbol from the mint's metadata, when it can be read. */
+  token: { name: string; symbol: string } | null;
   /** §9's six prices, SOL per token (display). `bidBin` and `bidNet` are null when no bid rests. */
   prices: { F: number; bidBin: number | null; bidNet: number | null; damm: number; dammSellNet: number; redemption: number };
   s: bigint;
@@ -114,7 +134,7 @@ export async function loadModel(conn: Connection, idl: { address: string }, laun
     "partner position": v.partnerPosition!.toBase58(), "creator position": v.creatorPosition!.toBase58(),
   };
   return {
-    launch, state: rec.state, baseMint: v.baseMint,
+    launch, state: rec.state, baseMint: v.baseMint, token: await tokenLabel(conn, v.baseMint),
     prices: {
       F, bidBin, bidNet: bidBin === null ? null : bidBin * (1 - dlmmFeeBps / 10_000),
       damm, dammSellNet: damm * (1 - DAMM_FEE_BPS / 10_000), redemption: redemptionPerToken,

@@ -820,6 +820,28 @@ every launch, and `global.treasury` has no setter. Proposed fix: if the treasury
 valid SPL WSOL account, `harvest` sends the treasury's share to the vault as well (F rises; nothing
 is stranded). This changes who is paid, so it is the owner's call.
 
+### 10 Oct 2026 — owner: "go with the recommended plans"; development closed
+
+- **Devnet: option A APPROVED.** The program stays as it is; the devnet deployment and the refused
+  `create_class` are the devnet evidence; `pnpm proof:local` on the mainnet binaries is the proof.
+  No further devnet SOL. The program stays deployed on devnet for the judges.
+- **`CLAUDE.md` wording: changed** (mission paragraph and correction 3) to D-011's "in the
+  pool-creation transaction, before any third-party trade". Spec §29's "before trade 1" checkbox is
+  left as written; D-011 governs it.
+- **Treasury-closed `harvest`: NOT applied, still open.** It was a proposal, not a recommendation,
+  and it changes `programs/ballast`: the binary every piece of evidence is tied to (sha256
+  `fc09a069…5abb` — the 8 Oct audit and suites, the 10 Oct proof, the devnet deployment). Changing it
+  the evening before submission would need all of them rerun. Disclosed in `docs/limitations.md`;
+  to be decided before the upgrade authority is frozen.
+- **Token page, end to end.** §21's header now names the token (from the mint's metadata). The
+  Redeem path — the page's quote, the transaction the button builds, signed and landed on the local
+  ledger — is tested by `pnpm -F app test:redeem`: quote 11,131,776 lamports = paid, tokens burned
+  exactly, F rose, the page's F after reload equals `s_after`, 1,059 bytes with no lookup table,
+  206,340 CU (`evidence/app/redeem-e2e.txt`); the verifier's ledger still closes to the lamport
+  afterwards. Not exercised: a browser wallet extension signing that transaction.
+- **§21 launch form: not built** (D-019: launching is by script). §29's mainnet items (Proof and
+  Public launches, an outside wallet, the multisig) are not done and are reported as such (D-007).
+
 ### 10 Oct 2026 — devnet: deployed; `create_class` refused (devnet DBC writes config version 1) — STOPPED, owner decision
 
 The owner funded the devnet payer with 10 SOL. The deploy stage ran
