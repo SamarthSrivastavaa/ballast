@@ -16,7 +16,8 @@
  * Evidence: evidence/proof-local/summary.md and summary.json.
  */
 import { execFileSync } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
 import { getMint } from "@solana/spl-token";
@@ -35,6 +36,7 @@ import { dbcConfig, got, payCreator } from "../../tests/integration/program/src/
 // `BALLAST_CLUSTER=devnet pnpm proof:devnet` runs the same §22 sequence on devnet (§18, D-007: public,
 // secondary evidence). Gates 9 and 10 (≈ 100 SOL of random-trade wallets) run locally only.
 const DEVNET = CLUSTER === "devnet";
+const STAGE = process.env.BALLAST_STAGE ?? "all";
 const OUT = resolve(REPO, DEVNET ? "evidence/proof-devnet" : "evidence/proof-local");
 const LOCAL = LOCAL_RPC;
 /** Wallet funding and the three team buys: devnet funds only what the curve needs (DECISIONS § Devnet). */
@@ -54,16 +56,24 @@ async function main(): Promise<void> {
   mkdirSync(OUT, { recursive: true });
 
   // ---- devnet preflight: refuse to start a run the payer cannot finish (DECISIONS § Devnet budget) ----
+  // BALLAST_STAGE=deploy stops after create_class: the program and the class on devnet, no launch.
+  const so = readFileSync(resolve(REPO, "target/deploy/ballast.so"));
+  const pd = await conn.getAccountInfo(pdas.programData());
+  // Already deployed with this exact binary (ProgramData = 45-byte header + the .so, zero-padded)?
+  const deployed = pd !== null && pd.data.subarray(45, 45 + so.length).equals(so) && pd.data.subarray(45 + so.length).every((x) => x === 0);
   if (DEVNET) {
-    const need = 14_200_000_000; // deploy 2.81 kept + 2.80 buffer, then team buys + rents (≈ 11.3)
+    // Full run: deploy 2.82 kept (+ 2.81 transient buffer), then team buys + rents (≈ 11.4).
+    const need = STAGE === "deploy" ? (deployed ? 200_000_000 : 5_900_000_000) : deployed ? 11_400_000_000 : 14_200_000_000;
     const have = await conn.getBalance(payer.publicKey);
-    console.log(`devnet payer ${payer.publicKey.toBase58()}: ${have / 1e9} SOL (need ≥ ${need / 1e9})`);
+    console.log(`devnet payer ${payer.publicKey.toBase58()}: ${have / 1e9} SOL (need ≥ ${need / 1e9}; program ${deployed ? "already deployed" : "not deployed"})`);
     if (have < need) throw new Error(`devnet payer underfunded: ${have / 1e9} SOL < ${need / 1e9} SOL`);
   }
 
   // ---- program, global, class --------------------------------------------------------------------
-  execFileSync("solana", ["program", "deploy", "-u", LOCAL, "-k", resolve(REPO, PAYER_KEY),
-    "--program-id", resolve(REPO, "target/deploy/ballast-keypair.json"), resolve(REPO, "target/deploy/ballast.so")], { stdio: ["ignore", "inherit", "inherit"] });
+  if (!deployed) {
+    execFileSync("solana", ["program", "deploy", "-u", LOCAL, "-k", resolve(REPO, PAYER_KEY),
+      "--program-id", resolve(REPO, "target/deploy/ballast-keypair.json"), resolve(REPO, "target/deploy/ballast.so")], { stdio: ["ignore", "inherit", "inherit"] });
+  }
   // The admin signs and pays for create_class; on a fresh ledger (local or devnet) it starts with nothing.
   const admin = await funded("program.admin", DEVNET ? 0.05 : 1);
   if (!(await conn.getAccountInfo(pdas.global()))) {
@@ -79,6 +89,16 @@ async function main(): Promise<void> {
     await ballast.methods.createClass(0).accountsPartial({ global: pdas.global(), admin: admin.publicKey, class: pdas.class(classConfig), dbcConfig: classConfig }).instruction(),
   ], [admin]);
   record("create_class(Proof) — every §7 rule checked on-chain", cc.signature);
+  if (STAGE === "deploy") {
+    const out = {
+      ranAt: new Date().toISOString(), cluster: CLUSTER, program: ballast.programId.toBase58(), programData: pdas.programData().toBase58(),
+      soBytes: so.length, soSha256: createHash("sha256").update(so).digest("hex"), global: pdas.global().toBase58(),
+      dbcConfig: classConfig.toBase58(), class: pdas.class(classConfig).toBase58(), payerLamportsAfter: await conn.getBalance(payer.publicKey), steps,
+    };
+    writeFileSync(resolve(OUT, "deploy.json"), JSON.stringify(out, null, 2) + "\n");
+    console.log(JSON.stringify(out, null, 2));
+    process.exit(0);
+  }
   const partnerAuth = pdas.partner(classConfig);
   await send("keeper: fund partner_auth (order rent), WSOL staging ATA", [
     SystemProgram.transfer({ fromPubkey: payer.publicKey, toPubkey: partnerAuth, lamports: 200_000_000 }),

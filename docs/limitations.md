@@ -42,6 +42,11 @@ mainnet DLMM binary (`evidence/program/part2/dlmm-active-bin.json`, `dlmm-bin-ra
 - **Meteora admin powers** (pool fees, pool status, program upgrades) are outside Ballast's control
   and are excluded from the challenge (§24). Q19 is not yet answered on-chain.
 - **Jupiter routing** to a fresh pair and pool is a mainnet-only question (Q10) and was not tested.
+- **A new DBC config version stops new classes.** `create_class` accepts only the config version it
+  was validated against (0, mainnet's today). Devnet's DBC already writes version 1, and the program
+  refused it there (`evidence/proof-devnet/deploy.json`). When that build reaches mainnet, creating a
+  class needs version 1's layout validated and a program upgrade; existing classes and launches keep
+  working.
 - **Devnet runs different Meteora code.** All five Meteora programs exist on devnet at the same
   addresses, but every devnet binary differs from its mainnet build (`evidence/devnet/program-ids.json`).
   Per D-001 the mainnet-binary local runs are authoritative; devnet is a public cross-check.

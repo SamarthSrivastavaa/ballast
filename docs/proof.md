@@ -19,7 +19,7 @@ read cloned in. Nothing is mocked (D-001). This is the authoritative proof (D-00
 | Cluster | State |
 |---|---|
 | Local validator, mainnet binaries | **Done**, all gates below |
-| Devnet | **Not run.** `pnpm proof:devnet` is ready; the devnet payer is unfunded (it needs 14.2 SOL at the peak; the faucet refused every request on 10 Oct). Devnet runs different Meteora builds, so it is a cross-check, not the proof |
+| Devnet | **Program deployed and initialised; no launch.** Devnet's DBC is a newer build whose configs carry version 1 (mainnet's carry 0), and `create_class` refused one with `ConfigWrongVersion` (§7 rule 1). Signatures in [`evidence/proof-devnet/deploy.json`](../evidence/proof-devnet/deploy.json) |
 | Mainnet | **Not deployed.** No mainnet transaction is sent without the owner approving that transaction (D-007) |
 
 ```bash
@@ -88,8 +88,9 @@ quote first reaches the vault.
 
 ## What this does not show
 
-- Nothing ran on mainnet or devnet, so there is no public explorer link yet. The signatures in the
-  summary are on a local ledger anyone can regenerate.
+- No launch ran on mainnet or devnet. The only public explorer links are the devnet deployment and
+  the refused `create_class`; the signatures in the summary are on a local ledger anyone can
+  regenerate.
 - All wallets were the team's. No outside wallet has filled the bid or redeemed.
 - Late buyers can lose about 74%: at graduation the DAMM v2 price is roughly 3.8 × F.
 - F is a price in SOL, not in dollars.

@@ -214,8 +214,12 @@ export async function send(
       await conn.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, "confirmed");
       break;
     } catch (e) {
-      if (attempt >= 2 || !String((e as Error).message).includes("block height exceeded")) {
-        throw new Error(`${label}: ${(e as Error).message}`);
+      // A public RPC's confirmation can reject for a transaction that did land (seen on devnet with
+      // a failed create_class, as an error with no message): if the signature has a status, read it.
+      if ((await conn.getSignatureStatus(signature)).value) break;
+      const why = (e as Error)?.message ?? JSON.stringify(e);
+      if (attempt >= 2 || !String(why).includes("block height exceeded")) {
+        throw new Error(`${label}: ${why} ${signature}`);
       }
     }
   }

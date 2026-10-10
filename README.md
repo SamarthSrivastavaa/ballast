@@ -105,15 +105,19 @@ walked through in [`docs/proof.md`](docs/proof.md).
 
 | | Address |
 |---|---|
-| Ballast program (local validator; the same address will be used on devnet) | `HSSv351Q1DftJ7mgEzKm9rt41WUTyWZJZLXUq7sfqerr` |
+| Ballast program (local validator and devnet) | `HSSv351Q1DftJ7mgEzKm9rt41WUTyWZJZLXUq7sfqerr` |
 | DBC | `dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN` |
 | DAMM v2 | `cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG` |
 | DLMM | `LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo` |
 
 **Mainnet: not deployed.** The project spends nothing on mainnet without the owner approving each
-transaction, and the Full tier deploys only if funded (D-007). The devnet deployment and proof are
-recorded in `evidence/proof-devnet/` once run: **devnet is not deployed yet** (the devnet payer is
-unfunded, 10 Oct; `pnpm proof:devnet` is ready).
+transaction, and the Full tier deploys only if funded (D-007).
+
+**Devnet: the program is deployed and initialised; no launch exists there.** Devnet runs a newer
+DBC build than mainnet, and the config it writes carries version 1 where mainnet's carries 0. The
+program checks that version first (§7 rule 1) and refused to create a class from it:
+`ConfigWrongVersion`, transaction `2kPEwtNj…rRJVNB`. The proof therefore ran only on the mainnet
+binaries. Signatures: [`evidence/proof-devnet/deploy.json`](evidence/proof-devnet/deploy.json).
 
 ## Limits
 
@@ -123,6 +127,9 @@ unfunded, 10 Oct; `pnpm proof:devnet` is ready).
   bid is capped there (still at or below F); further down the bid is suspended and the vault rests
   unplaced. Redemption still pays F less 0.5% either way (D-020, D-021).
 - A wallet whose whole balance redeems for less than 0.001 SOL cannot redeem (§10's minimum).
+- A class can only be created from a DBC config of the version the program was validated against.
+  When Meteora ships a new config version to mainnet (devnet already has one), new classes need a
+  program upgrade first; existing classes and launches are not affected.
 - The program is upgradeable by its authority; a malicious upgrade is the one path to the vault.
 
 Everything else, with evidence: [`docs/limitations.md`](docs/limitations.md) ·

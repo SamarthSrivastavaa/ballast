@@ -60,9 +60,11 @@ local validator — never mocks (D-001).
 ## 5. Traction
 
 Honest status: no mainnet deployment yet (D-007: no mainnet spend without per-transaction approval;
-the Full tier deploys only if funded). No devnet deployment either yet (the devnet payer is
-unfunded as of 10 Oct; `pnpm proof:devnet` is ready). The public evidence today is the reproducible
-local proof on Meteora's mainnet binaries and `ballast scan` over existing DBC → DAMM v2 launches
+the Full tier deploys only if funded). On devnet the program is deployed and
+initialised, but no launch exists: devnet's DBC is a newer build whose configs carry version 1, and
+the program refused to create a class from one (`ConfigWrongVersion`, §7 rule 1 —
+`evidence/proof-devnet/deploy.json`). The evidence is the reproducible local proof on Meteora's
+mainnet binaries, that devnet refusal, and `ballast scan` over existing DBC → DAMM v2 launches
 (`evidence/scanner/scan-100-2026-10-08.json`).
 
 ## Limits you should know

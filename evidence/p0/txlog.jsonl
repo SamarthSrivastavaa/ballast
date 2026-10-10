@@ -10655,3 +10655,8 @@
 {"label":"g10: dust redeem","signature":"2RXjiooFzYHvko6LXJd8LAQZ2MVhaYAy5FChDcBnSrBbABCAyE94RiJxNUXLidASWi6vKKjw3XePYTAuVngJqzDM","slot":1075,"err":{"InstructionError":[1,{"Custom":6109}]},"cu":107029,"logLines":25}
 {"label":"g10 WSOL ATA","signature":"3bmgJTbwZPW6u7H1qjZwMDUdFpNyZbKRrg635vozCuE18Fm95rHwFkyMUaS6SMrDCJU9p9cfeoXrWa8Bj9teQhCT","slot":1076,"err":null,"cu":8938,"logLines":4}
 {"label":"g10: min_out above payout","signature":"2L4fmAaLsj1TkyDvYFUis9xH1vV2iex46aPrRK7Mt3E5Ct9yp7nwsdWdra17de6A2byeNh4UF8jKq6hxMybJ6zgJ","slot":1077,"err":{"InstructionError":[1,{"Custom":6110}]},"cu":107336,"logLines":25}
+{"label":"fund EjqP97TZ 0.05 SOL","signature":"4NiadB1Mwf8s44ZZ5QTe3uMrVPFuAAq4zwQGXrNF8kP6RFrMVSnzS4v5iDyvCLtLtrs3VdUXFo12PLosjv6ZjADX","slot":509549994,"err":null,"cu":150,"logLines":2}
+{"label":"payer WSOL ATA (treasury)","signature":"4Yet9XweppPpPf4QVNoZ9cNbBBDqwauP4MPRLSg58QhCaHdoQszrg3vdxTa3Tf9gU5Av4LFsuFzaKeJEmhB7yTzU","slot":509550015,"err":null,"cu":13413,"logLines":17}
+{"label":"initialize_global","signature":"4ELjDu5cmUUGQuhbcRQ8Hhn2oa25xTUjZd9rqgrwBeNiNg6yay14AMHQQqYBuY6wBfwDNLeFT2Hzek7zHZSVgHB6","slot":509550028,"err":null,"cu":14465,"logLines":7}
+{"label":"payer WSOL for dust buys","signature":"3W33szeVb2fQi67dQWKC8axgUgtq22Fd859TDseMfrAAtFYAatbYCmQtQEL9bdmwUD7dfShUtavWwSuhoBxDcH8M","slot":509550040,"err":null,"cu":4690,"logLines":9}
+{"label":"proof class: DBC create_config","signature":"4CuWaC5nvJjLQaM2hRJ7XyiaH8BciDER8PoPTnbLa3YM37hBKbRgQpFwcksbNapSA8khhGHEZKiN11c2J6XTwHF7","slot":509550050,"err":null,"cu":44421,"logLines":12}

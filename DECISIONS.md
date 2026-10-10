@@ -820,6 +820,40 @@ every launch, and `global.treasury` has no setter. Proposed fix: if the treasury
 valid SPL WSOL account, `harvest` sends the treasury's share to the vault as well (F rises; nothing
 is stranded). This changes who is paid, so it is the owner's call.
 
+### 10 Oct 2026 — devnet: deployed; `create_class` refused (devnet DBC writes config version 1) — STOPPED, owner decision
+
+The owner funded the devnet payer with 10 SOL. The deploy stage ran
+(`BALLAST_CLUSTER=devnet BALLAST_STAGE=deploy`, `evidence/proof-devnet/deploy.json`):
+
+| Step | Signature | Result |
+|---|---|---|
+| `solana program deploy` (553,456 B, sha256 `fc09a069…5abb`) | `36QzhPaB6KwjTHZFoFc47y2SuqYdnDeWG6ZAitewJmTUdZPWYRgEWpSq3d1ZhWYuewN1WmnSAHq2wd5d57pyeEEW` | ok; ProgramData holds 2,812,435,320 lamports, as computed |
+| `initialize_global` | `4ELjDu5cmUUGQuhbcRQ8Hhn2oa25xTUjZd9rqgrwBeNiNg6yay14AMHQQqYBuY6wBfwDNLeFT2Hzek7zHZSVgHB6` | ok |
+| DBC `create_config` (Proof parameters) | `4CuWaC5nvJjLQaM2hRJ7XyiaH8BciDER8PoPTnbLa3YM37hBKbRgQpFwcksbNapSA8khhGHEZKiN11c2J6XTwHF7` | ok; config `EQYWJt4pSdPkiY8b16j4x3Xrqx48WEH3Zveb3pR5oYGV` |
+| `create_class(Proof)` | `2kPEwtNjwECwh7tSg5TJmWJgRyTaTpte5WN3K6wkfarJuf1dqUBwzQEns4NuMM5z4RJUB8AuZLHgAbqABKrRJVNB` | **REFUSED: `ConfigWrongVersion` (6011)** |
+
+**Observed:** the config devnet's DBC wrote has the mainnet discriminator and size (1,048 B) but
+`version = 1` at account offset 236; the mainnet binary writes 0 for the same call, and §7 rule 1
+pins 0. Devnet's DBC is a different, newer build (`evidence/devnet/program-ids.json`). The program
+did what rule 1 is for: it refused a config version it was not validated against.
+
+**Consequences.** (1) No Ballast class or launch can exist on devnet with this program, so the
+devnet proof cannot run. The further 4.2 SOL is not needed. (2) If Meteora ships this DBC build to
+mainnet, new configs there will be version 1 and `create_class` will refuse them until version 1's
+layout is validated and the program upgraded; classes created before that are not affected.
+
+**Options (owner's call; nothing applied):**
+- **A (recommended):** leave the program as it is. Devnet evidence is the deployment and the
+  refusal; `pnpm proof:local` on the mainnet binaries stays the proof (D-001: mainnet governs,
+  divergence recorded).
+- **B:** validate a version-1 config field by field against devnet's DBC (as Q12 did for version 0)
+  and deploy a devnet-only build that accepts it. It changes an account check, proves a binary that
+  is not the mainnet target, and does not fit before 11 Oct.
+
+Payer after the stage: 7.10511768 SOL (2.81243532 SOL more is refundable with `solana program
+close`). Harness: `send()` now reads a landed transaction's status when the RPC's confirmation
+rejects without a message (the failed `create_class` first surfaced as `undefined`).
+
 ### 10 Oct 2026 — gate 4, token page in a real browser
 
 - **Gate 4 closed.** `ballast verify` gained a "Ledger" line (§10: "the verifier can re-run this
@@ -1167,8 +1201,8 @@ assumed. At the current `.so` (551,488 B):
   re-audit fixes is **553,456 B** (sha256 `fc09a069…5abb`), so ProgramData is (45 + 553,456 + 128) ×
   5,080 = **2,812,435,320 lamports** and the transient buffer 2,812,394,680: **deploy 2.816 SOL kept,
   5.63 SOL at the peak**. The 14.2 SOL minimum and 17 SOL recommendation stand (2.82 + ≈ 11.3).
-- **10 Oct: the devnet payer holds 0 SOL.** Five `solana airdrop` requests (5, 5, 5, 2, 1 SOL) were all
-  refused by the faucet's rate limit, so the devnet deploy and `pnpm proof:devnet` have not run.
+- **10 Oct:** five `solana airdrop` requests were refused by the faucet's rate limit; the owner then
+  funded 10 SOL and the deploy stage ran — see "10 Oct 2026 — devnet" above for the outcome.
 
 ---
 

@@ -39,7 +39,9 @@ and redemption settles the bid itself (§26; gate 10 in `evidence/proof-local/`)
 ## Deploying
 
 - **Local** (authoritative proof, D-001/D-007): `pnpm proof:local`.
-- **Devnet** (public cross-check, D-001: the local result governs): fund the devnet payer
+- **Devnet** (public cross-check, D-001: the local result governs). *State, 10 Oct: the program is
+  deployed (`BALLAST_STAGE=deploy pnpm proof:devnet`), and `create_class` is refused because devnet's
+  DBC writes config version 1 — the rest of this procedure cannot run there today.* Fund the devnet payer
   (`.keys/devnet/payer.json`, gitignored) and run `pnpm proof:devnet`. It checks the cluster's genesis
   hash, deploys with `solana program deploy` under `target/deploy/ballast-keypair.json`, runs the same
   §22 sequence, and writes `evidence/proof-devnet/`. Gates 9 and 10 run locally only.

@@ -1,0 +1,29 @@
+{
+  "what": "Devnet deploy stage (BALLAST_CLUSTER=devnet BALLAST_STAGE=deploy tsx scripts/proof/local.ts), 10 Oct 2026. The program is deployed and initialised; create_class was refused by rule 1 because devnet's DBC build writes PoolConfig.version = 1 (mainnet's writes 0). No launch exists on devnet.",
+  "cluster": "devnet",
+  "program": "HSSv351Q1DftJ7mgEzKm9rt41WUTyWZJZLXUq7sfqerr",
+  "programData": "FTuA5AyXwCkeivWxRjBZqtgQXyzsJPyDW3QM3KvMgbFc",
+  "upgradeAuthority": "F1s4kPpt5LHNV98YhoWcSDUhqiPsZaw6W41MRYjGrUT1",
+  "soBytes": 553456,
+  "soSha256": "fc09a0699934310ac639c6ba5a3133efc538153a29161472fbfed43ed9475abb",
+  "programDataLamports": 2812435320,
+  "deployedInSlot": 509549985,
+  "steps": [
+    { "step": "solana program deploy", "signature": "36QzhPaB6KwjTHZFoFc47y2SuqYdnDeWG6ZAitewJmTUdZPWYRgEWpSq3d1ZhWYuewN1WmnSAHq2wd5d57pyeEEW", "result": "ok" },
+    { "step": "payer WSOL ATA (treasury)", "signature": "4Yet9XweppPpPf4QVNoZ9cNbBBDqwauP4MPRLSg58QhCaHdoQszrg3vdxTa3Tf9gU5Av4LFsuFzaKeJEmhB7yTzU", "slot": 509550015, "result": "ok" },
+    { "step": "initialize_global", "signature": "4ELjDu5cmUUGQuhbcRQ8Hhn2oa25xTUjZd9rqgrwBeNiNg6yay14AMHQQqYBuY6wBfwDNLeFT2Hzek7zHZSVgHB6", "slot": 509550028, "cu": 14465, "result": "ok" },
+    { "step": "DBC create_config (Proof parameters, the same call as proof:local)", "signature": "4CuWaC5nvJjLQaM2hRJ7XyiaH8BciDER8PoPTnbLa3YM37hBKbRgQpFwcksbNapSA8khhGHEZKiN11c2J6XTwHF7", "slot": 509550050, "cu": 44421, "config": "EQYWJt4pSdPkiY8b16j4x3Xrqx48WEH3Zveb3pR5oYGV", "result": "ok" },
+    { "step": "create_class(Proof)", "signature": "2kPEwtNjwECwh7tSg5TJmWJgRyTaTpte5WN3K6wkfarJuf1dqUBwzQEns4NuMM5z4RJUB8AuZLHgAbqABKrRJVNB", "cu": 20653, "result": "REFUSED: ConfigWrongVersion (6011, 0x177b) — rule 1: dbc_config.version is not the validated version (programs/ballast/src/lib.rs:337)" }
+  ],
+  "divergence": {
+    "account": "EQYWJt4pSdPkiY8b16j4x3Xrqx48WEH3Zveb3pR5oYGV",
+    "owner": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+    "dataLen": 1048,
+    "discriminator": [26, 108, 14, 123, 116, 230, 129, 43],
+    "versionOffsetInAccount": 236,
+    "versionOnDevnet": 1,
+    "versionOnMainnetBinary": 0,
+    "note": "Same discriminator and size as the mainnet layout; the version byte differs. Devnet's DBC was redeployed at about slot 503.2M and its sha256 differs from the mainnet pin (evidence/devnet/program-ids.json). What else changed in a version-1 config has not been examined."
+  },
+  "payer": { "address": "F1s4kPpt5LHNV98YhoWcSDUhqiPsZaw6W41MRYjGrUT1", "lamportsBefore": 10000000000, "lamportsAfter": 7105117680 }
+}

@@ -2,8 +2,9 @@
 
 **Updated:** 10 Oct 2026 · **Deadline:** 13 Oct 2026 06:59 UTC (submit 11 Oct)
 
-Development is complete on the local validator (Meteora's mainnet binaries). What is left needs the
-owner: devnet SOL, the video, the submission, and two decisions at the bottom.
+Development is complete on the local validator (Meteora's mainnet binaries). The program is deployed
+on devnet, but devnet's DBC refuses to yield a config the program accepts, so no devnet proof exists.
+What is left needs the owner: the video, the submission, and the decisions at the bottom.
 
 ## State
 
@@ -21,17 +22,15 @@ owner: devnet SOL, the video, the submission, and two decisions at the bottom.
 | Token page (§21) | DONE: renders in Chrome, 13 model checks, browser smoke test (`evidence/app/`). Launch form cut (D-019). Redeem button not exercised with a real wallet |
 | README, `JUDGES.md`, docs (incl. `docs/proof.md`), `docs/demo.md` | DONE, numbers from the 10 Oct run |
 | CI | fmt, clippy, unit, property, reference, wording, SBF lock; **added 10 Oct:** WASM differential, compiler check |
-| **Devnet deploy + `pnpm proof:devnet`** | **NOT RUN: the devnet payer holds 0 SOL** |
+| **Devnet** | **Program deployed and initialised (`HSSv351Q…`); `create_class` REFUSED** (`ConfigWrongVersion`: devnet's DBC writes config version 1, mainnet's 0). No class, no launch, no devnet proof. `evidence/proof-devnet/deploy.json` |
 | Mainnet | Not deployed (D-007) |
 | Video, submission | Owner, 11 Oct |
 
 ## Next
 
-1. **Owner: fund the devnet payer** `F1s4kPpt5LHNV98YhoWcSDUhqiPsZaw6W41MRYjGrUT1` with **14.2 SOL
-   minimum, 17 recommended** (deploy 2.816 SOL kept, 5.63 at the peak; about 5.7 SOL of the buys
-   comes back on the sell-out). The faucet refused five CLI requests on 10 Oct. Then:
-   `source ~/.ballast-env && cd ~/ballast && anchor build && pnpm proof:devnet`
-   → `evidence/proof-devnet/`; record signatures in `DECISIONS.md`; update README "Addresses".
+1. **Owner: devnet decision** (`DECISIONS.md` "10 Oct 2026 — devnet"). Recommended: leave it — the
+   deployment and the refusal are the devnet evidence. Do not send more devnet SOL. The payer holds
+   7.105 SOL; `solana program close` would return 2.812 more.
 2. **Video (11 Oct):** follow `docs/demo.md` (12 rows, each with its signature). The signatures are
    from the 10 Oct local ledger; if the validator is restarted, rerun `pnpm proof:local` and
    `python3 scripts/proof/demo_checklist.py` first.
@@ -57,6 +56,7 @@ CHROME=<chrome> LAUNCH=<launch> pnpm -F app smoke    # the page in a real browse
 
 | Item | Detail |
 |---|---|
+| Devnet DBC config version 1 | A: leave as is (recommended). B: validate version 1 and ship a devnet-only build — changes an account check, does not fit before 11 Oct |
 | Treasury account closed → `harvest` reverts (MEDIUM) | `global.treasury` has no setter. Proposed: if the treasury is not a valid WSOL account, its share goes to the vault. Changes who is paid, so not applied. Disclosed in `docs/limitations.md` |
 | `CLAUDE.md` lines 11 and 83, spec §29 | Still say "before trade 1"; D-011 records the prediction in the pool-creation transaction, which contains a dust buy. Public copy already uses the D-011 wording |
 | Identity-rewrite leftovers (`backup/pre-identity-rewrite`, `refs/original`) | Kept until the owner confirms deletion |
@@ -65,7 +65,8 @@ CHROME=<chrome> LAUNCH=<launch> pnpm -F app smoke    # the page in a real browse
 
 | Risk | Impact | Status |
 |---|---|---|
-| No public (devnet or mainnet) evidence | Judges see a local ledger only | Blocked on devnet SOL; README and `JUDGES.md` say so plainly |
+| No public launch (devnet or mainnet) | Judges see a local ledger plus a devnet deployment and refusal | README and `JUDGES.md` say so plainly |
+| DBC config version 1 reaching mainnet | `create_class` refuses new configs until version 1 is validated and the program upgraded | Disclosed in `docs/limitations.md`; existing classes unaffected |
 | Devnet runs different Meteora builds | The devnet proof may diverge from the local one | D-001: the local result governs; record any divergence |
 | Local CU ≠ mainnet CU (finding T6) | Numbers near a limit could mislead | 6× headroom on `redeem`; cross-check on devnet |
 | D-020/D-021 cap is a third-party lever | Bid can sit up to 70 bins under F, or be suspended | Disclosed; redemption at F less 0.5% is unaffected |
