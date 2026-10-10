@@ -839,6 +839,10 @@ is stranded). This changes who is paid, so it is the owner's call.
   exactly, F rose, the page's F after reload equals `s_after`, 1,059 bytes with no lookup table,
   206,340 CU (`evidence/app/redeem-e2e.txt`); the verifier's ledger still closes to the lamport
   afterwards. Not exercised: a browser wallet extension signing that transaction.
+- **Token page restyled** at the owner's request, from a reference screenshot: top bar, fact ticker,
+  dark hero with the required headline and a launch timeline, hairline figures, one composition
+  meter. Same data, same labels, same states; no new numbers except F at `open` (from `s_open`).
+  Screenshots in `evidence/app/`.
 - **§21 launch form: not built** (D-019: launching is by script). §29's mainnet items (Proof and
   Public launches, an outside wallet, the multisig) are not done and are reported as such (D-007).
 

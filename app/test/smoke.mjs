@@ -20,7 +20,7 @@ const run = (args) => spawnSync(chrome, [...common, ...args, url], { encoding: "
 
 const dom = run(["--enable-logging=stderr", "--v=0", "--dump-dom"]);
 const html = dom.stdout ?? "";
-const text = html.replace(/<[^>]+>/g, " ");
+const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
 const errors = (dom.stderr ?? "").split("\n").filter((l) => /CONSOLE.*(Uncaught|Error:)/.test(l));
 const must = [
   "This is an executable buyback floor on Meteora, not a promise about prices elsewhere.",
@@ -33,7 +33,7 @@ const must = [
 ];
 const missing = must.filter((m) => !text.includes(m));
 const fShown = /Floor F \(theoretical floor\)\s+[\d.]+e-\d+ SOL\/token/.test(text.replace(/\s+/g, " "));
-if (process.env.SHOT) run(["--window-size=1100,2300", `--screenshot=${process.env.SHOT}`]);
+if (process.env.SHOT) run(["--window-size=1100,2750", `--screenshot=${process.env.SHOT}`]);
 if (missing.length || errors.length || !fShown) {
   console.error(JSON.stringify({ url, missing, fShown, errors: errors.slice(0, 5) }, null, 2));
   process.exit(1);

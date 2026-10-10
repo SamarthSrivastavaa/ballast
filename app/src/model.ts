@@ -61,6 +61,9 @@ export interface Model {
   inputs: { v: bigint; sSupply: bigint; l: bigint };
   proof: { predictionTx: string | null; openTx: string | null; addresses: Record<string, string> };
   predictedF: number;
+  /** F recorded at `open` (display, from `s_open`). */
+  openF: number;
+  openSlot: number;
 }
 
 /** Oldest signature touching `addr` (the launch's first transaction is its registration). */
@@ -150,6 +153,8 @@ export async function loadModel(conn: Connection, idl: { address: string }, laun
       addresses,
     },
     predictedF: fFromS(BigInt(rec.predictedS.toString())),
+    openF: fFromS(BigInt(rec.sOpen.toString())),
+    openSlot: Number(rec.openSlot.toString()),
   };
 }
 
