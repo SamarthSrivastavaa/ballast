@@ -1,0 +1,52 @@
+name: Break the floor
+description: You think you made F fall, moved the vault, or caught the verifier disagreeing with the chain.
+title: "Break attempt: "
+labels: ["break-attempt"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Rules and what counts: [submission/BREAK_THE_FLOOR.md](https://github.com/SamarthSrivastavaa/ballast/blob/main/submission/BREAK_THE_FLOOR.md). Failed attempts are welcome too: they are evidence.
+  - type: dropdown
+    id: claim
+    attributes:
+      label: What did you break?
+      options:
+        - F fell between two slots
+        - Quote left a vault by a path other than its own bid or a redemption
+        - Permanently locked liquidity of a recorded position decreased
+        - A redemption paid less than the formula
+        - The verifier disagrees with the chain
+        - The bid filled below its stated price
+        - Something else
+        - Nothing - I tried and it held
+    validations:
+      required: true
+  - type: dropdown
+    id: cluster
+    attributes:
+      label: Cluster
+      options:
+        - mainnet
+        - devnet
+        - local validator (mainnet binaries)
+    validations:
+      required: true
+  - type: input
+    id: mint
+    attributes:
+      label: Launch mint
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Transaction signatures, slots, `ballast verify` output, and the steps to reproduce.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: handle
+    attributes:
+      label: Your handle (optional)

@@ -820,6 +820,22 @@ every launch, and `global.treasury` has no setter. Proposed fix: if the treasury
 valid SPL WSOL account, `harvest` sends the treasury's share to the vault as well (F rises; nothing
 is stranded). This changes who is paid, so it is the owner's call.
 
+### 11 Oct 2026 — submission sprint (owner's brief: three tracks, no questions, log every choice)
+
+One line per choice, newest last.
+
+- Sprint brief accepted as the owner's instruction. Standing rules it does not relax stay in force:
+  no mainnet transaction without `GO MAINNET`, the banned wording list, the floor crate as the only F.
+- The brief's devnet runbook is not possible (devnet DBC config version 1; payer 7.1 SOL, faucet
+  refuses). Every "devnet" step runs on the local validator with Meteora's mainnet binaries, and all
+  copy says so. Devnet option B (accept version 1) not attempted: it needs funds and a program change.
+- Positioning copy adjusted where the brief's wording breaks the banned list or the facts: "safer
+  launch class" → "a launch class with a verifiable floor"; "one guarantee" → "one invariant"; "the
+  price stopped at F" → "the lowest fill was 1.017 × F"; "25 tests" → 34 (the real count).
+- Licence: the repo already has Apache-2.0; left in place (the brief said not to add one).
+- Launchpad integration count stated as 1 instruction (`register_launch`) plus the open keeper's 6
+  permissionless cranks, counted from `programs/ballast/src/lib.rs`.
+
 ### 10 Oct 2026 — owner: "go with the recommended plans"; development closed
 
 - **Devnet: option A APPROVED.** The program stays as it is; the devnet deployment and the refused

@@ -263,3 +263,82 @@ pub fn evaluate(rpc: &Rpc, migrations: &[Migration]) -> Result<Vec<Row>, Error> 
     }
     Ok(rows)
 }
+
+/// The locked-liquidity floor under one DAMM v2 pool, from two accounts: the pool and its base mint.
+#[derive(Clone, Debug)]
+pub struct PoolCheck {
+    pub pool: Pubkey,
+    pub base_mint: Pubkey,
+    pub quote_mint: Pubkey,
+    pub base_decimals: u8,
+    pub quote_decimals: u8,
+    /// The pool's `permanent_lock_liquidity`: every position's permanently locked liquidity.
+    pub l_permanent: u128,
+    pub l_pool: u128,
+    pub supply: u64,
+    pub mint_authority: bool,
+    pub s_price: u128,
+    pub s_max: u128,
+    /// `s` of the floor with V = 0, or why there is none.
+    pub s_floor: Result<u128, String>,
+}
+
+impl PoolCheck {
+    pub fn permanent_share_ppm(&self) -> u64 {
+        ((self.l_permanent as f64 / self.l_pool.max(1) as f64) * 1e6).round() as u64
+    }
+    /// F ÷ the pool price, in ppm.
+    pub fn floor_over_price_ppm(&self) -> Option<u64> {
+        let s = *self.s_floor.as_ref().ok()?;
+        Some(((s as f64 / self.s_price.max(1) as f64).powi(2) * 1e6).round() as u64)
+    }
+    /// A sqrt price (Q64) as quote tokens per base token, using both mints' decimals. Display only.
+    pub fn human(&self, s: u128) -> f64 {
+        (s as f64 / 2f64.powi(64)).powi(2)
+            * 10f64.powi(i32::from(self.base_decimals) - i32::from(self.quote_decimals))
+    }
+}
+
+/// `ballast check <pool>`: the price at which the pool's permanently locked liquidity alone absorbs
+/// the base token's whole supply (the floor equation with V = 0), computed by the floor crate.
+/// Token A is taken as the base token, as in every DBC migration.
+pub fn check_pool(rpc: &Rpc, pool_key: &Pubkey) -> Result<PoolCheck, Error> {
+    let acc = rpc.must(pool_key, "DAMM v2 pool")?;
+    let pool = layout::meteora::<DammPool>(&acc.data, &DammPool::DISCRIMINATOR, "DAMM v2 Pool")?;
+    let (base_mint, quote_mint) = (layout::pk(pool.token_a_mint), layout::pk(pool.token_b_mint));
+    let mints = rpc.accounts(&[base_mint, quote_mint])?;
+    let (Some(base), Some(quote)) = (&mints[0], &mints[1]) else {
+        return Err(Error::Missing(format!("mint accounts of pool {pool_key}")));
+    };
+    let m = layout::mint(&base.data)?;
+    if quote.data.len() < 82 {
+        return Err(Error::Layout("quote mint: too short".into()));
+    }
+    let (l_permanent, l_pool, s_price, s_max) = (
+        pool.permanent_lock_liquidity,
+        pool.liquidity,
+        pool.sqrt_price,
+        pool.sqrt_max_price,
+    );
+    let s_floor = floor_sqrt_q64(&FloorInputs {
+        v: 0,
+        s: m.supply,
+        l: l_permanent,
+        s_max,
+    })
+    .map_err(|e| format!("{e:?}"));
+    Ok(PoolCheck {
+        pool: *pool_key,
+        base_mint,
+        quote_mint,
+        base_decimals: base.data[44],
+        quote_decimals: quote.data[44],
+        l_permanent,
+        l_pool,
+        supply: m.supply,
+        mint_authority: m.mint_authority.is_some(),
+        s_price,
+        s_max,
+        s_floor,
+    })
+}

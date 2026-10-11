@@ -53,6 +53,8 @@ pub struct Numbers {
     /// §10 ledger: the V the launch's counters account for, and live V less that (`None`: missing).
     pub ledger_v: Option<u64>,
     pub ledger_excess: Option<u64>,
+    /// Slot of `register_launch`: when the prediction was recorded.
+    pub registered_slot: u64,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -116,6 +118,23 @@ fn below(id: i32, bin_step: u16, s: u128) -> Option<bool> {
     price_q64(id, bin_step).map(|p| !bin_at_or_below(0, p, s))
 }
 
+/// The launch account for `key`, which may be the launch itself or its base mint (the launch is the
+/// PDA `["launch", mint]`). Errors if neither exists.
+pub fn resolve_launch(rpc: &Rpc, key: &Pubkey) -> Result<Pubkey, Error> {
+    if let Some(a) = rpc.account(key)? {
+        if a.owner == PROGRAM {
+            return Ok(*key);
+        }
+    }
+    let launch = pda(&[b"launch", key.as_ref()], &PROGRAM);
+    match rpc.account(&launch)? {
+        Some(a) if a.owner == PROGRAM => Ok(launch),
+        _ => Err(Error::Missing(format!(
+            "no Ballast launch at {key} or for mint {key} on this cluster"
+        ))),
+    }
+}
+
 pub fn verify(rpc: &Rpc, launch_key: &Pubkey, opts: &Options) -> Result<Report, Error> {
     let mut r = Report {
         launch: launch_key.to_string(),
@@ -166,6 +185,7 @@ pub fn verify(rpc: &Rpc, launch_key: &Pubkey, opts: &Options) -> Result<Report, 
         "sha256 over the curve fields recomputed from the DBC config (§7 rule 3)".into(),
     );
     r.numbers.predicted_s = launch.predicted_s;
+    r.numbers.registered_slot = launch.registered_slot;
     match predict::lower_bound(&cfg) {
         Some((lo, band_lo, band_hi)) => r.push(
             "Prediction",

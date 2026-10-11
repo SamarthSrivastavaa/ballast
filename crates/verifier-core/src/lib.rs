@@ -14,7 +14,7 @@ pub mod scan;
 pub mod verify;
 
 pub use rpc::Rpc;
-pub use verify::{verify, Options, Report, Status};
+pub use verify::{resolve_launch, verify, Options, Report, Status};
 
 #[derive(Debug)]
 pub enum Error {

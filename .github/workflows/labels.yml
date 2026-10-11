@@ -1,0 +1,24 @@
+name: labels
+
+# Creates the three labels the issue forms apply. Idempotent; runs when this file changes or by hand.
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/labels.yml"]
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  labels:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - run: |
+          gh label create verified --color 2a3fe0 --description "Someone ran ballast verify or ballast check and posted the output" --force
+          gh label create launch-request --color 58c2a5 --description "A creator or launchpad asking for a Ballast launch" --force
+          gh label create break-attempt --color e9a13b --description "An attempt at the Break the Floor challenge" --force

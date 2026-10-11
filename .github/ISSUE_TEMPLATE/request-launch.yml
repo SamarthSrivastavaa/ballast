@@ -1,0 +1,39 @@
+name: Request a Ballast launch
+description: You would launch a token with a verifiable floor, or offer it on your launchpad.
+title: "Launch request: "
+labels: ["launch-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ballast is not on mainnet yet. This form tells us who wants it and for what. Nothing here is a commitment on either side.
+  - type: dropdown
+    id: role
+    attributes:
+      label: You are a
+      options:
+        - creator
+        - launchpad
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: use
+    attributes:
+      label: What would you use it for?
+      description: A sentence or two is enough. For launchpads: would you offer it as a launch class?
+    validations:
+      required: true
+  - type: input
+    id: handle
+    attributes:
+      label: Your handle (optional)
+  - type: dropdown
+    id: quote
+    attributes:
+      label: May we quote you publicly?
+      options:
+        - "yes"
+        - "no"
+    validations:
+      required: true

@@ -1,0 +1,61 @@
+name: I verified a floor
+description: You ran `ballast verify` or `ballast check` yourself. Paste what it printed.
+title: "Verified: "
+labels: ["verified"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for checking instead of trusting. Run one of these, then paste the block the tool prints at the end.
+
+        ```
+        ballast check <any Meteora DAMM v2 pool> --cluster mainnet     # the locked-liquidity floor under any pool
+        ballast verify <Ballast launch mint> --cluster <cluster>       # a Ballast launch
+        ```
+  - type: dropdown
+    id: what
+    attributes:
+      label: What did you check?
+      options:
+        - A Meteora DAMM v2 pool (ballast check)
+        - A Ballast launch (ballast verify)
+    validations:
+      required: true
+  - type: dropdown
+    id: cluster
+    attributes:
+      label: Cluster
+      options:
+        - mainnet
+        - devnet
+        - local validator (mainnet binaries)
+    validations:
+      required: true
+  - type: input
+    id: address
+    attributes:
+      label: Pool or mint address
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: Paste the block between the `---` lines, or the whole output.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: handle
+    attributes:
+      label: Your handle (optional)
+      description: X, Telegram or GitHub. Leave empty to stay anonymous.
+  - type: dropdown
+    id: quote
+    attributes:
+      label: May we quote this publicly?
+      options:
+        - "yes"
+        - "no"
+    validations:
+      required: true

@@ -1,0 +1,40 @@
+name: release
+
+# A tag v* builds the `ballast` verifier for Linux x64 and macOS arm64 and attaches both to a
+# GitHub Release, so a stranger can verify without a Rust toolchain.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            asset: ballast-linux-x64
+          - os: macos-14
+            asset: ballast-macos-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build --release --locked -p ballast-verifier
+      - run: |
+          cp target/release/ballast ${{ matrix.asset }}
+          shasum -a 256 ${{ matrix.asset }} > ${{ matrix.asset }}.sha256
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ${{ matrix.asset }}
+            ${{ matrix.asset }}.sha256
