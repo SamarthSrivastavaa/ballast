@@ -1,5 +1,14 @@
 # Checklist — what only you can do, and what is still open
 
+## Done by Claude (Sun night)
+- [x] Audit (`AUDIT.md`), traction engine (forms, labels, release v0.1.0, `ballast check`), challenge, outreach, thread
+- [x] Demo runbook (`pnpm demo:*`), three clean runs; dump chart and README GIF
+- [x] README rewritten; `docs/INTEGRATE.md`
+- [x] Mainnet dry run and decision sheet (`MAINNET.md`): peak 13.55 SOL, 7.77 spent for good
+- [x] Submissions (`COLOSSEUM.md`, `EARN_METEORA.md`, `EARN_INDIA.md`), `JUDGE_FAQ.md`, video scripts, shot list, captions, cards
+- [x] **Correction:** "1.017 × F" was a measurement error; the real worst fill is 0.9984 × F
+
+
 Updated by Claude as work lands. ⟦FILL⟧ items need you.
 
 ## Do now (Sun night)
@@ -20,7 +29,10 @@ Updated by Claude as work lands. ⟦FILL⟧ items need you.
 - [ ] Confirm the X handles for Meteora and Superteam India before posting `THREAD.md` (written as ⟦FILL⟧ there)
 
 ## Record and submit
-- [ ] Record demo and pitch videos (`submission/video/`), upload unlisted to YouTube, paste links: ⟦FILL⟧
+- [ ] Record demo and pitch videos (`submission/video/SHOTLIST.md`), upload unlisted to YouTube, paste links: ⟦FILL⟧
+- [ ] Before filming scene 7: open `submission/video/cards/traction.html` (live counts) and update `TRACTION.md` with the same numbers
+- [ ] Repo settings (GitHub → About): description "Launch with a floor: a Meteora DBC launch class with a verifiable, executable buyback floor"; topics `solana meteora dbc dlmm damm-v2 launchpad`
+- [ ] Post `submission/THREAD.md` on X after the videos are up (confirm the two handles first)
 - [ ] Colosseum: paste from `submission/COLOSSEUM.md` by Mon 21:00 IST
 - [ ] Superteam Earn, Meteora: paste from `submission/EARN_METEORA.md` by Tue 09:00 IST (not editable after)
 - [ ] Superteam Earn, India: paste from `submission/EARN_INDIA.md` by Tue 09:00 IST (not editable after)

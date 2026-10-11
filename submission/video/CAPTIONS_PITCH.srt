@@ -1,0 +1,39 @@
+1
+00:00:00,000 --> 00:00:15,000
+Hi, I'm [FILL: name], building Ballast from India. If you buy a token at launch on Solana today, nobody can tell you the worst that can happen to your money. Ballast can.
+
+2
+00:00:15,000 --> 00:00:28,000
+Launches are one of the most active things on Solana, but buyers go in blind. Of the 100 newest tokens that graduated from Meteora's bonding curve, 94 had no permanently locked liquidity at all.
+
+3
+00:00:28,000 --> 00:00:40,000
+And creators who launch in good faith get treated exactly like rugs, because nothing on-chain tells them apart.
+
+4
+00:00:40,000 --> 00:01:05,000
+Meteora's DLMM has limit orders. Put that together with the bonding curve's migration fee and DAMM v2's permanent locks, and a floor no longer has to be a promise. It can be enforced by liquidity.
+
+5
+00:01:05,000 --> 00:01:20,000
+A Ballast launch commits 15% of its raise to a limit order at a price F, and locks the rest as permanent liquidity. F is computed so the two together can absorb every token in existence.
+
+6
+00:01:20,000 --> 00:01:35,000
+We tested it on Meteora's mainnet binaries: we sold every token holders had, and the worst fill was 0.998 of F, fees included. One command lets anyone recompute F from raw chain data.
+
+7
+00:01:35,000 --> 00:01:55,000
+Our users are creators who want to launch credibly, and launchpads that want a launch type with a verifiable floor. [FILL: the demand line you recorded]
+
+8
+00:01:55,000 --> 00:02:10,000
+The program keeps 10% of the trading fees its own locked position earns; the other 90% goes into the vault and raises the floor. Launchpads integrate with one config and one instruction.
+
+9
+00:02:10,000 --> 00:02:22,000
+[FILL: the founder-fit line you recorded]
+
+10
+00:02:22,000 --> 00:02:30,000
+Next: an audit, then Ballast as a launch type any DBC launchpad can offer. Ballast. Launch with a floor.

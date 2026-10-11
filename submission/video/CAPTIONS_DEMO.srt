@@ -1,0 +1,55 @@
+1
+00:00:00,000 --> 00:00:10,000
+Every token launch asks you to trust that something is underneath the price. Usually, nothing is.
+
+2
+00:00:10,000 --> 00:00:20,000
+This is Ballast: a Meteora launch with a floor you can see before the first public trade, and verify yourself.
+
+3
+00:00:20,000 --> 00:00:32,000
+When a creator launches, Ballast computes the floor, F, from the launch parameters alone, and records it on-chain before anyone else can trade.
+
+4
+00:00:32,000 --> 00:00:45,000
+Every buyer sees their worst case up front. Here: 74% below the curve's final price, down to the floor.
+
+5
+00:00:45,000 --> 00:00:58,000
+Buyers trade on Meteora's Dynamic Bonding Curve. At graduation, 85% of the raise migrates into DAMM v2 as two positions locked for good, owned by our program.
+
+6
+00:00:58,000 --> 00:01:15,000
+The other 15%, the migration fee, goes into a program vault and becomes a single DLMM limit order resting at F. Three Meteora products, one invariant.
+
+7
+00:01:15,000 --> 00:01:30,000
+Now we sell everything. Every token holders have. The price slides down the pool's curve, lands on the floor, and the bid absorbs the rest.
+
+8
+00:01:30,000 --> 00:01:43,000
+The worst fill of the whole sell-out: 0.998 of F, fees included.
+
+9
+00:01:43,000 --> 00:01:55,000
+This isn't a promise from a team. It's liquidity and a limit order, and the program has no instruction that withdraws them.
+
+10
+00:01:55,000 --> 00:02:08,000
+Don't trust our app. One command reads the raw accounts and recomputes F with the same tested library.
+
+11
+00:02:08,000 --> 00:02:20,000
+It checks F against the vault, the bid and the locked liquidity. Sixteen checks. Same answer, for anyone, every time.
+
+12
+00:02:20,000 --> 00:02:38,000
+[FILL: the traction line you recorded, real numbers only] And the challenge is open: break the floor.
+
+13
+00:02:38,000 --> 00:02:48,000
+Buyers know their worst case before they buy. Creators launch without being called a rug.
+
+14
+00:02:48,000 --> 00:02:55,000
+Any DBC launchpad can offer it with one config and one instruction. Ballast. Launch with a floor.
