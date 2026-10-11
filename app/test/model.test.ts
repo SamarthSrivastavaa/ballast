@@ -81,7 +81,7 @@ async function main(): Promise<void> {
     tokenNamedFromMetadata: m.token !== null && m.token.name.length > 0 && m.token.symbol.length > 0,
     redeemTxFitsWithoutLookupTable: redeemTx.size <= 1232,
     // The IDL committed for CI builds is the one `anchor build` produced.
-    committedIdlIsCurrent: readFileSync(resolve(REPO, "app/idl/ballast.json"), "utf8") === readFileSync(resolve(REPO, "target/idl/ballast.json"), "utf8"),
+    committedIdlIsCurrent: readFileSync(resolve(REPO, "sdk/typescript/idl/ballast.json"), "utf8") === readFileSync(resolve(REPO, "target/idl/ballast.json"), "utf8"),
   };
   console.log(JSON.stringify({ launch: launch.toBase58(), token: m.token, redeemTxBytes: redeemTx.size, F: m.prices.F, s: m.s.toString(), prices: m.prices, composition: m.composition, bid: m.bid, bidQuote, checks }, (_k, x) => (typeof x === "bigint" ? x.toString() : x), 2));
   const failed = Object.entries(checks).filter(([, ok]) => !ok).map(([k]) => k);
