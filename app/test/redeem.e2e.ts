@@ -28,27 +28,33 @@ async function main(): Promise<void> {
   const all = (await (client.program.account as never as { launch: { all(): Promise<{ publicKey: PublicKey; account: { state: number; registeredSlot: BN } }[]> } }).launch.all())
     .filter((x) => x.account.state === LAUNCH_STATE.open)
     .sort((a, b) => Number(b.account.registeredSlot.toString()) - Number(a.account.registeredSlot.toString()));
-  const launch = process.env.LAUNCH ? new PublicKey(process.env.LAUNCH) : all[0]?.publicKey;
-  if (!launch) throw new Error("no Open launch on this ledger — run pnpm proof:local first");
-
-  // What the page shows before the click.
-  const before = await loadModel(conn, idl, launch, floor);
-  // A redemption worth a tenth of V: well above §10's 0.001 SOL minimum, well inside the vault.
-  const amount = ((before.inputs.v / 10n) << 128n) / (before.s * before.s);
-  const quote = floor.payout(amount, before.s, REDEEM_FEE_BPS);
-  if (quote < 1_000_000n) throw new Error(`the vault is too small for a redemption above the minimum (quote ${quote} lamports)`);
-
-  // A holder: the test wallet with the most tokens (the proof script's named wallets).
+  // The newest Open launch that can be redeemed against: a vault worth more than §10's minimum and
+  // a test wallet still holding tokens (a sold-out launch has neither).
   const keys = JSON.parse(readFileSync(resolve(REPO, "tests/integration/p0/.state/keys.json"), "utf8")) as Record<string, number[]>;
+  const wallets = Object.values(keys).map((k) => Keypair.fromSecretKey(Uint8Array.from(k)));
   const bal = async (a: PublicKey) => conn.getTokenAccountBalance(a, "confirmed").then((b) => BigInt(b.value.amount), () => 0n);
-  let holder: Keypair | null = null;
-  let held = 0n;
-  for (const k of Object.values(keys)) {
-    const w = Keypair.fromSecretKey(Uint8Array.from(k));
-    const b = await bal(getAssociatedTokenAddressSync(before.baseMint, w.publicKey, true));
-    if (b > held) [holder, held] = [w, b];
+  const candidates = process.env.LAUNCH ? [new PublicKey(process.env.LAUNCH)] : all.map((x) => x.publicKey);
+  let picked: { launch: PublicKey; before: Awaited<ReturnType<typeof loadModel>>; amount: bigint; quote: bigint; holder: Keypair } | null = null;
+  for (const launch of candidates) {
+    // What the page shows before the click.
+    const before = await loadModel(conn, idl, launch, floor);
+    // A redemption worth a tenth of V: well above the 0.001 SOL minimum, well inside the vault.
+    const amount = ((before.inputs.v / 10n) << 128n) / (before.s * before.s);
+    const quote = floor.payout(amount, before.s, REDEEM_FEE_BPS);
+    if (quote < 1_000_000n) continue;
+    let holder: Keypair | null = null;
+    let held = 0n;
+    for (const w of wallets) {
+      const b = await bal(getAssociatedTokenAddressSync(before.baseMint, w.publicKey, true));
+      if (b > held) [holder, held] = [w, b];
+    }
+    if (holder && held >= amount) {
+      picked = { launch, before, amount, quote, holder };
+      break;
+    }
   }
-  if (!holder || held < amount) throw new Error(`no test wallet holds ${amount} base units of ${before.baseMint.toBase58()}`);
+  if (!picked) throw new Error("no Open launch on this ledger has both a vault above the minimum and a test wallet holding tokens — run pnpm proof:local");
+  const { launch, before, amount, quote, holder } = picked;
   const baseAta = getAssociatedTokenAddressSync(before.baseMint, holder.publicKey, true);
   const quoteAta = getAssociatedTokenAddressSync(WSOL, holder.publicKey, true);
   const [base0, wsol0] = [await bal(baseAta), await bal(quoteAta)];

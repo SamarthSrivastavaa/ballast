@@ -5,7 +5,7 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import idl from "./ballast.json";
 import { loadFloor, type Floor } from "../../sdk/typescript/src/floor";
 import { BallastClient, LAUNCH_STATE } from "../../sdk/typescript/src/client";
-import { buildRedeemTx, explorerUrl, fFromS, loadModel, REDEEM_FEE_BPS, type Model } from "./model";
+import { buildRedeemTx, explorerUrl, fFromS, floorHistory, loadModel, REDEEM_FEE_BPS, resolveLaunch, verifyInBrowser, type Check, type FloorPoint, type Model } from "./model";
 
 /** One row of the landing page's launch list, straight from the `Launch` account. */
 interface LaunchRow { key: string; mint: string; state: number; predictedF: number; lastF: number | null; slot: number }
@@ -16,8 +16,10 @@ const HEADLINE_B = "not a promise about prices elsewhere.";
 const LIMITS =
   "F is in SOL, not dollars. Selling directly on DAMM v2 can execute below F; the bid and redemption don't. Late buyers can lose most of what they paid.";
 
+/** ?rpc=<url>, else the local validator when served locally, else devnet (where the program is deployed). */
 export function rpcFromUrl(): string {
-  return new URLSearchParams(window.location.search).get("rpc") ?? "http://127.0.0.1:8899";
+  const local = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+  return new URLSearchParams(window.location.search).get("rpc") ?? (local ? "http://127.0.0.1:8899" : "https://api.devnet.solana.com");
 }
 
 const sol = (x: number) => (x === 0 ? "0" : x < 1e-6 ? x.toExponential(4) : x.toLocaleString(undefined, { maximumFractionDigits: 9 }));
@@ -44,6 +46,69 @@ function Stat({ label, value, note }: { label: string; value: string; note?: Rea
       <div className="label">{label}</div>
       <div className="value">{value}</div>
       {note && <div className="note">{note}</div>}
+    </div>
+  );
+}
+
+/**
+ * F after each instruction that set it: one bold step line. The prediction is a thin reference; the
+ * pool price is on a different scale and is stated beside the chart, not plotted.
+ */
+function FloorChart({ points, predicted, damm }: { points: FloorPoint[] | null; predicted: number; damm: number }) {
+  const [hover, setHover] = useState<number | null>(null);
+  if (points === null) return <p className="q">Reading the launch's transactions…</p>;
+  if (points.length === 0) return <p className="q">No floor updates were found in this RPC's transaction history.</p>;
+  const [W, H, L, R, T, B] = [1000, 310, 86, 150, 34, 34];
+  const fs = points.map((p) => p.f);
+  const lo = Math.min(predicted, ...fs) * 0.995, hi = Math.max(...fs) * 1.005;
+  const [s0, s1] = [points[0].slot, Math.max(points[points.length - 1].slot, points[0].slot + 1)];
+  const X = (slot: number) => L + ((slot - s0) / (s1 - s0)) * (W - L - R);
+  const Y = (f: number) => H - B - ((f - lo) / (hi - lo)) * (H - T - B);
+  const e9 = (f: number) => (f * 1e9).toFixed(3);
+  let d = `M${X(points[0].slot)},${Y(points[0].f)}`;
+  for (let i = 1; i < points.length; i++) d += ` H${X(points[i].slot)} V${Y(points[i].f)}`;
+  d += ` H${W - R}`;
+  const last = points[points.length - 1];
+  const h = hover === null ? null : points[hover];
+  return (
+    <div className="chart">
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        role="img"
+        aria-label={`Floor F from ${e9(points[0].f)} to ${e9(last.f)} times ten to the minus nine SOL per token over ${points.length} updates; it never decreases`}
+        onMouseLeave={() => setHover(null)}
+        onMouseMove={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          const x = ((e.clientX - r.left) / r.width) * W;
+          let best = 0;
+          points.forEach((p, i) => { if (Math.abs(X(p.slot) - x) < Math.abs(X(points[best].slot) - x)) best = i; });
+          setHover(best);
+        }}
+      >
+        {[lo, (lo + hi) / 2, hi].map((v) => (
+          <g key={v}>
+            <line x1={L} x2={W - R} y1={Y(v)} y2={Y(v)} className="grid" />
+            <text x={L - 10} y={Y(v) + 4} textAnchor="end" className="tick">{e9(v)}</text>
+          </g>
+        ))}
+        <text x={L} y={14} className="tick">×10⁻⁹ SOL per token</text>
+        <line x1={L} x2={W - R} y1={Y(predicted)} y2={Y(predicted)} className="ref" />
+        <text x={W - R + 10} y={Y(predicted) + 4} className="tick">predicted {e9(predicted)}</text>
+        <path d={d} className="fline" />
+        <text x={W - R + 10} y={Y(last.f) - 6} className="flabel">Floor F {e9(last.f)}</text>
+        <text x={L} y={H - 8} className="tick">slot {s0.toLocaleString()}</text>
+        <text x={W - R} y={H - 8} textAnchor="end" className="tick">slot {last.slot.toLocaleString()}</text>
+        {h && (
+          <g>
+            <line x1={X(h.slot)} x2={X(h.slot)} y1={T} y2={H - B} className="cross" />
+            <circle cx={X(h.slot)} cy={Y(h.f)} r={5} className="dot" />
+          </g>
+        )}
+      </svg>
+      <p className="note">
+        {h ? `${h.kind} at slot ${h.slot.toLocaleString()}: F = ${sol(h.f)} SOL/token` : `${points.length} floor updates; it has never decreased. Hover for each one.`}{" "}
+        The DAMM v2 price now is {sol(damm)} SOL/token, {(damm / last.f).toFixed(2)} × F: off this chart's scale.
+      </p>
     </div>
   );
 }
@@ -75,7 +140,13 @@ function Step({ tone, where, href, title, facts }: { tone: "teal" | "amber" | "b
 export function App() {
   const { connection } = useConnection();
   const wallet = useWallet();
-  const launchParam = useMemo(() => new URLSearchParams(window.location.search).get("launch"), []);
+  // A launch is named by ?launch=<launch or mint>, ?mint=<mint>, or the path /launch/<mint or launch>.
+  const launchParam = useMemo(() => {
+    const q = new URLSearchParams(window.location.search);
+    return q.get("launch") ?? q.get("mint") ?? window.location.pathname.match(/\/launch\/([1-9A-HJ-NP-Za-km-z]{32,44})\/?$/)?.[1] ?? null;
+  }, []);
+  const [history, setHistory] = useState<FloorPoint[] | null>(null);
+  const [checks, setChecks] = useState<{ checks: Check[]; ms: number } | "running" | null>(null);
   const [floor, setFloor] = useState<Floor | null>(null);
   const [model, setModel] = useState<Model | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -107,14 +178,16 @@ export function App() {
   }, [connection, launchParam]);
 
   useEffect(() => {
-    fetch("/floor_wasm.wasm").then((r) => r.arrayBuffer()).then(loadFloor).then(setFloor, (e) => setError(String(e)));
+    fetch(`${import.meta.env.BASE_URL}floor_wasm.wasm`).then((r) => r.arrayBuffer()).then(loadFloor).then(setFloor, (e) => setError(String(e)));
   }, []);
 
   const refresh = useCallback(async () => {
     if (!floor || !launchParam) return;
     try {
-      setModel(await loadModel(connection, idl, new PublicKey(launchParam), floor));
+      const launch = await resolveLaunch(connection, idl, new PublicKey(launchParam));
+      setModel(await loadModel(connection, idl, launch, floor));
       setError(null);
+      floorHistory(connection, idl, launch).then(setHistory, () => setHistory([]));
     } catch (e) {
       setError(String((e as Error).message ?? e));
     }
@@ -128,6 +201,21 @@ export function App() {
   }, [amount]);
   const payout = model && floor && baseUnits > 0n ? floor.payout(baseUnits, model.s, REDEEM_FEE_BPS) : 0n;
   const minOutLamports = minOut === null ? payout : BigInt(Math.floor(Number(minOut) * 1e9));
+
+  const runChecks = async () => {
+    if (!model || !floor) return;
+    setChecks("running");
+    try {
+      setChecks(await verifyInBrowser(connection, idl, model.launch, floor));
+    } catch (e) {
+      setChecks({ checks: [{ label: "Could not verify", ok: false, detail: String((e as Error).message ?? e) }], ms: 0 });
+    }
+  };
+
+  // ?verify=1 runs the in-browser verification as soon as the launch has loaded (used by the smoke test).
+  useEffect(() => {
+    if (model && floor && checks === null && new URLSearchParams(window.location.search).get("verify") === "1") void runChecks();
+  }, [model, floor]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const redeem = async () => {
     if (!wallet.publicKey || !model || baseUnits === 0n) return;
@@ -180,7 +268,7 @@ export function App() {
         "Every number is read from chain; F comes from the floor crate",
         "Check any launch with ballast verify",
       ];
-  const here = `${window.location.pathname}?rpc=${encodeURIComponent(rpc)}`;
+  const here = `${import.meta.env.BASE_URL}?rpc=${encodeURIComponent(rpc)}`;
 
   return (
     <div className="page" id="top">
@@ -356,6 +444,7 @@ export function App() {
         </div>
       </header>
 
+      {launchParam && <p className="banner caution">Experimental and unaudited. Only use what you can afford to lose.</p>}
       {error && <p className="banner error">{error}</p>}
       {m && !m.floorMatches && (
         <p className="banner error">The program's floor() and the floor crate disagree on these accounts — F is not shown as verified.</p>
@@ -380,12 +469,12 @@ export function App() {
           <main>
             <section id="floor" className="intro">
               <div>
-                <div className="eyebrow">The floor, now</div>
-                <h2>Six prices, each one named.</h2>
+                <div className="eyebrow">Before you buy</div>
+                <h2>Know your worst case first.</h2>
               </div>
               <p>
                 A token has more than one price. F is theoretical; what you receive depends on where you sell. Every figure on this page says
-                which of the six it is.
+                which of the six prices it is.
               </p>
             </section>
 
@@ -394,10 +483,42 @@ export function App() {
             </p>
 
             <section className="figures lead">
-              <Price hero label="Floor F (theoretical floor)" value={m.prices.F} note={`Predicted before any third-party trade: ${sol(m.predictedF)}`} />
+              <Price hero label="Floor F (theoretical floor)" value={m.prices.F} note={`Predicted at slot ${m.registeredSlot.toLocaleString()}, before any third-party trade: ${sol(m.predictedF)}`} />
               <Price label="Market price (DAMM v2 price)" value={m.prices.damm} />
               <Stat label="Price ÷ F" value={`${(m.prices.damm / m.prices.F).toFixed(3)}×`} />
-              <Stat label="Max loss if you buy now (in SOL terms)" value={pct(m.maxLossIfBuyNow)} note="1 − F ÷ DAMM v2 price" />
+              <Stat label="Max loss if you buy now (in SOL terms)" value={`−${pct(m.maxLossIfBuyNow)}`} note="worst case from here: 1 − F ÷ DAMM v2 price" />
+            </section>
+
+            <section className="verifybox">
+              <div className="row">
+                <span className={m.floorMatches ? "chip ok" : "chip bad"}>
+                  {m.floorMatches ? "✓ floor() = floor crate on these accounts" : "✗ floor() and the floor crate disagree"}
+                </span>
+                <span>
+                  Prediction {tx(m.proof.predictionTx)} · open {tx(m.proof.openTx)}
+                </span>
+                <button className="btn" onClick={runChecks} disabled={checks === "running"}>
+                  {checks === "running" ? "Reading the chain…" : "Verify in your browser"}
+                </button>
+              </div>
+              {checks && checks !== "running" && (
+                <ul className="checks">
+                  {checks.checks.map((c) => (
+                    <li key={c.label} className={c.ok ? "ok" : "bad"}>
+                      <b>{c.ok ? "✓" : "✗"} {c.label}</b> <span>{c.detail}</span>
+                    </li>
+                  ))}
+                  <li className="foot-note">
+                    {checks.checks.every((c) => c.ok) ? "Verified in your browser" : "Not verified"} in {checks.ms} ms: raw accounts from {rpc}, F recomputed by the floor
+                    crate in WebAssembly. The full check, with history and ledger: <code>ballast verify {m.baseMint.toBase58()}</code>
+                  </li>
+                </ul>
+              )}
+            </section>
+
+            <section className="history">
+              <div className="eyebrow">Floor F since open, from the program's events</div>
+              <FloorChart points={history} predicted={m.predictedF} damm={m.prices.damm} />
             </section>
 
             <section className="composition">

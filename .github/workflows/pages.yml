@@ -1,0 +1,55 @@
+name: pages
+
+# Builds the web page (landing page and token page) and publishes it to GitHub Pages.
+# One-time setup by the repository owner: Settings → Pages → Source: "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+    paths: ["app/**", "sdk/typescript/**", "crates/floor/**", "crates/floor-wasm/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.85.0"
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # The floor crate, compiled to WebAssembly: the page recomputes F with it.
+      - run: cargo build -p floor-wasm --target wasm32-unknown-unknown --release
+      - run: pnpm -F app build
+        env:
+          BASE: /ballast/
+      # Deep links (/ballast/launch/<mint>) are served by the same page.
+      - run: cp app/dist/index.html app/dist/404.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: app/dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

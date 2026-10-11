@@ -7,8 +7,11 @@ import { fileURLToPath } from "node:url";
 
 const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const repo = resolve(app, "..");
+// The IDL: a fresh `anchor build` if there is one, else the copy committed in app/idl/ (so the page
+// builds in CI and on a machine without the Solana toolchain). `pnpm -F app test` fails if they differ.
+const builtIdl = resolve(repo, "target/idl/ballast.json");
 const inputs = [
-  [resolve(repo, "target/idl/ballast.json"), resolve(app, "src/ballast.json"), "anchor build"],
+  [existsSync(builtIdl) ? builtIdl : resolve(app, "idl/ballast.json"), resolve(app, "src/ballast.json"), "anchor build"],
   [resolve(repo, "target/wasm32-unknown-unknown/release/floor_wasm.wasm"), resolve(app, "public/floor_wasm.wasm"), "cargo build -p floor-wasm --target wasm32-unknown-unknown --release"],
 ];
 for (const [from, to, how] of inputs) {

@@ -66,3 +66,4 @@ app/public/floor_wasm.wasm
 
 # Demo runbook state: local test keys between steps.
 demo/.state/
+app/public/demo-chart.html

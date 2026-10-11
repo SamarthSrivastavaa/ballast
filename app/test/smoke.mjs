@@ -14,7 +14,8 @@ if (!chrome || !launch) {
   process.exit(2);
 }
 const rpc = process.env.RPC ?? "http://localhost:8899";
-const url = `${process.env.PAGE ?? "http://localhost:4173"}/?launch=${launch}&rpc=${encodeURIComponent(rpc)}`;
+// LAUNCH may be the launch account or its mint; ?verify=1 runs "Verify in your browser" on load.
+const url = `${process.env.PAGE ?? "http://localhost:4173"}/launch/${launch}?rpc=${encodeURIComponent(rpc)}&verify=1`;
 const common = ["--headless=new", "--disable-gpu", "--no-first-run", "--virtual-time-budget=40000", ...(process.env.CHROME_ARGS?.split(" ") ?? [])];
 const run = (args) => spawnSync(chrome, [...common, ...args, url], { encoding: "utf8", maxBuffer: 64 << 20, timeout: 120_000 });
 
@@ -29,7 +30,11 @@ const must = [
   "Market price (DAMM v2 price)",
   "Redemption (F less 0.5%)",
   "Floor composition at F",
-  `ballast verify ${launch}`,
+  "Before you buy",
+  "Verified in your browser",
+  "Floor F since open",
+  "Experimental and unaudited. Only use what you can afford to lose.",
+  "ballast verify ",
 ];
 const missing = must.filter((m) => !text.includes(m));
 const fShown = /Floor F \(theoretical floor\)\s+[\d.]+e-\d+ SOL\/token/.test(text.replace(/\s+/g, " "));

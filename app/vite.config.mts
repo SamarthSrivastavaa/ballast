@@ -2,7 +2,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 // web3.js and Anchor expect Node's Buffer and `global` in the browser.
+// BASE=/ballast/ builds for GitHub Pages (https://<owner>.github.io/ballast/).
 export default defineConfig({
+  base: process.env.BASE ?? "/",
   plugins: [react()],
   define: { global: "globalThis" },
   // wallet-adapter-react-ui's own dependency range resolves to a second copy of wallet-adapter-react,

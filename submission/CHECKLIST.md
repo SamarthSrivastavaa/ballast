@@ -5,6 +5,7 @@
 - [x] Demo runbook (`pnpm demo:*`), three clean runs; dump chart and README GIF
 - [x] README rewritten; `docs/INTEGRATE.md`
 - [x] Mainnet dry run and decision sheet (`MAINNET.md`): peak 13.55 SOL, 7.77 spent for good
+- [x] Floor card on the page: "Before you buy", "Verify in your browser", floor history, `/launch/<mint>`
 - [x] Submissions (`COLOSSEUM.md`, `EARN_METEORA.md`, `EARN_INDIA.md`), `JUDGE_FAQ.md`, video scripts, shot list, captions, cards
 - [x] **Correction:** "1.017 × F" was a measurement error; the real worst fill is 0.9984 × F
 
@@ -15,6 +16,8 @@ Updated by Claude as work lands. ⟦FILL⟧ items need you.
 - [ ] Send the messages in `submission/OUTREACH.md` and post the two community posts (list at the top of that file).
 - [x] GitHub labels `launch-request`, `verified`, `break-attempt`: created by a workflow.
 - [ ] **Re-record anything that says "1.017".** The correct line is "the worst fill was 0.998 times the floor, fees included".
+
+- [ ] **Enable GitHub Pages** (repo → Settings → Pages → Source: "GitHub Actions"), then re-run the `pages` workflow (Actions → pages → Run workflow). Live app: https://samarthsrivastavaa.github.io/ballast/ — paste it where the submissions say ⟦FILL: Live app⟧
 
 ## Decide (Mon 07:00 IST)
 - [ ] **GO MAINNET or not.** Read `submission/MAINNET.md` (cost table, risks). Type exactly `GO MAINNET` in chat to approve; anything else is NO-GO.

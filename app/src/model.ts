@@ -6,7 +6,8 @@
  * Meteora's cp-amm SDK. Every price is labelled as one of §9's six.
  */
 import { ComputeBudgetProgram, Connection, Keypair, PublicKey, TransactionInstruction, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
-import { createAssociatedTokenAccountIdempotentInstruction, getAssociatedTokenAddressSync, getMint } from "@solana/spl-token";
+import { createAssociatedTokenAccountIdempotentInstruction, getAccount, getAssociatedTokenAddressSync, getMint } from "@solana/spl-token";
+import { BorshCoder, EventParser } from "@coral-xyz/anchor";
 import { CpAmm } from "@meteora-ag/cp-amm-sdk";
 import DLMM from "@meteora-ag/dlmm";
 import { BallastClient, binPriceQ64, floorBin, LAUNCH_STATE, WSOL } from "../../sdk/typescript/src/client";
@@ -64,6 +65,8 @@ export interface Model {
   /** F recorded at `open` (display, from `s_open`). */
   openF: number;
   openSlot: number;
+  /** Slot of `register_launch`: when the prediction was recorded. */
+  registeredSlot: number;
 }
 
 /** Oldest signature touching `addr` (the launch's first transaction is its registration). */
@@ -155,6 +158,7 @@ export async function loadModel(conn: Connection, idl: { address: string }, laun
     predictedF: fFromS(BigInt(rec.predictedS.toString())),
     openF: fFromS(BigInt(rec.sOpen.toString())),
     openSlot: Number(rec.openSlot.toString()),
+    registeredSlot: Number(rec.registeredSlot.toString()),
   };
 }
 
@@ -189,4 +193,83 @@ export async function buildRedeemTx(
   const size = tx.serialize().length;
   if (size > 1232) throw new Error(`redeem transaction is ${size} bytes (limit 1,232)`);
   return { tx, order, size };
+}
+
+/** The launch account for `key`: the launch itself, or the launch of that mint (PDA ["launch", mint]). */
+export async function resolveLaunch(conn: Connection, idl: { address: string }, key: PublicKey): Promise<PublicKey> {
+  const program = new PublicKey(idl.address);
+  const acc = await conn.getAccountInfo(key, "confirmed");
+  if (acc?.owner.equals(program)) return key;
+  const [launch] = PublicKey.findProgramAddressSync([Buffer.from("launch"), key.toBuffer()], program);
+  if (!(await conn.getAccountInfo(launch, "confirmed"))?.owner.equals(program)) throw new Error(`no Ballast launch at ${key.toBase58()} or for that mint on this cluster`);
+  return launch;
+}
+
+export interface FloorPoint { slot: number; f: number; kind: string; signature: string }
+
+/**
+ * F after every instruction that set it, oldest first, decoded from the program's own events in the
+ * launch's transactions (the newest `max` of them). Display only: each F is `s` from the chain.
+ */
+export async function floorHistory(conn: Connection, idl: { address: string }, launch: PublicKey, max = 150): Promise<FloorPoint[]> {
+  const sigs = (await conn.getSignaturesForAddress(launch, { limit: Math.min(max, 1000) }, "confirmed")).filter((x) => !x.err).reverse();
+  const parser = new EventParser(new PublicKey(idl.address), new BorshCoder(idl as never));
+  const out: FloorPoint[] = [];
+  for (let i = 0; i < sigs.length; i += 10) {
+    const txs = await Promise.all(sigs.slice(i, i + 10).map((x) => conn.getTransaction(x.signature, { commitment: "confirmed", maxSupportedTransactionVersion: 0 })));
+    txs.forEach((t, j) => {
+      if (!t?.meta?.logMessages) return;
+      for (const e of parser.parseLogs(t.meta.logMessages)) {
+        const d = e.data as Record<string, { toString(): string } | undefined>;
+        if (d.launch && d.launch.toString() !== launch.toBase58()) continue;
+        const name = e.name.toLowerCase();
+        const raw = name === "flooropened" ? d.s_open ?? d.sOpen : name === "redeemed" ? d.s_after ?? d.sAfter : ["floorrefreshed", "harvested", "deposited"].includes(name) ? d.s_new ?? d.sNew : undefined;
+        if (raw !== undefined) out.push({ slot: t.slot, f: fFromS(BigInt(raw.toString())), kind: e.name, signature: sigs[i + j].signature });
+      }
+    });
+  }
+  return out;
+}
+
+export interface Check { label: string; ok: boolean; detail: string }
+
+/**
+ * "Verify in your browser": the launch's raw accounts read from the RPC in use, F recomputed by the
+ * floor crate compiled to WebAssembly, and each claim checked. Fewer checks than `ballast verify`
+ * (no history, no ledger, no prediction re-derivation): the CLI is the full verifier.
+ */
+export async function verifyInBrowser(conn: Connection, idl: { address: string }, launch: PublicKey, floor: Floor): Promise<{ checks: Check[]; ms: number }> {
+  const t0 = performance.now();
+  const program = new PublicKey(idl.address);
+  const client = new BallastClient(conn, idl);
+  const v = await client.view(launch);
+  const rec = v.launch;
+  const checks: Check[] = [];
+  const add = (label: string, ok: boolean, detail: string) => checks.push({ label, ok, detail });
+  const acc = await conn.getAccountInfo(launch, "confirmed");
+  const [pda] = PublicKey.findProgramAddressSync([Buffer.from("launch"), v.baseMint.toBuffer()], program);
+  add("Launch account", !!acc?.owner.equals(program) && pda.equals(launch), "owned by the Ballast program, at the address derived from the mint");
+  const cp = new CpAmm(conn);
+  const [pp, cpos] = await Promise.all([cp.fetchPositionState(v.partnerPosition!), cp.fetchPositionState(v.creatorPosition!)]);
+  const zero = (x: { toString(): string }) => x.toString() === "0";
+  const l = BigInt(pp.permanentLockedLiquidity.toString()) + BigInt(cpos.permanentLockedLiquidity.toString());
+  add("Locked liquidity", [pp, cpos].every((p) => zero(p.unlockedLiquidity) && zero(p.vestedLiquidity) && !zero(p.permanentLockedLiquidity)),
+    "both positions fully permanent: unlocked = vested = 0");
+  const vaultAcc = await getAccount(conn, v.vault, "confirmed");
+  add("Vault", vaultAcc.owner.equals(v.partnerAuth) && vaultAcc.mint.equals(WSOL), "a wrapped-SOL account whose authority is a program PDA");
+  const mint = await getMint(conn, v.baseMint, "confirmed");
+  add("Supply", mint.mintAuthority === null && mint.freezeAuthority === null, "mint authority and freeze authority removed");
+  const staging = await conn.getTokenAccountBalance(v.stagingBase, "confirmed").then((b) => BigInt(b.value.amount), () => 0n);
+  const vTotal = vaultAcc.amount + BigInt(rec.bidQuoteCommitted.toString());
+  const s = floor.s({ v: vTotal, s: mint.supply - staging, l, sMax: S_MAX_DAMM_V2 });
+  const report = await client.readFloor(v, v.partnerAuth);
+  add("Floor F", s !== null && s === report.s, s === null ? "inputs out of range" : `recomputed here by the floor crate: ${fFromS(s).toExponential(4)} SOL/token = the program's own floor() view`);
+  add("Never fell", report.s >= BigInt(rec.sLast.toString()) && BigInt(rec.sLast.toString()) >= BigInt(rec.sOpen.toString()), "F now ≥ the last recorded F ≥ F at open");
+  add("Realised ≥ predicted", BigInt(rec.sOpen.toString()) >= BigInt(rec.predictedS.toString()),
+    `F at open ${fFromS(BigInt(rec.sOpen.toString())).toExponential(4)} against the prediction ${fFromS(BigInt(rec.predictedS.toString())).toExponential(4)}`);
+  const resting = BigInt(rec.bidQuoteCommitted.toString());
+  if (resting > 0n && s !== null) {
+    add("Bid", rec.bidBinId <= floorBin(s, v.binStep), `resting in bin ${rec.bidBinId}, at or below F's bin`);
+  }
+  return { checks, ms: Math.round(performance.now() - t0) };
 }

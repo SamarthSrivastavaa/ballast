@@ -148,3 +148,22 @@ table.list td:first-child { font-family: var(--mono); font-size: 13px; } table.l
 .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 4vw, 56px); }
 .trio > div { border-top: 1px solid var(--ink); padding-top: 18px; } .trio p { margin: 0 0 8px; }
 @media (max-width: 900px) { .trio { grid-template-columns: minmax(0, 1fr); } table.list th:nth-child(3), table.list td:nth-child(3) { display: none; } }
+
+/* Before you buy: verification strip, floor history. */
+.banner.caution { background: #fbf1da; border-left: 3px solid var(--amber); font-size: 14px; }
+.verifybox { padding: 16px 0 4px; }
+.verifybox .row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; font-size: 13px; color: var(--muted); }
+.verifybox .row .btn { margin-left: auto; background: var(--ink); color: var(--paper); border-color: var(--ink); padding: 10px 16px; cursor: pointer; }
+.verifybox .row .btn:hover:not(:disabled) { background: var(--blue); border-color: var(--blue); }
+.chip { font-family: var(--mono); font-size: 12px; padding: 5px 10px; border: 1px solid var(--rule); color: var(--ink); }
+.chip.ok { border-color: var(--teal); } .chip.bad { border-color: var(--red); color: var(--red); }
+.checks { list-style: none; margin: 14px 0 0; padding: 0; border-top: 1px solid var(--rule); }
+.checks li { display: grid; grid-template-columns: 240px 1fr; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 14px; }
+.checks li span { color: var(--muted); } .checks li.bad b { color: var(--red); }
+.checks .foot-note { display: block; color: var(--muted); font-size: 13px; } .checks code { font-family: var(--mono); font-size: 12px; color: var(--ink); overflow-wrap: anywhere; }
+.history { padding: 28px 0 0; } .chart svg { width: 100%; height: auto; display: block; }
+.chart .grid { stroke: var(--rule); stroke-width: 1; } .chart .ref { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 5 5; }
+.chart .fline { fill: none; stroke: var(--ink); stroke-width: 4; stroke-linejoin: round; } .chart .cross { stroke: var(--muted); stroke-width: 1; }
+.chart .dot { fill: var(--blue); stroke: var(--paper); stroke-width: 2; }
+.chart .tick { font-family: var(--mono); font-size: 12px; fill: var(--muted); } .chart .flabel { font-family: var(--sans); font-size: 14px; font-weight: 600; fill: var(--ink); }
+@media (max-width: 900px) { .checks li { grid-template-columns: 1fr; gap: 2px; } .verifybox .row .btn { margin-left: 0; } }

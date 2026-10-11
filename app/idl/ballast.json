@@ -1,0 +1,3700 @@
+{
+  "address": "HSSv351Q1DftJ7mgEzKm9rt41WUTyWZJZLXUq7sfqerr",
+  "metadata": {
+    "name": "ballast",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "The Ballast program: class verification, launch registry, prediction record, vault, floor, bids, redemption, burns, fee routing (§3, §6)."
+  },
+  "instructions": [
+    {
+      "name": "burn_leftover",
+      "docs": [
+        "§6 `burn_leftover()`: after migration, withdraw DBC's leftover base into `partner_auth`'s ATA",
+        "(skipped if a third party already did — DBC can only pay that ATA), pull the partner surplus",
+        "into the vault, and burn everything in the ATA. The `Migrated` observation and the move to",
+        "`Cleaned` happen here together (§5)."
+      ],
+      "discriminator": [
+        58,
+        137,
+        245,
+        55,
+        2,
+        29,
+        142,
+        89
+      ],
+      "accounts": [
+        {
+          "name": "launch",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  97,
+                  117,
+                  110,
+                  99,
+                  104
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch.base_mint",
+                "account": "Launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "class",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  108,
+                  97,
+                  115,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          },
+          "relations": [
+            "launch"
+          ]
+        },
+        {
+          "name": "dbc_config"
+        },
+        {
+          "name": "virtual_pool",
+          "writable": true
+        },
+        {
+          "name": "base_vault",
+          "writable": true
+        },
+        {
+          "name": "quote_vault",
+          "writable": true
+        },
+        {
+          "name": "base_mint",
+          "writable": true
+        },
+        {
+          "name": "quote_mint",
+          "address": "So11111111111111111111111111111111111111112"
+        },
+        {
+          "name": "partner_auth",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  97,
+                  114,
+                  116,
+                  110,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "staging_base",
+          "writable": true
+        },
+        {
+          "name": "dbc_pool_authority",
+          "address": "FhVo3mqL8PW5pH5U2CN4XE33DokiyZnUwuGpH2hmHLuM"
+        },
+        {
+          "name": "dbc_event_authority",
+          "address": "8Ks12pbrD6PXxfty1hVQiE9sc289zgU1zHkvXhrSdriF"
+        },
+        {
+          "name": "dbc_program",
+          "address": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_class",
+      "docs": [
+        "§6 `create_class(size_tag)`. Admin signs and pays. Validates the DBC `PoolConfig` field by",
+        "field against §7, each rule with its own error code, then records the class immutably."
+      ],
+      "discriminator": [
+        34,
+        138,
+        228,
+        149,
+        66,
+        39,
+        106,
+        183
+      ],
+      "accounts": [
+        {
+          "name": "global",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "docs": [
+            "§19: only the multisig admin creates classes. §6 lists the admin as the sole signer, so the",
+            "admin also pays — no extra payer signer is introduced."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "class",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  108,
+                  97,
+                  115,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "dbc_config"
+              }
+            ]
+          }
+        },
+        {
+          "name": "dbc_config",
+          "docs": [
+            "size and version are all checked there, with a distinct error code each."
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "size_tag",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "deposit",
+      "docs": [
+        "§6 `deposit(amount)` — see `floor_ix::handle_deposit`."
+      ],
+      "discriminator": [
+        242,
+        35,
+        198,
+        137,
+        82,
+        225,
+        242,
+        182
+      ],
+      "accounts": [
+        {
+          "name": "launch",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  97,
+                  117,
+                  110,
+                  99,
+                  104
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch.base_mint",
+                "account": "Launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "class",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  108,
+                  97,
+                  115,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          },
+          "relations": [
+            "launch"
+          ]
+        },
+        {
+          "name": "partner_auth",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  97,
+                  114,
+                  116,
+                  110,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "staging_base",
+          "writable": true
+        },
+        {
+          "name": "base_mint",
+          "writable": true
+        },
+        {
+          "name": "damm_pool"
+        },
+        {
+          "name": "partner_position"
+        },
+        {
+          "name": "creator_position"
+        },
+        {
+          "name": "depositor",
+          "signer": true
+        },
+        {
+          "name": "depositor_quote",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "floor",
+      "docs": [
+        "§6 `floor()` view — see `floor_ix::handle_floor`."
+      ],
+      "discriminator": [
+        18,
+        151,
+        114,
+        3,
+        139,
+        54,
+        134,
+        97
+      ],
+      "accounts": [
+        {
+          "name": "launch",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  97,
+                  117,
+                  110,
+                  99,
+                  104
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch.base_mint",
+                "account": "Launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "class",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  108,
+                  97,
+                  115,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          },
+          "relations": [
+            "launch"
+          ]
+        },
+        {
+          "name": "partner_auth",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  97,
+                  114,
+                  116,
+                  110,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "staging_base"
+        },
+        {
+          "name": "base_mint"
+        },
+        {
+          "name": "damm_pool"
+        },
+        {
+          "name": "partner_position"
+        },
+        {
+          "name": "creator_position"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "harvest",
+      "docs": [
+        "§6 `harvest()` — see `floor_ix::handle_harvest`."
+      ],
+      "discriminator": [
+        228,
+        241,
+        31,
+        182,
+        53,
+        169,
+        59,
+        199
+      ],
+      "accounts": [
+        {
+          "name": "launch",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  97,
+                  117,
+                  110,
+                  99,
+                  104
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch.base_mint",
+                "account": "Launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "class",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  108,
+                  97,
+                  115,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          },
+          "relations": [
+            "launch"
+          ]
+        },
+        {
+          "name": "global",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "partner_auth",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  97,
+                  114,
+                  116,
+                  110,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "staging_base",
+          "writable": true
+        },
+        {
+          "name": "staging_quote",
+          "writable": true
+        },
+        {
+          "name": "base_mint",
+          "writable": true
+        },
+        {
+          "name": "quote_mint",
+          "address": "So11111111111111111111111111111111111111112"
+        },
+        {
+          "name": "damm_pool"
+        },
+        {
+          "name": "partner_position",
+          "writable": true
+        },
+        {
+          "name": "creator_position"
+        },
+        {
+          "name": "partner_nft_account"
+        },
+        {
+          "name": "token_a_vault",
+          "writable": true
+        },
+        {
+          "name": "token_b_vault",
+          "writable": true
+        },
+        {
+          "name": "treasury",
+          "writable": true
+        },
+        {
+          "name": "damm_pool_authority",
+          "address": "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC"
+        },
+        {
+          "name": "damm_event_authority",
+          "address": "3rmHSu74h1ZcmAisVcWerTCiRDQbUrBKmcwptYGjHfet"
+        },
+        {
+          "name": "damm_program",
+          "address": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize_global",
+      "docs": [
+        "§6 `initialize_global(admin)`; the treasury is passed as an account, not an argument.",
+        "",
+        "The signer must be the program's **upgrade authority**. Without that constraint the",
+        "instruction is open between §19 runbook step 1 (deploy from a buffer) and step 3 (this",
+        "call), and whoever calls it first takes `global.admin` and `global.treasury` permanently —",
+        "there is no admin setter and `init` makes the legitimate call fail. That would falsify",
+        "§19's \"exactly two authorities exist, both a 2-of-3 multisig\"."
+      ],
+      "discriminator": [
+        47,
+        225,
+        15,
+        112,
+        86,
+        51,
+        190,
+        231
+      ],
+      "accounts": [
+        {
+          "name": "global",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "deployer",
+          "docs": [
+            "Must be the program's upgrade authority — otherwise this instruction is open between",
+            "deployment and §19 runbook step 3, and admin/treasury are permanently takeable."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "program_data",
+          "docs": [
+            "parsed in the handler. Anchor's `Account<ProgramData>` decodes with bincode/serde, which",
+            "pulls serde and float formatting into the binary (D-009 size budget)."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  244,
+                  63,
+                  208,
+                  4,
+                  37,
+                  25,
+                  122,
+                  162,
+                  204,
+                  165,
+                  88,
+                  171,
+                  199,
+                  128,
+                  158,
+                  131,
+                  40,
+                  216,
+                  51,
+                  96,
+                  144,
+                  222,
+                  245,
+                  131,
+                  118,
+                  12,
+                  181,
+                  66,
+                  24,
+                  20,
+                  163,
+                  31
+                ]
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                2,
+                168,
+                246,
+                145,
+                78,
+                136,
+                161,
+                176,
+                226,
+                16,
+                21,
+                62,
+                247,
+                99,
+                174,
+                43,
+                0,
+                194,
+                185,
+                61,
+                22,
+                193,
+                36,
+                210,
+                192,
+                83,
+                122,
+                16,
+                4,
+                128,
+                0,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "name": "treasury"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "admin",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "open",
+      "docs": [
+        "§6 `open(bin_id_hint)` — see `floor_ix::handle_open`."
+      ],
+      "discriminator": [
+        228,
+        220,
+        155,
+        71,
+        199,
+        189,
+        60,
+        45
+      ],
+      "accounts": [
+        {
+          "name": "bid",
+          "accounts": [
+            {
+              "name": "launch",
+              "writable": true,
+              "pda": {
+                "seeds": [
+                  {
+                    "kind": "const",
+                    "value": [
+                      108,
+                      97,
+                      117,
+                      110,
+                      99,
+                      104
+                    ]
+                  },
+                  {
+                    "kind": "account",
+                    "path": "launch.base_mint",
+                    "account": "Launch"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "class",
+              "pda": {
+                "seeds": [
+                  {
+                    "kind": "const",
+                    "value": [
+                      99,
+                      108,
+                      97,
+                      115,
+                      115
+                    ]
+                  },
+                  {
+                    "kind": "account",
+                    "path": "class.dbc_config",
+                    "account": "Class"
+                  }
+                ]
+              },
+              "relations": [
+                "launch"
+              ]
+            },
+            {
+              "name": "partner_auth",
+              "docs": [
+                "payer and receiver (§5: kept funded by the keeper)."
+              ],
+              "writable": true,
+              "pda": {
+                "seeds": [
+                  {
+                    "kind": "const",
+                    "value": [
+                      112,
+                      97,
+                      114,
+                      116,
+                      110,
+                      101,
+                      114
+                    ]
+                  },
+                  {
+                    "kind": "account",
+                    "path": "class.dbc_config",
+                    "account": "Class"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "vault",
+              "writable": true,
+              "pda": {
+                "seeds": [
+                  {
+                    "kind": "const",
+                    "value": [
+                      118,
+                      97,
+                      117,
+                      108,
+                      116
+                    ]
+                  },
+                  {
+                    "kind": "account",
+                    "path": "launch"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "staging_base",
+              "writable": true
+            },
+            {
+              "name": "base_mint",
+              "writable": true
+            },
+            {
+              "name": "quote_mint",
+              "address": "So11111111111111111111111111111111111111112"
+            },
+            {
+              "name": "dlmm_pair",
+              "writable": true
+            },
+            {
+              "name": "reserve_x",
+              "writable": true
+            },
+            {
+              "name": "reserve_y",
+              "writable": true
+            },
+            {
+              "name": "bid_order",
+              "docs": [
+                "Unused by `open` and while no order rests."
+              ],
+              "writable": true
+            },
+            {
+              "name": "new_order",
+              "docs": [
+                "A fresh keypair for the new order account (unused while the DLMM leg is suspended)."
+              ],
+              "writable": true,
+              "signer": true
+            },
+            {
+              "name": "dlmm_event_authority",
+              "address": "D1ZN9Wj1fRSUQfCjhvnu1hqDMT7hzjzBBpi12nVniYD6"
+            },
+            {
+              "name": "dlmm_program",
+              "address": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"
+            },
+            {
+              "name": "memo_program",
+              "address": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
+            },
+            {
+              "name": "token_program",
+              "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            },
+            {
+              "name": "system_program",
+              "address": "11111111111111111111111111111111"
+            }
+          ]
+        },
+        {
+          "name": "creator_auth",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  114,
+                  101,
+                  97,
+                  116,
+                  111,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "bid.launch",
+                "account": "BidAccounts"
+              }
+            ]
+          }
+        },
+        {
+          "name": "damm_pool"
+        },
+        {
+          "name": "partner_position"
+        },
+        {
+          "name": "creator_position"
+        },
+        {
+          "name": "partner_nft_account"
+        },
+        {
+          "name": "creator_nft_account"
+        }
+      ],
+      "args": [
+        {
+          "name": "bin_id_hint",
+          "type": "i32"
+        }
+      ]
+    },
+    {
+      "name": "pay_creator",
+      "docs": [
+        "D-022 `pay_creator()` — see `creator_ix::handle_pay_creator`."
+      ],
+      "discriminator": [
+        243,
+        54,
+        64,
+        68,
+        128,
+        10,
+        179,
+        221
+      ],
+      "accounts": [
+        {
+          "name": "launch",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  97,
+                  117,
+                  110,
+                  99,
+                  104
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch.base_mint",
+                "account": "Launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "class",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  108,
+                  97,
+                  115,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          },
+          "relations": [
+            "launch"
+          ]
+        },
+        {
+          "name": "creator_auth",
+          "docs": [
+            "both claims."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  114,
+                  101,
+                  97,
+                  116,
+                  111,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "partner_auth",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  97,
+                  114,
+                  116,
+                  110,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          }
+        },
+        {
+          "name": "staging_base",
+          "docs": [
+            "(handler)."
+          ],
+          "writable": true
+        },
+        {
+          "name": "beneficiary_quote",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "base_mint",
+          "writable": true
+        },
+        {
+          "name": "quote_mint",
+          "address": "So11111111111111111111111111111111111111112"
+        },
+        {
+          "name": "virtual_pool",
+          "docs": [
+            "handler."
+          ],
+          "writable": true
+        },
+        {
+          "name": "base_vault",
+          "writable": true
+        },
+        {
+          "name": "quote_vault",
+          "writable": true
+        },
+        {
+          "name": "dbc_pool_authority",
+          "address": "FhVo3mqL8PW5pH5U2CN4XE33DokiyZnUwuGpH2hmHLuM"
+        },
+        {
+          "name": "dbc_event_authority",
+          "address": "8Ks12pbrD6PXxfty1hVQiE9sc289zgU1zHkvXhrSdriF"
+        },
+        {
+          "name": "dbc_program",
+          "address": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "damm_pool",
+          "optional": true
+        },
+        {
+          "name": "partner_position",
+          "optional": true
+        },
+        {
+          "name": "creator_position",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "creator_nft_account",
+          "optional": true
+        },
+        {
+          "name": "token_a_vault",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "token_b_vault",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "damm_pool_authority",
+          "optional": true
+        },
+        {
+          "name": "damm_event_authority",
+          "optional": true
+        },
+        {
+          "name": "damm_program",
+          "optional": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "redeem",
+      "docs": [
+        "§6 `redeem(amount, min_out)` — see `floor_ix::handle_redeem`."
+      ],
+      "discriminator": [
+        184,
+        12,
+        86,
+        149,
+        70,
+        196,
+        97,
+        225
+      ],
+      "accounts": [
+        {
+          "name": "bid",
+          "accounts": [
+            {
+              "name": "launch",
+              "writable": true,
+              "pda": {
+                "seeds": [
+                  {
+                    "kind": "const",
+                    "value": [
+                      108,
+                      97,
+                      117,
+                      110,
+                      99,
+                      104
+                    ]
+                  },
+                  {
+                    "kind": "account",
+                    "path": "launch.base_mint",
+                    "account": "Launch"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "class",
+              "pda": {
+                "seeds": [
+                  {
+                    "kind": "const",
+                    "value": [
+                      99,
+                      108,
+                      97,
+                      115,
+                      115
+                    ]
+                  },
+                  {
+                    "kind": "account",
+                    "path": "class.dbc_config",
+                    "account": "Class"
+                  }
+                ]
+              },
+              "relations": [
+                "launch"
+              ]
+            },
+            {
+              "name": "partner_auth",
+              "docs": [
+                "payer and receiver (§5: kept funded by the keeper)."
+              ],
+              "writable": true,
+              "pda": {
+                "seeds": [
+                  {
+                    "kind": "const",
+                    "value": [
+                      112,
+                      97,
+                      114,
+                      116,
+                      110,
+                      101,
+                      114
+                    ]
+                  },
+                  {
+                    "kind": "account",
+                    "path": "class.dbc_config",
+                    "account": "Class"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "vault",
+              "writable": true,
+              "pda": {
+                "seeds": [
+                  {
+                    "kind": "const",
+                    "value": [
+                      118,
+                      97,
+                      117,
+                      108,
+                      116
+                    ]
+                  },
+                  {
+                    "kind": "account",
+                    "path": "launch"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "staging_base",
+              "writable": true
+            },
+            {
+              "name": "base_mint",
+              "writable": true
+            },
+            {
+              "name": "quote_mint",
+              "address": "So11111111111111111111111111111111111111112"
+            },
+            {
+              "name": "dlmm_pair",
+              "writable": true
+            },
+            {
+              "name": "reserve_x",
+              "writable": true
+            },
+            {
+              "name": "reserve_y",
+              "writable": true
+            },
+            {
+              "name": "bid_order",
+              "docs": [
+                "Unused by `open` and while no order rests."
+              ],
+              "writable": true
+            },
+            {
+              "name": "new_order",
+              "docs": [
+                "A fresh keypair for the new order account (unused while the DLMM leg is suspended)."
+              ],
+              "writable": true,
+              "signer": true
+            },
+            {
+              "name": "dlmm_event_authority",
+              "address": "D1ZN9Wj1fRSUQfCjhvnu1hqDMT7hzjzBBpi12nVniYD6"
+            },
+            {
+              "name": "dlmm_program",
+              "address": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"
+            },
+            {
+              "name": "memo_program",
+              "address": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
+            },
+            {
+              "name": "token_program",
+              "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            },
+            {
+              "name": "system_program",
+              "address": "11111111111111111111111111111111"
+            }
+          ]
+        },
+        {
+          "name": "damm_pool"
+        },
+        {
+          "name": "partner_position"
+        },
+        {
+          "name": "creator_position"
+        },
+        {
+          "name": "holder",
+          "signer": true
+        },
+        {
+          "name": "holder_base",
+          "writable": true
+        },
+        {
+          "name": "holder_quote",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "min_out",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "refresh_floor",
+      "docs": [
+        "§6 `refresh_floor(bin_id_hint)` — see `floor_ix::handle_refresh_floor`."
+      ],
+      "discriminator": [
+        10,
+        48,
+        206,
+        117,
+        67,
+        161,
+        166,
+        97
+      ],
+      "accounts": [
+        {
+          "name": "bid",
+          "accounts": [
+            {
+              "name": "launch",
+              "writable": true,
+              "pda": {
+                "seeds": [
+                  {
+                    "kind": "const",
+                    "value": [
+                      108,
+                      97,
+                      117,
+                      110,
+                      99,
+                      104
+                    ]
+                  },
+                  {
+                    "kind": "account",
+                    "path": "launch.base_mint",
+                    "account": "Launch"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "class",
+              "pda": {
+                "seeds": [
+                  {
+                    "kind": "const",
+                    "value": [
+                      99,
+                      108,
+                      97,
+                      115,
+                      115
+                    ]
+                  },
+                  {
+                    "kind": "account",
+                    "path": "class.dbc_config",
+                    "account": "Class"
+                  }
+                ]
+              },
+              "relations": [
+                "launch"
+              ]
+            },
+            {
+              "name": "partner_auth",
+              "docs": [
+                "payer and receiver (§5: kept funded by the keeper)."
+              ],
+              "writable": true,
+              "pda": {
+                "seeds": [
+                  {
+                    "kind": "const",
+                    "value": [
+                      112,
+                      97,
+                      114,
+                      116,
+                      110,
+                      101,
+                      114
+                    ]
+                  },
+                  {
+                    "kind": "account",
+                    "path": "class.dbc_config",
+                    "account": "Class"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "vault",
+              "writable": true,
+              "pda": {
+                "seeds": [
+                  {
+                    "kind": "const",
+                    "value": [
+                      118,
+                      97,
+                      117,
+                      108,
+                      116
+                    ]
+                  },
+                  {
+                    "kind": "account",
+                    "path": "launch"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "staging_base",
+              "writable": true
+            },
+            {
+              "name": "base_mint",
+              "writable": true
+            },
+            {
+              "name": "quote_mint",
+              "address": "So11111111111111111111111111111111111111112"
+            },
+            {
+              "name": "dlmm_pair",
+              "writable": true
+            },
+            {
+              "name": "reserve_x",
+              "writable": true
+            },
+            {
+              "name": "reserve_y",
+              "writable": true
+            },
+            {
+              "name": "bid_order",
+              "docs": [
+                "Unused by `open` and while no order rests."
+              ],
+              "writable": true
+            },
+            {
+              "name": "new_order",
+              "docs": [
+                "A fresh keypair for the new order account (unused while the DLMM leg is suspended)."
+              ],
+              "writable": true,
+              "signer": true
+            },
+            {
+              "name": "dlmm_event_authority",
+              "address": "D1ZN9Wj1fRSUQfCjhvnu1hqDMT7hzjzBBpi12nVniYD6"
+            },
+            {
+              "name": "dlmm_program",
+              "address": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"
+            },
+            {
+              "name": "memo_program",
+              "address": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
+            },
+            {
+              "name": "token_program",
+              "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            },
+            {
+              "name": "system_program",
+              "address": "11111111111111111111111111111111"
+            }
+          ]
+        },
+        {
+          "name": "damm_pool"
+        },
+        {
+          "name": "partner_position"
+        },
+        {
+          "name": "creator_position"
+        }
+      ],
+      "args": [
+        {
+          "name": "bin_id_hint",
+          "type": "i32"
+        }
+      ]
+    },
+    {
+      "name": "register_launch",
+      "docs": [
+        "§6 `register_launch(creator_beneficiary)`, as amended by D-011: the last instruction of the",
+        "single launch transaction. Verifies the transaction by introspection and DBC/DLMM state,",
+        "records the prediction, and creates the vault. No funds move."
+      ],
+      "discriminator": [
+        114,
+        114,
+        67,
+        23,
+        41,
+        70,
+        0,
+        225
+      ],
+      "accounts": [
+        {
+          "name": "class",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  108,
+                  97,
+                  115,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          }
+        },
+        {
+          "name": "launch",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  97,
+                  117,
+                  110,
+                  99,
+                  104
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "base_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "virtual_pool"
+        },
+        {
+          "name": "base_mint"
+        },
+        {
+          "name": "creator_auth",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  114,
+                  101,
+                  97,
+                  116,
+                  111,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "partner_auth",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  97,
+                  114,
+                  116,
+                  110,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_mint",
+          "address": "So11111111111111111111111111111111111111112"
+        },
+        {
+          "name": "dlmm_pair"
+        },
+        {
+          "name": "creator",
+          "docs": [
+            "The original DBC pool creator: sets `creator_beneficiary`, so it must sign."
+          ],
+          "signer": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "instructions",
+          "address": "Sysvar1nstructions1111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "creator_beneficiary",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "settle_graduation",
+      "docs": [
+        "§6 `settle_graduation()`: once the curve is complete, move the partner migration fee and the",
+        "partner trading fees into the vault, each measured as a balance delta. Valid before or after",
+        "migration (§5 keeper lag). Partner flows only (D-022): the creator's trading fees stay in DBC",
+        "for `pay_creator`, so nothing the creator controls can block graduation."
+      ],
+      "discriminator": [
+        42,
+        67,
+        238,
+        17,
+        198,
+        238,
+        122,
+        199
+      ],
+      "accounts": [
+        {
+          "name": "launch",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  97,
+                  117,
+                  110,
+                  99,
+                  104
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch.base_mint",
+                "account": "Launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "class",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  108,
+                  97,
+                  115,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          },
+          "relations": [
+            "launch"
+          ]
+        },
+        {
+          "name": "dbc_config"
+        },
+        {
+          "name": "virtual_pool",
+          "writable": true
+        },
+        {
+          "name": "base_vault",
+          "writable": true
+        },
+        {
+          "name": "quote_vault",
+          "writable": true
+        },
+        {
+          "name": "base_mint",
+          "writable": true
+        },
+        {
+          "name": "quote_mint",
+          "address": "So11111111111111111111111111111111111111112"
+        },
+        {
+          "name": "partner_auth",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  97,
+                  114,
+                  116,
+                  110,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "class.dbc_config",
+                "account": "Class"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "launch"
+              }
+            ]
+          }
+        },
+        {
+          "name": "staging_base",
+          "writable": true
+        },
+        {
+          "name": "dbc_pool_authority",
+          "address": "FhVo3mqL8PW5pH5U2CN4XE33DokiyZnUwuGpH2hmHLuM"
+        },
+        {
+          "name": "dbc_event_authority",
+          "address": "8Ks12pbrD6PXxfty1hVQiE9sc289zgU1zHkvXhrSdriF"
+        },
+        {
+          "name": "dbc_program",
+          "address": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Class",
+      "discriminator": [
+        95,
+        167,
+        107,
+        136,
+        142,
+        38,
+        133,
+        232
+      ]
+    },
+    {
+      "name": "Global",
+      "discriminator": [
+        167,
+        232,
+        232,
+        177,
+        200,
+        108,
+        114,
+        127
+      ]
+    },
+    {
+      "name": "Launch",
+      "discriminator": [
+        144,
+        51,
+        51,
+        163,
+        206,
+        85,
+        213,
+        38
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "BackingDecreased",
+      "discriminator": [
+        223,
+        152,
+        134,
+        189,
+        232,
+        122,
+        64,
+        194
+      ]
+    },
+    {
+      "name": "BidCapped",
+      "discriminator": [
+        12,
+        204,
+        27,
+        231,
+        56,
+        113,
+        69,
+        152
+      ]
+    },
+    {
+      "name": "BidSuspended",
+      "discriminator": [
+        6,
+        19,
+        148,
+        140,
+        222,
+        195,
+        106,
+        122
+      ]
+    },
+    {
+      "name": "ClassCreated",
+      "discriminator": [
+        176,
+        154,
+        249,
+        25,
+        63,
+        40,
+        221,
+        230
+      ]
+    },
+    {
+      "name": "CreatorPaid",
+      "discriminator": [
+        110,
+        132,
+        111,
+        208,
+        170,
+        45,
+        93,
+        98
+      ]
+    },
+    {
+      "name": "Deposited",
+      "discriminator": [
+        111,
+        141,
+        26,
+        45,
+        161,
+        35,
+        100,
+        57
+      ]
+    },
+    {
+      "name": "FloorOpened",
+      "discriminator": [
+        58,
+        195,
+        23,
+        89,
+        154,
+        129,
+        208,
+        21
+      ]
+    },
+    {
+      "name": "FloorRefreshed",
+      "discriminator": [
+        171,
+        26,
+        236,
+        66,
+        127,
+        107,
+        226,
+        171
+      ]
+    },
+    {
+      "name": "GlobalInitialized",
+      "discriminator": [
+        142,
+        186,
+        188,
+        168,
+        64,
+        228,
+        8,
+        20
+      ]
+    },
+    {
+      "name": "GraduationSettled",
+      "discriminator": [
+        214,
+        44,
+        244,
+        244,
+        174,
+        81,
+        171,
+        112
+      ]
+    },
+    {
+      "name": "Harvested",
+      "discriminator": [
+        249,
+        229,
+        78,
+        151,
+        106,
+        185,
+        149,
+        11
+      ]
+    },
+    {
+      "name": "LaunchRegistered",
+      "discriminator": [
+        158,
+        211,
+        66,
+        169,
+        249,
+        238,
+        122,
+        253
+      ]
+    },
+    {
+      "name": "LeftoverBurned",
+      "discriminator": [
+        28,
+        216,
+        145,
+        193,
+        156,
+        135,
+        159,
+        255
+      ]
+    },
+    {
+      "name": "Redeemed",
+      "discriminator": [
+        14,
+        29,
+        183,
+        71,
+        31,
+        165,
+        107,
+        38
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "NotUpgradeAuthority",
+      "msg": "signer is not the program's upgrade authority"
+    },
+    {
+      "code": 6001,
+      "name": "TreasuryNotTokenAccount",
+      "msg": "treasury is not an SPL token account"
+    },
+    {
+      "code": 6002,
+      "name": "TreasuryWrongMint",
+      "msg": "treasury's mint is not SPL WSOL"
+    },
+    {
+      "code": 6003,
+      "name": "ClassCreationDisabled",
+      "msg": "class creation is disabled"
+    },
+    {
+      "code": 6004,
+      "name": "NotAdmin",
+      "msg": "signer is not the global admin"
+    },
+    {
+      "code": 6005,
+      "name": "UnknownSizeTag",
+      "msg": "unknown size_tag"
+    },
+    {
+      "code": 6006,
+      "name": "ClassNotPinned",
+      "msg": "this size_tag has no compiler-pinned constants yet"
+    },
+    {
+      "code": 6007,
+      "name": "ConfigWrongOwner",
+      "msg": "rule 1: dbc_config is not owned by the DBC program"
+    },
+    {
+      "code": 6008,
+      "name": "ConfigWrongDiscriminator",
+      "msg": "rule 1: dbc_config discriminator is not PoolConfig"
+    },
+    {
+      "code": 6009,
+      "name": "ConfigTooSmall",
+      "msg": "rule 1: dbc_config is too small to hold a discriminator"
+    },
+    {
+      "code": 6010,
+      "name": "ConfigWrongSize",
+      "msg": "rule 1: dbc_config account size is wrong for PoolConfig"
+    },
+    {
+      "code": 6011,
+      "name": "ConfigWrongVersion",
+      "msg": "rule 1: dbc_config.version is not the validated version"
+    },
+    {
+      "code": 6012,
+      "name": "ConfigQuoteMint",
+      "msg": "rule 2: quote_mint is not SPL WSOL"
+    },
+    {
+      "code": 6013,
+      "name": "ConfigQuoteTokenFlag",
+      "msg": "rule 2: quote_token_flag is not SPL (Token-2022 is rejected)"
+    },
+    {
+      "code": 6014,
+      "name": "ConfigFeeClaimer",
+      "msg": "rule 2: fee_claimer is not the partner_auth PDA"
+    },
+    {
+      "code": 6015,
+      "name": "ConfigLeftoverReceiver",
+      "msg": "rule 2: leftover_receiver is not the partner_auth PDA"
+    },
+    {
+      "code": 6016,
+      "name": "ConfigTokenType",
+      "msg": "rule 2: token_type is not SPL"
+    },
+    {
+      "code": 6017,
+      "name": "ConfigTokenDecimal",
+      "msg": "rule 2: token_decimal is not 6"
+    },
+    {
+      "code": 6018,
+      "name": "ConfigFixedSupplyFlag",
+      "msg": "rule 2: fixed_token_supply_flag is not set"
+    },
+    {
+      "code": 6019,
+      "name": "ConfigPreMigrationSupply",
+      "msg": "rule 2: pre_migration_token_supply is not 10^15"
+    },
+    {
+      "code": 6020,
+      "name": "ConfigTokenUpdateAuthority",
+      "msg": "rule 2: token_update_authority is not Immutable"
+    },
+    {
+      "code": 6021,
+      "name": "ConfigCollectFeeMode",
+      "msg": "rule 2: collect_fee_mode is not quote-only"
+    },
+    {
+      "code": 6022,
+      "name": "ConfigMigrationOption",
+      "msg": "rule 2: migration_option is not DAMM v2"
+    },
+    {
+      "code": 6023,
+      "name": "ConfigMigrationFeeOption",
+      "msg": "rule 2: migration_fee_option is not the Customizable option"
+    },
+    {
+      "code": 6024,
+      "name": "ConfigMigratedCollectFeeMode",
+      "msg": "rule 2: migrated_collect_fee_mode is not DBC QuoteToken (D-010)"
+    },
+    {
+      "code": 6025,
+      "name": "ConfigMigratedDynamicFee",
+      "msg": "rule 2: migrated_dynamic_fee is not off"
+    },
+    {
+      "code": 6026,
+      "name": "ConfigMigratedPoolFeeBps",
+      "msg": "rule 2: migrated_pool_fee_bps is not 100"
+    },
+    {
+      "code": 6027,
+      "name": "ConfigMigratedBaseFeeMode",
+      "msg": "rule 2: migrated pool base fee is not a flat mode with zero scheduler bytes"
+    },
+    {
+      "code": 6028,
+      "name": "ConfigMigratedCompounding",
+      "msg": "rule 2: migrated_compounding_fee_bps is not 0"
+    },
+    {
+      "code": 6029,
+      "name": "ConfigCreatorTradingFee",
+      "msg": "rule 2: creator_trading_fee_percentage is not 50"
+    },
+    {
+      "code": 6030,
+      "name": "ConfigMigrationFeePercentage",
+      "msg": "rule 2: migration_fee_percentage is not 15"
+    },
+    {
+      "code": 6031,
+      "name": "ConfigCreatorMigrationFeePercentage",
+      "msg": "rule 2: creator_migration_fee_percentage is not 0"
+    },
+    {
+      "code": 6032,
+      "name": "ConfigPartnerPermanentLp",
+      "msg": "rule 2: partner permanent LP percentage is not 50"
+    },
+    {
+      "code": 6033,
+      "name": "ConfigCreatorPermanentLp",
+      "msg": "rule 2: creator permanent LP percentage is not 50"
+    },
+    {
+      "code": 6034,
+      "name": "ConfigPartnerLp",
+      "msg": "rule 2: partner unlocked LP percentage is not 0"
+    },
+    {
+      "code": 6035,
+      "name": "ConfigCreatorLp",
+      "msg": "rule 2: creator unlocked LP percentage is not 0"
+    },
+    {
+      "code": 6036,
+      "name": "ConfigLpVesting",
+      "msg": "rule 2: LP vesting is not all zero"
+    },
+    {
+      "code": 6037,
+      "name": "ConfigLockedVesting",
+      "msg": "rule 2: token locked vesting is not all zero"
+    },
+    {
+      "code": 6038,
+      "name": "ConfigFirstSwapMinFee",
+      "msg": "rule 2: enable_first_swap_with_min_fee is not false"
+    },
+    {
+      "code": 6039,
+      "name": "ConfigBaseFee",
+      "msg": "rule 2: base fee is not a flat 1% cliff with zero periods and zero factors"
+    },
+    {
+      "code": 6040,
+      "name": "ConfigDynamicFee",
+      "msg": "rule 2: dynamic fee is not disabled"
+    },
+    {
+      "code": 6041,
+      "name": "ConfigThreshold",
+      "msg": "rule 2: migration_quote_threshold does not match the size"
+    },
+    {
+      "code": 6042,
+      "name": "ConfigStartPrice",
+      "msg": "rule 2: sqrt_start_price does not match the size"
+    },
+    {
+      "code": 6043,
+      "name": "ConfigHashMismatch",
+      "msg": "rule 3: config hash does not match the compiled constant for this size_tag"
+    },
+    {
+      "code": 6044,
+      "name": "ConfigMigrationPriceOutOfBand",
+      "msg": "rule 4: migration_sqrt_price is not within tolerance of the last curve point"
+    },
+    {
+      "code": 6045,
+      "name": "ConfigCurveCapacityTooSmall",
+      "msg": "rule 4: the curve cannot absorb the whole migration_quote_threshold"
+    },
+    {
+      "code": 6046,
+      "name": "ConfigCurvePointCount",
+      "msg": "rule 4: the curve does not have exactly three non-zero leading points"
+    },
+    {
+      "code": 6047,
+      "name": "ConfigCurveNotAscending",
+      "msg": "rule 4: the curve's points are not strictly ascending in sqrt_price"
+    },
+    {
+      "code": 6048,
+      "name": "ConfigCurveTailNotZero",
+      "msg": "rule 4: the curve's unused tail entries are not zero"
+    },
+    {
+      "code": 6049,
+      "name": "ConfigLpPercentagesSum",
+      "msg": "rule 4: LP percentages do not sum to 100"
+    },
+    {
+      "code": 6050,
+      "name": "ConfigBinStep",
+      "msg": "rule 5: bid_bin_step is not a DLMM-legal step for this class (D-014)"
+    },
+    {
+      "code": 6051,
+      "name": "BadPrediction",
+      "msg": "predicted_s_open is zero or out of range"
+    },
+    {
+      "code": 6052,
+      "name": "Overflow",
+      "msg": "arithmetic overflow"
+    },
+    {
+      "code": 6053,
+      "name": "LaunchTxMalformed",
+      "msg": "launch tx: an instruction is too short to parse"
+    },
+    {
+      "code": 6054,
+      "name": "LaunchPoolNotCreatedInTx",
+      "msg": "launch tx: no DBC pool creation for this pool before register_launch"
+    },
+    {
+      "code": 6055,
+      "name": "LaunchPairNotCreatedInTx",
+      "msg": "launch tx: no DLMM pair creation for this pair before register_launch"
+    },
+    {
+      "code": 6056,
+      "name": "LaunchCreatorNotTransferred",
+      "msg": "launch: the pool creator was not transferred to creator_auth"
+    },
+    {
+      "code": 6057,
+      "name": "LaunchWrongConfig",
+      "msg": "launch: the pool is not from this class's DBC config"
+    },
+    {
+      "code": 6058,
+      "name": "LaunchBaseMintMismatch",
+      "msg": "launch: base mint does not match the pool"
+    },
+    {
+      "code": 6059,
+      "name": "LaunchCreatorMismatch",
+      "msg": "launch: the signing creator is not the pool's creator"
+    },
+    {
+      "code": 6060,
+      "name": "LaunchTooManySwaps",
+      "msg": "launch tx: more than one DBC swap before register_launch"
+    },
+    {
+      "code": 6061,
+      "name": "LaunchSwapNotByPayer",
+      "msg": "launch tx: the DBC swap before register_launch is not by the payer"
+    },
+    {
+      "code": 6062,
+      "name": "LaunchDustBuyTooLarge",
+      "msg": "launch tx: the payer's first buy exceeds the class dust limit"
+    },
+    {
+      "code": 6063,
+      "name": "LaunchUnexpectedDbcInstruction",
+      "msg": "launch tx: unexpected DBC instruction before register_launch"
+    },
+    {
+      "code": 6064,
+      "name": "LaunchUnexpectedDlmmInstruction",
+      "msg": "launch tx: unexpected DLMM instruction before register_launch"
+    },
+    {
+      "code": 6065,
+      "name": "LaunchPoolWrongOwner",
+      "msg": "launch: virtual_pool is not a DBC VirtualPool"
+    },
+    {
+      "code": 6066,
+      "name": "LaunchPoolAlreadyTraded",
+      "msg": "launch: the pool's quote reserve exceeds the dust limit (already traded)"
+    },
+    {
+      "code": 6067,
+      "name": "LaunchBaseMintNotSpl",
+      "msg": "launch: base mint is not an SPL Token mint"
+    },
+    {
+      "code": 6068,
+      "name": "LaunchPairWrongOwner",
+      "msg": "launch: dlmm_pair is not a DLMM LbPair"
+    },
+    {
+      "code": 6069,
+      "name": "LaunchPairWrongAddress",
+      "msg": "launch: dlmm_pair is not the customizable pair for (base mint, WSOL)"
+    },
+    {
+      "code": 6070,
+      "name": "LaunchPairWrongMints",
+      "msg": "launch: pair mints are not (base mint, WSOL)"
+    },
+    {
+      "code": 6071,
+      "name": "LaunchPairWrongBinStep",
+      "msg": "launch: pair bin step is not the class bin step (D-014)"
+    },
+    {
+      "code": 6072,
+      "name": "LaunchPairWrongType",
+      "msg": "launch: pair is not a customizable LimitOrder pair"
+    },
+    {
+      "code": 6073,
+      "name": "LaunchPairWrongFeeMode",
+      "msg": "launch: pair does not collect fees in WSOL only"
+    },
+    {
+      "code": 6074,
+      "name": "LaunchPairWrongBaseFee",
+      "msg": "launch: pair base fee is not 1 bps"
+    },
+    {
+      "code": 6075,
+      "name": "LaunchPairCreatorControl",
+      "msg": "launch: pair creator has on/off control"
+    },
+    {
+      "code": 6076,
+      "name": "LaunchPairDisabled",
+      "msg": "launch: pair is not enabled"
+    },
+    {
+      "code": 6077,
+      "name": "LaunchWrongState",
+      "msg": "launch is not in the state this instruction requires"
+    },
+    {
+      "code": 6078,
+      "name": "CurveNotComplete",
+      "msg": "DBC curve not complete (quote_reserve < migration threshold)"
+    },
+    {
+      "code": 6079,
+      "name": "PoolNotMigrated",
+      "msg": "DBC pool not migrated (migration_progress != CreatedPool)"
+    },
+    {
+      "code": 6080,
+      "name": "PoolVaultMismatch",
+      "msg": "base or quote vault is not the DBC pool's"
+    },
+    {
+      "code": 6081,
+      "name": "StagingNotPartnerAta",
+      "msg": "staging account is not partner_auth's base-mint ATA"
+    },
+    {
+      "code": 6082,
+      "name": "BeneficiaryAccountInvalid",
+      "msg": "beneficiary account is not a WSOL account owned by creator_beneficiary"
+    },
+    {
+      "code": 6083,
+      "name": "VaultInvalid",
+      "msg": "vault is not a WSOL account owned by partner_auth"
+    },
+    {
+      "code": 6084,
+      "name": "CreatorBaseFee",
+      "msg": "a creator base-token fee would be burned; refusing (class pins QuoteToken fees)"
+    },
+    {
+      "code": 6085,
+      "name": "BeneficiaryIsBallastPda",
+      "msg": "creator_beneficiary is one of this program's PDAs"
+    },
+    {
+      "code": 6086,
+      "name": "DammPoolInvalid",
+      "msg": "DAMM pool is not a DAMM v2 Pool for (base mint, WSOL)"
+    },
+    {
+      "code": 6087,
+      "name": "DammPoolNotMigrated",
+      "msg": "DAMM pool is not the PDA under the DBC migration config (§8)"
+    },
+    {
+      "code": 6088,
+      "name": "DammPoolMode",
+      "msg": "DAMM pool is not OnlyB / non-compounding (§8)"
+    },
+    {
+      "code": 6089,
+      "name": "DammPoolRange",
+      "msg": "DAMM pool range is not full range (§8)"
+    },
+    {
+      "code": 6090,
+      "name": "PositionInvalid",
+      "msg": "position is not a DAMM v2 Position at its canonical address"
+    },
+    {
+      "code": 6091,
+      "name": "PositionWrongPool",
+      "msg": "position is not in the launch's DAMM pool"
+    },
+    {
+      "code": 6092,
+      "name": "PositionNotPermanent",
+      "msg": "position liquidity is not fully permanent (§8)"
+    },
+    {
+      "code": 6093,
+      "name": "PositionNftHolder",
+      "msg": "position NFT is not held by the required Ballast PDA (§8)"
+    },
+    {
+      "code": 6094,
+      "name": "PositionsNotDistinct",
+      "msg": "partner and creator positions are the same account"
+    },
+    {
+      "code": 6095,
+      "name": "PositionNotRecorded",
+      "msg": "position is not the one recorded at open"
+    },
+    {
+      "code": 6096,
+      "name": "FloorBelowPrediction",
+      "msg": "floor below the on-chain prediction (s_open < predicted_s)"
+    },
+    {
+      "code": 6097,
+      "name": "FloorInputsOutOfRange",
+      "msg": "floor computation rejected its inputs (§4 bounds)"
+    },
+    {
+      "code": 6098,
+      "name": "FloorDecreased",
+      "msg": "monotone check failed: s_new < s_last (§4)"
+    },
+    {
+      "code": 6099,
+      "name": "BinHintNotAtFloor",
+      "msg": "bin hint is not the highest bin at or below F (§9)"
+    },
+    {
+      "code": 6100,
+      "name": "BinPriceUndefined",
+      "msg": "DLMM has no price for this bin"
+    },
+    {
+      "code": 6101,
+      "name": "BinArrayMissing",
+      "msg": "bin array for the bid bin does not exist; the keeper creates it (D-013)"
+    },
+    {
+      "code": 6102,
+      "name": "BitmapExtensionInvalid",
+      "msg": "bitmap extension account is not the one DLMM requires for this bin"
+    },
+    {
+      "code": 6103,
+      "name": "PairAccountsInvalid",
+      "msg": "DLMM pair accounts do not match the launch's pair"
+    },
+    {
+      "code": 6104,
+      "name": "BidOrderMismatch",
+      "msg": "limit order is not the launch's recorded bid order"
+    },
+    {
+      "code": 6105,
+      "name": "PartnerAuthUnfunded",
+      "msg": "partner_auth lacks lamports for the order account rent (keeper funds it, §5)"
+    },
+    {
+      "code": 6106,
+      "name": "VaultEmpty",
+      "msg": "vault holds nothing to bid"
+    },
+    {
+      "code": 6107,
+      "name": "RefreshRateLimited",
+      "msg": "refresh_floor called again within the rate limit"
+    },
+    {
+      "code": 6108,
+      "name": "BidBinStale",
+      "msg": "F moved more bins than one call scans; run refresh_floor first"
+    },
+    {
+      "code": 6109,
+      "name": "PayoutBelowMinimum",
+      "msg": "redemption payout below the minimum (0.001 SOL, §10)"
+    },
+    {
+      "code": 6110,
+      "name": "SlippageExceeded",
+      "msg": "redemption payout below min_out"
+    },
+    {
+      "code": 6111,
+      "name": "VaultExhausted",
+      "msg": "redemption payout exceeds the vault"
+    },
+    {
+      "code": 6112,
+      "name": "HolderAccountInvalid",
+      "msg": "holder account is not the holder's token account for this mint"
+    },
+    {
+      "code": 6113,
+      "name": "TreasuryMismatch",
+      "msg": "treasury account is not global.treasury"
+    },
+    {
+      "code": 6114,
+      "name": "CreatorBaseLpFee",
+      "msg": "a creator base-token LP fee would be burned; refusing (pool is OnlyB)"
+    },
+    {
+      "code": 6115,
+      "name": "DepositZero",
+      "msg": "deposit amount is zero"
+    },
+    {
+      "code": 6116,
+      "name": "DepositorAccountInvalid",
+      "msg": "depositor account is not the depositor's WSOL token account"
+    },
+    {
+      "code": 6117,
+      "name": "BidOrderInvalid",
+      "msg": "resting order is not a DLMM LimitOrder of partner_auth on the launch's pair"
+    },
+    {
+      "code": 6118,
+      "name": "BitmapExtensionMismatch",
+      "msg": "bitmap extension account is not the pair's"
+    },
+    {
+      "code": 6119,
+      "name": "StagingQuoteInvalid",
+      "msg": "partner_auth's WSOL staging account is invalid (D-012)"
+    }
+  ],
+  "types": [
+    {
+      "name": "BackingDecreased",
+      "docs": [
+        "§8 fail-safe, one per position and per decrease."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "launch",
+            "type": "pubkey"
+          },
+          {
+            "name": "position",
+            "type": "pubkey"
+          },
+          {
+            "name": "l_recorded",
+            "type": "u128"
+          },
+          {
+            "name": "l_read",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BidCapped",
+      "docs": [
+        "D-020: the bid rests at the DLMM active bin, below F's bin, because a third-party order pins the",
+        "active bin. Still a bid at or below F."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "launch",
+            "type": "pubkey"
+          },
+          {
+            "name": "bin",
+            "type": "i32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BidSuspended",
+      "docs": [
+        "D-021: the active bin is pinned more than 70 bins under F's bin; the vault rests unplaced, V",
+        "still counts it and redemption stays live."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "launch",
+            "type": "pubkey"
+          },
+          {
+            "name": "active_bin",
+            "type": "i32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Class",
+      "docs": [
+        "§5: a verified DBC config plus the prediction parameters. Immutable once created."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "dbc_config",
+            "docs": [
+              "The DBC `PoolConfig` this class is pinned to."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "quote_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "config_hash",
+            "docs": [
+              "`sha256` over the canonical curve fields (§7 rule 3)."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "size_tag",
+            "type": "u8"
+          },
+          {
+            "name": "partner_auth_bump",
+            "type": "u8"
+          },
+          {
+            "name": "migration_threshold",
+            "type": "u64"
+          },
+          {
+            "name": "predicted_s_open",
+            "docs": [
+              "Lower bound on `s` at `open`, from the compiler (§7). `u128` = Q64 sqrt price."
+            ],
+            "type": "u128"
+          },
+          {
+            "name": "bid_bin_step",
+            "docs": [
+              "D-014: fixed per class. The DLMM pair address carries no bin step, so there is one pair per",
+              "mint pair and this value cannot be changed later."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "redeem_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "harvest_treasury_bps",
+            "type": "u16"
+          },
+          {
+            "name": "vault_cap",
+            "type": "u64"
+          },
+          {
+            "name": "dust_limit",
+            "docs": [
+              "D-011(b): the payer's dust first buy in the launch transaction must not exceed this."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "launches",
+            "type": "u32"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "reserved",
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ClassCreated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "config",
+            "type": "pubkey"
+          },
+          {
+            "name": "size_tag",
+            "type": "u8"
+          },
+          {
+            "name": "config_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "predicted_s_open",
+            "type": "u128"
+          },
+          {
+            "name": "bid_bin_step",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CreatorPaid",
+      "docs": [
+        "D-022: creator income paid to `ATA(creator_beneficiary, WSOL)`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "launch",
+            "type": "pubkey"
+          },
+          {
+            "name": "dbc_fees",
+            "docs": [
+              "DBC creator trading fees."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "lp_fees",
+            "docs": [
+              "The creator position's DAMM v2 LP fees (0 before `Open`)."
+            ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Deposited",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "launch",
+            "type": "pubkey"
+          },
+          {
+            "name": "from",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "s_new",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FloorOpened",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "launch",
+            "type": "pubkey"
+          },
+          {
+            "name": "s_open",
+            "type": "u128"
+          },
+          {
+            "name": "predicted_s",
+            "type": "u128"
+          },
+          {
+            "name": "l",
+            "type": "u128"
+          },
+          {
+            "name": "v",
+            "type": "u64"
+          },
+          {
+            "name": "s_supply",
+            "type": "u64"
+          },
+          {
+            "name": "bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "committed",
+            "type": "u64"
+          },
+          {
+            "name": "order",
+            "docs": [
+              "The resting order (default while the DLMM leg is suspended)."
+            ],
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FloorRefreshed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "launch",
+            "type": "pubkey"
+          },
+          {
+            "name": "filled_tokens",
+            "type": "u64"
+          },
+          {
+            "name": "burned",
+            "docs": [
+              "Base burned from staging: the fill plus anything sent there from outside."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "quote_returned",
+            "docs": [
+              "Quote the cancel returned to the vault: unfilled + DLMM fees."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "s_new",
+            "type": "u128"
+          },
+          {
+            "name": "bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "order",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Global",
+      "docs": [
+        "§5: admin (a multisig), treasury, class-creation switch. Initialised once."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "docs": [
+              "The 2-of-3 multisig (§19). Can create classes and toggle creation — nothing else."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "docs": [
+              "Treasury WSOL token account, receiving 10% of harvested partner LP fees (§6 `harvest`)."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "class_creation_enabled",
+            "type": "bool"
+          },
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "reserved",
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "GlobalInitialized",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GraduationSettled",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "launch",
+            "type": "pubkey"
+          },
+          {
+            "name": "migration_fee",
+            "docs": [
+              "Partner migration fee → vault (§10: 15% of the threshold)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "partner_fees",
+            "docs": [
+              "Partner DBC trading fees → vault. (The creator's fees are `pay_creator`'s, D-022.)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "base_burned",
+            "docs": [
+              "Base fees burned from staging (0 under the class's QuoteToken fee mode)."
+            ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Harvested",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "launch",
+            "type": "pubkey"
+          },
+          {
+            "name": "to_vault",
+            "type": "u64"
+          },
+          {
+            "name": "to_treasury",
+            "type": "u64"
+          },
+          {
+            "name": "base_burned",
+            "type": "u64"
+          },
+          {
+            "name": "s_new",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Launch",
+      "docs": [
+        "§5: one launch. Never closed — it is the public proof record."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "class",
+            "type": "pubkey"
+          },
+          {
+            "name": "dbc_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "base_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "creator_beneficiary",
+            "docs": [
+              "Receives creator income at its WSOL ATA, through `pay_creator` only (D-022) — never on the",
+              "floor's critical path. Set by the signing creator."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "state",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "creator_auth_bump",
+            "type": "u8"
+          },
+          {
+            "name": "vault_bump",
+            "type": "u8"
+          },
+          {
+            "name": "predicted_s",
+            "docs": [
+              "The on-chain prediction (§7): `class.predicted_s_open`, recorded in the pool-creation",
+              "transaction before any third-party trade (D-011)."
+            ],
+            "type": "u128"
+          },
+          {
+            "name": "registered_slot",
+            "type": "u64"
+          },
+          {
+            "name": "damm_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "partner_position",
+            "type": "pubkey"
+          },
+          {
+            "name": "creator_position",
+            "type": "pubkey"
+          },
+          {
+            "name": "partner_nft_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "creator_nft_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "dlmm_pair",
+            "type": "pubkey"
+          },
+          {
+            "name": "bid_order",
+            "type": "pubkey"
+          },
+          {
+            "name": "bid_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "bid_quote_committed",
+            "type": "u64"
+          },
+          {
+            "name": "s_open",
+            "type": "u128"
+          },
+          {
+            "name": "s_last",
+            "docs": [
+              "Only state cached across instructions (§4 code rule 2): the monotone check's last `s`."
+            ],
+            "type": "u128"
+          },
+          {
+            "name": "burned",
+            "type": "u64"
+          },
+          {
+            "name": "redeemed_tokens",
+            "type": "u64"
+          },
+          {
+            "name": "redeemed_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "harvested",
+            "type": "u64"
+          },
+          {
+            "name": "deposited",
+            "type": "u64"
+          },
+          {
+            "name": "filled_tokens",
+            "type": "u64"
+          },
+          {
+            "name": "creator_forwarded",
+            "type": "u64"
+          },
+          {
+            "name": "treasury_fees",
+            "type": "u64"
+          },
+          {
+            "name": "open_slot",
+            "type": "u64"
+          },
+          {
+            "name": "migration_fee",
+            "docs": [
+              "`settle_graduation`: the partner migration fee and partner trading fees moved to the vault."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "partner_fees",
+            "type": "u64"
+          },
+          {
+            "name": "leftover_burned",
+            "docs": [
+              "`burn_leftover`: leftover base units burned and partner surplus moved to the vault."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "surplus",
+            "type": "u64"
+          },
+          {
+            "name": "last_refresh_slot",
+            "docs": [
+              "`refresh_floor` rate limit (§6): slot of the last refresh."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "l_open",
+            "docs": [
+              "L at `open`. A later live read below it is §8's `BackingDecreased` fail-safe."
+            ],
+            "type": "u128"
+          },
+          {
+            "name": "degraded",
+            "docs": [
+              "§8 fail-safe: set once L reads below `l_open`; the monotone check is then suspended."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bid_capped",
+            "docs": [
+              "D-020: the resting bid sits at the DLMM active bin, below F's bin, because a third-party order",
+              "pinned the active bin. Still a bid at or below F; any `refresh_floor` lifts it once cleared."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bid_suspended",
+            "docs": [
+              "D-021: the vault rests unplaced because the DLMM active bin is pinned more than 70 bins under",
+              "F's bin (or where DLMM has no price). V still counts the vault; redemption stays live. While",
+              "set, `bid_bin_id` is the pinned active bin and `bid_order` is default."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "fill_quote_spent",
+            "docs": [
+              "§10 ledger (audit 7 Oct): quote the bid spent on fills, net of the fees DLMM credits back",
+              "(committed − returned on each cancel)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "partner_l_recorded",
+            "docs": [
+              "§8 fail-safe (audit 7 Oct): each recorded position's L, lowered when a decrease is observed so",
+              "every further decrease emits its own `BackingDecreased`."
+            ],
+            "type": "u128"
+          },
+          {
+            "name": "creator_l_recorded",
+            "type": "u128"
+          },
+          {
+            "name": "reserved",
+            "type": {
+              "array": [
+                "u8",
+                61
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "LaunchRegistered",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "launch",
+            "type": "pubkey"
+          },
+          {
+            "name": "base_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "predicted_s",
+            "docs": [
+              "The on-chain prediction, recorded in the pool-creation transaction before any third-party",
+              "trade (D-011)."
+            ],
+            "type": "u128"
+          },
+          {
+            "name": "slot",
+            "type": "u64"
+          },
+          {
+            "name": "dlmm_pair",
+            "type": "pubkey"
+          },
+          {
+            "name": "creator_beneficiary",
+            "type": "pubkey"
+          },
+          {
+            "name": "dbc_pool",
+            "docs": [
+              "§25: the launch's DBC pool."
+            ],
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LeftoverBurned",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "launch",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "docs": [
+              "Base units burned (S falls by exactly this)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "surplus",
+            "docs": [
+              "Partner surplus → vault."
+            ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Redeemed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "launch",
+            "type": "pubkey"
+          },
+          {
+            "name": "holder",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "payout",
+            "type": "u64"
+          },
+          {
+            "name": "s_before",
+            "type": "u128"
+          },
+          {
+            "name": "s_after",
+            "type": "u128"
+          },
+          {
+            "name": "filled_tokens",
+            "type": "u64"
+          },
+          {
+            "name": "quote_returned",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ]
+}

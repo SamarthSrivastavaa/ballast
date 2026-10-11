@@ -71,13 +71,17 @@ async function main(): Promise<void> {
     redemptionBelowF: m.prices.redemption < m.prices.F,
     bidBinPriceEqualsDlmm: storedBinPrice === null || storedBinPrice === binPriceQ64(m.bid.binId, v.binStep),
     bidAtOrBelowF: m.prices.bidBin === null || m.prices.bidBin <= m.prices.F,
-    bidNetEqualsDlmmQuote: bidQuote === null || Math.abs(bidQuote.quoteNet / bidQuote.pageNet - 1) < 1e-6,
+    // Within 2 lamports of the page's figure for the amount sold (DLMM rounds its fee up and the payout
+    // down), or within 1 ppm: a dust-sized bid makes the relative error of one lamport large.
+    bidNetEqualsDlmmQuote: bidQuote === null || Math.abs(Number(bidQuote.out) - bidQuote.pageNet * 1e3 * Number(bidQuote.sold)) <= 2 || Math.abs(bidQuote.quoteNet / bidQuote.pageNet - 1) < 1e-6,
     compositionCoversSupply: shareSum >= 0.999999 && shareSum < 1.001,
     predictionTxIsRegistration: (await logs(m.proof.predictionTx)).some((l) => l.includes("Instruction: RegisterLaunch")),
     openTxIsOpen: (await logs(m.proof.openTx)).some((l) => l.includes("Instruction: Open")),
     realisedAtLeastPredicted: m.prices.F >= m.predictedF,
     tokenNamedFromMetadata: m.token !== null && m.token.name.length > 0 && m.token.symbol.length > 0,
     redeemTxFitsWithoutLookupTable: redeemTx.size <= 1232,
+    // The IDL committed for CI builds is the one `anchor build` produced.
+    committedIdlIsCurrent: readFileSync(resolve(REPO, "app/idl/ballast.json"), "utf8") === readFileSync(resolve(REPO, "target/idl/ballast.json"), "utf8"),
   };
   console.log(JSON.stringify({ launch: launch.toBase58(), token: m.token, redeemTxBytes: redeemTx.size, F: m.prices.F, s: m.s.toString(), prices: m.prices, composition: m.composition, bid: m.bid, bidQuote, checks }, (_k, x) => (typeof x === "bigint" ? x.toString() : x), 2));
   const failed = Object.entries(checks).filter(([, ok]) => !ok).map(([k]) => k);

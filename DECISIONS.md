@@ -847,6 +847,19 @@ One line per choice, newest last.
 - The spec's mandated limits sentence ("the bid and redemption don't [execute below F]") is loose:
   the bid fills at its bin price (at or just under F, less 1 bps) and redemption pays F less 0.5%.
   The app keeps the mandated sentence; new copy states the precise version. Flagged for the owner.
+- Traction needs something public to verify and nothing Ballast-specific is on a public cluster:
+  added `ballast check <DAMM v2 pool>` (the locked-liquidity floor, V = 0, by the floor crate), which
+  works on mainnet read-only today. The "I verified" form accepts both `check` and `verify` output.
+- Releases: tags `v0.1.0`, `v0.1.1` build the verifier for linux-x64 and macOS-arm64 (the owner's
+  earlier "gate tags only" rule is superseded by the brief's request for a release).
+- No ffmpeg, pip or sudo on this machine, and the npm registry timed out: the README GIF is encoded
+  by a dependency-free script (`demo/gif.mjs`); the demo chart is an HTML canvas page for recording.
+- Floor card built into the existing page: "Before you buy" figures, "Verify in your browser"
+  (raw accounts → floor crate in WebAssembly), floor history from program events, `/launch/<mint>`.
+  A per-launch OG image needs a server; one static image is used instead.
+- Hosting: GitHub Pages workflow (needs Pages enabled once by the owner); the hosted page defaults
+  to devnet, where the program is deployed and no launch exists, and says so.
+- Mainnet: default NO-GO; dry run measured on the local validator (peak 13.55 SOL, 7.77 spent).
 - Launchpad integration count stated as 1 instruction (`register_launch`) plus the open keeper's 6
   permissionless cranks, counted from `programs/ballast/src/lib.rs`.
 
