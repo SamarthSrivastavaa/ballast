@@ -1,13 +1,13 @@
 {
-  "ranAt": "2026-10-10T12:45:08.775Z",
+  "ranAt": "2026-10-11T15:26:31.397Z",
   "cluster": "localnet",
   "proof": {
-    "launch": "HE5uHyPiVP2FiLbVWJQ2Vo17kjxWvZDfihxMoYTmsY5D",
+    "launch": "8bhs9kb1QSZGvJrXTfH4HMrFQ3WEycSkicjegyabvT8w",
     "class": "Proof (10 SOL)",
-    "baseMint": "4gxuHirJ6ai4kM4iRubdYwF5z5yCUDNrKT14kssfPAh9",
-    "dbcPool": "3j6x4MtvdRDSuuFcWCY7tku2LDdGp6dv6fEDmA9CTLZp",
-    "dammPool": "Eg6UiufotSGnjA2UCqKjWDtmbNA62fhYFSEj57gtDkoL",
-    "dlmmPair": "xUSWgaTea1DZEqJJD5X5LNeSNN4PpMW5MSMvn3N3ube",
+    "baseMint": "8UmnA8wF5p9aXL4tNDyYNPqWK42Pvy7eVAbq2MeqHhY5",
+    "dbcPool": "F6nypkKjYNQHPBPLmD6ZeAQNhXiKKGTBpCDiWfdUY7q9",
+    "dammPool": "FBwtHdQHq6CeHhyRovqHudkuncFtZXDVRQdmE29ckgzy",
+    "dlmmPair": "DGY7nJ3DMdyuKC1ZCFvYQ2BQcbBoEzraUyYJayP44xRF",
     "predicted": {
       "s": "47755047807748143",
       "solPerToken": 6.7019182091506225e-9
@@ -38,7 +38,7 @@
       "toBid": 37,
       "toDamm": 35,
       "baseSold": 537931934.590083,
-      "lowestExecutionOverF": 1.017337
+      "lowestExecutionOverF": 1.017369
     },
     "afterSelloutBeforeHarvest": {
       "vPlusCommittedLamports": "45844528"
@@ -59,12 +59,12 @@
       "checks": [
         {
           "check": "Launch",
-          "detail": "owner Ballast, seeds [\"launch\", 4gxuHirJ6ai4kM4iRubdYwF5z5yCUDNrKT14kssfPAh9]",
+          "detail": "owner Ballast, seeds [\"launch\", 8UmnA8wF5p9aXL4tNDyYNPqWK42Pvy7eVAbq2MeqHhY5]",
           "status": "PASS"
         },
         {
           "check": "Class",
-          "detail": "proof (10 SOL); DBC config 96xaawsHcayVS4tsNLtY4L6Y8SMSod7znsqq1jqwrzqS",
+          "detail": "proof (10 SOL); DBC config B24dtZmC2XVNrqPpqq1gV3ZYxvaqSrivBrEVCcudZA7M",
           "status": "PASS"
         },
         {
@@ -84,12 +84,12 @@
         },
         {
           "check": "Recorded before trade",
-          "detail": "registered in the pool's first transaction, slot 95 (4sm5FvS8quQS)",
+          "detail": "registered in the pool's first transaction, slot 97 (4b3vNmiTPz51)",
           "status": "PASS"
         },
         {
           "check": "DAMM pool",
-          "detail": "canonical migrated pool Eg6UiufotSGnjA2UCqKjWDtmbNA62fhYFSEj57gtDkoL; OnlyB, no compounding, full range",
+          "detail": "canonical migrated pool FBwtHdQHq6CeHhyRovqHudkuncFtZXDVRQdmE29ckgzy; OnlyB, no compounding, full range",
           "status": "PASS"
         },
         {
@@ -129,7 +129,7 @@
         },
         {
           "check": "History",
-          "detail": "12 floor updates from program events, never decreasing; the last equals s_last",
+          "detail": "11 floor updates from program events, never decreasing; the last equals s_last",
           "status": "PASS"
         },
         {
@@ -139,11 +139,11 @@
         },
         {
           "check": "Sell-out",
-          "detail": "lowest execution 1.0173·F over 72 transaction(s) (gate 8: ≥ 0.99·F)",
+          "detail": "lowest execution 1.0174·F over 72 transaction(s) (gate 8: ≥ 0.99·F)",
           "status": "PASS"
         }
       ],
-      "historyPoints": 12
+      "historyPoints": 11
     },
     "ledger": {
       "pass": true,
@@ -162,97 +162,93 @@
     "steps": [
       {
         "step": "initialize_global",
-        "signature": "dNihwYfGyBZMaJ8znzQwJJMG97LmDDbpMfnGQ1ZVd7t2aYXSQUaqjXwKYTYCWm4BHKWriAmAwxVHgEn7XnjCgeq"
+        "signature": "5hNMSpK1CcABxi8tBtWoUiA5gervWRXTSBM9PiSkMVMwRaUW7HpwPsxGHsDWPxkpEBoooz3HFCuVJpGXmdFVCsN5"
       },
       {
         "step": "create_class(Proof) — every §7 rule checked on-chain",
-        "signature": "5SdXsyU8j4vaypg41PdSJFh4ggJycu5j8XevNN6WGT385T8uTgsetS5SgHZpY88dEeqjjLCH8J3gWnVe6KtxnTgq"
+        "signature": "5ixXZ11sXz3LgCGiL7jBiwtN5F8rwabXHoSQEnY1o1RucyU1iYtdwFbB95DFqQL3uPSwQWg174i5nEYWv4QdvHxk"
       },
       {
         "step": "launch (D-011: DBC pool + dust buy + DLMM pair + transfer_pool_creator + register_launch)",
-        "signature": "4sm5FvS8quQSM5V1VvSiJEfxehZvL4sRVosFb4U8zzfrVmLU6b7jNHxFrecNyNZ6fhjgDV26JxhAE7SzkALneFNS"
+        "signature": "4b3vNmiTPz51kagpRCVtjPZFY7bYChSC4ASN1dDTY1iG4qPNogdwoDoqBp259KATaX5UMunZuLgQoAT1tFJodHWT"
       },
       {
         "step": "buy 1",
-        "signature": "Zkp98Piu32EX5t6XVMAMK6VxupdT2ACHEMTKZUyk2yoFqPpMFmiPNNHxQeaahgNQHnLjJfy7eQ7JrrS44efdgPm"
+        "signature": "59YQPMfqq5F3qCaXeZZWSR2jCbnCbH6Q1gyDXC9vABud7xVeFhrMwRHerjLGyjgQcqxFB5PJ1xhp4RGMxeNETRXN"
       },
       {
         "step": "buy 2",
-        "signature": "4Pi33z5SgFLz8JToQNz3m1SqnAWS11hcEMnjZrWXYwZyJRznN7sGnLBcYuasBGU6Mp2UgacAMhnvHE9L29zBAk4a"
+        "signature": "2x4NSmSc975Trz9FLMp8de6DmEXeK4MkSea2mhapPUiRJxvB61GAs4JA7244wEWLJ4g9M4kwMtjVyC8jp5mwVJyn"
       },
       {
         "step": "buy 3",
-        "signature": "2Q3jkrPaj81arQ4GYuF2kpdQUHRcvb4ucxBSMcEQdeKErDFnyRbXbnNoy35eG271DEhFHdmBUzx1RhhT8ZiVJh9P"
+        "signature": "4ij2gxqCTtg9FegWJvGE5WHkmdGxw6HoQbgih99HXrRehmii6cpn6Lwed5Ap6BKDWuHtgYXkdwRk9vHuEXJ17xWk"
       },
       {
         "step": "settle_graduation",
-        "signature": "5VUDQd5fCyqxCtDnpP8NsTHBkQJnbPccC2ZJbPGE9XhKZqrbCAtRBUhwRLDjvyWDvgKviufYgu59PhvDxvGDzgyM"
+        "signature": "4Sxs9fMjeZ7j7FJYniEkWxyBxBCZXHAjDQ7SSAJiUtp16SidnQq12ujWoqofNMR3BEgrk62e7bJguA9cTgko6jXL"
       },
       {
         "step": "migration_damm_v2 (top-level keeper)",
-        "signature": "55p2RHyQG2MyXs7MAiK5Rn3Ak2SWczEU97anmkDEPPn7eXtrAgb3VyziPjp9WuSobjE2BiShdeXsbxibRaYYZAPt"
+        "signature": "2M5RUo48Kiro6jiLgGznzDZwPX3wjqFDcS39dreJbnSa9CShEP2DeP9NKY818D1eYFBfL9PkgMP9tXfdGnQwL4Po"
       },
       {
         "step": "burn_leftover",
-        "signature": "tsgaRPZwpwbipNPDVtkBmxWMs85K4PTQ4yTiej5Ln6gPAqfsZnB9SzgKfxnBaKpd4EwLbxSUooJPyHaBWr6qHYR"
+        "signature": "3yRvdNcrV6GvjG5ezaVeZKYtbBG52tnzR2Fkduu6KsMQcSCxKDGQivnErenwUKFzXkXyiumiaxR5yYh2CrL4RKko"
       },
       {
         "step": "open — bid at F's bin, active bin moved up (D-020)",
-        "signature": "Nz1crp9tBSJTJPaCTKCo8btWKwupF28FiP6ACVrFYah6RYqZrzbEQvUbaB6yQ6YqVhy1NaRZXTPJw6EmzurvwsC"
+        "signature": "isxnur9cjHVCsoZ7WG1XjZasgFpaAcKk6x5qsMQuM5HZsnbDJquPW9DDbgARtMtixrTdfgdrFZ8yfJGVtF11oJz"
       },
       {
         "step": "keeper: refresh_floor during the sell-out",
-        "signature": "2yPWnZnwdukjs2mq1cpmFUy9CzeMtv39Zqq85zRrxhkLx8QieXqvFvaY54EcuucJimFVBSJ4NxiJ9g2UQezbmudn"
+        "signature": "SZFAX1T5fAf3MWireiekeutY8w4ac1VF7cpdJMWoUjUxrvewt9XnsgzRM33Tpom9xXZcDGT6Z61rAWXf93zvZif"
       },
       {
         "step": "keeper: refresh_floor during the sell-out",
-        "signature": "2Vm9pcb3Ra7xbHqZXhGPtQsNf9SCwWxb3ASfCeKHHknDXvsw3WycLmSpVVZry7BwNvaszFm5F2WCUBH1C47Cq84q"
+        "signature": "2t7zRiaKErLwEVCgGdSXz8XCfRSVRngXCrzMdn3BVTp7w3e2GXZtyS6djnM3QMXSBqmqaxWGrWrXc24JkAKFwCvj"
       },
       {
         "step": "keeper: refresh_floor during the sell-out",
-        "signature": "2h5pK3z3q9adjkyZx9Bq1mU55abpkJ2Yv9877fW2rnvdGAZvdvrLad8d2hJ7HoUycxDCNJtFHMVVHq4MoZcVBm8N"
+        "signature": "31oavPWcB2bynTxqakqhbi5bnbU46T3MDGnHBERgFoLcAYNZdR7ZzQm4geMJgrfbnXrKFz7ugzGQVC4DY3yJPi8t"
       },
       {
         "step": "keeper: refresh_floor during the sell-out",
-        "signature": "3hxUB6tKzGXpCKV3TqKUTx5HMvqZeMi2472JUJG4h4mpB3fGJbZ1bKurJTuWm7Qs6wwCgtweuwENJwFVjywRWdAY"
+        "signature": "62mv1f6KQkTA2zT5xES7DcM6UE58uEg4Z5SHvTNR3u9y8cLqK1dKSDY4bGgHjM1SL36kcrjuYxSy64vunMJQNT7j"
       },
       {
         "step": "keeper: refresh_floor during the sell-out",
-        "signature": "5qaTUzrNfrHX7eR8tNyCvJJGggTLHQaFciZG6DtPuETSx7Lxtc3NNPHCNmJw1UjVEy4bMgpYZE5vWYQ15ikmfFnG"
+        "signature": "2hXVcx47P6DTvCVWEiD4QYJmwSeTyzAGbV6HLyjriQtLFCBro5GnCMfpTUSgnfyqVBS7n25x79ejy25U4MyGde8h"
       },
       {
         "step": "keeper: refresh_floor during the sell-out",
-        "signature": "5JcwcEk2HwJSTWboZuwZFbDNyoFoRC6oGQCWHKFuzGMuVYTFdJWPYMM5wJgn89NJghNbskkYbVaYeekTrmBuf6V5"
+        "signature": "48bsgoHLsz3SyC4LKpuiiEWFLqyQTSnr3KWmiQycysTeHXCJYoSk5raRVoAcmRSfmUvDq2c7r1ekDGFMAGwb75nz"
       },
       {
         "step": "keeper: refresh_floor during the sell-out",
-        "signature": "2NjZyHaAHEocVXmEeASvDihJ9W7FpaS116UNiA935nz2preTcm4rcXNPeQ82ixCk8ESaco7vZozzV4u4Uhoi4WHC"
+        "signature": "3HT9gmKMTQUXgBGMQ9UYTm5d5YFMxYeh89v71VpvnMAHtpJjBxqocoGQpB9EWojxcYW7WTtPWbQC8SUnWoJJiq6J"
       },
       {
         "step": "keeper: refresh_floor during the sell-out",
-        "signature": "5d5qYSbkWnNfR31gkSicp8SmXk6CV4K6v1NfstkNFvSX8p2PFxp4jzaTJGZ6x1C7jqVa5ssSmDtrqU8MeDsvqE8K"
-      },
-      {
-        "step": "keeper: refresh_floor during the sell-out",
-        "signature": "4U5eeAkqiRNNkFEbNgZu8e5qvXvFowy4hng988Y2gnbUaj3ca8CWrUpFHsXUfyVXduBaFB2TPkS6xwVCGeaQPZrk"
+        "signature": "4mydQ5rpBaSDjyHNPHzuBKba3EaugxWTRr7tHm7zkf3LbmBrWJ6ewhq4ez2vzY9XogEUvGmUeJJJrFvz36jRuLUW"
       },
       {
         "step": "refresh_floor after the sell-out",
-        "signature": "E2GrYQ2FaKFkSFbJYqW9kcuqr9YbEYNtYmB3eYrR685TCnMd1kWLzHT5m4npf3KcmU3FRRS3LDJJptF3ndKeJJX"
+        "signature": "3GkkjVMHvNke1SZshV18NtdKgdzWFJZhaZXJHjLcRS4nhXzMLKBQGF3cysyowaXPnpdGCVeGdB6aErSPkWHswmj9"
       },
       {
         "step": "harvest",
-        "signature": "ipdQhZg5fprdttWRaeBj5oCQ96dgcQuUJDAiPwe31VNMhpmYTANvrKpgBkjCEy6kHHSR1YfzhSw5au4Gm9yqD4o",
+        "signature": "23FSzuakDrbGgosCMtG3KYChw2xhGAUupL7FqkX4eSGsjD7GF4J4GW58YPYHBta9LK68ajGvL4YFoFzDhimG28Ae",
         "note": "succeeded"
       },
       {
         "step": "pay_creator",
-        "signature": "4Yjnymu1NSVLu3esAVYhGWUV1cMcaHW9edG1e7C6fdcgx2Fsq4WctEMg2TCSDVTB7z37eCVWEFYWd9cLmH1fbYE4",
+        "signature": "3K8NS4jtH4opwmEhUJtxhk8Y5vcxzSjuiorMsZ1hxpj2EbYrYNRanwD9Z6es7iqQSG2FhSChATokCCmZi63KoCPr",
         "note": "succeeded"
       },
       {
         "step": "gate 9: open",
-        "signature": "4MrKw2RDGCBmwixVtum8fPKbDGFZtpZvNrsqNqSmjTjfStcze7fkiwev5GsuG28gA8etKqJS8x4UesMNGMpLE8kw"
+        "signature": "3H8iw34oeHECuqZrw1w6b4qbcGNVvRroHbSrze3sGizirYXWwXvVW4MbxNyYVwAFhdDxQUndZxRsECLwbVixCUBx"
       }
     ],
     "sells": [
@@ -260,438 +256,438 @@
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "21dSzvcipd8P9JB45TeYSvoHBEFkvK7BEYMRZZEMUZnUPW5vDGCB3cYmFWq2rs27YvMq7AnuZUWYqEhQZhwNeegb"
+        "signature": "39t3L9crHiYYeURWehPWkPwEpoTrVcdHmaLr6mKpQLfetqSo4q2jRTguMU8DizSYQoJCCHEf8jFfQ4V2wgc59SiV"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "34eDVwq1bi9FSAoBQgjnyUh8qBVxuHJ6Ap21jYdgae1AsTEN11MCVZfxQi78Cz46XViE82sLzr9v6FaDhbd9Ja27"
+        "signature": "3zUsRNDU4SM7hhNWX9LdPpih57HiAn6r3Ft9LhUbrMLNa9naGPecrLavgvAr5YvkzyVWwhDBiXXQcEjSiMVxUBJR"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "2eXt7NoRtqLGka99apaNMMwP6vSXejyzhTdp4DjA5wcPZRH71WNr1yEW3J1vdoXBkCZvew47y1dLZFD1uWX79abL"
+        "signature": "56YKzHerMGSUGeYUYeYk58H7u2f7syDDkpsmzPN8PjASJogjbjPzdGhHTN1vWXMB8PSR3WWnQc2CoiAiQwWN8xHh"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "PuFTZvpQX2Ye2CjjUW1eKzVm4SNKmVhVjYovThRD9whLnAdahcVR92Va897Z84b79C4xXKeZRSKKP6bFz5kRzSk"
+        "signature": "3d1EaUsrG85jxGVxTJryNYxne5kWUVsrETtaAg8jovaMgZALjq1GFQag4Yb8se1A1cR7P2Cg5FcXTzchDaiN55MW"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "5uj7auVPkoPfrMPjVhDig1LidSSQKMfaW2ceFbMxuuzPQx1KzAjE4eq3tkJZmaiY4PVUoPb97gKMGMKh7CiumvK6"
+        "signature": "64GMizzhHXJGuciRcH8dTsqNRfrUATadSp6erAXTwqh9e34QmvkWREarrgaSvuAQkp8Jk6mZncgqXg4fGWPkiNoJ"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "3j43J7LiUFNs4nq5EP16vvtnnKBzpryc35YyUvMu7obsNmUvMRDRwwZ7s5NnUeYjQNUuKo6gXHfjia1cHAqAX1ss"
+        "signature": "27cZ9HqfiUuLXtp34EnZWBw2Badm2194dxddao2hoS4gSQ6mpiQC8nssqJzs9WY9NYsj7NZ2y1Jrh4LwK7Uju7gx"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "218X4dxukTYDjXi1xC31TdgVJzg7DNA3GmiDxJPKoA6cZDmWAWYJpT9qW4EBoJrX3qbKKiveo9JhYGJkSSjbbKY6"
+        "signature": "v6YhS3evvmz2jTQyNd7Q9whqveXpG5u11jTZyGLHLVQVJ2DNuEFBFxL6KTD81wF4bKTg5hu8yFTfWRE1qpRYRNo"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "4HWXQ3Gnw8Xb2V83iDUfvkaHtuRwxpN7XApnz8bbzUbGREcXZzDutVKmxph2L7VuqxWk7L5wQ1SkfMiENCuvG9Lv"
+        "signature": "2u3bJGf225EGdgvReW5JTnevUrkKciFn4N1ZFPXf4zRCXNpqUCTKnzqLAC62QQFAEDBYbhaaRaJWQ5bANpBoXNa"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "3mxsTMuZyxZbtBR5ZLRXaaKuTaHGsCk3jEJE2GEEWN4bjYoBiWJd6KPNHW2SyhCnhBJ775h8NAiHEn1PYhgk1FoE"
+        "signature": "3fJiPzXTXzrNNN3XwnKH8vBjJNBoJmF3Su7fLhpEJp33Wgy9XTWWeqWiXRGQuMdsYrJBxHeyzkYrULd3rYGYbynF"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "2mHCRskwwzXn6qvW3TXP2LKcGcmmAoTZqKBZkfKsitnJ9G5UeYpCs6TZf1JarjQYYxHrTzWsmrh5Co5fHdWRKjWW"
+        "signature": "3tYLtZvKTBFcs3fqTAr4zyTTp4JDkCJaXvPZq5sGxqVBbeKhTivpLmbMTpA3wTRJZy3MKAbmyXgbiECYuNtmCw4n"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "CworPKRH48ZEr3fRPd2cgJ89FFZazrPhsKQMXknEiXSfMDutJhnd28YKVP9Lr3kU3GSTeFuc9uibgMPar6g54fF"
+        "signature": "2eBMwWHqVe4UMcadwLkXraeWUJK4GVXG5gCDGD1ueSvA7VyquX97zZ2CxbtB4RiPfUXNnaHDz5rHgCMLQ8hupKRr"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "4v77imNKqDfq9BS517qVLXnymN6HgtcdXsxahF49goQ11JBhUAjUWoX1a53Z37PeAyYmoggFmDLwziXJZW74zjB"
+        "signature": "4s5qAWkBhHTh6LTybXuU1sKFkuQKTYdF6TAzQyFUVyf6xcYbPR83WVFUis6XWa4LfMZCJAhTwEpzUM6m9f7Y4WQG"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "3FFunXJYLbjnXyzzHUR14uYhHAtoTUPPuaMJ6wiJ4DqWqeNGGsAUGxktwr2jF6E8Pd9gAUNrTSd5DZoyqUeofTMa"
+        "signature": "4df7dEYdL2fjw5wiDmJvqjAB2xy5auub4jaoq15dxQYpEZNhso2ye6xKjnk3kJ7AkmF8KS436ogedym58UiwYAaz"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "5kQ1ZP5r6om6qDsGDdJChwcTFvN56yXsRn6vdymANch2Pv8h6dHg6TysANpFy8nw9ohMFa8dheAyXKiCemfWgCQT"
+        "signature": "5r9XhvHpC6HBCdMUkhhNibLY8ypy7jDcz4JgWGHKA3X2r7JfkN1EFtJx1rWihDKUaGZVfhDY5PaC6DpGmuFG1KSc"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "267vWzTrw1jtBiwiaLV6fTxCXNNCwGSjMDvLLymQftjEH1nqJ6Jon1fGeWuuHmtpMr5WZwmD6SHmz8eFNxb1Mr7b"
+        "signature": "AvgbB7o7zoEtc4vfWEMeRGqKMqLmSd32Bjs6DoExbGmn5pq5z8rwzzExkTfxaoNdMFmfStD8XdF6xjuBJHEeY9C"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "5qXYA61EMaga4g61kCXW9EeRotuhq2hPFdTk534WYZ7vs7L1mxf7G6x9sMfDMBKGLJtNwAiYWTcrqj9fWatxS9Dw"
+        "signature": "2cYRuBHpF2RnEuNxESvnsp9Ke7CLctadV5Z8RtUetGWDGb913MgHnCmHpnbWKH5FTZxFaJ2iSFqhVAYHC9Z1ZRKQ"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "tZboGiAfx7fx9sbVxvwwto2nt1jzy2e1aRbr13MBFkBrzTHu4BMWSDCQoEAeYsYZqbgfYZWGFehwPjiYS4if8Dt"
+        "signature": "wx7mFuS2WhRETdPfXoS8yLTV42D5j9PUWxaL8ixkv41D9zo2jLWNBLj3b21JYY4jjy4Re2o9RHDpS3Ejg34cqf2"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "4RvZRpUh64vYd27E8CBt6nAhfuJSfmfxKe6abLQ8diVvY9mpAsF6vSeYgzUQqYriTKAfhyYgvZ4dsgKsUszNS9qu"
+        "signature": "3cJjuDXJX4W4YvSBjnBCkVQP86z8FhfptWPky6NKrkbHdh3KUmMhbwRq99SULXrBSRWybJqJpMycm5VNLoedd7KW"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "55MLhyqAK9bHTzLY1GbtAEVXxrJ6MDwgjNvrUNAJJ9FbtFsF3wJPSj8bpnRCTvcJB98nWbTGHS3yZ5qVfW4sKP9F"
+        "signature": "mw6JzPY9yk2KtCCJnj96DT8tp9dapXRuXfqv9No4efZPvcwwjP3dHaePSNzLik9G6buKD4fqvkky5KMJFFu9kth"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "2rvZECxurzxoVDGkBYwcM7cRnTMLRyE8UputKiKp3dxz6NdXa5G1CcTomyBoA7nuSraUQ53ciKySXLti97kj1fjj"
+        "signature": "3kE78HFBGVHKd56YEKVg2DrSUDaFTo7YkZXQbSScYRJfzU2EWBscqZpTmeAPswCZhyGRLszRC47uPWwmyWe6kc4A"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "hxozz2g1t564JCioatqTNN1QDBFx7oc6YUnDhNgcXqhrwGVyCt1fnvKpUPqSpVfPqiUG45CVqYU8uYgx8G7ZqAy"
+        "signature": "2v2suU8QYfd57QDFwN8NnG22zAE3FHK2zCxiw7nmQsG4VPswenCpcRASwHhtPbpAj5yhQhinYybsqgEW7aHEokfa"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "5kqAcHrNVHzVHp21VKojJF3rHPRPcfdKs9DT4TdTdrZDtTjdg8A3Cmu3PuZy45QFzLjuojxZoivscuVt3Y9JKuzj"
+        "signature": "2K7ast7WXW4eD4MZBmiWtSTv3fVxcYce1V5nXLmmr4tfzxq5hfY13gMscej2RP9kkHisrwPWHTQSya6anFdG2eYw"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "9566518900966",
-        "signature": "44Cy8o2HSwN5w63cnU9nZiWRnmVLNP8sNoJkLBuJTK7sbHdwa8R2CCgRf2NjooGST9eNf6y1u1ouaEXGw8JxpHjR"
+        "signature": "jVFodd8zfRt8PtB5FB8pgVNrhqVbLYZtnsBbCtayk1ME2jfnzpaRs1ogvn8CBL4umMUjFqe4em2r8um4fkaC7GX"
       },
       {
         "wallet": 1,
         "venue": "DAMM v2",
         "base": "19133037801925",
-        "signature": "Eao27PPGnqab24R9LSrCeD8HmqUwNo9d9Hn5PYiJbPDPwSQh3CnoUaXW4o3G9CVCHSVVZ6SGkEastny2mgv7juq"
+        "signature": "4JgeHZjzfUtCVxXaZwW5Jp1sUAHuLNn1p1Fkq8bzd9kJpZ1TWkJU9VM9DdTKSJhVNKQi2NRGopsygHRzEyvVQhGJ"
       },
       {
         "wallet": 2,
         "venue": "DAMM v2",
         "base": "6843310373726",
-        "signature": "2NwrL5jji3eKsgrLZH83sfAnjjL94PjkoiH4V24vHCyhPFp3A1qBbptZreVXLS8uiFjBGW3sd8MduHTHGoFEqUve"
+        "signature": "xPtyc5MZmMSsiL18Ub3GsRSkKggUYE5nbircbfMyrDGNYUNqk3r63BcehYA3xYKR6ArmptH312tgyf2YCoTJxux"
       },
       {
         "wallet": 2,
         "venue": "DAMM v2",
         "base": "6843310373726",
-        "signature": "woWixCv6ajRPpM6TBi2RQQqDBB8ZDRRMXsLc4M5KLa1bJycR2JNGkqkZ2JsZnYYGG4ZXgNJz1WgY72CzXFM78mh"
+        "signature": "4q27bBMx3TzbwVbxKXaXC5aTtmfGgTxeRATwXL7NodMje7stuCd9W23j2CTfDccs7UfDaMn4Zb5cNzdKcd2XGTv8"
       },
       {
         "wallet": 2,
         "venue": "DAMM v2",
         "base": "6843310373726",
-        "signature": "yHnSGJTyzKNYiXiM6sFwu9xvi4V1rS3eC7BEhik2urBsXcZ8XxwkeYMUNgC3qJKvUY8ULrNjXG5Hs3bsrAZC68m"
+        "signature": "5kgkEwM3hTh61U1fr9m5ZTEaeMZUkCcvGsdqqG9ExwjkXwE689bn6BnKL7v6bBprhDLoSbgxvMMUyWqiNie3LYMo"
       },
       {
         "wallet": 2,
         "venue": "DAMM v2",
         "base": "6843310373726",
-        "signature": "Z8XpN3KuT3twjVnBeXsPDFhVMjqtN57zaRW4WPwYbKaQnibGJdpGwujj7VVRUbrC5fYgTirQE5vJzs2DiSpXbk8"
+        "signature": "2SZ7gbR9pAGNDVv575Fif7MnbKx5ENbH8zf1m3gJeU7Uvzw34giaX3YJJxgurjsnAzDoV3jD5FKP3v2byjS3fUgo"
       },
       {
         "wallet": 2,
         "venue": "DAMM v2",
         "base": "6843310373726",
-        "signature": "58RP7NTVjKCkJAJLmzkasJqfi8RRnLdWBYQhkauXPdFSsNvtGeKevGhq9rJUhqu9oK3v4Y9rqqgHQHyCjM1gcFEq"
+        "signature": "5LtXB692MvMmxm225k3TuchKgJSscq2LhxhLMBaK8DDYh1D2tCAsCLoBCouTQmQ6tLWX79phtECzMHxB2vvaAwvW"
       },
       {
         "wallet": 2,
         "venue": "DAMM v2",
         "base": "6843310373726",
-        "signature": "2Qt5cxMxyPETZw1vZT3tjXv2ebCovjQhSSAUQjMhmFUo8f1jcy9mrs5mUZ2WvFZDiEqrgo4PGx6sihBDdgxwEtdk"
+        "signature": "2ddVgjzrgXHiECMnm91EhPs7ycsEvXo7RpuyfMSrsCz6jzETUuqVW2yyRrNQYADpX2wLNzcmWzSCsp8Ya3EuBUB4"
       },
       {
         "wallet": 2,
         "venue": "DAMM v2",
         "base": "6843310373726",
-        "signature": "5kxjMJgsXhCcaJeY38rsktiy6DovYstcTC7cH3s9jhvr4UoJww21TxRAtd5QzevMGnQ4hDf58nUY8CN814FDSPts"
+        "signature": "3AdzumeL6ZrAfvpknNEoaAoPUuQ2Qm1LwsCwvR2NqqC7GivZSC2nLjX4vNRwvZRdYjNaesVCcwpiQbBzkApfpfNQ"
       },
       {
         "wallet": 2,
         "venue": "DAMM v2",
         "base": "6843310373726",
-        "signature": "eFMKWAuFmqrMMMjaAErRZDsAf7VdgJ5NVaR9it3i4svMNSrNbvboh3WoXYoUEaBdrgNXqnExxuWcQ2FzRsatGYe"
+        "signature": "26wxXVkzteWUMCCubj7n6GZdaKjcptoZGhxTbdD4YZu9WGYcjuDLodahJd72c3m42Qr4AsAEH59fnAdJd1Rq6yBY"
       },
       {
         "wallet": 2,
         "venue": "DAMM v2",
         "base": "6843310373726",
-        "signature": "yQuMWxkfudGfRX2hRQ9w1mySdzzbSiFdAiCKoYzrGsa3HWbPUjrng84H4NQnWbFQNXsdzbqCc7w1EXC4Yg6ucJu"
+        "signature": "4e811A4APV8NPsDUqK3cRSByMPp5FsPH5T18t6oyQnzbyi6GqSfHdKpqEW4e9oEMRswLWSGQPoWn8JC7uUHxVVGi"
       },
       {
         "wallet": 2,
         "venue": "DAMM v2",
         "base": "6843310373726",
-        "signature": "3obqoEWBxY3snbKZ75e7dzbEP8wr9JeNKUL85WpupaoJ7fEsXXYHXsGsu3G3CwQ7mLyczikNQK7ieu52v6RktEpc"
+        "signature": "3yNi6FPHj5KWCQVYaS3PFdbLLxyjH9NDU33UmssaUJbbVH7pUwYw5ms8b4GYJLtEXC4BmroskegAP5qtpyymfbmQ"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "tBYtC3qCtkWDdPvnLHDmeQRBChKcNR85RiuhffAL1GB1c1rzXp4YpuQdhDzck4mdQBr8CeHAQgcWYqhgR6APceZ"
+        "signature": "4XDuE5r5ZxrxiwH23PCTWoqSm8js3HLV5SyTuLFnRXCLBwzNLuBQuaAnrA9Zbe7jHUbMbtQ8T1QTt2R6CS8NnHB8"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "3oy8RXyRDLRxnQjSg2C3ih9pHBwj9frXTveCAwEtKWbCCu58Fc3hY5mL6yDa23Xh4iBzdQ8xtLQPbKQzwoQzRDPo"
+        "signature": "y4S5iDhntpXszfSrKVdKgPiXURc1WFN5sgBKNP52A24JZy6m3yyNvv6yM8rz1QJJvZoKFSWigCGjFyW5KZQ4fKr"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "5APXLLVrR2oQChiLJsPszEwvaSXSCiEyQaDTbsoC2ZgcAV5dbUFBU8xHozAv6QdCpNopMfUSMdLSFtHkPi5A58Tt"
+        "signature": "3CsS16jQ7VUkkyVzARSAe3wQRGXRhL31FDZHpikn3PmS9k7YrJxNNq8JVXDvJYwWAD8jj4xSockkFxqrLWunWS9M"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "5KKAncCpvwmaa3FLWkRtXHQbzrNz36npJGJC6C33gzkXDT8Mx1rzMKGD8e2FyKHGF6zdGMKLj5yXZBzXHGzjqeZS"
+        "signature": "3HNDagtRc61evw9ziNViud16LkGd93yN51xWRTfAJ5uNuyHh5Jpkxpt1ekPWpUEdvSUXCC8CceXPR9z5kzx43nzj"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "LKmuh6Cr1duopbkZe4XszxX6XgmqkkHyVCeZQrHGeyxYa97LsDdxqzPGDsFGgZqEwswuh6ynKqTNJiLHiCM5c1S"
+        "signature": "3g5CyruwsfdA8dQsNCFRZ92A89uCpg3KULAwigrtsQA5EmnisPL76mhzfYLkS9FTZiae6P25AssWR4BYJFfPRW5k"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "EZ8VukjPk7KjS6fBKKLgTQDtNx7TXeVShS6R38vR3JhcZpfiZH88hyfPTFWZp6VW1yRhG4SuE6jJz8ZXMV2nVoD"
+        "signature": "5Hw9X7ZxjtM41sARX4sHJmyCNNpVniMTa7T3tngi1QTbkSJYqvPgQ2VCWYD4jE9Lj29AtEkbQrKrzmhc21kq95kS"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "4vJzrbDuYGtD53N8DdDB2QeBjZEcuF1nKrNUfu5r2X9AV9BAeLUt3aaDBD9Y1Xc6ujeiKbBE4CuDr5PNo9B6JBsP"
+        "signature": "jBkDYn9ftj2xhP2KpKL3QfeFpVeVpNoB7f5ZtoxZSLencUxSsEYbX8rPDQkUcToyWZhJwxXDm4G2hSFvyuLfaw9"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "2Tr3YtCwJSX4UjUCu3BMfWW2mM7MuYu5MAKVmuXcwrh9Xzbj37bKabxQJBF1SctxvmfEQh9Fw8DSBxRUSPbKHpaF"
+        "signature": "3sQZK24rTbGm9NWxDxPwjTYzPmi6LfTEAcgcmhJWcSARmUJfmdL5d4f7Bkmk2sF11cxbzDnHFYLjUBQHvMKttBjo"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "5KRaE2u8L483c2ApXdY1kwryw2Nfjz72haScvkaqjz35mA9ZwpbGGqpCNVkvzMDNnUyaSR6fY1q6giULprH44nN"
+        "signature": "cnxJ8c6BUNgTGiojEZn6p852fjjtsJk2jvSyFsgYZpBtHbDjKqZcRAzxgDpnsj6nfA4VqzXAUEiD7fFJgLbawmQ"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "5LNm4RqC8KcqATn1VZDykoMRKFVp2LHLcPfNBZi6B9dAM6BApGR69mpf9eUoKkNmkArxQodjFNQAfKATkf1fzk47"
+        "signature": "3PjrYwTTU9aFDp1Kgx8bMDXMTeYStZfWT7ThPZY5jNCdRno21GzBLx1iVmzgLQ8NhvfPsfynNiAVvUNfGCwMaBdA"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "4Qwcc26tF7RDqQXPQNvALmiAdXDGn7NWVzWgUCUEioEBVeAuLWs4WjgTGciK9RCaprhAiKMznqGnSqYzhQSDt5LG"
+        "signature": "BMExHAv5aPr1WC3HgtPvfSX1e121mQjSvovTUgQSPjxYHeRkt1N8enKXnQYGNP611RwGrG96ZHLKBfNCahsyVVc"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "2AxjLM2zaBYwfPGTgPq6auFeNaUTdhZS6AHjNmF8ZTf2FkjNU6JUa8qRtRU1LJdcDkKhJktJUMajFiMsyFaTWPtK"
+        "signature": "4QChDrAnBxdQ3Sqm7iFvtSket7FKmccWGdJCdc8eyWkxrxfz35CunmUJxe8SxE1vhELaNdUbSArgCpwDdsR3amgt"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "6843310373726",
-        "signature": "67NnyRbdAx7edyPxvB6TooUmRXvACimJXzYkk6wriHWhBEHpXmsfKRKLeNB1tRp9UYwtaLy2yKe86ueZS8XzKk3p"
+        "signature": "9HaTapSrJjFiTJePR1h5LuUi78xXqpM8hxzjr6vYcxn6ZQ5yTdhBXY7nXbkbSPqQuQMQy9y4zgs6WtWeDxMUfQW"
       },
       {
         "wallet": 2,
         "venue": "DLMM bid",
         "base": "13686620747427",
-        "signature": "2edjP3ZSx8pVcKQLZAsuxbreVR8Swcz9fwDndBXYuDgh9tzq9N7Ex6c4D49ZrsXYJZDQXqpHG4dxg6XckbPDYohf"
+        "signature": "2TPjtte4rFMqmuVexzipuXQcDqXNcYWdP8ZJyHhTFHCsU4pQvSfehSpM1U1LQbho5eScmch1tNS1ELByhnh8HHab"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "5o39JwqHKmKw6pNyNJ6cUJgruSc9qtqB6ozDbkRMKGyPoVyZSVh1XUwVouXxb3pccLMZBRKh3FVp2C9yhCsXVBZV"
+        "signature": "4VhzgRygwfLzECcuY14huyY5NXwVGPfVSbf9VXapsxymk1odqPXh6JAhdc2HDijMLT9ovL5zoNgfkTzKkxwQza1A"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "5Af3hBUi6PUzfquip4nXsVU1TnrZ7ubcnG3ooLPy4BRwdHfM8SF4tTDnaw8L2HkBMKyGpLRDxKkdjpskRf6Lzfkw"
+        "signature": "4Ax5ji1fhLXyUhX57m9Nr7zTD5A4rwKUoA6eM813SUJXtoKUbxinfVTNhtGn2huzZMKVtjtdqErquLnaR2sMdjHc"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "5QZ3CHLi5a9EoAv4gvTtutLvBaypcSUvVcnquJNvx8svGX1qoeBxvLq7RJ9iRYXdDwgw9XrgFU4CusTCTAn51aSU"
+        "signature": "5vGg8SbS994qdgJ8xe1jTNfRQiftFVrnpnzgoYNF2sXfzAGwiLFLbHfDYWYegfUwsBGgHuWeY6NKo1RUmBiwPAg1"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "51fw4CERoy83WmmZ4ZQr2quHRBUMtvZ5CkCrH44yHuGrEiL2XK7bwfpeQxPGqgF7Rykgv82DJhhtDKVKXnEDqfcZ"
+        "signature": "4GpmzvEasqoszbDZMLD8Fx6YWjbdYW3v3qVqX7LuQgzzAeHKVjgKe8HtuwAE7PH5L9gicFauNVesoSwDzhzU6wX5"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "5iCggeXk4oRMvMt6oPVM5YyL5d3Pa82Q5GbNSKbo1d652RNsHzgsvmubNxdbpV7sGADYcpDWYt9rYAV7DRDAD4WL"
+        "signature": "5HPzNt9JVs7jxFMzE5LNegjmvGRV1cadB27VRBZktoZMcb6kge5pi7xgE1r8CWFKVYN23F9wgDsfvSxTQj3Ny4wC"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "4BvzzibWd4aV6opJxVjsCDZjN25ixhdbop6WhycnDiaAG98htVVmco3adTJdN3Vp4MrJQZwAPgEn6hT4j1Pe7NTi"
+        "signature": "41R6R8rcwvJMKu3kDWf9Y8PNmsx8Tfp3j87p2Q5LtLyQeknz8WKeRNT9CLUfTdFVweEjg45KPRdTenWYHEQpqRCT"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "5z2vzddEiAh3Y8Tp5D9zLD2dZregj4garUPbVAmQsYJSGcfAntzj45HobPggugesUZw38x4QpNT6tETW7pBD2kA8"
+        "signature": "2GK6FXh5rd9cyRUq7Yo9KQvkjtCfCYoLxx79564TkJ3ScjD7JgfVXztetaYvq9Bf3TuVNrM1cc6H54hc5BvcgS3i"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "4mLJYg8XT17ZYpL8VAzDNbVvoKurT56dwDRouhssXobaTeev3N4L3KMLkq6Rs1cyY8gcnbAufCitvmsCqcAdCPMJ"
+        "signature": "5BrVyebkV79q6a9dtc3A8WRFBfPvRE9dB3vGWFuhuBPASKWEfvRj2RRm5946t8sRoc7tNZkje86N72aBxPyiVQyd"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "4hT3PAqW7dJzFt2FZ3eAVmbWi7ZDJc4tDB6FFmPYfQtR7xBZkko5CpwoaBscouSvx1mWVHvdiJUW9Z5HfxuzqJZJ"
+        "signature": "3cLcxWPA8cNoxbsouu9ZuyJoni9hDTrgNCrgSjEDDd4MZtw8GsL3KW72YHcEssoxHZLS68U1u1EZCnW16aE2S4SR"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "2E4DmA1zh7NwsfoJMz5STErtWK7yZyJcBvvRvhNM2wYDkCoW5WUUJc7jWW6ynCfm4GRx6yoZvXuJenYVb4vyR84w"
+        "signature": "4cykhidLhvrzcr8Uq35kFPcnHmj5Vs6geq84Vd2bjohv3prgsdwwoGRdd9GMG2QTjyE44NuyY6cDQipvsy8nLL1n"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "2a8Zp5k7ohqTCSTQMJ8s7gdXQ4LeQP4KBcyEHXfAjNhHsApGT3MWXoAK2cmPg5AL1X8XfpR4i5skAtUH5nvTwNj"
+        "signature": "5j72rheJrTKfBX4F4xtg2AJpKmNi4YW8NAZL61dRqniqwmA3T7Y5G178Ti73gEoBdEuehz5BEtAh4q1zE8EB3LA2"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "SSHsXoGEUF8PbdR8tDcegtW5k52bLmRg4AEt623AuJu8Vc97L4dzsFM34XUu8kJuRinSVQhAx798e5QW1jgP3r8"
+        "signature": "5HtyJhk5j9WBz8jqCzzQUPMx4YByNiiW6KFddtrumJTxwUKL92LPNpuqMKmq4jfeYm5hkAvbdiStd4E2rJ7SeXTQ"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "358VtrVjEqnqrgfftDsbtGX7eDLYARsCz25FNYKUU4uqbfxh7GHeTQaWuy2so2Pnf35ktMAYi7hVA7wMsBnTEJ73"
+        "signature": "37B22y1CAxhf5azfzgWu8oEwMV5jYsvugzUTBzA3SNknDSSjs1hAYDXtzAJPXMk2oAtQhP6MiCBqBYJM6XFbEZRx"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "4oEmybQVnt65j1qEqVmXDgAm9DX8NfQRjNmKa2cyNBu58WMifKXju8i5LZ3KNDhrskD1vRRL9prYS7ipsK3zVVeA"
+        "signature": "naMyLsrD7Pm5aQHdGgXyPPb1dTgmadt5uSxerufWcQCpejQ7WnU6PffVVKP1bYLd9iojKuWzF1NDGUKPz8JXxbs"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "4sWQM2wXgULyFbEWzXmqdFwR7Ym1CrgT1VeWLVrJsYjn6s8LV2z1PBNetcunmks7QPoADJK6SRsQr6gkVEq9xCU6"
+        "signature": "2gAqvbWagK42XXUVmzhzXpTGanHvqz4vZxCMfRsVDDLD1VSmSgZSqQ9oBRjWu8Es7xgH2LbWoqXQExUNbTqka7uJ"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "5HEAmAg3QVL2WPdNQkFE3poVHP6v5VsYxesEMh2UGrNm9wRBZdYBzidDq1t77Ymry8J4UqsUhpYM82yHGmzBEqeR"
+        "signature": "5nZtZR8Rg8JPnAixd6qypbhpQt4gfRh2vVsP2tzCoEv3vsvu27nZnL1pcJd8z3Q3rtXFcerwsjop5Se3t68o9sWm"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "3g6qX6z1LR2kys4EHN2GJwj1WZN3ymPYieQMJ2g87Bg4W5X2GGXNSMbfeBhA52xKn1MhLaL5TJXvwW1CFPMqceFi"
+        "signature": "63ntth556mwENTMou8JBxvSwFWaf2qwWFwmCb2zsbrM8MUSoqp9GXy1aMgGk2cCMa9P18o2wy7GivXuYLt8qyFWS"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "4WoRZt9kEv7j9BhSArQFrEenGCZntJHDC1U8UE4unEGKzXrzhoP4FiKraCBqpqfGA33AyAaZtF3QwGBnzrAqyS2f"
+        "signature": "5a2Fm8vTfuxuYJw4cCkSaZhJDmmSFSy8VK6mXbq2TKFvVCkaDmURSmgfkbdePuS3Yb7ufBUACWrj1sMTFk2jdNGF"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "4aBrTZS5FF6yz21tJHaJM8sfRZ4FAWRu1obiYkUE2rvz2pY9vdVvffCjNMo8t2axYADH1hqdcJGynofkGwFPomVj"
+        "signature": "5LYsyqSz6pUNT74Ja3E1qxejjWjJXZQJq5RsjV3WJQAS55VkzuiEXXZM8kBJsddeTxoBAQVxg19KfrRStwuq1jaX"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "5aQgemd8o7q6suaPRDBn86Ftt6xZT95JUMonzweDGvrAfAtaere7s2AbDtoZSF7cQ96MDncScwqrhZY6nKepebLY"
+        "signature": "3Nwi3zo6NQYsEcf4sLYMKM9eDQr6XgF4jBbMdjnFrLLANSKx5qCbBZNdwjfreMMTeCJnGayVExFzKiyMTDnXoZwY"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "2MtMEMFe72bySSTgvzYfTUuqjsNJG43HAbr9shLrr8S2eefqh5XGFkzvzXi15rA8NmW2Xu96pijj7C48isqEnv8i"
+        "signature": "2ZfjobHhWDTYERvypE7p3NhKgDAbSGupoPu7a3pH6xRALJuW6KQV5hU7jnaevNsD7DcLcZZt19xkLDytoEvLmZA7"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "2nNqJLGNVefaEc4buU58aJq2eDyU8Zb9r68sQTZ6TLq9FMdShRoV2NxGy22PUM1Ynm9ekhuUHnNhwtKxCRjjLwqs"
+        "signature": "6y42qAiv5yW4w1GqkorDWWARaSucxJpScYVodKjsE9h8rEVHT6teDeWBs4VbridcABcYxzXGU3rab1x29YbM66B"
       },
       {
         "wallet": 3,
         "venue": "DLMM bid",
         "base": "5107448108913",
-        "signature": "2fSzPhGLELq2QD8PMva6ZsCX8aZq9gCjTdrq7vBjYTxYAR3iys5UQxfZNNB15sF9boDWda1HBWCbYnn38bvaC6sY"
+        "signature": "5UrdM6yDV9B1LQYBAbRHyZhojwwd1ws9XSrSb8hZrvwSWLQB6v38ULKtWppLpMErmVJfoSCzieSTQVuKtVqhqrWC"
       },
       {
         "wallet": 3,
         "venue": "DAMM v2",
         "base": "10214896217816",
-        "signature": "3pXUNVAnQcryQDJXPZdQF56k413yi9Eb4ehMoXf15PVKYWeoJqb4VbsdPtGVQoh8qFCXBfZAeZJXJYaQfAD2yNVd"
+        "signature": "246cJq5C7CxxHb2peAotdwZVAVRofwD3KZ8Xkh2z1r2YaSmnRNnF47rGaiN3PQkuajgG7KtuVtmGV3BgrzRbpAC8"
       }
     ]
   },
   "gate9": {
-    "launch": "Bg85caXmbWdxQCEeiEtRzQW3JkrMHxPNz4xyAQsrs9tw",
+    "launch": "4k8c2Z5bAjDAv5YoTqJyxpMKXKWXhRbwZhuWgTaTf2RF",
     "transactions": 200,
     "byOperation": {
       "redeem": {
@@ -720,9 +716,9 @@
         }
       },
       "refresh": {
-        "ok": 22,
+        "ok": 21,
         "refused": {
-          "RefreshRateLimited": 8
+          "RefreshRateLimited": 9
         }
       },
       "damm_sell": {
@@ -738,7 +734,7 @@
     },
     "floorDecreasedReverts": 0,
     "verifierPass": true,
-    "historyPoints": 74,
+    "historyPoints": 73,
     "ledger": {
       "pass": true,
       "detail": "V = 1.774977782 in − 1.759670834 out (fills 1.243310170, redemptions 0.516360664), to the lamport; supply = minted − burned exactly; counters = event sums",
@@ -751,7 +747,7 @@
     {
       "case": "keeper off for 60 slots after fills: redeem settles the stale bid and pays exactly",
       "pass": true,
-      "detail": "3 fills; succeeded U2zTmPdQaEZs1SFhd6ut41CmtQjZpjEtqAcG9zuCo2e1F3DP3DkCNhvC9fMfKeaKHXVP9tEkKhiWbUfjBPS6siQ"
+      "detail": "3 fills; succeeded 3KmoBSFEREwoeS6hrVo4R99kyP16rtVYV4JPVTZsVSbWVciouevYLos3B5GWZZSChxsKGWUEQ1h4wUZRkyH5TcL"
     },
     {
       "case": "refresh with a stale bin hint is refused",
@@ -771,7 +767,7 @@
     {
       "case": "verifier PASS after the injected failures",
       "pass": true,
-      "detail": "77 floor updates, never decreasing; ledger reconciles (excess 0 lamports)"
+      "detail": "76 floor updates, never decreasing; ledger reconciles (excess 0 lamports)"
     }
   ]
 }

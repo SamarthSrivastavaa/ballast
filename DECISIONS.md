@@ -191,7 +191,7 @@ evidence, secondary). The heading was "§18 Devnet gates" until 2 Oct 2026.
 | 5 | **P0** DLMM bid | Fills persist; cancel returns unfilled + filled + fees | PASS (local, P0 + suites) | | Q5 above; `refresh_floor` case in `evidence/program/part2/results.json` (fill burned exactly) |
 | 6 | F | Identical s across `floor()`, Rust, WASM, Python; realised ≥ predicted | PASS (local, by tests) | | `floor()` = WASM = `ballast verify` (`app/test/model.test.ts`), Rust = Python = WASM on 10,014 vectors, realised +1.34% (`evidence/proof-local/`) |
 | 7 | Redemption | Exact payout; F rises; CU within limit (else two-step redeem) | PASS (local, by suite) | | redeem case in `evidence/program/part2/results.json` (209,023 CU); Q18 |
-| 8 | Full sell-out | Lowest execution ≥ 0.99·F; vault ≈ 0; F not lower | **PASS (local, 8 Oct; rerun 10 Oct)** | `gate-8-pass` | `evidence/proof-local/summary.md`: 72 sells, lowest 1.0173·F; 0.0458 SOL left; F 6.7919e-9 → 6.8394e-9 |
+| 8 | Full sell-out | Lowest execution ≥ 0.99·F; vault ≈ 0; F not lower | **PASS (local, 8 Oct; rerun 10 Oct)** | `gate-8-pass` | `evidence/proof-local/summary.md`: 72 sells, lowest 1.0174·F; 0.0458 SOL left; F 6.7919e-9 → 6.8394e-9 |
 | 9 | Invariant run | 200 random txs, no monotone-check failure; verifier PASS | **PASS (local, 8 Oct)** | `gate-9-pass` | `evidence/proof-local/summary.json` gate9: 200 transactions, 0 monotone reverts, verifier PASS |
 | 10 | Failure injection | All fail safe as in §26 | **PASS (local, 8 Oct)** | `gate-10-pass` | `evidence/proof-local/summary.json` gate10: keeper off + stale bid settled by redemption, stale bin hint refused, dust and slippage refused, verifier PASS; substitution negatives in the suites |
 

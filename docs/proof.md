@@ -6,7 +6,7 @@ The claim Ballast makes is narrow and falsifiable: the floor is predicted on-cha
 third-party trade, the realised floor is at or above the prediction, and it never falls afterwards.
 The proof is one launch built to be sold out (§22): three team wallets buy a 10 SOL Proof launch to
 graduation, then sell every token they hold, and the verifier checks what happened from raw chain
-data. Every number below is from the run of 10 Oct 2026 in
+data. Every number below is from the run of 11 Oct 2026 in
 [`evidence/proof-local/summary.md`](../evidence/proof-local/summary.md) (signatures included) and can
 be reproduced with one command.
 
@@ -42,7 +42,7 @@ Prices are in SOL per token. "F" is the theoretical floor; each other price says
 | Migration to DAMM v2 | Two permanently locked positions, both held by Ballast PDAs; L = 3.0702e31 |
 | `burn_leftover` | 134,558,940 unsold tokens burned; 865,441,060 outstanding |
 | `open` | The whole vault rests as one DLMM bid at F's bin. Realised F **6.7919e-9**, 1.34% above the prediction |
-| Sell-out: 72 sells, each to the better of the DLMM bid and DAMM v2 | 37 to the bid, 35 to the pool; 537,931,935 tokens sold. **Lowest execution 1.0173 × F** in force at that slot (gate 8 requires ≥ 0.99) |
+| Sell-out: 72 sells, each to the better of the DLMM bid and DAMM v2 | 37 to the bid, 35 to the pool; 537,931,935 tokens sold. **Lowest execution 1.0174 × F** in force at that slot (gate 8 requires ≥ 0.99) |
 | Keeper `refresh_floor` during the sell-out | Fills are settled by cancelling, the bought tokens burned (220,120,959), the bid re-placed; F rises each time |
 | After the sell-out | 0.045844528 SOL left in the bid of the 1.54 SOL vault; F **6.8394e-9**, not lower than at `open` |
 | `harvest`, `pay_creator` | 0.015062311 SOL of LP fees to the vault, 0.00167359 SOL to the treasury, 0.057139942 SOL to the creator |
@@ -60,7 +60,7 @@ redemption do not.
 - the prediction recorded in the pool's first transaction;
 - the canonical DAMM v2 pool, both positions fully permanent and PDA-owned;
 - the vault and the resting bid, at or below F;
-- F recomputed from live V, S and L with the floor crate, and its history: 12 floor updates decoded
+- F recomputed from live V, S and L with the floor crate, and its history: 11 floor updates decoded
   from the program's events, never decreasing;
 - **the §10 ledger, to the lamport**: 1.555466352 SOL in, 1.494559513 SOL out (all of it fills, no
   redemptions on this launch), which is exactly the 0.060906839 SOL the vault and bid hold; the
@@ -77,7 +77,7 @@ redemption do not.
 | 5 DLMM bid | PASS | `evidence/p0/Q5`, `evidence/program/part2/results.json` |
 | 6 F identical across `floor()`, Rust, WASM, Python | PASS | `crates/floor/vectors.json`, `app/test/model.test.ts` |
 | 7 Redemption | PASS: exact payout, 209,023 compute units | `evidence/program/part2/results.json` |
-| 8 Full sell-out | PASS: lowest execution 1.0173 × F | `evidence/proof-local/summary.md` |
+| 8 Full sell-out | PASS: lowest execution 1.0174 × F | `evidence/proof-local/summary.md` |
 | 9 Invariant run | PASS: 200 random transactions from five wallets on a second launch, no monotone-check failure; its ledger also closes to the lamport, with 0.516360664 SOL of redemptions | same |
 | 10 Failure injection | PASS: keeper off with a stale bid (redemption settles it and pays exactly), stale bin hint, dust and slippage redemptions refused | same |
 
