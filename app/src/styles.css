@@ -138,3 +138,13 @@ footer span:first-child { color: var(--ink); }
   .push { margin-left: 0; }
 }
 @media (max-width: 520px) { .figures.lead, .meta { grid-template-columns: minmax(0, 1fr); } td:first-child { width: 36%; } }
+
+/* Landing: the scan figure, the launch list, the three programs. */
+.why .big { font-size: clamp(64px, 10vw, 128px); font-weight: 600; letter-spacing: -0.04em; line-height: 0.95; margin-bottom: 16px; }
+.why .big span { font-size: 0.3em; letter-spacing: -0.01em; color: var(--night-muted); }
+table.list th { text-align: left; font-family: var(--mono); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 400; color: var(--muted); padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); }
+table.list td, table.list td:first-child { width: auto; color: var(--ink); font-family: var(--sans); font-size: 14px; padding: 14px 12px 14px 0; }
+table.list td:first-child { font-family: var(--mono); font-size: 13px; } table.list td:last-child { text-align: right; font-family: var(--sans); font-size: 13px; font-weight: 600; }
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 4vw, 56px); }
+.trio > div { border-top: 1px solid var(--ink); padding-top: 18px; } .trio p { margin: 0 0 8px; }
+@media (max-width: 900px) { .trio { grid-template-columns: minmax(0, 1fr); } table.list th:nth-child(3), table.list td:nth-child(3) { display: none; } }

@@ -4,7 +4,12 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import idl from "./ballast.json";
 import { loadFloor, type Floor } from "../../sdk/typescript/src/floor";
-import { buildRedeemTx, explorerUrl, loadModel, REDEEM_FEE_BPS, type Model } from "./model";
+import { BallastClient, LAUNCH_STATE } from "../../sdk/typescript/src/client";
+import { buildRedeemTx, explorerUrl, fFromS, loadModel, REDEEM_FEE_BPS, type Model } from "./model";
+
+/** One row of the landing page's launch list, straight from the `Launch` account. */
+interface LaunchRow { key: string; mint: string; state: number; predictedF: number; lastF: number | null; slot: number }
+const STATE_NAME: Record<number, string> = { 1: "Registered", 2: "Funded", 3: "Migrated", 4: "Cleaned", 5: "Open" };
 
 const HEADLINE_A = "This is an executable buyback floor on Meteora,";
 const HEADLINE_B = "not a promise about prices elsewhere.";
@@ -77,6 +82,29 @@ export function App() {
   const [amount, setAmount] = useState("");
   const [minOut, setMinOut] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
+  const [launches, setLaunches] = useState<LaunchRow[] | null>(null);
+
+  // Landing page (no ?launch=): every launch the program holds on this cluster, newest first.
+  useEffect(() => {
+    if (launchParam) return;
+    type Raw = { publicKey: PublicKey; account: { state: number; baseMint: PublicKey; registeredSlot: { toString(): string }; predictedS: { toString(): string }; sLast: { toString(): string } } };
+    const client = new BallastClient(connection, idl);
+    (client.program.account as never as { launch: { all(): Promise<Raw[]> } }).launch
+      .all()
+      .then((all) =>
+        setLaunches(
+          all
+            .map((x) => ({
+              key: x.publicKey.toBase58(), mint: x.account.baseMint.toBase58(), state: x.account.state,
+              predictedF: fFromS(BigInt(x.account.predictedS.toString())),
+              lastF: x.account.state === LAUNCH_STATE.open ? fFromS(BigInt(x.account.sLast.toString())) : null,
+              slot: Number(x.account.registeredSlot.toString()),
+            }))
+            .sort((p, q) => q.slot - p.slot),
+        ),
+      )
+      .catch((e) => setError(`could not list launches on ${connection.rpcEndpoint}: ${String((e as Error).message ?? e)}`));
+  }, [connection, launchParam]);
 
   useEffect(() => {
     fetch("/floor_wasm.wasm").then((r) => r.arrayBuffer()).then(loadFloor).then(setFloor, (e) => setError(String(e)));
@@ -145,7 +173,14 @@ export function App() {
         `Locked pool absorbs ${pct(m.composition.lockedPool)} of supply at F`,
         `Predicted ${sol(m.predictedF)} before any third-party trade`,
       ]
-    : ["Every number on this page is read from chain", "F comes from the floor crate, never from this page", "Check it with ballast verify"];
+    : [
+        "94 of the 100 newest DBC → DAMM v2 launches on mainnet had no permanently locked liquidity",
+        "Ballast: 85% of the raise locked for ever, 15% resting as one DLMM bid at the floor",
+        "Full sell-out on Meteora's mainnet binaries: lowest execution 1.017 × F",
+        "Every number is read from chain; F comes from the floor crate",
+        "Check any launch with ballast verify",
+      ];
+  const here = `${window.location.pathname}?rpc=${encodeURIComponent(rpc)}`;
 
   return (
     <div className="page" id="top">
@@ -155,11 +190,23 @@ export function App() {
           Ballast
         </a>
         <div className="links">
-          <a href="#floor">Floor</a>
-          <a href="#bid">Bid</a>
-          <a href="#redeem">Redeem</a>
-          <a href="#proof">Proof</a>
-          <a href="#limits">Limits</a>
+          {launchParam ? (
+            <>
+              <a href={here}>All launches</a>
+              <a href="#floor">Floor</a>
+              <a href="#bid">Bid</a>
+              <a href="#redeem">Redeem</a>
+              <a href="#proof">Proof</a>
+              <a href="#limits">Limits</a>
+            </>
+          ) : (
+            <>
+              <a href="#launches">Launches</a>
+              <a href="#how">How it works</a>
+              <a href="#check">Check it</a>
+              <a href="#limits">Limits</a>
+            </>
+          )}
         </div>
         <div className="right">
           <span className="cluster">
@@ -208,10 +255,10 @@ export function App() {
             accounts.
           </p>
           <div className="cta">
-            <a className="btn solid" href="#redeem">
-              Redeem at F less 0.5%
+            <a className="btn solid" href={launchParam ? "#redeem" : "#launches"}>
+              {launchParam ? "Redeem at F less 0.5%" : "Open a launch"}
             </a>
-            <a className="btn" href="#proof">
+            <a className="btn" href={launchParam ? "#proof" : "#check"}>
               Verify it yourself
             </a>
           </div>
@@ -234,11 +281,16 @@ export function App() {
         </div>
 
         <div className="trail">
-          <div className="eyebrow">One launch, end to end</div>
+          <div className="eyebrow">{launchParam ? "One launch, end to end" : "Why it matters"}</div>
           {!launchParam ? (
-            <p className="lede dim">
-              Open a launch: <code>?launch=&lt;launch address&gt;&amp;rpc=&lt;rpc url&gt;</code>
-            </p>
+            <div className="why">
+              <div className="big">
+                94 <span>of 100</span>
+              </div>
+              <p className="lede">of the newest DBC → DAMM v2 launches on mainnet had no permanently locked liquidity at all.</p>
+              <p className="lede dim">Only 2 held a locked-liquidity floor above half their pool price. A Ballast launch locks 85% of the raise for ever and rests the other 15% as a bid at the floor.</p>
+              <p className="caption">Measured with `ballast scan` over mainnet on 8 Oct 2026: evidence/scanner/scan-100-2026-10-08.json.</p>
+            </div>
           ) : !m ? (
             <p className="lede dim">{error ? "The launch could not be read." : "Reading the launch from chain…"}</p>
           ) : (
@@ -478,6 +530,97 @@ export function App() {
             </section>
           </main>
         </>
+      )}
+
+      {!launchParam && (
+        <main>
+          <section id="launches">
+            <div className="intro">
+              <div>
+                <div className="eyebrow">Launches on this cluster</div>
+                <h2>Pick one and try to break it.</h2>
+              </div>
+              <p>Every launch the program holds, read from its accounts. Open one to see its floor, its bid, redemption and the transactions that prove it.</p>
+            </div>
+            {launches === null ? (
+              <p className="q">{error ? "" : "Reading launches from chain…"}</p>
+            ) : launches.length === 0 ? (
+              <p className="q">No launch exists on this cluster yet.</p>
+            ) : (
+              <table className="list">
+                <thead>
+                  <tr>
+                    <th>Launch</th>
+                    <th>State</th>
+                    <th>Predicted F (lower bound)</th>
+                    <th>Floor F (last recorded)</th>
+                    <th />
+                  </tr>
+                </thead>
+                <tbody>
+                  {launches.map((l) => (
+                    <tr key={l.key}>
+                      <td>{addr(l.key, short(l.key))}</td>
+                      <td>{STATE_NAME[l.state] ?? l.state}</td>
+                      <td>{sol(l.predictedF)} SOL/token</td>
+                      <td>{l.lastF === null ? "not open yet" : `${sol(l.lastF)} SOL/token`}</td>
+                      <td>{l.state === LAUNCH_STATE.open ? <a href={`${here}&launch=${l.key}`}>Open the floor →</a> : "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </section>
+
+          <section id="how">
+            <div className="intro">
+              <div>
+                <div className="eyebrow">How it works</div>
+                <h2>Three Meteora programs, one floor.</h2>
+              </div>
+              <p>F is the price at which the locked pool and the vault's bid can together absorb every outstanding token. Each program carries a part of it; none is decoration.</p>
+            </div>
+            <div className="trio">
+              <div>
+                <h3>
+                  <i>01</i> DBC
+                </h3>
+                <p className="q">The launch class</p>
+                <p>The curve's config is checked field by field on-chain, and the predicted floor is recorded in the pool-creation transaction, before any third-party trade.</p>
+              </div>
+              <div>
+                <h3>
+                  <i>02</i> DAMM v2
+                </h3>
+                <p className="q">The locked liquidity</p>
+                <p>85% of the raise migrates into two permanently locked positions held by the program. That liquidity is L in the floor equation.</p>
+              </div>
+              <div>
+                <h3>
+                  <i>03</i> DLMM
+                </h3>
+                <p className="q">The vault's bid</p>
+                <p>The other 15% rests as one limit order in the highest bin at or below F. Fills are burned, which raises F for everyone who remains.</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="check">
+            <div className="intro">
+              <div>
+                <div className="eyebrow">Check it</div>
+                <h2>A claim built to be tested.</h2>
+              </div>
+              <p>The verifier recomputes the prediction, F, its whole history and the vault's ledger from raw accounts. On Meteora's mainnet binaries, a full sell-out of every team token executed no lower than 1.017 × F.</p>
+            </div>
+            <pre>ballast verify &lt;launch&gt; --rpc {rpc}</pre>
+          </section>
+
+          <section id="limits" className="limits">
+            <div className="eyebrow">Limits</div>
+            <p>{LIMITS}</p>
+          </section>
+        </main>
       )}
 
       <footer>
