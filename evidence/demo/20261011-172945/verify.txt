@@ -1,0 +1,31 @@
+Launch:            Ca7Rw4v56TJJMVvkW5vD9k5h9aSifefZyVkoFcRywHXq   class: proof (10 SOL)
+Prediction:        6.7019e-9 SOL/token  (recorded in the pool-creation transaction, before any third-party trade)
+Realised at open:  6.7919e-9 SOL/token  (+1.34% vs prediction)
+Recomputed F now:  6.7934e-9 SOL/token  (theoretical floor F)
+Backing:           L = 3.0702e31 (locked pool absorbs 100.0% of S at F)   V = 0.000059 SOL (vault 0.000000 + resting bid 0.000059)
+Outstanding S:     638576673 tokens
+
+PASS  Launch                 owner Ballast, seeds ["launch", 2grGr373VLUeRi1QATautFvBpvDyR3Luz9f4BsifXbe1]
+PASS  Class                  proof (10 SOL); DBC config Hma9gP44P2huh8xZBxfRxeXFL2K1MrJ2uuY37BwAgsg8
+PASS  Config hash            sha256 over the curve fields recomputed from the DBC config (§7 rule 3)
+PASS  Prediction             6.7019e-9 SOL/token recorded; independent derivation from the config 6.7178e-9 (band 6.7178e-9…6.7178e-9); a lower bound
+PASS  DBC pool               config, base mint, and pool creator = creator_auth (D-011)
+PASS  Recorded before trade  registered in the pool's first transaction, slot 18896 (5axcdQ9d6ZY4)
+PASS  DAMM pool              canonical migrated pool 6RJhdXg6Z9bqf7HWq6ZEeovkFGeKsGYaaSKokuhoomzM; OnlyB, no compounding, full range
+PASS  Permanent              L = 3.0702e31 (both positions permanent, unlocked = vested = 0; ≥ L at open)
+PASS  PDA owners             partner NFT held by partner_auth, creator NFT by creator_auth
+PASS  Vault                  WSOL account of partner_auth, 0.000000 SOL on hand
+PASS  Supply                 S = 638576673 tokens outstanding; mint authority None, freeze authority None
+PASS  Invariant              V/F + L(1/√F − 1/√P_max) ≥ S at the recomputed F, and F ≥ the last recorded F
+PASS  Realised ≥ predicted   +1.34% vs the prediction
+PASS  Bid                    0.000059 SOL resting @ bin -11906 = 6.7901e-9 SOL/token, owned by partner_auth; the highest bin at or below F
+PASS  History                10 floor updates from program events, never decreasing; the last equals s_last
+PASS  Ledger                 V = 1.540404041 in − 1.540345493 out (fills 1.540345493, redemptions 0.000000000), to the lamport; supply = minted − burned exactly; counters = event sums
+
+RESULT: FLOOR VERIFIED ✓  F = 6.7934e-9 SOL/token (predicted 6.7019e-9 at slot 18896)
+
+--- paste this into https://github.com/SamarthSrivastavaa/ballast/issues/new?template=i-verified.yml ---
+command: ballast verify Ca7Rw4v56TJJMVvkW5vD9k5h9aSifefZyVkoFcRywHXq --cluster local
+checks passed: 16 of 16
+RESULT: FLOOR VERIFIED ✓  F = 6.7934e-9 SOL/token (predicted 6.7019e-9 at slot 18896)
+---

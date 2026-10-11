@@ -17,7 +17,8 @@ import {
 import { airdrop, conn, payer, REPO } from "./env";
 import { WSOL } from "./config";
 
-const KEYS = resolve(REPO, "tests/integration/p0/.state/keys.json");
+// Mainnet wallets hold real SOL: their keys live outside the repository (BALLAST_MAINNET_KEYS).
+const KEYS = process.env.BALLAST_CLUSTER === "mainnet" ? resolve(process.env.BALLAST_MAINNET_KEYS!) : resolve(REPO, "tests/integration/p0/.state/keys.json");
 
 function loadKeys(): Record<string, number[]> {
   return existsSync(KEYS) ? JSON.parse(readFileSync(KEYS, "utf8")) : {};

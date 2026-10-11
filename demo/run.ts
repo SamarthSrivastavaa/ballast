@@ -22,11 +22,14 @@ import { resolve } from "node:path";
 import { Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
 import DLMM from "@meteora-ag/dlmm";
 import { deriveDammV2PoolAddress } from "@meteora-ag/dynamic-bonding-curve-sdk";
-import { assertLocal, conn, LOCAL_RPC, payer, PAYER_KEY, REPO, send } from "../tests/integration/p0/src/env";
+import { assertLocal, CLUSTER, conn, CU_PRICE, LOCAL_RPC, payer, PAYER_KEY, REPO, send } from "../tests/integration/p0/src/env";
+import { Keeper } from "../keeper/src/keeper";
+import { BallastClient } from "../sdk/typescript/src/client";
+import { loadFloor } from "../sdk/typescript/src/floor";
 import { PROOF, sqrtPriceQ64, WSOL } from "../compiler/src/canon";
 import { buyPartialFill, MIGRATION_DAMM_CONFIG, migrate, rawData, virtualPool } from "../tests/integration/p0/src/flow";
 import { ata, ensureAtaIx, funded, tokenBalanceOrZero, tokenBalanceStrict, wallet } from "../tests/integration/p0/src/wallets";
-import { accounts, ballast, pdas } from "../tests/integration/program/src/client";
+import { accounts, ballast, IDL, pdas } from "../tests/integration/program/src/client";
 import { launch, type Launch } from "../tests/integration/program/src/launch";
 import {
   bestRoute, dammSell, keeperRefresh, liveInputs, nftAccountOf, OPT, positionOf, sellIntoBid, openAtFloor, waitSlots, type Opened,
@@ -39,8 +42,14 @@ const F = (s: bigint) => (Number(s) / 2 ** 64) ** 2 * 1e-3; // SOL per token, di
 const sci = (x: number) => x.toExponential(4);
 const sol = (lamports: bigint | number) => (Number(lamports) / 1e9).toFixed(9).replace(/0+$/, "").replace(/\.$/, "");
 const tok = (base: bigint) => (Number(base) / 1e6).toLocaleString("en-US", { maximumFractionDigits: 0 });
-const tx = (sig: string) => `https://explorer.solana.com/tx/${sig}?cluster=custom&customUrl=${encodeURIComponent(LOCAL_RPC)}`;
-const ad = (a: PublicKey | string) => `https://explorer.solana.com/address/${a.toString()}?cluster=custom&customUrl=${encodeURIComponent(LOCAL_RPC)}`;
+const EXPLORER = CLUSTER === "mainnet" ? "" : CLUSTER === "devnet" ? "?cluster=devnet" : `?cluster=custom&customUrl=${encodeURIComponent(LOCAL_RPC)}`;
+const tx = (sig: string) => `https://explorer.solana.com/tx/${sig}${EXPLORER}`;
+const ad = (a: PublicKey | string) => `https://explorer.solana.com/address/${a.toString()}${EXPLORER}`;
+const WHERE = CLUSTER === "mainnet" ? "MAINNET" : CLUSTER === "devnet" ? "devnet" : "local validator, Meteora mainnet binaries";
+// Real clusters, and a local rehearsal of them (DEMO_AMOUNTS=mainnet), fund only what the curve needs.
+const EXACT = CLUSTER !== "localnet" || process.env.DEMO_AMOUNTS === "mainnet";
+const FUND = EXACT ? { admin: 0.05, creator: 0.05, buyers: [3.6, 3.6, 3.35] } : { admin: 1, creator: 5, buyers: [12, 12, 12] };
+const BUYS = EXACT ? [3_500_000_000n, 3_500_000_000n, 3_200_000_000n] : [3_500_000_000n, 3_500_000_000n, 8_000_000_000n];
 
 function banner(step: string, title: string): void {
   console.log(`\n${C.b}${C.c}━━ ${step.toUpperCase()} ━━${C.x}  ${C.b}${title}${C.x}\n`);
@@ -114,12 +123,13 @@ async function reset(): Promise<void> {
   banner("reset", "A fresh DBC config, a fresh class, funded wallets");
   if (!(await conn.getAccountInfo(ballast.programId))?.executable) {
     execFileSync("solana", ["program", "deploy", "-u", LOCAL_RPC, "-k", resolve(REPO, PAYER_KEY), "--program-id",
-      resolve(REPO, "target/deploy/ballast-keypair.json"), resolve(REPO, "target/deploy/ballast.so")], { stdio: ["ignore", "inherit", "inherit"] });
+      resolve(REPO, "target/deploy/ballast-keypair.json"), resolve(REPO, "target/deploy/ballast.so"),
+      ...(CLUSTER === "mainnet" ? ["--with-compute-unit-price", String(CU_PRICE), "--max-sign-attempts", "100", "--use-rpc"] : [])], { stdio: ["ignore", "inherit", "inherit"] });
   }
   const now = new Date();
   const id = now.toISOString().replace(/[-:]/g, "").replace("T", "-").slice(0, 15);
   const s: State = { id, classConfig: PublicKey.default, steps: [] };
-  const admin = await funded("program.admin", 1);
+  const admin = await funded("program.admin", FUND.admin);
   if (!(await conn.getAccountInfo(pdas.global()))) {
     await send("payer WSOL ATA (treasury)", [ensureAtaIx(WSOL, payer.publicKey)]);
     const ix = await ballast.methods.initializeGlobal(admin.publicKey)
@@ -137,12 +147,12 @@ async function reset(): Promise<void> {
     SystemProgram.transfer({ fromPubkey: payer.publicKey, toPubkey: partnerAuth, lamports: 200_000_000 }),
     ensureAtaIx(WSOL, partnerAuth),
   ]);
-  await funded(`demo.${id}.creator`, 5);
-  for (const i of [1, 2, 3]) await funded(`demo.${id}.buyer${i}`, 12);
+  await funded(`demo.${id}.creator`, FUND.creator);
+  for (const i of [1, 2, 3]) await funded(`demo.${id}.buyer${i}`, FUND.buyers[i - 1]);
   save(s);
   rows([
     ["Demo id", id],
-    ["Cluster", "local validator, Meteora mainnet binaries"],
+    ["Cluster", WHERE],
     ["Ballast program", ballast.programId.toBase58()],
     ["DBC config", s.classConfig.toBase58()],
     ["Class (10 SOL)", pdas.class(s.classConfig).toBase58()],
@@ -164,7 +174,7 @@ async function doLaunch(): Promise<void> {
   note(s, "launch", "launch: DBC pool + dust buy + DLMM pair + transfer_pool_creator + register_launch", l.landed.signature);
   const [pF, pG] = [F(s.predictedS), graduationPrice()];
   const prediction = {
-    cluster: "local validator (Meteora mainnet binaries)", mint: l.baseMint.publicKey.toBase58(), launch: l.launch.toBase58(),
+    cluster: WHERE, mint: l.baseMint.publicKey.toBase58(), launch: l.launch.toBase58(),
     dbcPool: l.pool.toBase58(), dlmmPair: l.lbPair.toBase58(), predictedS: s.predictedS.toString(), predictedFSolPerToken: pF,
     recordedAtSlot: Number(rec.registeredSlot.toString()), signature: l.landed.signature,
     graduationPriceSolPerToken: pG, floorOverGraduationPrice: pF / pG, worstCaseFromGraduationPct: (1 - pF / pG) * 100,
@@ -189,7 +199,7 @@ async function buy(): Promise<void> {
   const s = load();
   if (!s.l) throw new Error("run demo:launch first");
   banner("buy", "Three wallets buy on Meteora's Dynamic Bonding Curve until it graduates");
-  const amounts = [3_500_000_000n, 3_500_000_000n, 8_000_000_000n];
+  const amounts = BUYS;
   for (const [i, w] of buyers(s).entries()) {
     const before = BigInt(await conn.getBalance(w.publicKey));
     const t = await buyPartialFill(`demo buy ${i + 1}`, w, s.l.pool, amounts[i]);
@@ -253,6 +263,86 @@ async function graduate(): Promise<void> {
   ok(`burn_leftover       ${C.dim}${tx(bu.signature)}${C.x}`);
 }
 
+/** The `Opened` handle the sell helpers need, rebuilt from chain state (after the keeper's cranks). */
+async function openedFromView(s: State): Promise<Opened> {
+  const v = await new BallastClient(conn, IDL).view(s.l!.launch);
+  const pair = await DLMM.create(conn, v.lbPair, OPT);
+  return {
+    classConfig: s.classConfig, l: s.l!, base: v.baseMint, partnerAuth: v.partnerAuth, staging: v.stagingBase, stagingQuote: v.stagingQuote, creator: creatorOf(s),
+    dammPool: v.dammPool, partnerPosition: v.partnerPosition!, creatorPosition: v.creatorPosition!, partnerNft: v.partnerNft!, creatorNft: v.creatorNft!,
+    reserveX: pair.lbPair.reserveX, reserveY: pair.lbPair.reserveY,
+  };
+}
+
+async function keeper(s: State): Promise<Keeper> {
+  const fl = await loadFloor(readFileSync(resolve(REPO, "target/wasm32-unknown-unknown/release/floor_wasm.wasm")));
+  return new Keeper(conn, new BallastClient(conn, IDL, payer.publicKey), payer, {
+    floor: fl,
+    log: (l) => {
+      if (l.signature) note(s, "crank", l.action, l.signature);
+      console.log(l.error ? `  ${C.y}…${C.x} ${l.action}: ${l.error.slice(0, 140)}` : `  ${C.g}✓${C.x} ${l.action.padEnd(20)} ${C.dim}${l.signature ? tx(l.signature) : ""}${C.x}`);
+    },
+  });
+}
+
+/**
+ * Graduation to an open floor by the permissionless keeper, the way a real launch runs: settle,
+ * migrate only if nobody has (on mainnet Meteora's keeper migrates 10 SOL pools itself), burn the
+ * leftover, open. DEMO_MIGRATE_FIRST=1 rehearses "Meteora migrated before we settled" locally.
+ */
+async function crank(): Promise<void> {
+  const s = load();
+  if (!s.l) throw new Error("run demo:launch first");
+  banner("crank", "The keeper: settle, migrate if nobody has, burn the leftover, open the floor");
+  if (process.env.DEMO_MIGRATE_FIRST === "1" && CLUSTER === "localnet") {
+    const mig = await migrate("someone else migrates first", s.l.pool);
+    note(s, "crank", "migration_damm_v2 (before settle, by another party)", mig.landed.signature);
+    ok(`migration by another party, before settle_graduation  ${C.dim}${tx(mig.landed.signature)}${C.x}`);
+  }
+  const k = await keeper(s);
+  let state = 0;
+  for (let pass = 0; pass < 40; pass++) {
+    await k.crank(s.l.launch).catch((e) => console.log(`  ${C.y}…${C.x} ${String((e as Error).message ?? e).slice(0, 160)}`));
+    state = (await accounts.launch.fetch(s.l.launch)).state;
+    if (state === 5) break;
+    await new Promise((r) => setTimeout(r, CLUSTER === "localnet" ? 800 : 4000));
+  }
+  if (state !== 5) throw new Error(`the launch is in state ${state}, not Open, after 40 keeper passes`);
+  s.P = await openedFromView(s);
+  const rec = await accounts.launch.fetch(s.l.launch);
+  s.sOpen = BigInt(rec.sOpen.toString());
+  save(s);
+  const [fOpen, fPred] = [F(s.sOpen), F(s.predictedS!)];
+  rows([
+    ["Migration fee → vault", `${sol(BigInt(rec.migrationFee.toString()))} SOL`],
+    ["Vault (PDA)", ad(s.P.l.vault)],
+    ["DAMM v2 pool", ad(s.P.dammPool)],
+    ["Locked positions", `${s.P.partnerPosition.toBase58()}, ${s.P.creatorPosition.toBase58()}`],
+    ["DLMM pair", ad(s.P.l.lbPair)],
+    ["Limit order", ad(new PublicKey(rec.bidOrder))],
+    ["Bid", `${sol(BigInt(rec.bidQuoteCommitted.toString()))} SOL resting in bin ${rec.bidBinId}`],
+  ]);
+  big([
+    `${C.b}FLOOR OPEN   F = ${sci(fOpen)} SOL/token${C.x}`,
+    `predicted before any third-party trade: ${sci(fPred)}   realised: ${C.g}${fOpen >= fPred ? "+" : ""}${((fOpen / fPred - 1) * 100).toFixed(2)}%${C.x}`,
+  ]);
+}
+
+/** Mainnet housekeeping: move what is left in the launch's wallets back to the payer. */
+async function sweep(): Promise<void> {
+  const s = load();
+  banner("sweep", "Return the wallets' remaining SOL to the payer");
+  for (const [name, w] of [["creator", creatorOf(s)], ...buyers(s).map((b, i) => [`buyer ${i + 1}`, b] as const)] as [string, Keypair][]) {
+    const bal = await conn.getBalance(w.publicKey);
+    const keep = 10_000 + (CU_PRICE > 0 ? 5_000 : 0);
+    if (bal <= keep) continue;
+    const t = await send(`sweep ${name}`, [SystemProgram.transfer({ fromPubkey: w.publicKey, toPubkey: payer.publicKey, lamports: bal - keep })], [w], { feePayer: w });
+    note(s, "sweep", `sweep ${name}`, t.signature);
+    ok(`${name}: ${sol(bal - keep)} SOL back to the payer`);
+  }
+  save(s);
+}
+
 async function floor(): Promise<void> {
   const s = load();
   if (!s.P) throw new Error("run demo:graduate first");
@@ -281,11 +371,21 @@ async function floor(): Promise<void> {
 
 async function dump(): Promise<void> {
   const s = load();
-  if (!s.P || !s.alt) throw new Error("run demo:floor first");
+  if (!s.P) throw new Error("run demo:floor (or demo:crank) first");
   banner("dump", "Sell every holder token. Each chunk goes to the better of the DLMM bid and DAMM v2");
   const P = s.P;
-  const alt = (await conn.getAddressLookupTable(s.alt)).value;
-  if (!alt) throw new Error("lookup table not found");
+  // After demo:floor the fixture's lookup table is used; after demo:crank the keeper refreshes.
+  const alt = s.alt ? (await conn.getAddressLookupTable(s.alt)).value : null;
+  const k = alt ? null : await keeper(s);
+  const refresh = async (): Promise<boolean> => {
+    if (alt) {
+      const r = await keeperRefresh(P, alt);
+      if (!r.err) note(s, "dump", "keeper refresh_floor", r.signature);
+      return !r.err;
+    }
+    await k!.crank(P.l.launch);
+    return true;
+  };
   const team = buyers(s);
   const held = await Promise.all(team.map((w) => tokenBalanceStrict(ata(P.base, w.publicKey))));
   const circulating = held.reduce((a, b) => a + b, 0n);
@@ -309,19 +409,12 @@ async function dump(): Promise<void> {
       const price = (Number(quoted) / Number(b)) * 1e-3;
       console.log(`  ${String(sells.length).padStart(3)}  ${venue === "DLMM bid" ? C.g : C.c}${venue.padEnd(9)}${C.x}  ${tok(b).padStart(11)}     ${sci(price).padStart(12)}      ${pct.toFixed(1).padStart(5)}%  ${"█".repeat(Math.round(pct / 4))}`);
       const slot = await conn.getSlot("confirmed");
-      if (venue === "DLMM bid" && slot >= lastRefresh + 11) {
-        const r = await keeperRefresh(P, alt);
-        if (!r.err) {
-          note(s, "dump", "keeper refresh_floor", r.signature);
-          lastRefresh = slot;
-        }
-      }
+      if (venue === "DLMM bid" && slot >= lastRefresh + 11 && (await refresh())) lastRefresh = slot;
       await send("WSOL ATA (after unwrap)", [ensureAtaIx(WSOL, w.publicKey)]);
     }
   }
   await waitSlots(12);
-  const fin = await keeperRefresh(P, alt);
-  if (!fin.err) note(s, "dump", "final refresh_floor", fin.signature);
+  await refresh();
   s.sells = sells;
   for (const x of sells) note(s, "dump", `sell ${x.n} (${x.venue})`, x.signature);
   save(s);
@@ -384,7 +477,7 @@ async function verify(): Promise<void> {
   const s = load();
   if (!s.l) throw new Error("run demo:launch first");
   banner("verify", "Don't trust this script. One command, raw accounts, the same floor crate");
-  const cmd = ["verify", s.l.baseMint.publicKey.toBase58(), "--cluster", "local"];
+  const cmd = ["verify", s.l.baseMint.publicKey.toBase58(), ...(CLUSTER === "localnet" ? ["--cluster", "local"] : CLUSTER === "devnet" ? ["--cluster", "devnet"] : ["--rpc", LOCAL_RPC])];
   console.log(`  ${C.b}$ ballast ${cmd.join(" ")}${C.x}\n`);
   let text: string;
   let code = 0;
@@ -414,12 +507,17 @@ function chart(): void {
   ]);
 }
 
-const STEPS: Record<string, () => Promise<void> | void> = { reset, launch: doLaunch, buy, graduate, floor, dump, verify, chart };
+const STEPS: Record<string, () => Promise<void> | void> = { reset, launch: doLaunch, buy, graduate, floor, dump, verify, chart, crank, sweep };
+/** `all` is the filmed sequence; `keeper-path` is the mainnet sequence (the keeper does graduation). */
+const SEQUENCES: Record<string, string[]> = {
+  all: ["reset", "launch", "buy", "graduate", "floor", "dump", "verify", "chart"],
+  "keeper-path": ["reset", "launch", "buy", "crank", "dump", "verify", "chart"],
+};
 (async () => {
   const which = process.argv[2] ?? "";
-  const list = which === "all" ? Object.keys(STEPS) : [which];
+  const list = SEQUENCES[which] ?? [which];
   for (const k of list) {
-    if (!STEPS[k]) throw new Error(`unknown step "${k}" — one of: ${Object.keys(STEPS).join(", ")}, all`);
+    if (!STEPS[k]) throw new Error(`unknown step "${k}" — one of: ${Object.keys(STEPS).join(", ")}, all, keeper-path`);
     await STEPS[k]();
   }
   process.exit(0);

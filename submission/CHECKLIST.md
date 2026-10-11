@@ -41,7 +41,7 @@ Updated by Claude as work lands. ⟦FILL⟧ items need you.
 - [ ] Superteam Earn, India: paste from `submission/EARN_INDIA.md` by Tue 09:00 IST (not editable after)
 
 ## Known open items
-- Mainnet harness mode is not written yet (the harness refuses mainnet by design). It is needed only after `GO MAINNET`.
+- Mainnet path: written, guarded and rehearsed locally (`scripts/mainnet/README.md`). It needs from you: `GO MAINNET`, a funded keypair outside the repo (15 SOL), a mainnet RPC URL, token name/symbol/metadata URL.
 - Devnet cannot host a launch (devnet's DBC writes a config version the program refuses). All launch evidence is on a local validator running Meteora's mainnet binaries.
 - Licence: the repo already carries Apache-2.0. Keep it or change it: ⟦FILL⟧
 - No external audit. Upgrade authority is a single project key.

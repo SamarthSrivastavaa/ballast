@@ -55,8 +55,13 @@ keeper migrates → `settle_graduation`, `burn_leftover`, `open` → team sells 
 `ballast verify --cluster mainnet`. Team wallets are listed in `submission/TRACTION.md` and excluded
 from every user count.
 
-## Not done yet
+## Ready
 
-The harness refuses mainnet by design. The guarded mainnet mode (cluster check, key path from the
-environment, priority fees, the literal `GO MAINNET` gate) is written only after the decision, or
-overnight if time allows; it is listed in `CHECKLIST.md` until it exists.
+The guarded mainnet path exists and was rehearsed locally on 11 Oct with the exact mainnet amounts
+and with another party migrating before `settle_graduation` (as Meteora's keeper will): every step
+passed, 73 sells, worst fill 0.9984 × F, verifier PASS. Commands: `scripts/mainnet/README.md`. The
+harness refuses mainnet unless `BALLAST_GO_MAINNET` is exactly `GO MAINNET`, simulates every
+transaction before sending, and keeps keys outside the repository.
+
+Not rehearsable without spending: mainnet congestion, priority-fee levels, a real RPC under the
+547-transaction deploy, and other people trading the pool.

@@ -34,10 +34,31 @@ export const EVIDENCE = resolve(REPO, "evidence/p0");
  * path stays loopback-only. Devnet uses its own payer key, pins devnet's genesis, never touches
  * mainnet, and funds wallets by transfer from the payer (devnet airdrops are rate-limited).
  */
-export const CLUSTER: "localnet" | "devnet" = process.env.BALLAST_CLUSTER === "devnet" ? "devnet" : "localnet";
+export const CLUSTER: "localnet" | "devnet" | "mainnet" =
+  process.env.BALLAST_CLUSTER === "devnet" ? "devnet" : process.env.BALLAST_CLUSTER === "mainnet" ? "mainnet" : "localnet";
+/**
+ * `BALLAST_CLUSTER=mainnet` signs and sends REAL transactions with REAL SOL. It exists for the
+ * mainnet Proof launch only (submission/MAINNET.md) and refuses to load unless all of these hold:
+ *   BALLAST_GO_MAINNET   exactly "GO MAINNET" — the owner's approval, typed by the owner (D-007)
+ *   BALLAST_MAINNET_RPC  an RPC URL that accepts transactions
+ *   BALLAST_MAINNET_PAYER  path to the funded keypair, outside this repository
+ *   BALLAST_MAINNET_KEYS   path for the launch's wallets' keys, outside this repository
+ * On mainnet every transaction is simulated first and is not sent if the simulation fails.
+ */
+if (CLUSTER === "mainnet") {
+  if (process.env.BALLAST_GO_MAINNET !== "GO MAINNET") throw new Error('refusing mainnet: BALLAST_GO_MAINNET is not exactly "GO MAINNET"');
+  for (const k of ["BALLAST_MAINNET_RPC", "BALLAST_MAINNET_PAYER", "BALLAST_MAINNET_KEYS"]) {
+    if (!process.env[k]) throw new Error(`refusing mainnet: ${k} is not set`);
+  }
+  for (const k of ["BALLAST_MAINNET_PAYER", "BALLAST_MAINNET_KEYS"]) {
+    if (resolve(process.env[k]!).startsWith(resolve(__dirname, "../../../.."))) throw new Error(`refusing mainnet: ${k} points inside the repository`);
+  }
+}
 const DEVNET_GENESIS = "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG";
 export const LOCAL_RPC =
-  process.env.LOCALNET_RPC_URL ?? (CLUSTER === "devnet" ? "https://api.devnet.solana.com" : "http://127.0.0.1:8899");
+  CLUSTER === "mainnet" ? process.env.BALLAST_MAINNET_RPC! : process.env.LOCALNET_RPC_URL ?? (CLUSTER === "devnet" ? "https://api.devnet.solana.com" : "http://127.0.0.1:8899");
+/** Priority fee in micro-lamports per compute unit (mainnet default 20,000; 0 elsewhere). */
+export const CU_PRICE = Number(process.env.BALLAST_CU_PRICE ?? (CLUSTER === "mainnet" ? 20_000 : 0));
 export const MAINNET_RPC = process.env.MAINNET_RPC_URL ?? "https://api.mainnet-beta.solana.com";
 const MAINNET_GENESIS = "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d";
 
@@ -47,11 +68,16 @@ export const mainnet = new Connection(MAINNET_RPC, "confirmed");
 export function loadKeypair(path: string): Keypair {
   return Keypair.fromSecretKey(Uint8Array.from(JSON.parse(readFileSync(resolve(REPO, path), "utf8"))));
 }
-export const PAYER_KEY = CLUSTER === "devnet" ? ".keys/devnet/payer.json" : ".keys/devnet/localnet.json";
+export const PAYER_KEY = CLUSTER === "mainnet" ? process.env.BALLAST_MAINNET_PAYER! : CLUSTER === "devnet" ? ".keys/devnet/payer.json" : ".keys/devnet/localnet.json";
 export const payer = loadKeypair(PAYER_KEY);
 
 /** This harness signs and sends: it may only ever talk to a loopback, non-mainnet validator (D-007). */
 export async function assertLocal(): Promise<void> {
+  if (CLUSTER === "mainnet") {
+    const g = await conn.getGenesisHash();
+    if (g !== MAINNET_GENESIS) throw new Error(`refusing: BALLAST_CLUSTER=mainnet but genesis is ${g}`);
+    return;
+  }
   if (CLUSTER === "devnet") {
     const g = await conn.getGenesisHash();
     if (g !== DEVNET_GENESIS) throw new Error(`refusing: BALLAST_CLUSTER=devnet but genesis is ${g}`);
@@ -125,7 +151,7 @@ async function getMany(c: Connection, keys: PublicKey[], slice: boolean) {
 
 export async function discover(label: string, keys: PublicKey[]): Promise<void> {
   // The clone check names mainnet accounts to pin for the local validator; on devnet they already exist.
-  if (CLUSTER === "devnet") return;
+  if (CLUSTER !== "localnet") return;
   const uniq = [...new Map(keys.map((k) => [k.toBase58(), k])).values()];
   const local = await getMany(conn, uniq, true);
   const missing = uniq.filter((_, i) => local[i] === null);
@@ -189,12 +215,25 @@ export async function send(
   const feePayer = opts.feePayer ?? payer;
   const all = [
     ...(opts.cu ? [ComputeBudgetProgram.setComputeUnitLimit({ units: opts.cu })] : []),
+    ...(CU_PRICE > 0 ? [ComputeBudgetProgram.setComputeUnitPrice({ microLamports: CU_PRICE })] : []),
     ...ixs,
   ];
   const keys = [feePayer.publicKey, ...all.flatMap((ix) => [ix.programId, ...ix.keys.map((k) => k.pubkey)])];
   await discover(label, keys);
 
   const uniqSigners = [...new Map([feePayer, ...signers].map((s) => [s.publicKey.toBase58(), s])).values()];
+  // Mainnet: never pay for a transaction that would fail. Simulate first; if it fails, report the
+  // failure to a caller that handles failures, or stop.
+  if (CLUSTER === "mainnet") {
+    const { blockhash } = await conn.getLatestBlockhash("confirmed");
+    const probe = new VersionedTransaction(new TransactionMessage({ payerKey: feePayer.publicKey, recentBlockhash: blockhash, instructions: all }).compileToV0Message(opts.alts ?? []));
+    const sim = await conn.simulateTransaction(probe, { sigVerify: false, replaceRecentBlockhash: true, commitment: "confirmed" });
+    if (sim.value.err) {
+      const logs = sim.value.logs ?? [];
+      if (!opts.expectFail) throw new Error(`${label}: simulation failed, NOT SENT ${JSON.stringify(sim.value.err)}\n${logs.join("\n")}`);
+      return { label, signature: "(not sent: simulation failed)", slot: sim.context.slot, err: sim.value.err, logs, cu: sim.value.unitsConsumed ?? null };
+    }
+  }
   let signature = "";
   // A transaction whose blockhash expired before it confirmed can no longer land, so resending it
   // with a fresh blockhash is safe; the local validator occasionally drops one under load.
@@ -265,7 +304,7 @@ export async function sendSdkTx(label: string, tx: Transaction, signers: Keypair
 }
 
 export async function airdrop(to: PublicKey, sol: number): Promise<void> {
-  if (CLUSTER === "devnet") {
+  if (CLUSTER !== "localnet") {
     // Devnet airdrops are rate-limited: wallets are funded from the payer instead.
     await send(`fund ${to.toBase58().slice(0, 8)} ${sol} SOL`, [
       SystemProgram.transfer({ fromPubkey: payer.publicKey, toPubkey: to, lamports: Math.round(sol * LAMPORTS_PER_SOL) }),

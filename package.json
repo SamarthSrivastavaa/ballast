@@ -34,7 +34,9 @@
     "demo:verify": "tsx demo/run.ts verify",
     "demo:chart": "tsx demo/run.ts chart",
     "demo:all": "tsx demo/run.ts all",
-    "mainnet:dryrun": "tsx scripts/mainnet/dry-run.ts"
+    "mainnet:dryrun": "tsx scripts/mainnet/dry-run.ts",
+    "demo:crank": "tsx demo/run.ts crank",
+    "demo:keeper-path": "tsx demo/run.ts keeper-path"
   },
   "devDependencies": {
     "@coral-xyz/anchor": "0.31.1",

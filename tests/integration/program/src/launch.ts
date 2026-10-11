@@ -89,7 +89,7 @@ export async function launch(label: string, classConfig: PublicKey, creator: Key
   // 1. pool creation (the SDK only reads the config, which exists).
   const createPool = (
     await dbcClient.creator.createPool({
-      name: "Ballast launch", symbol: "BLST", uri: "https://example.invalid/launch.json",
+      name: process.env.BALLAST_TOKEN_NAME ?? "Ballast launch", symbol: process.env.BALLAST_TOKEN_SYMBOL ?? "BLST", uri: process.env.BALLAST_TOKEN_URI ?? "https://example.invalid/launch.json",
       payer: payer.publicKey, poolCreator: creator.publicKey, config: poolConfig, baseMint: baseMint.publicKey,
     })
   ).instructions.filter((ix) => !ix.programId.equals(ComputeBudgetProgram.programId));

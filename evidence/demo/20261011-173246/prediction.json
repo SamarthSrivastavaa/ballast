@@ -1,0 +1,14 @@
+{
+  "cluster": "local validator, Meteora mainnet binaries",
+  "mint": "4Hq5cLVoV9YpS5JDBgJpnmPJEvvAsC6MqVRXJC1XAreF",
+  "launch": "8UtjF1PmpovFHoH1au51ReYotU4Q52KBwaqdBxmLtmwC",
+  "dbcPool": "7RSMMq7KtnBXLco9kdWjXuyLd4tEGcUVv7N9n2etwkUB",
+  "dlmmPair": "JaxTbc1cfUbX4W5otDpG9YH6ezUoHQSSjhy7q1vkbZG",
+  "predictedS": "47755047807748143",
+  "predictedFSolPerToken": 6.7019182091506225e-9,
+  "recordedAtSlot": 19325,
+  "signature": "23GrdgGTMfs2hiF6NoQ9yPiwGRwwT46SdmWMyLGvDx5DaTZk1kBDE5dTP5UQ9WcEDjk1vRod9mMvxJwH9DYaYGap",
+  "graduationPriceSolPerToken": 2.59776e-8,
+  "floorOverGraduationPrice": 0.2579883518550837,
+  "worstCaseFromGraduationPct": 74.20116481449163
+}
