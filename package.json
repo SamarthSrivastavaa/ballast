@@ -24,7 +24,17 @@
     "test:wasm": "cargo build -p floor-wasm --target wasm32-unknown-unknown --release && tsx sdk/typescript/test/differential.ts",
     "verifier:build": "cargo build --release -p ballast-verifier",
     "proof:local": "cargo build --release -p ballast-verifier && tsx scripts/proof/local.ts",
-    "proof:devnet": "cargo build --release -p ballast-verifier && BALLAST_CLUSTER=devnet tsx scripts/proof/local.ts"
+    "proof:devnet": "cargo build --release -p ballast-verifier && BALLAST_CLUSTER=devnet tsx scripts/proof/local.ts",
+    "demo:reset": "tsx demo/run.ts reset",
+    "demo:launch": "tsx demo/run.ts launch",
+    "demo:buy": "tsx demo/run.ts buy",
+    "demo:graduate": "tsx demo/run.ts graduate",
+    "demo:floor": "tsx demo/run.ts floor",
+    "demo:dump": "tsx demo/run.ts dump",
+    "demo:verify": "tsx demo/run.ts verify",
+    "demo:chart": "tsx demo/run.ts chart",
+    "demo:all": "tsx demo/run.ts all",
+    "mainnet:dryrun": "tsx scripts/mainnet/dry-run.ts"
   },
   "devDependencies": {
     "@coral-xyz/anchor": "0.31.1",

@@ -63,3 +63,6 @@ tests/integration/p0/.state/
 # app/: copied in at build by app/scripts/assets.mjs (target/idl, floor-wasm)
 app/src/ballast.json
 app/public/floor_wasm.wasm
+
+# Demo runbook state: local test keys between steps.
+demo/.state/

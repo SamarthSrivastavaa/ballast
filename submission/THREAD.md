@@ -1,7 +1,7 @@
 # X thread
 
 Handles to confirm before posting: Meteora ⟦FILL: confirm handle⟧ · Superteam India ⟦FILL: confirm handle⟧.
-Attach the dump-test GIF (`submission/video/dump.gif`) to post 2. Numbers are from the local run of
+Attach the dump-test GIF (`submission/video/dump.gif`) to post 2. Numbers are from the corrected local run of
 11 Oct on Meteora's mainnet binaries; update post 6 with the live counts before posting.
 
 **1/**
@@ -14,7 +14,7 @@ Launch with a floor. 🧵
 **2/**
 We tested it the hard way: bought a launch to graduation, then sold every token the team held. 72 sells.
 
-Lowest fill: 1.017 × the floor.
+Worst fill of the whole sell-out: 0.998 × the floor, fees included.
 The floor ended higher than it started, because every fill is burned.
 
 [GIF]

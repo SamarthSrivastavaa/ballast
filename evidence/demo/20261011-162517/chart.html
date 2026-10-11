@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ballast — the dump test</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #121211; overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; object-fit: contain; background: #121211; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+// The dump test, animated from the run's own data (demo/run.ts writes it in place of the null below).
+// 1920×1080, made for screen recording. space = replay · ?still=1 = final frame · ?speed=2 ·
+// ?frame=K&of=N = one deterministic frame (for a GIF).
+const D = {
+  "mint": "GYQW32AngEqzmS18V7YradifQjRE74rqxuuXBrstUzbg",
+  "sells": 72,
+  "toBid": 37,
+  "toDamm": 35,
+  "holderTokensAtStart": 537931934.590083,
+  "holderTokensLeft": 0,
+  "supplyAbsorbedPct": 100,
+  "lowestExecutionSolPerToken": 6.911074104194449e-9,
+  "fInForceThenSolPerToken": 6.793138427946863e-9,
+  "lowestExecutionOverF": 1.017361,
+  "fAtOpenSolPerToken": 6.7918562535396e-9,
+  "fAfterSolPerToken": 6.7932991176808196e-9,
+  "fNotLower": true,
+  "verifierPass": true,
+  "points": [
+    {
+      "n": 1,
+      "venue": "DAMM v2",
+      "soldPct": 1.7783,
+      "price": 2.5199009234757553e-8,
+      "f": 6.7918562535396e-9,
+      "over": 3.71018
+    },
+    {
+      "n": 2,
+      "venue": "DAMM v2",
+      "soldPct": 3.5567,
+      "price": 2.381608542369309e-8,
+      "f": 6.7918562535396e-9,
+      "over": 3.506565
+    },
+    {
+      "n": 3,
+      "venue": "DAMM v2",
+      "soldPct": 5.3351,
+      "price": 2.2544880856143097e-8,
+      "f": 6.7918562535396e-9,
+      "over": 3.319399
+    },
+    {
+      "n": 4,
+      "venue": "DAMM v2",
+      "soldPct": 7.1135,
+      "price": 2.137367958007022e-8,
+      "f": 6.7918562535396e-9,
+      "over": 3.146957
+    },
+    {
+      "n": 5,
+      "venue": "DAMM v2",
+      "soldPct": 8.8919,
+      "price": 2.0292259851812884e-8,
+      "f": 6.7918562535396e-9,
+      "over": 2.987734
+    },
+    {
+      "n": 6,
+      "venue": "DAMM v2",
+      "soldPct": 10.6703,
+      "price": 1.9291676796685177e-8,
+      "f": 6.7918562535396e-9,
+      "over": 2.840413
+    },
+    {
+      "n": 7,
+      "venue": "DAMM v2",
+      "soldPct": 12.4487,
+      "price": 1.83640654451455e-8,
+      "f": 6.7918562535396e-9,
+      "over": 2.703836
+    },
+    {
+      "n": 8,
+      "venue": "DAMM v2",
+      "soldPct": 14.2271,
+      "price": 1.750249810381524e-8,
+      "f": 6.7918562535396e-9,
+      "over": 2.576983
+    },
+    {
+      "n": 9,
+      "venue": "DAMM v2",
+      "soldPct": 16.0054,
+      "price": 1.6700855310209963e-8,
+      "f": 6.7918562535396e-9,
+      "over": 2.458953
+    },
+    {
+      "n": 10,
+      "venue": "DAMM v2",
+      "soldPct": 17.7838,
+      "price": 1.595370357932683e-8,
+      "f": 6.7918562535396e-9,
+      "over": 2.348946
+    },
+    {
+      "n": 11,
+      "venue": "DAMM v2",
+      "soldPct": 19.5622,
+      "price": 1.525621390136958e-8,
+      "f": 6.7918562535396e-9,
+      "over": 2.246251
+    },
+    {
+      "n": 12,
+      "venue": "DAMM v2",
+      "soldPct": 21.3406,
+      "price": 1.4604080239473471e-8,
+      "f": 6.7918562535396e-9,
+      "over": 2.150234
+    },
+    {
+      "n": 13,
+      "venue": "DAMM v2",
+      "soldPct": 23.119,
+      "price": 1.3993451611142738e-8,
+      "f": 6.7918562535396e-9,
+      "over": 2.060328
+    },
+    {
+      "n": 14,
+      "venue": "DAMM v2",
+      "soldPct": 24.8974,
+      "price": 1.3420877753400589e-8,
+      "f": 6.7918562535396e-9,
+      "over": 1.976025
+    },
+    {
+      "n": 15,
+      "venue": "DAMM v2",
+      "soldPct": 26.6758,
+      "price": 1.2883268371651662e-8,
+      "f": 6.7918562535396e-9,
+      "over": 1.89687
+    },
+    {
+      "n": 16,
+      "venue": "DAMM v2",
+      "soldPct": 28.4542,
+      "price": 1.2377825221119498e-8,
+      "f": 6.7918562535396e-9,
+      "over": 1.822451
+    },
+    {
+      "n": 17,
+      "venue": "DAMM v2",
+      "soldPct": 30.2326,
+      "price": 1.1902035314990287e-8,
+      "f": 6.7918562535396e-9,
+      "over": 1.752398
+    },
+    {
+      "n": 18,
+      "venue": "DAMM v2",
+      "soldPct": 32.0109,
+      "price": 1.1453623381419098e-8,
+      "f": 6.7918562535396e-9,
+      "over": 1.686376
+    },
+    {
+      "n": 19,
+      "venue": "DAMM v2",
+      "soldPct": 33.7893,
+      "price": 1.1030531487961102e-8,
+      "f": 6.7918562535396e-9,
+      "over": 1.624082
+    },
+    {
+      "n": 20,
+      "venue": "DAMM v2",
+      "soldPct": 35.5677,
+      "price": 1.0630885082290324e-8,
+      "f": 6.7918562535396e-9,
+      "over": 1.56524
+    },
+    {
+      "n": 21,
+      "venue": "DAMM v2",
+      "soldPct": 37.3461,
+      "price": 1.025298620034338e-8,
+      "f": 6.7918562535396e-9,
+      "over": 1.5096
+    },
+    {
+      "n": 22,
+      "venue": "DAMM v2",
+      "soldPct": 39.1245,
+      "price": 9.89527950703821e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.456933
+    },
+    {
+      "n": 23,
+      "venue": "DAMM v2",
+      "soldPct": 40.9029,
+      "price": 9.556359088130332e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.407032
+    },
+    {
+      "n": 24,
+      "venue": "DAMM v2",
+      "soldPct": 44.4597,
+      "price": 8.97577763186526e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.32155
+    },
+    {
+      "n": 25,
+      "venue": "DAMM v2",
+      "soldPct": 45.7318,
+      "price": 8.764802201061558e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.290487
+    },
+    {
+      "n": 26,
+      "venue": "DAMM v2",
+      "soldPct": 47.004,
+      "price": 8.564802409963577e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.26104
+    },
+    {
+      "n": 27,
+      "venue": "DAMM v2",
+      "soldPct": 48.2761,
+      "price": 8.371805022662996e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.232624
+    },
+    {
+      "n": 28,
+      "venue": "DAMM v2",
+      "soldPct": 49.5483,
+      "price": 8.185484030059643e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.205191
+    },
+    {
+      "n": 29,
+      "venue": "DAMM v2",
+      "soldPct": 50.8204,
+      "price": 8.005540590478367e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.178697
+    },
+    {
+      "n": 30,
+      "venue": "DAMM v2",
+      "soldPct": 52.0926,
+      "price": 7.83168265410026e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.153099
+    },
+    {
+      "n": 31,
+      "venue": "DAMM v2",
+      "soldPct": 53.3647,
+      "price": 7.663645338531436e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.128358
+    },
+    {
+      "n": 32,
+      "venue": "DAMM v2",
+      "soldPct": 54.6369,
+      "price": 7.501170553234262e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.104436
+    },
+    {
+      "n": 33,
+      "venue": "DAMM v2",
+      "soldPct": 55.909,
+      "price": 7.344006999527356e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.081296
+    },
+    {
+      "n": 34,
+      "venue": "DAMM v2",
+      "soldPct": 57.1812,
+      "price": 7.191937338010603e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.058906
+    },
+    {
+      "n": 35,
+      "venue": "DLMM bid",
+      "soldPct": 58.4533,
+      "price": 7.087369919131108e-9,
+      "f": 6.7918562535396e-9,
+      "over": 1.04351
+    },
+    {
+      "n": 36,
+      "venue": "DLMM bid",
+      "soldPct": 59.7255,
+      "price": 7.087371049120168e-9,
+      "f": 6.791883371173877e-9,
+      "over": 1.043506
+    },
+    {
+      "n": 37,
+      "venue": "DLMM bid",
+      "soldPct": 60.9976,
+      "price": 7.087371049120168e-9,
+      "f": 6.791883371173877e-9,
+      "over": 1.043506
+    },
+    {
+      "n": 38,
+      "venue": "DLMM bid",
+      "soldPct": 62.2698,
+      "price": 7.087371049120168e-9,
+      "f": 6.791883371173877e-9,
+      "over": 1.043506
+    },
+    {
+      "n": 39,
+      "venue": "DLMM bid",
+      "soldPct": 63.5419,
+      "price": 7.087371049120168e-9,
+      "f": 6.791883371173877e-9,
+      "over": 1.043506
+    },
+    {
+      "n": 40,
+      "venue": "DLMM bid",
+      "soldPct": 64.8141,
+      "price": 7.087371049120168e-9,
+      "f": 6.791883371173877e-9,
+      "over": 1.043506
+    },
+    {
+      "n": 41,
+      "venue": "DLMM bid",
+      "soldPct": 66.0862,
+      "price": 7.0873746133455876e-9,
+      "f": 6.792029981624622e-9,
+      "over": 1.043484
+    },
+    {
+      "n": 42,
+      "venue": "DLMM bid",
+      "soldPct": 67.3584,
+      "price": 7.0873746133455876e-9,
+      "f": 6.792029981624622e-9,
+      "over": 1.043484
+    },
+    {
+      "n": 43,
+      "venue": "DLMM bid",
+      "soldPct": 68.6305,
+      "price": 7.0873746133455876e-9,
+      "f": 6.792029981624622e-9,
+      "over": 1.043484
+    },
+    {
+      "n": 44,
+      "venue": "DLMM bid",
+      "soldPct": 69.9027,
+      "price": 7.0873746133455876e-9,
+      "f": 6.792029981624622e-9,
+      "over": 1.043484
+    },
+    {
+      "n": 45,
+      "venue": "DLMM bid",
+      "soldPct": 71.1748,
+      "price": 7.0873746133455876e-9,
+      "f": 6.792029981624622e-9,
+      "over": 1.043484
+    },
+    {
+      "n": 46,
+      "venue": "DLMM bid",
+      "soldPct": 72.447,
+      "price": 7.087373235471204e-9,
+      "f": 6.792197899169113e-9,
+      "over": 1.043458
+    },
+    {
+      "n": 47,
+      "venue": "DLMM bid",
+      "soldPct": 73.7191,
+      "price": 7.087373235471204e-9,
+      "f": 6.792197899169113e-9,
+      "over": 1.043458
+    },
+    {
+      "n": 48,
+      "venue": "DLMM bid",
+      "soldPct": 76.2635,
+      "price": 6.93837279015713e-9,
+      "f": 6.792197899169113e-9,
+      "over": 1.021521
+    },
+    {
+      "n": 49,
+      "venue": "DLMM bid",
+      "soldPct": 77.2129,
+      "price": 7.188651698345714e-9,
+      "f": 6.792197899169113e-9,
+      "over": 1.058369
+    },
+    {
+      "n": 50,
+      "venue": "DLMM bid",
+      "soldPct": 78.1624,
+      "price": 7.188649091037609e-9,
+      "f": 6.79238155133285e-9,
+      "over": 1.05834
+    },
+    {
+      "n": 51,
+      "venue": "DLMM bid",
+      "soldPct": 79.1118,
+      "price": 7.188649091037609e-9,
+      "f": 6.79238155133285e-9,
+      "over": 1.05834
+    },
+    {
+      "n": 52,
+      "venue": "DLMM bid",
+      "soldPct": 80.0613,
+      "price": 7.188649091037609e-9,
+      "f": 6.79238155133285e-9,
+      "over": 1.05834
+    },
+    {
+      "n": 53,
+      "venue": "DLMM bid",
+      "soldPct": 81.0108,
+      "price": 7.188649091037609e-9,
+      "f": 6.79238155133285e-9,
+      "over": 1.05834
+    },
+    {
+      "n": 54,
+      "venue": "DLMM bid",
+      "soldPct": 81.9602,
+      "price": 7.188649091037609e-9,
+      "f": 6.79238155133285e-9,
+      "over": 1.05834
+    },
+    {
+      "n": 55,
+      "venue": "DLMM bid",
+      "soldPct": 82.9097,
+      "price": 7.1886535687249614e-9,
+      "f": 6.792546235029232e-9,
+      "over": 1.058315
+    },
+    {
+      "n": 56,
+      "venue": "DLMM bid",
+      "soldPct": 83.8591,
+      "price": 7.1886535687249614e-9,
+      "f": 6.792546235029232e-9,
+      "over": 1.058315
+    },
+    {
+      "n": 57,
+      "venue": "DLMM bid",
+      "soldPct": 84.8086,
+      "price": 7.1886535687249614e-9,
+      "f": 6.792546235029232e-9,
+      "over": 1.058315
+    },
+    {
+      "n": 58,
+      "venue": "DLMM bid",
+      "soldPct": 85.7581,
+      "price": 7.1886535687249614e-9,
+      "f": 6.792546235029232e-9,
+      "over": 1.058315
+    },
+    {
+      "n": 59,
+      "venue": "DLMM bid",
+      "soldPct": 86.7075,
+      "price": 7.188653097889366e-9,
+      "f": 6.792693413433501e-9,
+      "over": 1.058292
+    },
+    {
+      "n": 60,
+      "venue": "DLMM bid",
+      "soldPct": 87.657,
+      "price": 7.188653097889366e-9,
+      "f": 6.792693413433501e-9,
+      "over": 1.058292
+    },
+    {
+      "n": 61,
+      "venue": "DLMM bid",
+      "soldPct": 88.6064,
+      "price": 7.188653097889366e-9,
+      "f": 6.792693413433501e-9,
+      "over": 1.058292
+    },
+    {
+      "n": 62,
+      "venue": "DLMM bid",
+      "soldPct": 89.5559,
+      "price": 7.188653097889366e-9,
+      "f": 6.792693413433501e-9,
+      "over": 1.058292
+    },
+    {
+      "n": 63,
+      "venue": "DLMM bid",
+      "soldPct": 90.5054,
+      "price": 7.188653097889366e-9,
+      "f": 6.792693413433501e-9,
+      "over": 1.058292
+    },
+    {
+      "n": 64,
+      "venue": "DLMM bid",
+      "soldPct": 91.4548,
+      "price": 7.188654813833276e-9,
+      "f": 6.792900434518243e-9,
+      "over": 1.05826
+    },
+    {
+      "n": 65,
+      "venue": "DLMM bid",
+      "soldPct": 92.4043,
+      "price": 7.188654813833276e-9,
+      "f": 6.792900434518243e-9,
+      "over": 1.05826
+    },
+    {
+      "n": 66,
+      "venue": "DLMM bid",
+      "soldPct": 93.3537,
+      "price": 7.188654813833276e-9,
+      "f": 6.792900434518243e-9,
+      "over": 1.05826
+    },
+    {
+      "n": 67,
+      "venue": "DLMM bid",
+      "soldPct": 94.3032,
+      "price": 7.188654813833276e-9,
+      "f": 6.792900434518243e-9,
+      "over": 1.05826
+    },
+    {
+      "n": 68,
+      "venue": "DLMM bid",
+      "soldPct": 95.2527,
+      "price": 7.188654813833276e-9,
+      "f": 6.792900434518243e-9,
+      "over": 1.05826
+    },
+    {
+      "n": 69,
+      "venue": "DLMM bid",
+      "soldPct": 96.2021,
+      "price": 7.188648533498785e-9,
+      "f": 6.793138427946863e-9,
+      "over": 1.058222
+    },
+    {
+      "n": 70,
+      "venue": "DLMM bid",
+      "soldPct": 97.1516,
+      "price": 7.188648533498785e-9,
+      "f": 6.793138427946863e-9,
+      "over": 1.058222
+    },
+    {
+      "n": 71,
+      "venue": "DLMM bid",
+      "soldPct": 98.101,
+      "price": 7.188648533498785e-9,
+      "f": 6.793138427946863e-9,
+      "over": 1.058222
+    },
+    {
+      "n": 72,
+      "venue": "DAMM v2",
+      "soldPct": 100,
+      "price": 6.911074104194449e-9,
+      "f": 6.793138427946863e-9,
+      "over": 1.017361
+    }
+  ]
+}
+;
+const q = new URLSearchParams(location.search);
+const cv = document.getElementById("c"), g = cv.getContext("2d");
+const W = 1920, H = 1080;
+const INK = "#f4f2eb", MUTED = "#9c998f", RULE = "#34332f", BG = "#121211";
+const DAMM = "#7c8cff", BID = "#3fbf9b";
+const SANS = '"Inter","Helvetica Neue","Segoe UI",Arial,sans-serif', MONO = 'ui-monospace,"Cascadia Mono",Consolas,monospace';
+const P = D ? D.points : [];
+const box = { l: 170, r: 1560, t: 300, b: 880 };
+const yMax = D ? Math.max(...P.map((p) => p.price)) * 1.12 : 1;
+const X = (pct) => box.l + (pct / 100) * (box.r - box.l);
+const Y = (v) => box.b - (v / yMax) * (box.b - box.t);
+const e9 = (v) => (v * 1e9).toFixed(2);
+const DURATION = 14000 / Number(q.get("speed") || 1);
+let hover = null;
+
+function text(s, x, y, font, color, align) { g.font = font; g.fillStyle = color; g.textAlign = align || "left"; g.fillText(s, x, y); }
+
+function draw(t) { // t in 0..1
+  g.fillStyle = BG; g.fillRect(0, 0, W, H);
+  if (!D) { text("Run `pnpm demo:dump` then `pnpm demo:chart`.", 170, 540, `40px ${SANS}`, INK); return; }
+  const shown = Math.min(P.length, Math.floor(t * P.length + 1e-9));
+  const sold = shown ? P[shown - 1].soldPct : 0;
+  const done = shown === P.length;
+
+  text("BALLAST · THE DUMP TEST", 170, 110, `22px ${MONO}`, MUTED);
+  text("Selling every token holders have.", 170, 190, `600 72px ${SANS}`, INK);
+  text("Each sell goes to the better of the DLMM bid and DAMM v2. Local validator, Meteora's mainnet binaries.", 170, 244, `26px ${SANS}`, MUTED);
+
+  // counter
+  text("SUPPLY SOLD", 1750, 110, `22px ${MONO}`, MUTED, "right");
+  text(`${sold.toFixed(0)}%`, 1750, 215, `600 120px ${SANS}`, INK, "right");
+
+  // axes: recessive
+  g.strokeStyle = RULE; g.lineWidth = 1;
+  for (let v = 0; v <= yMax; v += 5e-9) {
+    g.beginPath(); g.moveTo(box.l, Y(v)); g.lineTo(box.r, Y(v)); g.stroke();
+    text(e9(v).replace(/\.00$/, ""), box.l - 18, Y(v) + 8, `22px ${MONO}`, MUTED, "right");
+  }
+  text("price, ×10⁻⁹ SOL per token", box.l - 110, box.t - 26, `22px ${MONO}`, MUTED);
+  for (let p = 0; p <= 100; p += 25) text(`${p}%`, X(p), box.b + 40, `22px ${MONO}`, MUTED, "center");
+  text("share of holders' tokens sold", (box.l + box.r) / 2, box.b + 84, `22px ${MONO}`, MUTED, "center");
+
+  // the floor: one bold line, labelled directly
+  const fNow = shown ? P[shown - 1].f : D.fAtOpenSolPerToken;
+  g.strokeStyle = INK; g.lineWidth = 6; g.beginPath(); g.moveTo(box.l, Y(D.fAtOpenSolPerToken));
+  for (let i = 0; i < shown; i++) g.lineTo(X(P[i].soldPct), Y(P[i].f));
+  g.lineTo(box.r, Y(fNow)); g.stroke();
+  text("FLOOR F", box.r + 24, Y(fNow) - 6, `600 30px ${SANS}`, INK);
+  text(`${e9(fNow)} ×10⁻⁹`, box.r + 24, Y(fNow) + 28, `24px ${MONO}`, MUTED);
+
+  // execution price: thin line, then a mark per sell (shape and colour by venue)
+  g.strokeStyle = MUTED; g.lineWidth = 2; g.beginPath();
+  for (let i = 0; i < shown; i++) { const x = X(P[i].soldPct), y = Y(P[i].price); i ? g.lineTo(x, y) : g.moveTo(x, y); }
+  g.stroke();
+  for (let i = 0; i < shown; i++) {
+    const p = P[i], x = X(p.soldPct), y = Y(p.price), bid = p.venue === "DLMM bid";
+    g.fillStyle = BG; g.beginPath(); bid ? g.rect(x - 9, y - 9, 18, 18) : g.arc(x, y, 10, 0, 7); g.fill();
+    g.fillStyle = bid ? BID : DAMM; g.beginPath(); bid ? g.rect(x - 7, y - 7, 14, 14) : g.arc(x, y, 8, 0, 7); g.fill();
+  }
+
+  // legend
+  let lx = box.l; const ly = 968;
+  g.fillStyle = DAMM; g.beginPath(); g.arc(lx + 8, ly - 8, 8, 0, 7); g.fill(); text("sold to DAMM v2", lx + 28, ly, `24px ${SANS}`, INK); lx += 250;
+  g.fillStyle = BID; g.fillRect(lx, ly - 15, 14, 14); text("sold to the DLMM bid", lx + 28, ly, `24px ${SANS}`, INK); lx += 300;
+  g.fillStyle = INK; g.fillRect(lx, ly - 11, 40, 6); text("floor F", lx + 54, ly, `24px ${SANS}`, INK);
+  text("Selling directly into the DAMM v2 pool can execute below F; the DLMM bid and redemption do not.", box.l, 1030, `22px ${SANS}`, MUTED);
+
+  if (done) {
+    g.fillStyle = "#1a1a18"; g.fillRect(1040, 316, 500, 196); g.strokeStyle = BID; g.lineWidth = 2; g.strokeRect(1040, 316, 500, 196);
+    text("LOWEST EXECUTION", 1066, 360, `20px ${MONO}`, MUTED);
+    text(`${D.lowestExecutionOverF.toFixed(4)} × F  ✓`, 1066, 424, `600 56px ${SANS}`, INK);
+    text(`${e9(D.lowestExecutionSolPerToken)} vs F ${e9(D.fInForceThenSolPerToken)} ×10⁻⁹ SOL/token`, 1066, 466, `22px ${MONO}`, MUTED);
+    text(`${D.sells} sells · ${D.supplyAbsorbedPct.toFixed(2)}% sold · F not lower`, 1066, 496, `22px ${MONO}`, MUTED);
+  }
+  if (hover && done) {
+    const p = hover, x = X(p.soldPct), y = Y(p.price);
+    g.fillStyle = "#1a1a18"; g.strokeStyle = RULE; g.lineWidth = 1; g.fillRect(x + 16, y - 92, 420, 84); g.strokeRect(x + 16, y - 92, 420, 84);
+    text(`sell ${p.n} · ${p.venue}`, x + 32, y - 58, `600 24px ${SANS}`, INK);
+    text(`${e9(p.price)} ×10⁻⁹ = ${p.over.toFixed(4)} × F · ${p.soldPct.toFixed(1)}% sold`, x + 32, y - 26, `20px ${MONO}`, MUTED);
+  }
+}
+
+let start = null;
+function loop(ts) {
+  if (start === null) start = ts;
+  const t = Math.min(1, (ts - start) / DURATION);
+  draw(t);
+  if (t < 1) requestAnimationFrame(loop);
+}
+if (q.get("of")) draw(Math.min(1, Number(q.get("frame")) / Number(q.get("of"))));
+else if (q.get("still")) draw(1);
+else requestAnimationFrame(loop);
+addEventListener("keydown", (e) => { if (e.code === "Space") { start = null; hover = null; requestAnimationFrame(loop); } });
+cv.addEventListener("mousemove", (e) => {
+  const r = cv.getBoundingClientRect(), s = Math.min(r.width / W, r.height / H);
+  const mx = (e.clientX - r.left - (r.width - W * s) / 2) / s, my = (e.clientY - r.top - (r.height - H * s) / 2) / s;
+  let best = null, bd = 40 * 40;
+  for (const p of P) { const d = (X(p.soldPct) - mx) ** 2 + (Y(p.price) - my) ** 2; if (d < bd) { bd = d; best = p; } }
+  if (best !== hover) { hover = best; if (start !== null) draw(1); }
+});
+</script>
+</body>
+</html>

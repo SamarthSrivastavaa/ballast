@@ -42,14 +42,22 @@ Prices are in SOL per token. "F" is the theoretical floor; each other price says
 | Migration to DAMM v2 | Two permanently locked positions, both held by Ballast PDAs; L = 3.0702e31 |
 | `burn_leftover` | 134,558,940 unsold tokens burned; 865,441,060 outstanding |
 | `open` | The whole vault rests as one DLMM bid at F's bin. Realised F **6.7919e-9**, 1.34% above the prediction |
-| Sell-out: 72 sells, each to the better of the DLMM bid and DAMM v2 | 37 to the bid, 35 to the pool; 537,931,935 tokens sold. **Lowest execution 1.0174 × F** in force at that slot (gate 8 requires ≥ 0.99) |
-| Keeper `refresh_floor` during the sell-out | Fills are settled by cancelling, the bought tokens burned (220,120,959), the bid re-placed; F rises each time |
-| After the sell-out | 0.045844528 SOL left in the bid of the 1.54 SOL vault; F **6.8394e-9**, not lower than at `open` |
-| `harvest`, `pay_creator` | 0.015062311 SOL of LP fees to the vault, 0.00167359 SOL to the treasury, 0.057139942 SOL to the creator |
+| Sell-out: 73 sells, each to the better of the DLMM bid and DAMM v2 (a chunk the bid can only partly absorb is split) | 38 to the bid, 35 to the pool; 537,931,935 tokens sold. **Lowest execution 0.9984 × F** in force at that slot, fees included: the last sell, into the pool. Fills on the bid: 0.9994 × F or better (gate 8 requires ≥ 0.99) |
+| Keeper `refresh_floor` during the sell-out | Fills are settled by cancelling, the bought tokens burned (226,864,386), the bid re-placed; F rises each time |
+| After the sell-out | 0.000058548 SOL left of the 1.54 SOL vault: the bid was sold out; F **6.8400e-9**, not lower than at `open` |
+| `harvest`, `pay_creator` | 0.014898632 SOL of LP fees to the vault, 0.001655403 SOL to the treasury, 0.056958076 SOL to the creator |
 
-After a total sell-out the DAMM v2 price itself sits just under F (6.6718e-9 on this run). That is
-expected and disclosed: a sale straight into the pool can execute below F; the DLMM bid and
-redemption do not.
+After a total sell-out the DAMM v2 price sits just under F (6.8136e-9 against 6.8400e-9 on this run)
+and the pool charges a 1% fee, so a sale straight into the pool can execute below F. That is expected
+and disclosed. The DLMM bid fills at its bin price, at or just under F, and redemption pays F less
+0.5%; neither depends on the pool price.
+
+**Correction, 11 Oct.** Earlier versions of this page reported the lowest execution as 1.0174 × F.
+That figure was wrong: the measurement counted the rent of each seller's closed wrapped-SOL account
+(0.002 SOL per sell) as sale proceeds. The verifier now excludes it
+(`crates/verifier-core/tests/execution.rs`), and the sell-out script now fills what is left of the bid
+before sending the rest of a chunk to the pool. Measured correctly, the old routing's last sell
+executed at 0.988 × F.
 
 ## What the verifier found
 
@@ -62,8 +70,8 @@ redemption do not.
 - the vault and the resting bid, at or below F;
 - F recomputed from live V, S and L with the floor crate, and its history: 11 floor updates decoded
   from the program's events, never decreasing;
-- **the §10 ledger, to the lamport**: 1.555466352 SOL in, 1.494559513 SOL out (all of it fills, no
-  redemptions on this launch), which is exactly the 0.060906839 SOL the vault and bid hold; the
+- **the §10 ledger, to the lamport**: 1.555302673 SOL in, 1.540345493 SOL out (all of it fills, no
+  redemptions on this launch), which is exactly the 0.014957180 SOL the vault and bid hold; the
   supply equals the minted supply less everything burned; every counter equals the sum of its events.
 
 ## The gates (§18)
@@ -77,7 +85,7 @@ redemption do not.
 | 5 DLMM bid | PASS | `evidence/p0/Q5`, `evidence/program/part2/results.json` |
 | 6 F identical across `floor()`, Rust, WASM, Python | PASS | `crates/floor/vectors.json`, `app/test/model.test.ts` |
 | 7 Redemption | PASS: exact payout, 209,023 compute units | `evidence/program/part2/results.json` |
-| 8 Full sell-out | PASS: lowest execution 1.0174 × F | `evidence/proof-local/summary.md` |
+| 8 Full sell-out | PASS: lowest execution 0.9984 × F, fees included | `evidence/proof-local/summary.md` |
 | 9 Invariant run | PASS: 200 random transactions from five wallets on a second launch, no monotone-check failure; its ledger also closes to the lamport, with 0.516360664 SOL of redemptions | same |
 | 10 Failure injection | PASS: keeper off with a stale bid (redemption settles it and pays exactly), stale bin hint, dust and slippage redemptions refused | same |
 

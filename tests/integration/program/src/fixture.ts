@@ -460,6 +460,39 @@ export async function bidSellQuote(o: Opened, b: bigint): Promise<bigint> {
 }
 
 /** A DAMM v2 sell of `b` base by `who`. */
+/**
+ * The largest amount ≤ `max` the resting bid can absorb in one sell (0 if none). A seller after the
+ * best price fills what is left of the bid before sending the rest to the pool; without this a chunk
+ * larger than the bid's remainder went to DAMM v2 whole and executed under 0.99·F (found 11 Oct).
+ */
+export async function bidCapacity(o: Opened, max: bigint): Promise<bigint> {
+  let [lo, hi] = [0n, max];
+  while (hi - lo > max / 1000n + 1n) {
+    const mid = (lo + hi + 1n) / 2n;
+    if ((await bidSellQuote(o, mid)) > 0n) lo = mid;
+    else hi = mid - 1n;
+  }
+  return lo;
+}
+
+/**
+ * Where a seller after the best price sends the next `b` tokens: the venue quoting more for the
+ * whole amount, or, when the bid cannot take it all but still pays more per token than the pool,
+ * the part the bid can take.
+ */
+export async function bestRoute(o: Opened, b: bigint): Promise<{ venue: "DLMM bid" | "DAMM v2"; amount: bigint; quoted: bigint }> {
+  const [qBid, qDamm] = [await bidSellQuote(o, b), await dammSellQuote(o, b)];
+  if (qBid > qDamm) return { venue: "DLMM bid", amount: b, quoted: qBid };
+  if (qBid === 0n) {
+    const cap = await bidCapacity(o, b);
+    if (cap >= b / 200n && cap > 0n) {
+      const [qb, qd] = [await bidSellQuote(o, cap), await dammSellQuote(o, cap)];
+      if (qb > qd) return { venue: "DLMM bid", amount: cap, quoted: qb };
+    }
+  }
+  return { venue: "DAMM v2", amount: b, quoted: qDamm };
+}
+
 export async function dammSell(o: Opened, who: Keypair, b: bigint): Promise<Landed> {
   const p = (await dammPool(o.dammPool)) as Record<string, string>;
   const tx = await cpAmm.swap({

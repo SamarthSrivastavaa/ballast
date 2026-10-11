@@ -34,7 +34,7 @@ Install line used below:
 
 > ⟦one personal line⟧
 >
-> Ballast is a DBC launch class with a floor: 85% migrates to DAMM v2 as two permanently locked, program-owned positions; the 15% migration fee rests as one DLMM limit order at F. On your mainnet binaries (local validator) we sold the whole supply; the lowest fill was 1.017 × F.
+> Ballast is a DBC launch class with a floor: 85% migrates to DAMM v2 as two permanently locked, program-owned positions; the 15% migration fee rests as one DLMM limit order at F. On your mainnet binaries (local validator) we sold every holder token; the worst fill was 0.998 × F, fees included.
 >
 > Repo and verifier: https://github.com/SamarthSrivastavaa/ballast
 > I'd value feedback on the DLMM limit-order handling.

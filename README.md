@@ -29,8 +29,8 @@ Selling directly into the DAMM v2 pool can execute below F; the DLMM bid and red
 | **DAMM v2** | 85% of the raise, in two permanently locked positions owned by Ballast PDAs — L in the equation |
 | **DLMM** | The vault as one limit order at the highest bin at or below F — V in the equation; fills are settled by cancel → burn → re-place, which raises F |
 
-Holders always have two ways out at or above the floor: sell into the DLMM bid, or **redeem** with
-the program at F less 0.5% (the fee stays in the vault and raises F for everyone else). Every
+Holders always have two ways out at the floor: sell into the DLMM bid (its bin price, at or just under
+F), or **redeem** with the program at F less 0.5% (the fee stays in the vault and raises F for everyone else). Every
 instruction that changes V, S or L ends with an on-chain check that F did not fall.
 
 Every number is one of six distinct prices, and Ballast always says which: **theoretical F**, the
@@ -99,7 +99,7 @@ walked through in [`docs/proof.md`](docs/proof.md).
 | Program test suites, fresh ledger, mainnet binaries | Part 1 94 pass · Part 2 46 · audit fixes 22 · keeper 5 · 0 fail | [`evidence/program/`](evidence/program/) |
 | Audits (spec + security) | 0 critical, 0 high; the vault's only exits are its own bid and a redeemer | [`DECISIONS.md`](DECISIONS.md) § Part 2 re-audit |
 | Compute units | `open` 145k · `refresh_floor` 188k · atomic `redeem` 209k | same |
-| Full §22 Proof launch on the mainnet binaries (`pnpm proof:local`) | prediction 6.7019e-09 SOL/token; realised at open 6.7919e-09 (+1.34%); full sell-out of every team token: 72 sells (37 to the bid, 35 to DAMM v2), lowest execution 1.0174·F; F after the sell-out 6.8394e-09 (not lower); vault left 0.0458 SOL; the §10 ledger closes to the lamport (gate 4); gate 9 (200 random transactions) and gate 10 PASS; verifier PASS | [`evidence/proof-local/summary.md`](evidence/proof-local/summary.md) |
+| Full §22 Proof launch on the mainnet binaries (`pnpm proof:local`) | prediction 6.7019e-09 SOL/token; realised at open 6.7919e-09 (+1.34%); full sell-out of every team token: 73 sells (38 to the bid, 35 to DAMM v2), lowest execution 0.9984·F with fees included; F after the sell-out 6.8400e-09 (not lower); vault left 0.00006 SOL; the §10 ledger closes to the lamport (gate 4); gate 9 (200 random transactions) and gate 10 PASS; verifier PASS | [`evidence/proof-local/summary.md`](evidence/proof-local/summary.md) |
 | Why it matters: `ballast scan` over the 100 newest DBC → DAMM v2 migrations on mainnet (8 Oct) | 94 had no permanently locked liquidity; 2 held a locked-liquidity floor above half the pool price | [`evidence/scanner/scan-100-2026-10-08.json`](evidence/scanner/scan-100-2026-10-08.json) |
 
 ## Addresses

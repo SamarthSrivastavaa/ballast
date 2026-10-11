@@ -588,6 +588,12 @@ pub fn verify(rpc: &Rpc, launch_key: &Pubkey, opts: &Options) -> Result<Report, 
 
 /// The signer's execution in a sell transaction, in ppm of F at that slot: quote received (WSOL
 /// balance + lamports, fee added back) per base unit sold.
+///
+/// Rent that returns to the signer when one of its token accounts is closed in the transaction is
+/// not sale proceeds and is taken out: an SDK swap that unwraps closes the WSOL account, and if
+/// that account existed beforehand its whole rent would otherwise count as quote received. An
+/// account both created and closed inside the transaction nets to zero by itself. Rent the signer
+/// pays for an account that stays open is left in, so the figure can only err low.
 pub fn execution_ppm(tx: &Tx, base_mint: &Pubkey, s: u128) -> Option<u64> {
     let signer = *tx.keys.first()?;
     let bal = |list: &[(usize, Pubkey, Pubkey, u64)], mint: &Pubkey| -> u128 {
@@ -603,7 +609,18 @@ pub fn execution_ppm(tx: &Tx, base_mint: &Pubkey, s: u128) -> Option<u64> {
     let wsol = bal(&tx.post_tokens, &WSOL) as i128 - bal(&tx.pre_tokens, &WSOL) as i128;
     let lamports =
         *tx.post_lamports.first()? as i128 - *tx.pre_lamports.first()? as i128 + tx.fee as i128;
-    let quote = (wsol + lamports).max(0) as u128;
+    // Token accounts of the signer that existed before and are gone after: their lamports, less
+    // any wrapped SOL they held (already counted as a WSOL balance), came back as rent.
+    let rent_back: i128 = tx
+        .pre_tokens
+        .iter()
+        .filter(|t| t.2 == signer && !tx.post_tokens.iter().any(|p| p.0 == t.0))
+        .map(|t| {
+            let held = tx.pre_lamports.get(t.0).copied().unwrap_or(0) as i128;
+            held - if t.1 == WSOL { t.3 as i128 } else { 0 }
+        })
+        .sum();
+    let quote = (wsol + lamports - rent_back).max(0) as u128;
     let exec: U256 = (U256::from(quote) << 64) / U256::from(sold);
     let f: U256 = (U256::from(s) * U256::from(s)) >> 64;
     let ppm: U256 = exec * U256::from(1_000_000u32) / f.max(U256::from(1u8));

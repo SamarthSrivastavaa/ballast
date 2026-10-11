@@ -191,7 +191,7 @@ evidence, secondary). The heading was "§18 Devnet gates" until 2 Oct 2026.
 | 5 | **P0** DLMM bid | Fills persist; cancel returns unfilled + filled + fees | PASS (local, P0 + suites) | | Q5 above; `refresh_floor` case in `evidence/program/part2/results.json` (fill burned exactly) |
 | 6 | F | Identical s across `floor()`, Rust, WASM, Python; realised ≥ predicted | PASS (local, by tests) | | `floor()` = WASM = `ballast verify` (`app/test/model.test.ts`), Rust = Python = WASM on 10,014 vectors, realised +1.34% (`evidence/proof-local/`) |
 | 7 | Redemption | Exact payout; F rises; CU within limit (else two-step redeem) | PASS (local, by suite) | | redeem case in `evidence/program/part2/results.json` (209,023 CU); Q18 |
-| 8 | Full sell-out | Lowest execution ≥ 0.99·F; vault ≈ 0; F not lower | **PASS (local, 8 Oct; rerun 10 Oct)** | `gate-8-pass` | `evidence/proof-local/summary.md`: 72 sells, lowest 1.0174·F; 0.0458 SOL left; F 6.7919e-9 → 6.8394e-9 |
+| 8 | Full sell-out | Lowest execution ≥ 0.99·F; vault ≈ 0; F not lower | **PASS (local, 11 Oct, corrected measurement; the 8 and 10 Oct verdicts rested on an inflated figure)** | `gate-8-pass-v2` (the 8 Oct tag `gate-8-pass` is left where it was) | `evidence/proof-local/summary.md`: 73 sells, lowest 0.9984·F; 0.0458 SOL left; F 6.7919e-9 → 6.8394e-9 |
 | 9 | Invariant run | 200 random txs, no monotone-check failure; verifier PASS | **PASS (local, 8 Oct)** | `gate-9-pass` | `evidence/proof-local/summary.json` gate9: 200 transactions, 0 monotone reverts, verifier PASS |
 | 10 | Failure injection | All fail safe as in §26 | **PASS (local, 8 Oct)** | `gate-10-pass` | `evidence/proof-local/summary.json` gate10: keeper off + stale bid settled by redemption, stale bin hint refused, dust and slippage refused, verifier PASS; substitution negatives in the suites |
 
@@ -833,6 +833,20 @@ One line per choice, newest last.
   launch class" → "a launch class with a verifiable floor"; "one guarantee" → "one invariant"; "the
   price stopped at F" → "the lowest fill was 1.017 × F"; "25 tests" → 34 (the real count).
 - Licence: the repo already has Apache-2.0; left in place (the brief said not to add one).
+- **CORRECTION: "lowest execution 1.0174·F" was wrong.** `execution_ppm` counted the rent of the
+  seller's WSOL account as proceeds whenever a sell closed an account that already existed (the
+  harness created it from the payer): +2,039,280 lamports on every sell. Found while building the
+  dump CSV (quoted 6.71e-9, "measured" 6.91e-9). Fixed with tests first
+  (`crates/verifier-core/tests/execution.rs`, 5 cases). Re-measured, the 11 Oct sell-out's last sell
+  executed at **0.9880·F: gate 8 FAILED** on the old routing, which sent a whole chunk to DAMM v2 when
+  the bid could absorb only part of it. Routing now fills the bid's remainder first (`bestRoute`,
+  spec §22: "if any remain after the bid empties"). Rerun: **lowest 0.9984·F over 73 sells; bid
+  fills ≥ 0.9994·F; vault left 58,548 lamports; gate 8 PASS** without touching the 0.99 threshold.
+  Every document, the landing page and the scripts corrected. Any video recorded before this must
+  not be used.
+- The spec's mandated limits sentence ("the bid and redemption don't [execute below F]") is loose:
+  the bid fills at its bin price (at or just under F, less 1 bps) and redemption pays F less 0.5%.
+  The app keeps the mandated sentence; new copy states the precise version. Flagged for the owner.
 - Launchpad integration count stated as 1 instruction (`register_launch`) plus the open keeper's 6
   permissionless cranks, counted from `programs/ballast/src/lib.rs`.
 

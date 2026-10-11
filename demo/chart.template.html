@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ballast — the dump test</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #121211; overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; object-fit: contain; background: #121211; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+// The dump test, animated from the run's own data (demo/run.ts writes it in place of the null below).
+// 1920×1080, made for screen recording. space = replay · ?still=1 = final frame · ?speed=2 ·
+// ?frame=K&of=N = one deterministic frame (for a GIF).
+const D = /*DATA*/null;
+const q = new URLSearchParams(location.search);
+const cv = document.getElementById("c"), g = cv.getContext("2d");
+const W = 1920, H = 1080;
+const INK = "#f4f2eb", MUTED = "#9c998f", RULE = "#34332f", BG = "#121211";
+const DAMM = "#7c8cff", BID = "#3fbf9b";
+const SANS = '"Inter","Helvetica Neue","Segoe UI",Arial,sans-serif', MONO = 'ui-monospace,"Cascadia Mono",Consolas,monospace';
+const P = D ? D.points : [];
+const box = { l: 170, r: 1560, t: 300, b: 880 };
+const yMax = D ? Math.max(...P.map((p) => p.price)) * 1.12 : 1;
+const X = (pct) => box.l + (pct / 100) * (box.r - box.l);
+const Y = (v) => box.b - (v / yMax) * (box.b - box.t);
+const e9 = (v) => (v * 1e9).toFixed(2);
+const DURATION = 14000 / Number(q.get("speed") || 1);
+let hover = null;
+
+function text(s, x, y, font, color, align) { g.font = font; g.fillStyle = color; g.textAlign = align || "left"; g.fillText(s, x, y); }
+
+function draw(t) { // t in 0..1
+  g.fillStyle = BG; g.fillRect(0, 0, W, H);
+  if (!D) { text("Run `pnpm demo:dump` then `pnpm demo:chart`.", 170, 540, `40px ${SANS}`, INK); return; }
+  const shown = Math.min(P.length, Math.floor(t * P.length + 1e-9));
+  const sold = shown ? P[shown - 1].soldPct : 0;
+  const done = shown === P.length;
+
+  text("BALLAST · THE DUMP TEST", 170, 110, `22px ${MONO}`, MUTED);
+  text("Selling every token holders have.", 170, 190, `600 72px ${SANS}`, INK);
+  text("Each sell goes to the better of the DLMM bid and DAMM v2. Local validator, Meteora's mainnet binaries.", 170, 244, `26px ${SANS}`, MUTED);
+
+  // counter
+  text("SUPPLY SOLD", 1750, 110, `22px ${MONO}`, MUTED, "right");
+  text(`${sold.toFixed(0)}%`, 1750, 215, `600 120px ${SANS}`, INK, "right");
+
+  // axes: recessive
+  g.strokeStyle = RULE; g.lineWidth = 1;
+  for (let v = 0; v <= yMax; v += 5e-9) {
+    g.beginPath(); g.moveTo(box.l, Y(v)); g.lineTo(box.r, Y(v)); g.stroke();
+    text(e9(v).replace(/\.00$/, ""), box.l - 18, Y(v) + 8, `22px ${MONO}`, MUTED, "right");
+  }
+  text("price, ×10⁻⁹ SOL per token", box.l - 70, box.t - 30, `22px ${MONO}`, MUTED);
+  for (let p = 0; p <= 100; p += 25) text(`${p}%`, X(p), box.b + 40, `22px ${MONO}`, MUTED, "center");
+  text("share of holders' tokens sold", (box.l + box.r) / 2, box.b + 78, `22px ${MONO}`, MUTED, "center");
+
+  // the floor: one bold line, labelled directly
+  const fNow = shown ? P[shown - 1].f : D.fAtOpenSolPerToken;
+  g.strokeStyle = INK; g.lineWidth = 6; g.beginPath(); g.moveTo(box.l, Y(D.fAtOpenSolPerToken));
+  for (let i = 0; i < shown; i++) g.lineTo(X(P[i].soldPct), Y(P[i].f));
+  g.lineTo(box.r, Y(fNow)); g.stroke();
+  text("FLOOR F", box.r + 24, Y(fNow) - 6, `600 30px ${SANS}`, INK);
+  text(`${e9(fNow)} ×10⁻⁹`, box.r + 24, Y(fNow) + 28, `24px ${MONO}`, MUTED);
+
+  // execution price: thin line, then a mark per sell (shape and colour by venue)
+  g.strokeStyle = MUTED; g.lineWidth = 2; g.beginPath();
+  for (let i = 0; i < shown; i++) { const x = X(P[i].soldPct), y = Y(P[i].price); i ? g.lineTo(x, y) : g.moveTo(x, y); }
+  g.stroke();
+  for (let i = 0; i < shown; i++) {
+    const p = P[i], x = X(p.soldPct), y = Y(p.price), bid = p.venue === "DLMM bid";
+    g.fillStyle = BG; g.beginPath(); bid ? g.rect(x - 9, y - 9, 18, 18) : g.arc(x, y, 10, 0, 7); g.fill();
+    g.fillStyle = bid ? BID : DAMM; g.beginPath(); bid ? g.rect(x - 7, y - 7, 14, 14) : g.arc(x, y, 8, 0, 7); g.fill();
+  }
+
+  // legend
+  let lx = box.l; const ly = 1012;
+  g.fillStyle = DAMM; g.beginPath(); g.arc(lx + 8, ly - 8, 8, 0, 7); g.fill(); text("sold to DAMM v2", lx + 28, ly, `24px ${SANS}`, INK); lx += 250;
+  g.fillStyle = BID; g.fillRect(lx, ly - 15, 14, 14); text("sold to the DLMM bid", lx + 28, ly, `24px ${SANS}`, INK); lx += 300;
+  g.fillStyle = INK; g.fillRect(lx, ly - 11, 40, 6); text("floor F", lx + 54, ly, `24px ${SANS}`, INK);
+  text("Prices are after fees. The DLMM bid fills at its bin price, at or just under F; a sale straight into the DAMM v2 pool can execute below F.", box.l, 1052, `22px ${SANS}`, MUTED);
+
+  if (done) {
+    g.fillStyle = "#1a1a18"; g.fillRect(980, 316, 560, 196); g.strokeStyle = BID; g.lineWidth = 2; g.strokeRect(980, 316, 560, 196);
+    text("LOWEST EXECUTION", 1006, 360, `20px ${MONO}`, MUTED);
+    text(`${D.lowestExecutionOverF.toFixed(4)} × F${D.lowestExecutionOverF >= 0.99 ? "  ✓" : ""}`, 1006, 424, `600 56px ${SANS}`, INK);
+    text(`${e9(D.lowestExecutionSolPerToken)} vs F ${e9(D.fInForceThenSolPerToken)} ×10⁻⁹ SOL/token`, 1006, 466, `22px ${MONO}`, MUTED);
+    text(`${D.sells} sells · ${D.supplyAbsorbedPct.toFixed(2)}% sold · F not lower`, 1006, 496, `22px ${MONO}`, MUTED);
+  }
+  if (hover && done) {
+    const p = hover, x = X(p.soldPct), y = Y(p.price);
+    g.fillStyle = "#1a1a18"; g.strokeStyle = RULE; g.lineWidth = 1; g.fillRect(x + 16, y - 92, 420, 84); g.strokeRect(x + 16, y - 92, 420, 84);
+    text(`sell ${p.n} · ${p.venue}`, x + 32, y - 58, `600 24px ${SANS}`, INK);
+    text(`${e9(p.price)} ×10⁻⁹ = ${p.over.toFixed(4)} × F · ${p.soldPct.toFixed(1)}% sold`, x + 32, y - 26, `20px ${MONO}`, MUTED);
+  }
+}
+
+let start = null;
+function loop(ts) {
+  if (start === null) start = ts;
+  const t = Math.min(1, (ts - start) / DURATION);
+  draw(t);
+  if (t < 1) requestAnimationFrame(loop);
+}
+if (q.get("of")) draw(Math.min(1, Number(q.get("frame")) / Number(q.get("of"))));
+else if (q.get("still")) draw(1);
+else requestAnimationFrame(loop);
+addEventListener("keydown", (e) => { if (e.code === "Space") { start = null; hover = null; requestAnimationFrame(loop); } });
+cv.addEventListener("mousemove", (e) => {
+  const r = cv.getBoundingClientRect(), s = Math.min(r.width / W, r.height / H);
+  const mx = (e.clientX - r.left - (r.width - W * s) / 2) / s, my = (e.clientY - r.top - (r.height - H * s) / 2) / s;
+  let best = null, bd = 40 * 40;
+  for (const p of P) { const d = (X(p.soldPct) - mx) ** 2 + (Y(p.price) - my) ** 2; if (d < bd) { bd = d; best = p; } }
+  if (best !== hover) { hover = best; if (start !== null) draw(1); }
+});
+</script>
+</body>
+</html>

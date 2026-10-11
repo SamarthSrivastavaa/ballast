@@ -176,7 +176,7 @@ export function App() {
     : [
         "94 of the 100 newest DBC → DAMM v2 launches on mainnet had no permanently locked liquidity",
         "Ballast: 85% of the raise locked for ever, 15% resting as one DLMM bid at the floor",
-        "Full sell-out on Meteora's mainnet binaries: lowest execution 1.017 × F",
+        "Full sell-out on Meteora's mainnet binaries: worst fill 0.998 × F, fees included",
         "Every number is read from chain; F comes from the floor crate",
         "Check any launch with ballast verify",
       ];
@@ -611,7 +611,7 @@ export function App() {
                 <div className="eyebrow">Check it</div>
                 <h2>A claim built to be tested.</h2>
               </div>
-              <p>The verifier recomputes the prediction, F, its whole history and the vault's ledger from raw accounts. On Meteora's mainnet binaries, a full sell-out of every team token executed no lower than 1.017 × F.</p>
+              <p>The verifier recomputes the prediction, F, its whole history and the vault's ledger from raw accounts. On Meteora's mainnet binaries, the worst fill in a full sell-out of every team token was 0.998 × F, fees included.</p>
             </div>
             <pre>ballast verify &lt;launch&gt; --rpc {rpc}</pre>
           </section>

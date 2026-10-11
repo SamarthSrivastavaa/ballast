@@ -27,7 +27,7 @@ import { virtualPool } from "../../tests/integration/p0/src/flow";
 import { ata, ensureAtaIx, funded, tokenBalanceOrZero, tokenBalanceStrict, wrapIxs } from "../../tests/integration/p0/src/wallets";
 import { accounts, ballast, pdas } from "../../tests/integration/program/src/client";
 import {
-  activeOf, altFor, arrays, bidSellQuote, cleanedLaunch, creatorDammAccounts, dammBuy, dammSell, dammSellQuote, expectedAfterSettle,
+  activeOf, altFor, arrays, bestRoute, bidSellQuote, cleanedLaunch, creatorDammAccounts, dammBuy, dammSell, dammSellQuote, expectedAfterSettle,
   depositIx, events, expectedPayout, field, floorBinNow, harvestIx, keeperRefresh, liveInputs, Opened, openAtFloor,
   payCreatorIx, redeemIx, refreshIx, sellIntoBid, waitSlots,
 } from "../../tests/integration/program/src/fixture";
@@ -137,9 +137,7 @@ async function main(): Promise<void> {
     for (let guard = 0; guard < 400; guard++) {
       const bal = await tokenBalanceOrZero(ata(P.base, w.publicKey));
       if (bal === 0n) break;
-      const b = bal < 2n * chunk ? bal : chunk;
-      const [qBid, qDamm] = [await bidSellQuote(P, b), await dammSellQuote(P, b)];
-      const venue = qBid > qDamm ? "DLMM bid" : "DAMM v2";
+      const { venue, amount: b } = await bestRoute(P, bal < 2n * chunk ? bal : chunk);
       const t = venue === "DLMM bid" ? await sellIntoBid(P, w, b) : await dammSell(P, w, b);
       if (t.err) throw new Error(`sell (${venue}): ${got(t)} ${t.signature}`);
       sells.push({ wallet: wi + 1, venue, base: b, signature: t.signature });
