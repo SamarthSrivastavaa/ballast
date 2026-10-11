@@ -1,164 +1,237 @@
 # Ballast
 
-A Meteora DBC launch class with an on-chain, **executable buyback floor** `F`.
+**Launch with a floor.**
+
+A Meteora token launch whose worst case is computed on-chain before the first public trade, and
+verifiable by anyone.
+
+[![ci](https://github.com/SamarthSrivastavaa/ballast/actions/workflows/ci.yml/badge.svg)](https://github.com/SamarthSrivastavaa/ballast/actions/workflows/ci.yml)
+[![independent verifications](https://img.shields.io/github/issues-search/SamarthSrivastavaa/ballast?query=label%3Averified&label=independent%20verifications&color=2a3fe0)](https://github.com/SamarthSrivastavaa/ballast/issues?q=label%3Averified)
+[![launch requests](https://img.shields.io/github/issues-search/SamarthSrivastavaa/ballast?query=label%3Alaunch-request&label=launch%20requests&color=58c2a5)](https://github.com/SamarthSrivastavaa/ballast/issues?q=label%3Alaunch-request)
+[![break attempts](https://img.shields.io/github/issues-search/SamarthSrivastavaa/ballast?query=label%3Abreak-attempt&label=break%20attempts&color=e9a13b)](https://github.com/SamarthSrivastavaa/ballast/issues?q=label%3Abreak-attempt)
 
 **This is an executable buyback floor on Meteora, not a promise about prices elsewhere.**
 
-At graduation, 15% of the raise is withdrawn as the DBC migration fee into a program-owned vault;
-the other 85% migrates into a DAMM v2 pool as two permanently locked, PDA-owned positions. The whole
-vault rests as one DLMM limit order in the highest bin at or below `F`. `F` is the price at which the
-locked liquidity plus that bid can absorb the entire outstanding supply:
+![Selling every token holders have: the price falls along the DAMM v2 curve and lands on the floor, where the DLMM bid absorbs the rest](docs/assets/dump.gif)
+
+*Every token holders had, sold on Meteora's mainnet binaries (local validator). The worst fill of
+the whole sell-out was 0.998 × F, fees included.*
+
+- **Buyers:** see your worst case before you buy.
+- **Creators:** launch without being called a rug.
+- **Launchpads:** offer a launch class with a verifiable floor, with one DBC config and one instruction.
+
+## Try to break it
+
+Check the locked-liquidity floor under **any Meteora DAMM v2 pool on mainnet**, in one command:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/SamarthSrivastavaa/ballast/main/install.sh | sh
+./ballast check <DAMM v2 pool address> --cluster mainnet
+```
 
 ```
-V/F + L·(1/√F − 1/√P_max) = S          V = vault quote · L = permanent liquidity · S = outstanding supply
+RESULT: LOCKED-LIQUIDITY FLOOR ✓  F = … per token = …% of the pool price (worst case from here: −…%)
+RESULT: NO FLOOR ✗  nothing in this pool is permanently locked; its liquidity can be withdrawn
 ```
 
-**The claim is falsifiable.** The floor is predicted on-chain in the pool-creation transaction,
-before any third-party trade (D-011), and `ballast verify` recomputes it from raw accounts with no
-dependency on this project's app. The claim is "realised F ≥ predicted F".
+Verify a Ballast launch the same way; it recomputes everything from raw accounts and never calls our
+app or any API of ours:
 
-**Late buyers can lose about 74%.** At graduation the pool price sits roughly 3.8× above F, so a
-buyer at that price can lose ≈ 74% before reaching the floor. F is a price in SOL, not in dollars.
-Selling directly into the DAMM v2 pool can execute below F; the DLMM bid and redemption do not.
+```bash
+./ballast verify <mint> --cluster <mainnet|devnet|local>
+# … 16 checks …
+# RESULT: FLOOR VERIFIED ✓  F = 6.8400e-9 SOL/token (predicted 6.7019e-9 at slot 12988)
+```
+
+No prebuilt binary for your machine? `cargo install --git https://github.com/SamarthSrivastavaa/ballast ballast-verifier --locked`.
+
+Ran it? [Post your output](https://github.com/SamarthSrivastavaa/ballast/issues/new?template=i-verified.yml).
+Think you can make the floor fall? [The challenge and its rules](submission/BREAK_THE_FLOOR.md).
+Want to launch with it? [Request a launch](https://github.com/SamarthSrivastavaa/ballast/issues/new?template=request-launch.yml).
 
 ## How it works
 
-| Meteora product | Role in the floor |
+```mermaid
+flowchart LR
+  A[Buyers trade on the<br/>Dynamic Bonding Curve] --> B{Graduation<br/>10 SOL raised}
+  B -->|85% of the raise| C[DAMM v2 pool<br/>two permanently locked positions<br/>owned by the program]
+  B -->|15%: the DBC migration fee| D[Program vault]
+  D --> E[One DLMM limit order<br/>in the highest bin at or below F]
+  C --> F((Floor F))
+  E --> F
+```
+
+At graduation, 85% of the raise migrates into DAMM v2 as two permanently locked, program-owned
+positions; the other 15%, the DBC migration fee, lands in a program vault and rests as one DLMM limit
+order in the highest bin at or below F. **F is the price at which that locked liquidity plus that bid
+absorb the entire outstanding supply:**
+
+```
+V/F + L·(1/√F − 1/√P_max) = S          V = vault quote · L = permanently locked liquidity · S = outstanding supply
+```
+
+F is recorded on-chain in the pool-creation transaction, before anyone but the launcher can trade.
+The realised F must be at or above that prediction, and every instruction that changes V, S or L ends
+with an on-chain check that F did not fall. Fills on the bid are burned, which raises F for everyone
+who remains. A holder can also redeem with the program at F less 0.5%; the 0.5% stays in the vault.
+
+| Meteora product | Its part of the floor |
 |---|---|
-| **DBC** (Dynamic Bonding Curve) | The launch class: two configs (Proof 10 SOL, Public 25 SOL) validated field by field on-chain; the prediction is recorded at registration |
-| **DAMM v2** | 85% of the raise, in two permanently locked positions owned by Ballast PDAs — L in the equation |
-| **DLMM** | The vault as one limit order at the highest bin at or below F — V in the equation; fills are settled by cancel → burn → re-place, which raises F |
+| **DBC** (Dynamic Bonding Curve) | The launch class: the config is validated field by field on-chain; the prediction is recorded at registration; the 15% migration fee funds the vault |
+| **DAMM v2** | 85% of the raise in two permanently locked positions owned by program PDAs: L in the equation |
+| **DLMM** | The vault as one limit order at the floor: V in the equation. Fills are settled by cancel → burn → re-place |
 
-Holders always have two ways out at the floor: sell into the DLMM bid (its bin price, at or just under
-F), or **redeem** with the program at F less 0.5% (the fee stays in the vault and raises F for everyone else). Every
-instruction that changes V, S or L ends with an on-chain check that F did not fall.
+**Why this needs all three:** a migration fee to fund the vault (DBC), liquidity that can never be
+withdrawn (DAMM v2's permanent locks) and a resting order a program can own (DLMM limit orders).
+Together they let a floor be enforced by liquidity instead of promised by a team.
 
-Every number is one of six distinct prices, and Ballast always says which: **theoretical F**, the
-**bid bin price** (at or below F, within one 0.1% bin), the **executable bid net** of the DLMM fee,
-the **DAMM v2 price**, the **DAMM v2 sell net** of its 1% fee, and **redemption** (F less 0.5%).
+## Proof
+
+We bought a launch to graduation, then sold every token holders had. Run of 11 Oct 2026:
+
+| Claim | Result |
+|---|---|
+| Predicted F, recorded before the first public trade | 6.7019e-9 SOL/token |
+| Realised F at open | 6.7919e-9 (+1.34%: at or above the prediction) |
+| Full sell-out | 73 sells: 38 into the DLMM bid, 35 into DAMM v2; 100% of holders' tokens |
+| **Worst fill of the whole sell-out** | **0.9984 × F, fees included** (the last sell, into the pool) |
+| Fills on the DLMM bid | 0.9994 × F or better |
+| Vault after the sell-out | 0.00006 SOL left of 1.54: the bid sold out |
+| F after the sell-out | 6.8400e-9: higher than at open |
+| The vault's ledger, rebuilt from chain data | closes to the lamport |
+| 200 random transactions on a second launch | F never fell |
+| `ballast verify` | 16 of 16 checks pass |
+
+**Where this ran, exactly:**
+
+| Cluster | State |
+|---|---|
+| **Local validator running Meteora's mainnet DBC, DAMM v2 and DLMM binaries**, dumped from mainnet and pinned by hash | Everything above. Nothing is mocked. Reproduce it with the four commands below |
+| **Devnet** | The program is deployed and initialised ([deploy](https://explorer.solana.com/tx/36QzhPaB6KwjTHZFoFc47y2SuqYdnDeWG6ZAitewJmTUdZPWYRgEWpSq3d1ZhWYuewN1WmnSAHq2wd5d57pyeEEW?cluster=devnet), [program](https://explorer.solana.com/address/HSSv351Q1DftJ7mgEzKm9rt41WUTyWZJZLXUq7sfqerr?cluster=devnet)). **No launch exists there**: devnet runs a newer DBC build whose configs carry version 1, and the program refused to create a class from one ([`ConfigWrongVersion`](https://explorer.solana.com/tx/2kPEwtNjwECwh7tSg5TJmWJgRyTaTpte5WN3K6wkfarJuf1dqUBwzQEns4NuMM5z4RJUB8AuZLHgAbqABKrRJVNB?cluster=devnet)). That is the config check doing its job |
+| **Mainnet** | **Not deployed.** `ballast check` and `ballast scan` read mainnet today |
+
+The launch's accounts and transactions live on the local ledger, so they have no public explorer
+links; every run regenerates them. From the 11 Oct run
+([`evidence/proof-local/summary.md`](evidence/proof-local/summary.md) has every signature):
+
+| What | Address or signature (local ledger) |
+|---|---|
+| Ballast program | `HSSv351Q1DftJ7mgEzKm9rt41WUTyWZJZLXUq7sfqerr` |
+| Token mint | `7pGEqAUtATUkWJkkCt5mAoPuuW7M9YhRx3UAaH9N1rry` |
+| Launch account | `2rbW5eaBUkYmsbX38X53vzggmoHenGJn3LJMREdxyiDy` |
+| Class | `t4HGJHkV2GQ9dLiQyT7an88ZWkgrBtc5eTPiqiQJ5BG` |
+| DBC pool | `4LRgsWWCKy4AGSnQiyqzcXZtK3i1XRo3HDZygcxLNhxY` |
+| DAMM v2 pool | `BJiEPE5KVywcoYVag941cM2c151F6X6SpaiebFJ4pQkN` |
+| Locked positions | `3fC9c2HLvqzTbWTpkaWeZNCTHvHdEp4m3bPikAowwJaz`, `EQShRPNpdPFouDYQQYY4sKQkMNhCq9fJGFDZxPqYyQaZ` |
+| Vault (PDA) | `3VeSUxczZukeo6CNNNZf6aLdMr6oPmZvTEsG83PHXnz3` |
+| DLMM pair (bin step 10; the vault rests in it as one limit order) | `EQM11DsypubNZWZam4AACMF9qze2dPhZGzaUmPFDXcwD` |
+| Limit order | `FFuwF4q5ZJPwpZE7n2eGKhJJktiTehzvowZjA2BAGLTP` (bin −11906) |
+| Prediction transaction (the launch) | `5RZTfviZMrvKCeJxwmKgDb99mGi65AfysSJd5XQZ1SiwiHnRSCysJAu4a68DTyyuMsFij8KcR7Kw8zrBfishh3oS` |
+| Graduation: fee to the vault | `4SGMtfdZdW5GGPtcGfa7Ccd9koLMxGzvHhz6hyd9ExfKXywLCce8i4TKHJaGgtgAw5YPeKs5YFrdGKAhpdFLoPdf` |
+| Graduation: migration to DAMM v2 | `uPrEMwC5s5RBqCb8FtoQNcwEyu8XJ7iV1Vbt3nKJL6hqQKPEWy5SG8qkooSW1viZ6rGjxoRXq6WBTC85TKz1tM5` |
+| Floor: the limit order placed | `3j3W2RGh3LXFziMzN5uKJTTh2kRQ7ycZPuBjq7J9PnHpBE8x17EfwPz4hsD8W8Ej1zEioo8tXNHCeZbmsrkXoeab` |
+| Dump: first fill on the bid | `4ChdeaEAtWqEkGht4Vg11wuDbMrCR4bC3yyzZA5BVwAqtHHFafZh141i4Vexscr9w2PfuTwEsjpLYsJr7jV5fT69` |
+| Dump: last sell | `A5kqaPboe1DSjAwQ7BFzFTcHJQB6aWz8Bz8UkN7fMb9uqGRmRdhyndefpypT8wTjzSrnV4pSKnV2ZmGCtbZmTqf` |
+| Verifier output | [`evidence/proof-local/verify.txt`](evidence/proof-local/verify.txt) |
+
+Reproduce all of it (toolchain in `docs/operations.md`):
+
+```bash
+pnpm fixtures:check && pnpm localnet --quiet &      # Meteora's mainnet binaries, hashes checked against mainnet
+bash tests/integration/p0/up.sh && anchor build
+pnpm proof:local                                    # the whole lifecycle and every gate, about 20 minutes
+pnpm demo:all                                       # the same launch as a step-by-step runbook with a chart
+```
+
+**Why it matters.** `ballast scan` over the 100 newest DBC → DAMM v2 launches on mainnet (8 Oct
+2026): 94 had no permanently locked liquidity at all, and only 2 held a locked-liquidity floor above
+half their pool price ([data](evidence/scanner/scan-100-2026-10-08.json)).
+
+## Engineering
+
+- **One implementation of F.** [`crates/floor`](crates/floor) is the only code that computes F: exact
+  integers, no floating point, rounding always toward the protocol. The on-chain program, the
+  verifier and the web page (through a WebAssembly build of the same crate) all call it.
+- **34 tests and a 100,000-case property gate** on that crate, in CI. An independent integer reference
+  in Python ([`tests/reference/floor.py`](tests/reference/floor.py)) agrees with the Rust crate and
+  its WebAssembly build on 10,014 published vectors, bit for bit.
+- **The program:** 12 instructions. The vault has exactly two exits: the DLMM bid it owns, and a
+  redeemer burning tokens in the same instruction. There is no withdraw instruction.
+- **Tested against the real thing:** 167 program tests run on Meteora's mainnet binaries, with one
+  negative test per substituted account. A model fuzzer ran 10 million steps with no failure.
+- **A verifier that shares nothing with the app:** it re-derives the prediction from the DBC config
+  with its own code, rebuilds the floor's whole history from program events, and reconciles the
+  vault's ledger to the lamport.
+- **A token page** that shows the floor only when the on-chain view and the WebAssembly floor crate
+  agree on the same live accounts ([`app/`](app), screenshots in [`evidence/app/`](evidence/app)).
 
 Details: [`docs/mechanism.md`](docs/mechanism.md) · [`docs/math.md`](docs/math.md) ·
-[`docs/meteora.md`](docs/meteora.md) · [`docs/architecture.md`](docs/architecture.md).
+[`docs/meteora.md`](docs/meteora.md) · [`docs/architecture.md`](docs/architecture.md) ·
+[`docs/verifier.md`](docs/verifier.md) · [`docs/proof.md`](docs/proof.md) ·
+[`docs/security.md`](docs/security.md).
 
-## Two tiers, one mechanism (D-008)
+## Integrate in your launchpad
 
-- **Ballast Full** — this program: the vault, the DLMM bid, redemption.
-- **Ballast Lite** — the same DBC curve with 100% permanently locked LP and no program. Its floor is
-  the locked-liquidity floor (V = 0); `ballast verify` and `ballast scan` measure it. Config scripts:
-  [`scripts/lite/`](scripts/lite/).
+One DBC config (already validated on-chain as a Ballast class) and **one instruction**,
+`register_launch`, in your launch transaction next to Meteora's own pool creation. Everything after
+that is a permissionless crank the open-source keeper sends. Real code:
+[`docs/INTEGRATE.md`](docs/INTEGRATE.md).
 
-## Verify it yourself
+## Limitations
 
-```bash
-cargo build --release -p ballast-verifier
-./target/release/ballast verify <launch-address> --rpc <url>          # recompute F from raw accounts
-./target/release/ballast verify <launch> --rpc <url> --sellout <sig>…  # lowest execution vs F
-./target/release/ballast scan --rpc <url>                              # locked-liquidity floor of DBC → DAMM v2 launches
+- **Late buyers can lose about 74%.** The floor sits at about 26% of the graduation price. It tells
+  you your worst case; it does not make it small.
+- **F is in SOL, not dollars.**
+- **Each number is one of six prices, and they differ:** the theoretical floor F; the bid's bin price
+  (at or below F, within one 0.1% bin); what you receive from the bid after DLMM's fee; the DAMM v2
+  price; what you receive from the pool after its 1% fee; and redemption (F less 0.5%).
+- **Selling straight into the DAMM v2 pool can execute below F.** After a full sell-out the pool
+  price sits just under F and the pool charges 1%. The bid fills at its bin price and redemption pays
+  F less 0.5%; neither depends on the pool price. Reaching the best price means routing between the
+  two venues, as an aggregator does.
+- **Not audited.** Two internal reviews found no critical or high issue; no outside firm has looked.
+- **Upgrade authority:** the program has no instruction that withdraws the vault or the locked
+  positions, but it is upgradeable. The authority is a single project key
+  (`F1s4kPpt…GrUT1` on devnet) until an audit; it is not a multisig and not revoked.
+- **Not on mainnet, and no launch on devnet.** See "Where this ran".
+- **No real users yet.** Every wallet in the proof is a test wallet.
+- **Dependencies on Meteora:** if the DLMM pair is disabled by its operator, the bid and redemption
+  pause; the locked pool still works. A new DBC config version needs a program upgrade before new
+  classes can be created.
+- **A third party can hold the DLMM bid below F's bin** by pinning the pair's active bin. Within 70
+  bins the bid is capped there; further down it is suspended. Redemption still pays F less 0.5%.
+
+Everything else, with evidence: [`docs/limitations.md`](docs/limitations.md).
+
+## Roadmap
+
+1. An external audit; upgrade authority to a multisig, then frozen.
+2. Mainnet: the Proof launch, then a public launch.
+3. Launchpad integrations: Ballast as a launch class any DBC launchpad can offer.
+4. Support for the next DBC config version.
+
+## Team
+
+⟦FILL: name, role, one line of background, contact⟧. Built in India.
+
+## Repository
+
 ```
-
-The verifier fetches the launch, the DBC config, the DAMM v2 pool and positions, the vault, the DLMM
-order and the mint, recomputes the prediction and F with the same floor crate the program uses, and
-rebuilds the floor's history and the §10 ledger from the program's events, and exits non-zero on any
-mismatch. See [`docs/verifier.md`](docs/verifier.md).
-
-### Token page
-
-```bash
-anchor build && cargo build -p floor-wasm --target wasm32-unknown-unknown --release
-pnpm -F app build && pnpm -F app exec vite preview      # open /?launch=<launch>&rpc=<url>
+programs/ballast/        the on-chain program
+crates/floor/            the floor crate (the only implementation of F) and its vectors
+crates/verifier-core/    account fetch and checks      verifier/   the `ballast` CLI
+sdk/typescript/          client, PDAs, the floor crate through WebAssembly
+keeper/                  permissionless cranks         app/        landing page and token page
+demo/                    the step-by-step runbook      scripts/    proof, mainnet dry run, fixtures
+evidence/                every run's output            submission/ challenge, outreach, submissions
 ```
-
-One page per launch (§21): market price, F and price ÷ F, the maximum loss if you buy now, how much
-of the supply the locked pool and the vault bid each absorb at F, the bid wall, redemption with an
-exact quote, and the proof transactions. F is shown only when the program's `floor()` view and the
-floor crate (compiled to WebAssembly) agree on the same live accounts. `pnpm -F app test` checks the
-page's numbers against `ballast verify` and a real DLMM sell quote; `pnpm -F app test:redeem` lands the
-Redeem button's transaction and checks the payout against the page's quote; `pnpm -F app smoke` loads
-the built page in Chrome and checks that it renders ([`evidence/app/`](evidence/app/)).
-
-### Reproduce the whole proof on Meteora's mainnet binaries
-
-```bash
-source ~/.ballast-env
-pnpm fixtures:check                      # the dumped Meteora programs still match mainnet (hashes)
-pnpm localnet --quiet &                  # local validator running the mainnet DBC, DAMM v2, DLMM binaries
-bash tests/integration/p0/up.sh          # fund the payer
-anchor build && pnpm proof:local         # §22: launch → buys → graduation → open → full sell-out → verify
-```
-
-`pnpm proof:local` writes [`evidence/proof-local/summary.md`](evidence/proof-local/summary.md); the run is
-walked through in [`docs/proof.md`](docs/proof.md).
-
-## Evidence
-
-| What | Result | Where |
-|---|---|---|
-| Meteora behaviour (P0): permanent lock, pool mode, L ↔ reserves, PDA fee claims, PDA DLMM orders | all five verified on the mainnet binaries | [`DECISIONS.md`](DECISIONS.md) Top 20, [`evidence/p0/`](evidence/p0/) |
-| One floor implementation, exact integers | Rust = WASM = Python on 10,014 cases | [`crates/floor/vectors.json`](crates/floor/vectors.json), [`evidence/floor/`](evidence/floor/) |
-| F never falls (model fuzz) | 1M and 10M steps, 0 failures | [`evidence/fuzz/`](evidence/fuzz/) |
-| Program test suites, fresh ledger, mainnet binaries | Part 1 94 pass · Part 2 46 · audit fixes 22 · keeper 5 · 0 fail | [`evidence/program/`](evidence/program/) |
-| Audits (spec + security) | 0 critical, 0 high; the vault's only exits are its own bid and a redeemer | [`DECISIONS.md`](DECISIONS.md) § Part 2 re-audit |
-| Compute units | `open` 145k · `refresh_floor` 188k · atomic `redeem` 209k | same |
-| Full §22 Proof launch on the mainnet binaries (`pnpm proof:local`) | prediction 6.7019e-09 SOL/token; realised at open 6.7919e-09 (+1.34%); full sell-out of every team token: 73 sells (38 to the bid, 35 to DAMM v2), lowest execution 0.9984·F with fees included; F after the sell-out 6.8400e-09 (not lower); vault left 0.00006 SOL; the §10 ledger closes to the lamport (gate 4); gate 9 (200 random transactions) and gate 10 PASS; verifier PASS | [`evidence/proof-local/summary.md`](evidence/proof-local/summary.md) |
-| Why it matters: `ballast scan` over the 100 newest DBC → DAMM v2 migrations on mainnet (8 Oct) | 94 had no permanently locked liquidity; 2 held a locked-liquidity floor above half the pool price | [`evidence/scanner/scan-100-2026-10-08.json`](evidence/scanner/scan-100-2026-10-08.json) |
-
-## Addresses
-
-| | Address |
-|---|---|
-| Ballast program (local validator and devnet) | `HSSv351Q1DftJ7mgEzKm9rt41WUTyWZJZLXUq7sfqerr` |
-| DBC | `dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN` |
-| DAMM v2 | `cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG` |
-| DLMM | `LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo` |
-
-**Mainnet: not deployed.** The project spends nothing on mainnet without the owner approving each
-transaction, and the Full tier deploys only if funded (D-007).
-
-**Devnet: the program is deployed and initialised; no launch exists there.** Devnet runs a newer
-DBC build than mainnet, and the config it writes carries version 1 where mainnet's carries 0. The
-program checks that version first (§7 rule 1) and refused to create a class from it:
-`ConfigWrongVersion`, transaction `2kPEwtNj…rRJVNB`. The proof therefore ran only on the mainnet
-binaries. Signatures: [`evidence/proof-devnet/deploy.json`](evidence/proof-devnet/deploy.json).
-
-## Limits
-
-- The DLMM leg depends on Meteora's pair: if an operator disables it, bids and redemption pause; the
-  locked pool still works.
-- Anyone can move the DLMM active bin and hold it with a dust order. Within 70 bins under F's bin the
-  bid is capped there (still at or below F); further down the bid is suspended and the vault rests
-  unplaced. Redemption still pays F less 0.5% either way (D-020, D-021).
-- A wallet whose whole balance redeems for less than 0.001 SOL cannot redeem (§10's minimum).
-- A class can only be created from a DBC config of the version the program was validated against.
-  When Meteora ships a new config version to mainnet (devnet already has one), new classes need a
-  program upgrade first; existing classes and launches are not affected.
-- The program is upgradeable by its authority; a malicious upgrade is the one path to the vault.
-
-Everything else, with evidence: [`docs/limitations.md`](docs/limitations.md) ·
-[`docs/security.md`](docs/security.md) · [`docs/operations.md`](docs/operations.md).
-
-## Challenge: make F go down
-
-Show on-chain evidence, on a named Full launch, of any of the following (§24 of the
-[build spec](docs/spec/BUILD_SPEC.md) has the exact rules):
-
-1. two slots t₁ < t₂ where the `floor()` value s fell, as evaluated by `ballast verify --at-slot`;
-2. a transfer out of a vault other than into the launch's own limit order or to a redeemer burning
-   tokens in the same instruction;
-3. a decrease in the permanently locked liquidity of a recorded position;
-4. a state with vault > 0 in which redeeming T tokens pays less than ⌊T·F·(1 − 0.5%)⌋.
-
-## Build and test
 
 ```bash
 cargo fmt --all --check && cargo clippy --all-targets -- -D warnings
-cargo test --workspace                                   # floor crate, layouts, verifier, fuzzer
-python3 tests/reference/floor.py                         # independent integer reference
-pnpm test:fuzz                                           # §14 model fuzz, 1M steps
-anchor build && pnpm exec tsx tests/integration/program/run.ts   # program suites on mainnet binaries
+cargo test --workspace && python3 tests/reference/floor.py
 ```
 
-Toolchain: Agave 2.1.21, Anchor 0.31.1, Rust 1.85 (host) / platform-tools v1.43 (SBF), Node 20,
-pnpm 9 — pinned and justified in [`DECISIONS.md`](DECISIONS.md) § Toolchain.
-
-For judges: [`JUDGES.md`](JUDGES.md). Specification: [`docs/spec/BUILD_SPEC.md`](docs/spec/BUILD_SPEC.md).
-Progress: [`STATUS.md`](STATUS.md). License: [Apache-2.0](LICENSE).
+For judges: [`JUDGES.md`](JUDGES.md) · [`submission/JUDGE_FAQ.md`](submission/JUDGE_FAQ.md).
+Build log and decisions: [`STATUS.md`](STATUS.md), [`DECISIONS.md`](DECISIONS.md).
+License: [Apache-2.0](LICENSE).

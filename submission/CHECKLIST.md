@@ -4,7 +4,8 @@ Updated by Claude as work lands. ⟦FILL⟧ items need you.
 
 ## Do now (Sun night)
 - [ ] Send the messages in `submission/OUTREACH.md` and post the two community posts (list at the top of that file).
-- [ ] Create three GitHub labels if they are not there: `launch-request`, `verified`, `break-attempt` (Issues → Labels → New label). The issue forms apply them automatically once they exist.
+- [x] GitHub labels `launch-request`, `verified`, `break-attempt`: created by a workflow.
+- [ ] **Re-record anything that says "1.017".** The correct line is "the worst fill was 0.998 times the floor, fees included".
 
 ## Decide (Mon 07:00 IST)
 - [ ] **GO MAINNET or not.** Read `submission/MAINNET.md` (cost table, risks). Type exactly `GO MAINNET` in chat to approve; anything else is NO-GO.
@@ -25,6 +26,7 @@ Updated by Claude as work lands. ⟦FILL⟧ items need you.
 - [ ] Superteam Earn, India: paste from `submission/EARN_INDIA.md` by Tue 09:00 IST (not editable after)
 
 ## Known open items
+- Mainnet harness mode is not written yet (the harness refuses mainnet by design). It is needed only after `GO MAINNET`.
 - Devnet cannot host a launch (devnet's DBC writes a config version the program refuses). All launch evidence is on a local validator running Meteora's mainnet binaries.
 - Licence: the repo already carries Apache-2.0. Keep it or change it: ⟦FILL⟧
 - No external audit. Upgrade authority is a single project key.

@@ -1,0 +1,106 @@
+{
+  "ranAt": "2026-10-11T17:08:58.039Z",
+  "what": "Dry run on the local validator with Meteora's mainnet binaries. No mainnet transaction was sent.",
+  "demoId": "20261011-170628",
+  "programBytes": 553456,
+  "deploy": {
+    "programDataLamports": 2812435320,
+    "programAccountLamports": 833120,
+    "transientBufferLamports": 2812394680,
+    "writeTransactions": 547,
+    "estWriteFeesLamports": 2735000
+  },
+  "launch": {
+    "payerClassConfigAndKeeperFloatLamports": 210249240,
+    "payerLaunchRentsAndCrankFeesLamports": 418785960,
+    "adminLamports": 0,
+    "buysLamports": 10106142943,
+    "sellProceedsLamports": 5785891279,
+    "lockedOrSpentInTheLaunchLamports": 4320251664,
+    "creatorLamportsDelta": 0,
+    "partnerAuthFloatLamports": 198051200
+  },
+  "sellOut": {
+    "sells": 73,
+    "lowestExecutionOverF": 0.998414,
+    "lowestExecutionVenue": "DAMM v2",
+    "lowestBidFillOverF": 0.999439,
+    "fNotLower": true
+  },
+  "snapshots": [
+    {
+      "after": "reset",
+      "lamports": {
+        "payer": 490992186680,
+        "admin": 997570960,
+        "creator": 5000000000,
+        "buyer1": 12000000000,
+        "buyer2": 12000000000,
+        "buyer3": 12000000000,
+        "partner_auth": 200000000
+      }
+    },
+    {
+      "after": "launch",
+      "lamports": {
+        "payer": 490913637440,
+        "admin": 997570960,
+        "creator": 5000000000,
+        "buyer1": 12000000000,
+        "buyer2": 12000000000,
+        "buyer3": 12000000000,
+        "partner_auth": 200000000
+      }
+    },
+    {
+      "after": "buy",
+      "lamports": {
+        "payer": 490913637440,
+        "admin": 997570960,
+        "creator": 5000000000,
+        "buyer1": 8497955720,
+        "buyer2": 8497955720,
+        "buyer3": 8897945617,
+        "partner_auth": 200000000
+      }
+    },
+    {
+      "after": "graduate",
+      "lamports": {
+        "payer": 490879069960,
+        "admin": 997570960,
+        "creator": 5000000000,
+        "buyer1": 8497955720,
+        "buyer2": 8497955720,
+        "buyer3": 8897945617,
+        "partner_auth": 200000000
+      }
+    },
+    {
+      "after": "floor",
+      "lamports": {
+        "payer": 490728866000,
+        "admin": 997570960,
+        "creator": 5000000000,
+        "buyer1": 8497955720,
+        "buyer2": 8497955720,
+        "buyer3": 8897945617,
+        "partner_auth": 198051200
+      }
+    },
+    {
+      "after": "dump",
+      "lamports": {
+        "payer": 490573400720,
+        "admin": 997570960,
+        "creator": 5000000000,
+        "buyer1": 12097217284,
+        "buyer2": 9766842490,
+        "buyer3": 9815688562,
+        "partner_auth": 198051200
+      }
+    }
+  ],
+  "peakLamports": 13551181583,
+  "spentForGoodLamports": 7765290304
+}

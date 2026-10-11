@@ -1,0 +1,14 @@
+{
+  "cluster": "local validator (Meteora mainnet binaries)",
+  "mint": "7uYwvJZ9LCkxj5Pq3qhsLsFKy7ggZTGz2Pr91TQ7acXg",
+  "launch": "HgJFTsGGPnwd1B9JaGpg8skHiMe6ppEbNBnBnQjmNdBW",
+  "dbcPool": "FrRKZZva1oiD4eZWiL9es6v21Cqq74eBJ3AHvf7EKt1K",
+  "dlmmPair": "RcGNpyC2KxTiaFnvyXRCG5tMG6ExwnmMPfp6Hu9va9W",
+  "predictedS": "47755047807748143",
+  "predictedFSolPerToken": 6.7019182091506225e-9,
+  "recordedAtSlot": 15555,
+  "signature": "44WJ1ePhTt3goDm2ixzdeUyNcrsvzHhYFvZLHexk3gwxqH1iyhLQLkrF7kKB6NvMakW7nUtTLWvxJxgq5HVJwSLu",
+  "graduationPriceSolPerToken": 2.59776e-8,
+  "floorOverGraduationPrice": 0.2579883518550837,
+  "worstCaseFromGraduationPct": 74.20116481449163
+}
