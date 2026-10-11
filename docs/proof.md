@@ -4,7 +4,7 @@ This is an executable buyback floor on Meteora, not a promise about prices elsew
 
 The claim Ballast makes is narrow and falsifiable: the floor is predicted on-chain before any
 third-party trade, the realised floor is at or above the prediction, and it never falls afterwards.
-The proof is one launch built to be sold out (§22): three team wallets buy a 10 SOL Proof launch to
+The proof is one launch built to be sold out: three team wallets buy a 10 SOL Proof launch to
 graduation, then sell every token they hold, and the verifier checks what happened from raw chain
 data. Every number below is from the run of 11 Oct 2026 in
 [`evidence/proof-local/summary.md`](../evidence/proof-local/summary.md) (signatures included) and can
@@ -14,13 +14,13 @@ be reproduced with one command.
 
 On a local validator running **Meteora's mainnet binaries** for DBC, DAMM v2 and DLMM, dumped from
 mainnet and pinned by hash (`pnpm fixtures:check` re-verifies them), with the mainnet accounts they
-read cloned in. Nothing is mocked (D-001). This is the authoritative proof (D-007).
+read cloned in. Nothing is mocked. This is the authoritative proof.
 
 | Cluster | State |
 |---|---|
 | Local validator, mainnet binaries | **Done**, all gates below |
-| Devnet | **Program deployed and initialised; no launch.** Devnet's DBC is a newer build whose configs carry version 1 (mainnet's carry 0), and `create_class` refused one with `ConfigWrongVersion` (§7 rule 1). Signatures in [`evidence/proof-devnet/deploy.json`](../evidence/proof-devnet/deploy.json) |
-| Mainnet | **Not deployed.** No mainnet transaction is sent without the owner approving that transaction (D-007) |
+| Devnet | **Program deployed and initialised; no launch.** Devnet's DBC is a newer build whose configs carry version 1 (mainnet's carry 0), and `create_class` refused one with `ConfigWrongVersion` (its config-version rule). Signatures in [`evidence/proof-devnet/deploy.json`](../evidence/proof-devnet/deploy.json) |
+| Mainnet | **Not deployed.** No mainnet transaction is sent without the owner approving that transaction |
 
 ```bash
 source ~/.ballast-env
@@ -36,7 +36,7 @@ Prices are in SOL per token. "F" is the theoretical floor; each other price says
 | Step | Result |
 |---|---|
 | `create_class` | The Proof config is checked field by field on-chain; the predicted floor is stored with the class |
-| Launch, one transaction: DBC pool, dust buy, DLMM pair, pool-creator role moved to a Ballast PDA, `register_launch` | Predicted F **6.7019e-9**, recorded in the pool's first transaction (D-011) |
+| Launch, one transaction: DBC pool, dust buy, DLMM pair, pool-creator role moved to a Ballast PDA, `register_launch` | Predicted F **6.7019e-9**, recorded in the pool's first transaction |
 | Three team wallets buy to the 10 SOL threshold | Curve completes with 10.000000001 SOL in reserve |
 | `settle_graduation` | Migration fee 1.5 SOL (15%) and 0.040404041 SOL of partner fees reach the vault: V = 1.540404041 SOL |
 | Migration to DAMM v2 | Two permanently locked positions, both held by Ballast PDAs; L = 3.0702e31 |
@@ -70,18 +70,18 @@ executed at 0.988 × F.
 - the vault and the resting bid, at or below F;
 - F recomputed from live V, S and L with the floor crate, and its history: 11 floor updates decoded
   from the program's events, never decreasing;
-- **the §10 ledger, to the lamport**: 1.555302673 SOL in, 1.540345493 SOL out (all of it fills, no
+- **the ledger, to the lamport**: 1.555302673 SOL in, 1.540345493 SOL out (all of it fills, no
   redemptions on this launch), which is exactly the 0.014957180 SOL the vault and bid hold; the
   supply equals the minted supply less everything burned; every counter equals the sum of its events.
 
-## The gates (§18)
+## The gates
 
 | Gate | Result | Evidence |
 |---|---|---|
 | 1 Config validation | PASS | `evidence/program/part1/results.json` |
 | 2 Graduation and migration | PASS: migration fee exactly 1,500,000,000 lamports | `evidence/program/part1/graduation.json` |
 | 3 Permanent lock | PASS | `evidence/p0/Q1`–`Q3`, verifier "Permanent" |
-| 4 Vault funding: the §10 ledger | PASS: closes to the lamport | verifier "Ledger" |
+| 4 Vault funding: the ledger | PASS: closes to the lamport | verifier "Ledger" |
 | 5 DLMM bid | PASS | `evidence/p0/Q5`, `evidence/program/part2/results.json` |
 | 6 F identical across `floor()`, Rust, WASM, Python | PASS | `crates/floor/vectors.json`, `app/test/model.test.ts` |
 | 7 Redemption | PASS: exact payout, 209,023 compute units | `evidence/program/part2/results.json` |
@@ -91,7 +91,7 @@ executed at 0.988 × F.
 
 Gates 1–3 and 5–7 passed in the program's test suites rather than as one scripted procedure each.
 The curve-phase split between traders, Meteora's protocol fee and the creator (the first rows of
-§10's table) is DBC's own accounting and is not rebuilt by the verifier; the ledger starts where
+the ledger's first rows) is DBC's own accounting and is not rebuilt by the verifier; the ledger starts where
 quote first reaches the vault.
 
 ## What this does not show

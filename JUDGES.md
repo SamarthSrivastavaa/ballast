@@ -1,74 +1,68 @@
 # For judges
 
-Every claim below links to the evidence that backs it. Criteria are in the order the project
-optimises for (DECISIONS.md D-006). Nothing here asks you to trust the app: `ballast verify`
+Every claim links to the evidence behind it. Nothing here asks you to trust our app: `ballast verify`
 recomputes the floor from raw accounts, and `pnpm proof:local` replays the whole lifecycle on
 Meteora's own mainnet binaries.
 
 This is an executable buyback floor on Meteora, not a promise about prices elsewhere.
 
-## 1. Depth of Meteora integration — DBC, DAMM v2 and DLMM each carry part of the floor
+**Two minutes, no setup:** the locked-liquidity floor under any Meteora DAMM v2 pool on mainnet.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/SamarthSrivastavaa/ballast/main/install.sh | sh
+./ballast check <DAMM v2 pool address> --cluster mainnet
+```
+
+## 1. Depth of Meteora integration
 
 | Product | What it does for the floor | Evidence |
 |---|---|---|
-| **DBC** | The launch class. Two configs are validated field by field on-chain (`create_class`, every §7 rule with its own error code); the prediction is recorded in the pool-creation transaction, before any third-party trade (D-011); 15% of the raise is withdrawn as the migration fee straight into the vault | `evidence/program/part1/results.json` (43 pass, one negative test per rule), `evidence/p0/Q4/`, `evidence/p0/d011/` |
-| **DAMM v2** | 85% of the raise migrates into a full-range, OnlyB, non-compounding pool as two permanently locked positions owned by Ballast PDAs; their liquidity L is half of the floor equation | `evidence/p0/Q1/` (both positions fully permanent in the migration transaction), `evidence/p0/Q2/`, `evidence/p0/Q3/` (L ↔ reserves within 2 units) |
-| **DLMM** | The whole vault rests as one limit order owned by a Ballast PDA at the highest bin at or below F; fills are settled by cancel → burn → re-place; redemption is atomic | `evidence/p0/Q5/` (place, fill, cancel returns exactly unfilled + filled + fees), `evidence/program/part2/results.json` |
-| Meteora behaviour found by execution, not assumed | DBC's migration price sits below the last curve point (D-017); DBC's and DAMM's fee-mode enums differ (D-010); DLMM refuses a bid above the active bin and anyone can pin it (D-020, D-021); a DLMM pair carries no bin step in its address (D-014) | `DECISIONS.md`, `evidence/program/d017/band.json`, `evidence/program/part2/dlmm-active-bin.json`, `dlmm-bin-range.json` |
+| **DBC** | The launch class. The config is validated field by field on-chain, each rule with its own error; the prediction is recorded in the pool-creation transaction, before any third-party trade; the 15% migration fee is claimed straight into the vault | `evidence/program/part1/results.json`, `evidence/p0/Q4/`, `evidence/p0/d011/` |
+| **DAMM v2** | 85% of the raise in a full-range pool as two permanently locked positions owned by program PDAs: L in the floor equation | `evidence/p0/Q1/`, `Q2/`, `Q3/` |
+| **DLMM** | The whole vault as one limit order owned by a program PDA, in the highest bin at or below F; fills settled by cancel → burn → re-place; atomic redemption | `evidence/p0/Q5/`, `evidence/program/part2/results.json` |
+| Found by running it, not assumed | DBC's migration price sits just under the last curve point; DLMM refuses a bid above the active bin, and anyone can move that bin; devnet's DBC writes a newer config version than mainnet's, and the program refused it | `docs/meteora.md`, `evidence/program/part2/dlmm-active-bin.json`, `evidence/proof-devnet/deploy.json` |
 
-All of it runs against **the mainnet Meteora binaries**, dumped and pinned by hash
-(`evidence/fixtures/mainnet-pins.json`; `pnpm fixtures:check` re-verifies them against mainnet), on a
-local validator — never mocks (D-001).
+All of it runs against **Meteora's mainnet binaries**, dumped and pinned by hash
+(`pnpm fixtures:check` re-verifies them against mainnet). Nothing is mocked.
 
-## 2. Technical execution — tests, fuzzing, verifier, reproducible proof
+## 2. Technical execution
 
 | Claim | Evidence |
 |---|---|
-| One implementation of F, exact integers, no floating point; Rust = WASM = Python bit for bit | `crates/floor` (§4), `crates/floor/vectors.json` (10,014 differential cases), `tests/reference/floor.py`, `evidence/floor/wasm-differential.json` |
-| F never falls across 1M and 10M random model steps (200 / 2,000 runs, with sell-outs) | `evidence/fuzz/model-1m.json`, `evidence/fuzz/model-10m.json` |
-| 11 instructions + `pay_creator`, each mutating one ending with the monotone check | `programs/ballast/`; fresh-ledger suites: Part 1 94 pass, Part 2 46 pass, audit fixes 22 pass, keeper 5 pass (`evidence/program/`) |
-| Every account substitution has a negative test | `tests/integration/program/src/part1.ts` … `part5.ts` |
-| Atomic redemption fits easily: `open` 145k CU, `refresh_floor` 188k, `redeem` 209k (limit 1.4M) | `DECISIONS.md` § Part 2 re-audit |
-| Two audits (spec + security), every finding fixed or decided; 0 critical / 0 high | `DECISIONS.md` § Part 2 audit findings, § Part 2 re-audit; `evidence/program/part2/audit.json` |
-| The vault has exactly two exits — the DLMM bid it owns and a redeemer — structurally | `docs/security.md`, `evidence/program/part2/audit.json` ("harvest never transfers out of the vault") |
-| `ballast verify <launch> --rpc <url>` recomputes everything from raw accounts | `crates/verifier-core`, `verifier/`, `docs/verifier.md` |
-| `pnpm proof:local` — the full §22 Proof launch on mainnet binaries: realised F +1.34% over the prediction; 73-sell full sell-out, lowest execution 0.9984·F with fees included (fills on the DLMM bid 0.9994·F or better); F never lower; gates 8–10 PASS | `evidence/proof-local/summary.md`, `docs/proof.md`, `docs/demo.md` |
-| The §10 ledger closes to the lamport from chain data: live V = recorded inflows − fills − redemptions, supply = minted − burned, every counter = the sum of its events (gate 4) — on the Proof launch and again after 200 random transactions | `ballast verify` line "Ledger" (`evidence/proof-local/verify.txt`), `crates/verifier-core/src/ledger.rs` |
-| The token page renders in a real browser, its numbers equal the verifier's and a real DLMM quote, and its Redeem transaction lands and pays exactly the quote shown | `evidence/app/`, `app/test/model.test.ts` (14 checks), `app/test/redeem.e2e.ts`, `app/test/smoke.mjs` |
+| One implementation of F, exact integers; Rust = WebAssembly = Python, bit for bit | `crates/floor` (34 tests, a 100,000-case property gate), `crates/floor/vectors.json` (10,014 cases), `tests/reference/floor.py` |
+| F never falls across 10 million random model steps | `evidence/fuzz/model-10m.json` |
+| 12 instructions; every one that changes the backing ends with an on-chain check that F did not fall | `programs/ballast/`; 167 tests on the mainnet binaries (`evidence/program/`) |
+| The vault has exactly two exits: its own DLMM order, and a redeemer | `docs/security.md`, `evidence/program/part2/audit.json` |
+| **The proof run (11 Oct):** predicted F 6.7019e-9; realised +1.34%; every holder token sold in 73 sells; **worst fill 0.9984 × F, fees included**; fills on the bid 0.9994 × F or better; F ended higher; the vault's ledger closes to the lamport | `evidence/proof-local/summary.md`, `docs/proof.md` |
+| The same launch as a step-by-step runbook with a chart, run three times in a row | `pnpm demo:all`, `evidence/demo/` |
+| The page renders in a real browser, its numbers equal the verifier's, its Redeem transaction lands and pays the quote shown | `evidence/app/`, `app/test/` |
+
+**A correction we made in the open.** Until 11 Oct this repository reported the worst fill as
+1.0174 × F. That was a measurement error: a rent refund counted as sale proceeds. The fix, its tests
+and the honest number are in `docs/proof.md` and `DECISIONS.md`.
 
 ## 3. Originality and taste
 
-- A launch class whose downside is **computed and predicted on-chain before anyone trades**, then
-  checked by anyone with an RPC URL. The claim is falsifiable on purpose: realised F ≥ predicted F.
-- The floor is quote-asset agnostic: the equation uses V (quote held), S (supply) and L (locked
-  liquidity), nothing SOL-specific.
-- Six prices kept distinct everywhere (theoretical F, bid bin price, executable bid net, DAMM v2
-  price, DAMM v2 sell net, redemption), so no number is shown without saying which it is.
+- The downside is **computed and recorded on-chain before the public can trade**, then checked by
+  anyone with an RPC URL. The claim is falsifiable on purpose: realised F ≥ predicted F.
+- Six prices kept distinct everywhere (theoretical F, the bid's bin price, the bid net of fee, the
+  DAMM v2 price, the pool sale net of fee, redemption), so no number appears without its meaning.
+- A public challenge with rules: `submission/BREAK_THE_FLOOR.md`.
 
 ## 4. Impact
 
-- Any DBC launchpad can adopt the class: two validated configs plus one program.
-- `floor()` returns `{s, F, V, S, L, s_last, bin, bin price}` as return data, so a terminal can read
-  the floor without this project's app.
-- **Ballast Lite** (D-008): the same curve with 100% permanently locked LP and no program — a
-  locked-liquidity floor (V = 0) any launch can have, which the verifier and `ballast scan` measure.
-- The gap is measurable today: of the 100 newest DBC → DAMM v2 migrations on mainnet (slots
-  454,622,437–454,633,832, scanned 8 Oct), **94 had no permanently locked liquidity at all** and only
-  2 held a locked-liquidity floor above half the pool price
-  (`evidence/scanner/scan-100-2026-10-08.json`; one pool spot-checked with Meteora's cp-amm SDK).
+- Any DBC launchpad can offer the class: one config, one instruction (`docs/INTEGRATE.md`).
+- `ballast check` and `ballast scan` are useful without Ballast: of the 100 newest DBC → DAMM v2
+  launches on mainnet (8 Oct), **94 had no permanently locked liquidity at all**
+  (`evidence/scanner/scan-100-2026-10-08.json`).
 
 ## 5. Traction
 
-Honest status: no mainnet deployment yet (D-007: no mainnet spend without per-transaction approval;
-the Full tier deploys only if funded). On devnet the program is deployed and
-initialised, but no launch exists: devnet's DBC is a newer build whose configs carry version 1, and
-the program refused to create a class from one (`ConfigWrongVersion`, §7 rule 1 —
-`evidence/proof-devnet/deploy.json`). The evidence is the reproducible local proof on Meteora's
-mainnet binaries, that devnet refusal, and `ballast scan` over existing DBC → DAMM v2 launches
-(`evidence/scanner/scan-100-2026-10-08.json`).
+Counted, with links, in `submission/TRACTION.md`. Stated plainly: no mainnet deployment, no launch on
+devnet, no outside users yet.
 
 ## Limits you should know
 
-Late buyers can lose ~74% before reaching the floor; F is in SOL, not dollars; selling directly on
-DAMM v2 can execute below F; a third party can hold the DLMM bid below F's bin (redemption still pays
-F less 0.5%). Full list: [`docs/limitations.md`](docs/limitations.md).
+Late buyers can lose about 74%. F is in SOL, not dollars. A sale straight into the DAMM v2 pool can
+execute below F. Not audited; the upgrade authority is one project key. Full list:
+[`docs/limitations.md`](docs/limitations.md). Hard questions, answered: [`submission/JUDGE_FAQ.md`](submission/JUDGE_FAQ.md).
