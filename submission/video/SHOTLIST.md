@@ -1,5 +1,9 @@
 # Shot list and recording settings
 
+**You do not need this to submit.** The demo video already exists: `ballast-demo.mp4`, rendered from a
+recorded run (`demo/film/README.md`). This file is for filming a live version yourself, if you ever
+want one.
+
 ## Before recording
 
 ```bash

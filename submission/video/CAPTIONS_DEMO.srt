@@ -1,55 +1,75 @@
 1
-00:00:00,000 --> 00:00:10,000
+00:00:00,400 --> 00:00:08,000
 Every token launch asks you to trust that something is underneath the price. Usually, nothing is.
 
 2
-00:00:10,000 --> 00:00:20,000
-This is Ballast: a Meteora launch with a floor you can see before the first public trade, and verify yourself.
+00:00:08,000 --> 00:00:19,000
+We measured it on mainnet: 94 of the 100 newest tokens that graduated from Meteora's bonding curve had no permanently locked liquidity.
 
 3
-00:00:20,000 --> 00:00:32,000
-When a creator launches, Ballast computes the floor, F, from the launch parameters alone, and records it on-chain before anyone else can trade.
+00:00:19,000 --> 00:00:26,000
+This is Ballast: a Meteora launch with a floor you can see before the first public trade, and verify yourself.
 
 4
-00:00:32,000 --> 00:00:45,000
-Every buyer sees their worst case up front. Here: 74% below the curve's final price, down to the floor.
+00:00:26,000 --> 00:00:36,450
+When a creator launches, Ballast computes the floor, F, from the launch parameters alone, and records it on-chain.
 
 5
-00:00:45,000 --> 00:00:58,000
-Buyers trade on Meteora's Dynamic Bonding Curve. At graduation, 85% of the raise migrates into DAMM v2 as two positions locked for good, owned by our program.
+00:00:36,450 --> 00:00:45,000
+Every buyer sees their worst case up front, before anyone else can trade.
 
 6
-00:00:58,000 --> 00:01:15,000
-The other 15%, the migration fee, goes into a program vault and becomes a single DLMM limit order resting at F. Three Meteora products, one invariant.
+00:00:45,000 --> 00:00:55,230
+Buyers trade on Meteora's Dynamic Bonding Curve until it graduates.
 
 7
-00:01:15,000 --> 00:01:30,000
-Now we sell everything. Every token holders have. The price slides down the pool's curve, lands on the floor, and the bid absorbs the rest.
+00:00:55,230 --> 00:01:02,360
+85% of the raise migrates into DAMM v2 as two positions locked for good, owned by the program.
 
 8
-00:01:30,000 --> 00:01:43,000
-The worst fill of the whole sell-out: 0.998 of F, fees included.
+00:01:02,360 --> 00:01:09,180
+The other 15%, the migration fee, goes into a program vault and becomes one DLMM limit order resting at F.
 
 9
-00:01:43,000 --> 00:01:55,000
-This isn't a promise from a team. It's liquidity and a limit order, and the program has no instruction that withdraws them.
+00:01:09,180 --> 00:01:16,000
+Three Meteora products, one invariant.
 
 10
-00:01:55,000 --> 00:02:08,000
-Don't trust our app. One command reads the raw accounts and recomputes F with the same tested library.
+00:01:16,000 --> 00:01:19,500
+Now let's try to break it.
 
 11
-00:02:08,000 --> 00:02:20,000
-It checks F against the vault, the bid and the locked liquidity. Sixteen checks. Same answer, for anyone, every time.
+00:01:19,500 --> 00:01:34,700
+Now we sell everything. Every token holders have.
 
 12
-00:02:20,000 --> 00:02:38,000
-[FILL: the traction line you recorded, real numbers only] And the challenge is open: break the floor.
+00:01:34,700 --> 00:01:49,140
+The price slides down the pool's curve, lands on the floor, and the bid absorbs the rest.
 
 13
-00:02:38,000 --> 00:02:48,000
-Buyers know their worst case before they buy. Creators launch without being called a rug.
+00:01:49,140 --> 00:01:57,500
+The worst fill of the whole sell-out was 0.9984 of F, fees included. It's liquidity and a limit order; the program has no instruction that withdraws them.
 
 14
-00:02:48,000 --> 00:02:55,000
-Any DBC launchpad can offer it with one config and one instruction. Ballast. Launch with a floor.
+00:01:57,500 --> 00:02:13,620
+Don't trust our app. One command reads the raw accounts and recomputes F with the same tested library.
+
+15
+00:02:13,620 --> 00:02:18,820
+Sixteen checks. Same answer, for anyone, every time.
+
+16
+00:02:18,820 --> 00:02:23,500
+And one command measures the floor under any Meteora pool on mainnet, today.
+
+17
+00:02:23,500 --> 00:02:32,500
+The page shows your worst case before you buy, and verifies it in your browser.
+
+18
+00:02:32,500 --> 00:02:43,500
+What this is not: late buyers can lose about 74%. F is in SOL. A sale straight into the DAMM v2 pool can execute below F. Not audited, not on mainnet yet.
+
+19
+00:02:43,500 --> 00:02:54,000
+Buyers see their worst case. Creators launch without being called a rug. Launchpads add one instruction. Ballast. Launch with a floor.

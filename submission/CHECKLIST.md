@@ -32,7 +32,9 @@ Updated by Claude as work lands. ⟦FILL⟧ items need you.
 - [ ] Confirm the X handles for Meteora and Superteam India before posting `THREAD.md` (written as ⟦FILL⟧ there)
 
 ## Record and submit
-- [ ] Record demo and pitch videos (`submission/video/SHOTLIST.md`), upload unlisted to YouTube, paste links: ⟦FILL⟧
+- [x] **Demo video: rendered for you.** `submission/video/ballast-demo.mp4` (also in your Windows `Videos` folder): 2:54, 1080p, captions burned in, no audio. It is a replay of a recorded run and says so on screen
+- [ ] **Upload `ballast-demo.mp4` to YouTube as unlisted** (drag and drop; thumbnail: `submission/video/poster.png`; subtitles: `CAPTIONS_DEMO.srt`) and paste the link: ⟦FILL⟧
+- [ ] Pitch video (face to camera, Colosseum reviews it first): `submission/video/PITCH_SCRIPT.md`. Only you can record this one: ⟦FILL: link, or skipped⟧
 - [ ] Before filming scene 7: open `submission/video/cards/traction.html` (live counts) and update `TRACTION.md` with the same numbers
 - [ ] Repo settings (GitHub → About): description "Launch with a floor: a Meteora DBC launch class with a verifiable, executable buyback floor"; topics `solana meteora dbc dlmm damm-v2 launchpad`
 - [ ] Post `submission/THREAD.md` on X after the videos are up (confirm the two handles first)

@@ -182,7 +182,7 @@ pub fn verify(rpc: &Rpc, launch_key: &Pubkey, opts: &Options) -> Result<Report, 
     r.push(
         "Config hash",
         cfg_acc.owner == DBC && predict::config_hash(&cfg) == class.config_hash,
-        "sha256 over the curve fields recomputed from the DBC config (§7 rule 3)".into(),
+        "sha256 over the curve fields recomputed from the DBC config".into(),
     );
     r.numbers.predicted_s = launch.predicted_s;
     r.numbers.registered_slot = launch.registered_slot;
@@ -212,7 +212,7 @@ pub fn verify(rpc: &Rpc, launch_key: &Pubkey, opts: &Options) -> Result<Report, 
             && pk(vp.pool_state.config) == class.dbc_config
             && pk(vp.pool_state.base_mint) == launch.base_mint
             && pk(vp.pool_state.creator) == creator_auth,
-        "config, base mint, and pool creator = creator_auth (D-011)".into(),
+        "config, base mint, and pool creator = creator_auth".into(),
     );
     let pool_sigs = rpc.signatures(&launch.dbc_pool, opts.max_signatures)?;
     match pool_sigs.first() {
@@ -419,7 +419,7 @@ pub fn verify(rpc: &Rpc, launch_key: &Pubkey, opts: &Options) -> Result<Report, 
     };
     r.numbers.floor_bin = Some(fb);
     if launch.bid_suspended {
-        r.info("Bid", format!("SUSPENDED (D-021): a third party pins the DLMM active bin at {}; the vault rests unplaced, V counts it, redemption pays F", launch.bid_bin_id));
+        r.info("Bid", format!("SUSPENDED: a third party pins the DLMM active bin at {}; the vault rests unplaced, V counts it, redemption pays F", launch.bid_bin_id));
     } else if launch.bid_order == Pubkey::default() {
         r.info(
             "Bid",
@@ -438,9 +438,9 @@ pub fn verify(rpc: &Rpc, launch_key: &Pubkey, opts: &Options) -> Result<Report, 
         let price = price_q64(launch.bid_bin_id, step).unwrap_or(0);
         let gap = fb - launch.bid_bin_id;
         let note = if launch.bid_capped {
-            format!("CAPPED (D-020): {gap} bins under F's bin while a third party pins the active bin; redemption pays F")
+            format!("CAPPED: {gap} bins under F's bin while a third party pins the active bin; redemption pays F")
         } else if gap > 0 {
-            format!("{gap} bin(s) under F's bin — stale until the next refresh_floor (§9)")
+            format!("{gap} bin(s) under F's bin — stale until the next refresh_floor")
         } else {
             "the highest bin at or below F".into()
         };
@@ -521,7 +521,7 @@ pub fn verify(rpc: &Rpc, launch_key: &Pubkey, opts: &Options) -> Result<Report, 
         r.push(
             "Backing",
             false,
-            format!("{decreases} BackingDecreased event(s); launch degraded (§8 fail-safe)"),
+            format!("{decreases} BackingDecreased event(s); launch degraded (fail-safe mode)"),
         );
     }
 
@@ -577,7 +577,7 @@ pub fn verify(rpc: &Rpc, launch_key: &Pubkey, opts: &Options) -> Result<Report, 
             "Sell-out",
             min >= 990_000,
             format!(
-                "lowest execution {:.4}·F over {} transaction(s) (gate 8: ≥ 0.99·F)",
+                "lowest execution {:.4}·F over {} transaction(s) (the pass mark is 0.99·F)",
                 min as f64 / 1e6,
                 r.sellout.len()
             ),

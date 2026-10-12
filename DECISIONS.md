@@ -860,6 +860,12 @@ One line per choice, newest last.
 - Hosting: GitHub Pages workflow (needs Pages enabled once by the owner); the hosted page defaults
   to devnet, where the program is deployed and no launch exists, and says so.
 - Mainnet: default NO-GO; dry run measured on the local validator (peak 13.55 SOL, 7.77 spent).
+- 12 Oct: the owner cannot record. The demo video is rendered instead of filmed: `demo/film/` draws
+  a 2:54 film on a canvas from one recorded run (`evidence/demo/20261011-173246/`, incl. its real
+  terminal output) and Chrome's MediaRecorder encodes it. It is labelled on screen as a replay of
+  recorded output; the page shot is labelled as a second launch on the same ledger. No audio.
+- The verifier's printed output no longer carries internal references ("§7 rule 3", "D-011", …);
+  release `v0.1.2`.
 - Launchpad integration count stated as 1 instruction (`register_launch`) plus the open keeper's 6
   permissionless cranks, counted from `programs/ballast/src/lib.rs`.
 

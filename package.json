@@ -36,7 +36,9 @@
     "demo:all": "tsx demo/run.ts all",
     "mainnet:dryrun": "tsx scripts/mainnet/dry-run.ts",
     "demo:crank": "tsx demo/run.ts crank",
-    "demo:keeper-path": "tsx demo/run.ts keeper-path"
+    "demo:keeper-path": "tsx demo/run.ts keeper-path",
+    "film:build": "node demo/film/build.mjs",
+    "film:serve": "node demo/film/server.mjs"
   },
   "devDependencies": {
     "@coral-xyz/anchor": "0.31.1",

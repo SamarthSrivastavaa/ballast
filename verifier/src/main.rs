@@ -236,7 +236,7 @@ fn scan_cmd(args: &[String]) -> ExitCode {
         );
         return ExitCode::SUCCESS;
     }
-    println!("Locked-liquidity floor under the newest {} DBC → DAMM v2 launches (V = 0: Ballast Lite's floor, D-008)", rows.len());
+    println!("Locked-liquidity floor under the newest {} DBC → DAMM v2 launches (V = 0: the floor of locked liquidity alone)", rows.len());
     println!("F = the price at which permanently locked liquidity alone absorbs every token; F/price = how far the pool can fall before reaching it.\n");
     println!(
         "{:<46} {:<5} {:>11} {:>10}  base mint",

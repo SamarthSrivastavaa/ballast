@@ -7,9 +7,9 @@ Outstanding S:     638576673 tokens
 
 PASS  Launch                 owner Ballast, seeds ["launch", 4Hq5cLVoV9YpS5JDBgJpnmPJEvvAsC6MqVRXJC1XAreF]
 PASS  Class                  proof (10 SOL); DBC config 3JKma2a6eXhN7c5q7akid6UB3nvuFtq65FDcpthqMFju
-PASS  Config hash            sha256 over the curve fields recomputed from the DBC config (§7 rule 3)
+PASS  Config hash            sha256 over the curve fields recomputed from the DBC config
 PASS  Prediction             6.7019e-9 SOL/token recorded; independent derivation from the config 6.7178e-9 (band 6.7178e-9…6.7178e-9); a lower bound
-PASS  DBC pool               config, base mint, and pool creator = creator_auth (D-011)
+PASS  DBC pool               config, base mint, and pool creator = creator_auth
 PASS  Recorded before trade  registered in the pool's first transaction, slot 19325 (23GrdgGTMfs2)
 PASS  DAMM pool              canonical migrated pool AR5GCTno3DnXArtGTMMmEn7oz6QfDjkzc61PqoVSWSQQ; OnlyB, no compounding, full range
 PASS  Permanent              L = 3.0702e31 (both positions permanent, unlocked = vested = 0; ≥ L at open)

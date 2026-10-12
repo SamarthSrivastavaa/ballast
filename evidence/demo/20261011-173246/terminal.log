@@ -1,0 +1,168 @@
+[1m[36m━━ RESET ━━[0m  [1mA fresh DBC config, a fresh class, funded wallets[0m
+  [2mDemo id        [0m   20261011-173246
+  [2mCluster        [0m   local validator, Meteora mainnet binaries
+  [2mBallast program[0m   HSSv351Q1DftJ7mgEzKm9rt41WUTyWZJZLXUq7sfqerr
+  [2mDBC config     [0m   3JKma2a6eXhN7c5q7akid6UB3nvuFtq65FDcpthqMFju
+  [2mClass (10 SOL) [0m   Cfz3UXK8jNcu6QVg7YjL4rKX2Eo5oujNkiH15sn8sU3B
+  [2mWallets        [0m   1 creator, 3 buyers, funded
+  [32m✓[0m create_class checked the config field by field on-chain  [2mDP6Wd6E6o7nUQjTTE9ng…[0m
+[1m[36m━━ LAUNCH ━━[0m  [1mOne transaction. The floor is recorded before any third-party trade[0m
+  [2mToken mint    [0m   4Hq5cLVoV9YpS5JDBgJpnmPJEvvAsC6MqVRXJC1XAreF
+  [2mLaunch account[0m   8UtjF1PmpovFHoH1au51ReYotU4Q52KBwaqdBxmLtmwC
+  [2mDBC pool      [0m   7RSMMq7KtnBXLco9kdWjXuyLd4tEGcUVv7N9n2etwkUB
+  [2mDLMM pair     [0m   JaxTbc1cfUbX4W5otDpG9YH6ezUoHQSSjhy7q1vkbZG
+  [2mTransaction   [0m   https://explorer.solana.com/tx/23GrdgGTMfs2hiF6NoQ9yPiwGRwwT46SdmWMyLGvDx5DaTZk1kBDE5dTP5UQ9WcEDjk1vRod9mMvxJwH9DYaYGap?cluster=custom&customUrl=http%3A%2F%2F127.0.0.1%3A8899
+  [32m┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓[0m
+  [32m┃[0m [1mPREDICTED FLOOR  F = 6.7019e-9 SOL/token[0m                                             [32m┃[0m
+  [32m┃[0m recorded on-chain at slot 19325, in the pool-creation transaction                    [32m┃[0m
+  [32m┃[0m curve's final price 2.5978e-8  →  worst case from there: [33m−74.2%[0m (a lower bound on F) [32m┃[0m
+  [32m┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛[0m
+[1m[36m━━ BUY ━━[0m  [1mThree wallets buy on Meteora's Dynamic Bonding Curve until it graduates[0m
+  [32m✓[0m buyer 1  paid   3.50204428 SOL   holds  239,162,973 tokens   curve  34.6% █████████[2m░░░░░░░░░░░░░░░░[0m
+  [32m✓[0m buyer 2  paid   3.50204428 SOL   holds  171,082,759 tokens   curve  69.3% █████████████████[2m░░░░░░░░[0m
+  [32m✓[0m buyer 3  paid  3.102054383 SOL   holds  127,686,203 tokens   curve 100.0% █████████████████████████[2m[0m
+  [32m┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓[0m
+  [32m┃[0m [1mGRADUATED[0m  the curve holds its 10 SOL threshold [32m┃[0m
+  [32m┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛[0m
+[1m[36m━━ GRADUATE ━━[0m  [1m15% to the vault. 85% into DAMM v2, locked for good[0m
+  [2mMigration fee → vault[0m   1.5 SOL  (15% of the raise)
+  [2mPartner fees → vault [0m   0.040404041 SOL
+  [2mVault                [0m   AnPkBRC5jYcFwQHjqkHYMn3o5pn7Z18ZYwNcMxY8nd64  holds 1.540404041 SOL
+  [2mDAMM v2 pool         [0m   AR5GCTno3DnXArtGTMMmEn7oz6QfDjkzc61PqoVSWSQQ
+  [2mLocked position 1    [0m   DfPxbXXVdofooJVgLeQebrQBeeX9Kr1h1pinZDvpjioc  [2mNFT held by partner_auth[0m
+  [2mLocked position 2    [0m   HLBFLrnRs3Hp1WYMiuYe8TGBDtkwSzBqCcnRxSrASHkv  [2mNFT held by creator_auth[0m
+  [2mUnsold supply burned [0m   134,558,940 tokens
+  [2mOutstanding supply   [0m   865,441,060 tokens
+  [32m✓[0m settle_graduation   [2mhttps://explorer.solana.com/tx/4gQw5BrjapsULBrbos7PSoVNQJwK4xV4zUPo5DMAYuQ14cTxRHdYV6pRqqFxxRmbGcPYvVKViJiDFAJfdJBtRXs5?cluster=custom&customUrl=http%3A%2F%2F127.0.0.1%3A8899[0m
+  [32m✓[0m migration_damm_v2   [2mhttps://explorer.solana.com/tx/35qZJtNPLa41ceP58FRngTfcKaMvArnNX95A8hrSKX46v5xmLBMjdge2LxiScPiEJjz28sfNUzFKL4sMgu41yiU2?cluster=custom&customUrl=http%3A%2F%2F127.0.0.1%3A8899[0m
+  [32m✓[0m burn_leftover       [2mhttps://explorer.solana.com/tx/5xjyw3xP8hh9vLVgjm9meMBiz4nH4DfnEapKCrp7S9x6hMXnRUVkVpgHeCDzdxjyza7iw7YLhbGbiDLfUkcQmBvk?cluster=custom&customUrl=http%3A%2F%2F127.0.0.1%3A8899[0m
+[1m[36m━━ FLOOR ━━[0m  [1mThe whole vault rests as one DLMM limit order at F[0m
+  [2mVault (PDA) [0m   https://explorer.solana.com/address/AnPkBRC5jYcFwQHjqkHYMn3o5pn7Z18ZYwNcMxY8nd64?cluster=custom&customUrl=http%3A%2F%2F127.0.0.1%3A8899
+  [2mDLMM pair   [0m   https://explorer.solana.com/address/JaxTbc1cfUbX4W5otDpG9YH6ezUoHQSSjhy7q1vkbZG?cluster=custom&customUrl=http%3A%2F%2F127.0.0.1%3A8899
+  [2mLimit order [0m   https://explorer.solana.com/address/Hw2w23qb3hWKVuYEH3m9VnCXy2HZwPmAJxb37adiQMHN?cluster=custom&customUrl=http%3A%2F%2F127.0.0.1%3A8899
+  [2mBid         [0m   1.540404041 SOL resting in bin -11906, the highest bin at or below F
+  [2mDAMM v2 pool[0m   https://explorer.solana.com/address/AR5GCTno3DnXArtGTMMmEn7oz6QfDjkzc61PqoVSWSQQ?cluster=custom&customUrl=http%3A%2F%2F127.0.0.1%3A8899
+  [2mTransaction [0m   https://explorer.solana.com/tx/3UJ29rCkgSS1x9YTNLhDMKW1EUcgrKAqwyWDc4LT15JAFfYBcZ8H8tUt1wnvwF2vzK77ogAh2ADKGwF8XHAe2UhE?cluster=custom&customUrl=http%3A%2F%2F127.0.0.1%3A8899
+  [32m┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓[0m
+  [32m┃[0m [1mFLOOR OPEN   F = 6.7919e-9 SOL/token[0m                                                               [32m┃[0m
+  [32m┃[0m predicted before any third-party trade: 6.7019e-9   realised: [32m+1.34%[0m  ✓ at or above the prediction [32m┃[0m
+  [32m┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛[0m
+[1m[36m━━ DUMP ━━[0m  [1mSell every holder token. Each chunk goes to the better of the DLMM bid and DAMM v2[0m
+  [2m  #  venue      tokens sold     quoted SOL/token   supply sold[0m
+    1  [36mDAMM v2  [0m    9,566,519        2.4986e-8        1.8%  
+    2  [36mDAMM v2  [0m    9,566,519        2.3603e-8        3.5%  █
+    3  [36mDAMM v2  [0m    9,566,519        2.2332e-8        5.3%  █
+    4  [36mDAMM v2  [0m    9,566,519        2.1161e-8        7.1%  ██
+    5  [36mDAMM v2  [0m    9,566,519        2.0079e-8        8.9%  ██
+    6  [36mDAMM v2  [0m    9,566,519        1.9079e-8       10.7%  ███
+    7  [36mDAMM v2  [0m    9,566,519        1.8151e-8       12.4%  ███
+    8  [36mDAMM v2  [0m    9,566,519        1.7289e-8       14.2%  ████
+    9  [36mDAMM v2  [0m    9,566,519        1.6488e-8       16.0%  ████
+   10  [36mDAMM v2  [0m    9,566,519        1.5741e-8       17.8%  ████
+   11  [36mDAMM v2  [0m    9,566,519        1.5043e-8       19.6%  █████
+   12  [36mDAMM v2  [0m    9,566,519        1.4391e-8       21.3%  █████
+   13  [36mDAMM v2  [0m    9,566,519        1.3780e-8       23.1%  ██████
+   14  [36mDAMM v2  [0m    9,566,519        1.3208e-8       24.9%  ██████
+   15  [36mDAMM v2  [0m    9,566,519        1.2670e-8       26.7%  ███████
+   16  [36mDAMM v2  [0m    9,566,519        1.2165e-8       28.4%  ███████
+   17  [36mDAMM v2  [0m    9,566,519        1.1689e-8       30.2%  ████████
+   18  [36mDAMM v2  [0m    9,566,519        1.1240e-8       32.0%  ████████
+   19  [36mDAMM v2  [0m    9,566,519        1.0817e-8       33.8%  ████████
+   20  [36mDAMM v2  [0m    9,566,519        1.0418e-8       35.6%  █████████
+   21  [36mDAMM v2  [0m    9,566,519        1.0040e-8       37.3%  █████████
+   22  [36mDAMM v2  [0m    9,566,519        9.6821e-9       39.1%  ██████████
+   23  [36mDAMM v2  [0m    9,566,519        9.3432e-9       40.9%  ██████████
+   24  [36mDAMM v2  [0m   19,133,038        8.8692e-9       44.5%  ███████████
+   25  [36mDAMM v2  [0m    6,843,310        8.4668e-9       45.7%  ███████████
+   26  [36mDAMM v2  [0m    6,843,310        8.2668e-9       47.0%  ████████████
+   27  [36mDAMM v2  [0m    6,843,310        8.0738e-9       48.3%  ████████████
+   28  [36mDAMM v2  [0m    6,843,310        7.8875e-9       49.5%  ████████████
+   29  [36mDAMM v2  [0m    6,843,310        7.7075e-9       50.8%  █████████████
+   30  [36mDAMM v2  [0m    6,843,310        7.5337e-9       52.1%  █████████████
+   31  [36mDAMM v2  [0m    6,843,310        7.3657e-9       53.4%  █████████████
+   32  [36mDAMM v2  [0m    6,843,310        7.2032e-9       54.6%  ██████████████
+   33  [36mDAMM v2  [0m    6,843,310        7.0460e-9       55.9%  ██████████████
+   34  [36mDAMM v2  [0m    6,843,310        6.8939e-9       57.2%  ██████████████
+   35  [32mDLMM bid [0m    6,843,310        6.7894e-9       58.5%  ███████████████
+   36  [32mDLMM bid [0m    6,843,310        6.7894e-9       59.7%  ███████████████
+   37  [32mDLMM bid [0m    6,843,310        6.7894e-9       61.0%  ███████████████
+   38  [32mDLMM bid [0m    6,843,310        6.7894e-9       62.3%  ████████████████
+   39  [32mDLMM bid [0m    6,843,310        6.7894e-9       63.5%  ████████████████
+   40  [32mDLMM bid [0m    6,843,310        6.7894e-9       64.8%  ████████████████
+   41  [32mDLMM bid [0m    6,843,310        6.7894e-9       66.1%  █████████████████
+   42  [32mDLMM bid [0m    6,843,310        6.7894e-9       67.3%  █████████████████
+   43  [32mDLMM bid [0m    6,843,310        6.7894e-9       68.6%  █████████████████
+   44  [32mDLMM bid [0m    6,843,310        6.7894e-9       69.9%  █████████████████
+   45  [32mDLMM bid [0m    6,843,310        6.7894e-9       71.2%  ██████████████████
+   46  [32mDLMM bid [0m    6,843,310        6.7894e-9       72.4%  ██████████████████
+   47  [32mDLMM bid [0m    6,843,310        6.7894e-9       73.7%  ██████████████████
+   48  [32mDLMM bid [0m   13,686,621        6.7894e-9       76.3%  ███████████████████
+   49  [32mDLMM bid [0m    5,107,448        6.7894e-9       77.2%  ███████████████████
+   50  [32mDLMM bid [0m    5,107,448        6.7894e-9       78.2%  ████████████████████
+   51  [32mDLMM bid [0m    5,107,448        6.7894e-9       79.1%  ████████████████████
+   52  [32mDLMM bid [0m    5,107,448        6.7894e-9       80.1%  ████████████████████
+   53  [32mDLMM bid [0m    5,107,448        6.7894e-9       81.0%  ████████████████████
+   54  [32mDLMM bid [0m    5,107,448        6.7894e-9       82.0%  ████████████████████
+   55  [32mDLMM bid [0m    5,107,448        6.7894e-9       82.9%  █████████████████████
+   56  [32mDLMM bid [0m    5,107,448        6.7894e-9       83.8%  █████████████████████
+   57  [32mDLMM bid [0m    5,107,448        6.7894e-9       84.8%  █████████████████████
+   58  [32mDLMM bid [0m    5,107,448        6.7894e-9       85.8%  █████████████████████
+   59  [32mDLMM bid [0m    5,107,448        6.7894e-9       86.7%  ██████████████████████
+   60  [32mDLMM bid [0m    5,107,448        6.7894e-9       87.7%  ██████████████████████
+   61  [32mDLMM bid [0m    5,107,448        6.7894e-9       88.6%  ██████████████████████
+   62  [32mDLMM bid [0m    5,107,448        6.7894e-9       89.5%  ██████████████████████
+   63  [32mDLMM bid [0m    5,107,448        6.7894e-9       90.5%  ███████████████████████
+   64  [32mDLMM bid [0m    5,107,448        6.7894e-9       91.5%  ███████████████████████
+   65  [32mDLMM bid [0m    5,107,448        6.7894e-9       92.4%  ███████████████████████
+   66  [32mDLMM bid [0m    5,107,448        6.7894e-9       93.3%  ███████████████████████
+   67  [32mDLMM bid [0m    5,107,448        6.7894e-9       94.3%  ████████████████████████
+   68  [32mDLMM bid [0m    5,107,448        6.7894e-9       95.3%  ████████████████████████
+   69  [32mDLMM bid [0m    5,107,448        6.7894e-9       96.2%  ████████████████████████
+   70  [32mDLMM bid [0m    5,107,448        6.7894e-9       97.2%  ████████████████████████
+   71  [32mDLMM bid [0m    5,107,448        6.7894e-9       98.1%  █████████████████████████
+   72  [32mDLMM bid [0m    6,743,428        6.7894e-9       99.3%  █████████████████████████
+   73  [36mDAMM v2  [0m    3,471,469        6.7824e-9      100.0%  █████████████████████████
+  [32m┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓[0m
+  [32m┃[0m [1mSOLD 100.00% OF EVERY TOKEN HOLDERS HAD[0m   73 sells: 38 to the bid, 35 to DAMM v2              [32m┃[0m
+  [32m┃[0m lowest execution   6.7824e-9 SOL/token   (a DAMM v2 sell)                                     [32m┃[0m
+  [32m┃[0m floor F then       6.7932e-9 SOL/token                                                        [32m┃[0m
+  [32m┃[0m [1mlowest execution = 0.9984 × F[0m   [32m✓ within 1% of F, fees included[0m                               [32m┃[0m
+  [32m┃[0m fills on the DLMM bid: never below 0.9994 × F (bin price at or just under F, less DLMM's fee) [32m┃[0m
+  [32m┃[0m F at open 6.7919e-9  →  F now 6.7934e-9   [32m✓ not lower[0m                                         [32m┃[0m
+  [32m┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛[0m
+  [2mScope: selling straight into the DAMM v2 pool can execute below F; the DLMM bid and redemption do not.[0m
+  [2mEvery fill: /home/hp/ballast/evidence/demo/20261011-173246/dump.csv[0m
+[1m[36m━━ VERIFY ━━[0m  [1mDon't trust this script. One command, raw accounts, the same floor crate[0m
+  [1m$ ballast verify 4Hq5cLVoV9YpS5JDBgJpnmPJEvvAsC6MqVRXJC1XAreF --cluster local[0m
+Launch:            8UtjF1PmpovFHoH1au51ReYotU4Q52KBwaqdBxmLtmwC   class: proof (10 SOL)
+Prediction:        6.7019e-9 SOL/token  (recorded in the pool-creation transaction, before any third-party trade)
+Realised at open:  6.7919e-9 SOL/token  (+1.34% vs prediction)
+Recomputed F now:  6.7934e-9 SOL/token  (theoretical floor F)
+Backing:           L = 3.0702e31 (locked pool absorbs 100.0% of S at F)   V = 0.000059 SOL (vault 0.000000 + resting bid 0.000059)
+Outstanding S:     638576673 tokens
+[32mPASS[0m  Launch                 owner Ballast, seeds ["launch", 4Hq5cLVoV9YpS5JDBgJpnmPJEvvAsC6MqVRXJC1XAreF]
+[32mPASS[0m  Class                  proof (10 SOL); DBC config 3JKma2a6eXhN7c5q7akid6UB3nvuFtq65FDcpthqMFju
+[32mPASS[0m  Config hash            sha256 over the curve fields recomputed from the DBC config (§7 rule 3)
+[32mPASS[0m  Prediction             6.7019e-9 SOL/token recorded; independent derivation from the config 6.7178e-9 (band 6.7178e-9…6.7178e-9); a lower bound
+[32mPASS[0m  DBC pool               config, base mint, and pool creator = creator_auth (D-011)
+[32mPASS[0m  Recorded before trade  registered in the pool's first transaction, slot 19325 (23GrdgGTMfs2)
+[32mPASS[0m  DAMM pool              canonical migrated pool AR5GCTno3DnXArtGTMMmEn7oz6QfDjkzc61PqoVSWSQQ; OnlyB, no compounding, full range
+[32mPASS[0m  Permanent              L = 3.0702e31 (both positions permanent, unlocked = vested = 0; ≥ L at open)
+[32mPASS[0m  PDA owners             partner NFT held by partner_auth, creator NFT by creator_auth
+[32mPASS[0m  Vault                  WSOL account of partner_auth, 0.000000 SOL on hand
+[32mPASS[0m  Supply                 S = 638576673 tokens outstanding; mint authority None, freeze authority None
+[32mPASS[0m  Invariant              V/F + L(1/√F − 1/√P_max) ≥ S at the recomputed F, and F ≥ the last recorded F
+[32mPASS[0m  Realised ≥ predicted   +1.34% vs the prediction
+[32mPASS[0m  Bid                    0.000059 SOL resting @ bin -11906 = 6.7901e-9 SOL/token, owned by partner_auth; the highest bin at or below F
+[32mPASS[0m  History                10 floor updates from program events, never decreasing; the last equals s_last
+[32mPASS[0m  Ledger                 V = 1.540404041 in − 1.540345493 out (fills 1.540345493, redemptions 0.000000000), to the lamport; supply = minted − burned exactly; counters = event sums
+[1m[32mRESULT: FLOOR VERIFIED ✓  F = 6.7934e-9 SOL/token (predicted 6.7019e-9 at slot 19325)[0m
+--- paste this into https://github.com/SamarthSrivastavaa/ballast/issues/new?template=i-verified.yml ---
+command: ballast verify 8UtjF1PmpovFHoH1au51ReYotU4Q52KBwaqdBxmLtmwC --cluster local
+checks passed: 16 of 16
+[1m[32mRESULT: FLOOR VERIFIED ✓  F = 6.7934e-9 SOL/token (predicted 6.7019e-9 at slot 19325)[0m
+---
+[1m[36m━━ CHART ━━[0m  [1mThe dump, animated, from dump.csv[0m
+  [2mChart file[0m   /home/hp/ballast/evidence/demo/20261011-173246/chart.html
+  [2mServed at [0m   http://localhost:4173/demo-chart.html   (while `vite preview` runs)
+  [2mControls  [0m   space = replay · ?still=1 = final frame · ?speed=2 = twice as fast

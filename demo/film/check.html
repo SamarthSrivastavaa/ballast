@@ -1,0 +1,8 @@
+<body style="margin:0;background:#222;color:#fff;font:28px Consolas"><video id="v" muted playsinline style="width:1920px;height:1080px;display:block"></video><img src="/hold" style="display:none"><div id="o" style="position:fixed;left:20px;top:20px;background:#000c;padding:8px 14px"></div><script>
+// Seeks the recorded film to ?t= and reports what the browser's own decoder says about the file.
+const v=document.getElementById("v"),o=document.getElementById("o"),t=Number(new URLSearchParams(location.search).get("t")||0);
+v.src="/video/"+(new URLSearchParams(location.search).get("f")||"ballast-demo.mp4");
+v.addEventListener("loadedmetadata",()=>{v.currentTime=t});
+v.addEventListener("seeked",()=>{o.textContent=`duration ${v.duration.toFixed(1)}s · ${v.videoWidth}×${v.videoHeight} · at ${v.currentTime.toFixed(1)}s`;fetch("/log",{method:"POST",body:o.textContent});requestAnimationFrame(()=>requestAnimationFrame(()=>fetch("/release")))});
+v.addEventListener("error",()=>{o.textContent="ERROR "+(v.error&&v.error.message);fetch("/log",{method:"POST",body:o.textContent})});
+</script></body>
