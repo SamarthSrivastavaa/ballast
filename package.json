@@ -6,7 +6,7 @@
   "//packageManager": "Pinned explicitly because C:\\Users\\HP\\package.json, above this repo, declares packageManager=yarn. Without this, corepack resolves the wrong manager for every command run here.",
   "packageManager": "pnpm@9.15.4",
   "engines": {
-    "node": ">=20 <21",
+    "node": ">=20",
     "pnpm": ">=9 <10"
   },
   "scripts": {

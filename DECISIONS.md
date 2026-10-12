@@ -875,6 +875,8 @@ One line per choice, newest last.
   voice `af_heart`, generated locally in headless Chrome (`demo/film/tts.html`), one clip per scene;
   the film retimes scenes to the clips (2:52). Levels measured from the finished file; nobody has
   listened to it yet, so pronunciation is unchecked.
+- Hosting on Vercel: Vercel has discontinued Node 20, so `engines.node` is widened from `>=20 <21` to
+  `>=20` (the hosted page builds on Node 24). Local development and CI stay on Node 20.
 - The verifier's printed output no longer carries internal references ("§7 rule 3", "D-011", …);
   release `v0.1.2`.
 - Launchpad integration count stated as 1 instruction (`register_launch`) plus the open keeper's 6
