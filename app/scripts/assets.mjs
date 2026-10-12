@@ -10,9 +10,12 @@ const repo = resolve(app, "..");
 // The IDL: a fresh `anchor build` if there is one, else the copy committed in sdk/typescript/idl/ (so the page
 // builds in CI and on a machine without the Solana toolchain). `pnpm -F app test` fails if they differ.
 const builtIdl = resolve(repo, "target/idl/ballast.json");
+// The floor crate as WebAssembly: a fresh build if there is one, else the copy committed in
+// sdk/typescript/wasm/ (so a host without Rust, such as Vercel, can build the page).
+const builtWasm = resolve(repo, "target/wasm32-unknown-unknown/release/floor_wasm.wasm");
 const inputs = [
   [existsSync(builtIdl) ? builtIdl : resolve(repo, "sdk/typescript/idl/ballast.json"), resolve(app, "src/ballast.json"), "anchor build"],
-  [resolve(repo, "target/wasm32-unknown-unknown/release/floor_wasm.wasm"), resolve(app, "public/floor_wasm.wasm"), "cargo build -p floor-wasm --target wasm32-unknown-unknown --release"],
+  [existsSync(builtWasm) ? builtWasm : resolve(repo, "sdk/typescript/wasm/floor_wasm.wasm"), resolve(app, "public/floor_wasm.wasm"), "cargo build -p floor-wasm --target wasm32-unknown-unknown --release"],
 ];
 for (const [from, to, how] of inputs) {
   if (!existsSync(from)) {

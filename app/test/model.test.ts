@@ -80,6 +80,8 @@ async function main(): Promise<void> {
     realisedAtLeastPredicted: m.prices.F >= m.predictedF,
     tokenNamedFromMetadata: m.token !== null && m.token.name.length > 0 && m.token.symbol.length > 0,
     redeemTxFitsWithoutLookupTable: redeemTx.size <= 1232,
+    // The floor crate's WebAssembly committed for hosted builds is the one cargo produced.
+    committedWasmIsCurrent: readFileSync(resolve(REPO, "sdk/typescript/wasm/floor_wasm.wasm")).equals(readFileSync(resolve(REPO, "target/wasm32-unknown-unknown/release/floor_wasm.wasm"))),
     // The IDL committed for CI builds is the one `anchor build` produced.
     committedIdlIsCurrent: readFileSync(resolve(REPO, "sdk/typescript/idl/ballast.json"), "utf8") === readFileSync(resolve(REPO, "target/idl/ballast.json"), "utf8"),
   };

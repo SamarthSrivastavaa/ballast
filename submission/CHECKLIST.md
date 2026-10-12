@@ -17,6 +17,7 @@ Updated by Claude as work lands. ⟦FILL⟧ items need you.
 - [x] GitHub labels `launch-request`, `verified`, `break-attempt`: created by a workflow.
 - [ ] **Re-record anything that says "1.017".** The correct line is "the worst fill was 0.998 times the floor, fees included".
 
+- [ ] **Host the page on Vercel** (easier than Pages): vercel.com → Add New → Project → import `SamarthSrivastavaa/ballast` → leave every setting as detected → Deploy. `vercel.json` in the repo sets the build. Paste the URL where the submissions say ⟦FILL: Live app⟧
 - [ ] **Enable GitHub Pages** (repo → Settings → Pages → Source: "GitHub Actions"), then re-run the `pages` workflow (Actions → pages → Run workflow). Live app: https://samarthsrivastavaa.github.io/ballast/ — paste it where the submissions say ⟦FILL: Live app⟧
 
 ## Decide (Mon 07:00 IST)
