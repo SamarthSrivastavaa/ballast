@@ -29,6 +29,8 @@ node demo/film/server.mjs &                     # http://localhost:4174
 # open http://localhost:4174/film.html          to watch it (space pauses, ←/→ seek, r restarts)
 # open http://localhost:4174/film.html?record=1 in Chrome and leave the tab in front for 3 minutes:
 #   the page records itself and saves submission/video/ballast-demo.mp4
+# http://localhost:4174/tts.html                generate the voice-over clips (Kokoro, open source) into demo/film/vo/
+# http://localhost:4174/film.html?record=1&vo=1  record with those clips as the sound track; scenes retime to them
 # http://localhost:4174/film.html?prompter=1    the film with the narration on screen and a countdown: read along to record your voice
 # http://localhost:4174/film.html?record=1&audio=vo.mp3   record with demo/film/vo.mp3 as the sound track
 # http://localhost:4174/film.html?at=112        one still frame, for checking

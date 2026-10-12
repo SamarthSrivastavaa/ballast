@@ -1,71 +1,71 @@
 1
-00:00:00,800 --> 00:00:08,000
+00:00:00,840 --> 00:00:08,400
 94 of the last 100 launches locked none of their liquidity.
 
 2
-00:00:08,800 --> 00:00:16,000
+00:00:09,300 --> 00:00:17,400
 A floor computed before the first public trade, verifiable by anyone.
 
 3
-00:00:16,000 --> 00:00:23,200
+00:00:17,400 --> 00:00:24,000
 We sold every token holders had.
 
 4
-00:00:23,200 --> 00:00:28,000
+00:00:24,000 --> 00:00:28,400
 The worst fill of the whole sell-out: 0.998 × the floor, fees included.
 
 5
-00:00:28,000 --> 00:00:36,160
+00:00:28,400 --> 00:00:37,184
 Buyers trade on the Dynamic Bonding Curve.
 
 6
-00:00:36,160 --> 00:00:42,960
+00:00:37,184 --> 00:00:44,504
 85% migrates into DAMM v2: two positions, permanently locked, owned by the program.
 
 7
-00:00:42,960 --> 00:00:52,480
+00:00:44,504 --> 00:00:54,752
 15%, the migration fee, rests as one DLMM limit order at the floor price F.
 
 8
-00:00:52,480 --> 00:01:02,000
+00:00:54,752 --> 00:01:05,000
 Three Meteora products. Remove one, and there is no floor.
 
 9
-00:01:02,000 --> 00:01:10,000
+00:01:05,000 --> 00:01:11,600
 The floor is recorded on-chain in the launch transaction, before anyone else can trade.
 
 10
-00:01:10,000 --> 00:01:18,000
+00:01:11,600 --> 00:01:18,200
 The worst case becomes a number you know before you buy.
 
 11
-00:01:18,000 --> 00:01:35,280
+00:01:18,200 --> 00:01:32,600
 The price slides down the pool's curve, lands on the floor, and the bid absorbs the rest.
 
 12
-00:01:35,280 --> 00:01:42,000
+00:01:32,600 --> 00:01:38,200
 Every fill is burned, so the floor ends higher than it started.
 
 13
-00:01:42,000 --> 00:01:54,960
+00:01:38,200 --> 00:01:49,540
 Don't trust our app: one command recomputes everything from raw accounts. 16 checks.
 
 14
-00:01:54,960 --> 00:02:06,000
+00:01:49,540 --> 00:01:59,200
 And one command works on mainnet today, on any Meteora pool.
 
 15
-00:02:06,000 --> 00:02:21,000
+00:01:59,200 --> 00:02:11,200
 The page: your worst case, verified in your browser, with redemption at F less 0.5%.
 
 16
-00:02:21,000 --> 00:02:36,000
+00:02:11,200 --> 00:02:28,800
 One config and one instruction for a launchpad. Tested against Meteora's mainnet binaries.
 
 17
-00:02:36,000 --> 00:02:49,000
+00:02:28,800 --> 00:02:43,100
 Not on mainnet yet. Not audited. Late buyers can lose about 74%.
 
 18
-00:02:49,000 --> 00:02:58,000
+00:02:43,100 --> 00:02:52,100
 Ballast. Launch with a floor.

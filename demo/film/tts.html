@@ -1,0 +1,42 @@
+<!doctype html><meta charset="utf-8"><title>Ballast — voice-over</title><body style="background:#111;color:#eee;font:16px Consolas"><pre id="o"></pre>
+<script type="module">
+// Generates the film's voice-over with Kokoro (open-source neural speech, Apache-2.0), in the
+// browser, from vo-lines.json: one WAV per scene, posted to /upload?to=vo. No account, no key.
+//   tts.html?voice=af_heart&dtype=fp32[&only=hook][&speed=1.0]
+import { KokoroTTS } from "https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/dist/kokoro.web.js";
+const q = new URLSearchParams(location.search), o = document.getElementById("o");
+const log = (m) => { o.textContent += m + "\n"; return fetch("/log", { method: "POST", body: m }).catch(() => {}); };
+const voice = q.get("voice") ?? "af_heart", dtype = q.get("dtype") ?? "fp32";
+function wav(pcm, sr) { // mono 16-bit PCM WAV
+  const b = new DataView(new ArrayBuffer(44 + pcm.length * 2)), w = (o2, s) => [...s].forEach((c, i) => b.setUint8(o2 + i, c.charCodeAt(0)));
+  w(0, "RIFF"); b.setUint32(4, 36 + pcm.length * 2, true); w(8, "WAVEfmt "); b.setUint32(16, 16, true); b.setUint16(20, 1, true); b.setUint16(22, 1, true);
+  b.setUint32(24, sr, true); b.setUint32(28, sr * 2, true); b.setUint16(32, 2, true); b.setUint16(34, 16, true); w(36, "data"); b.setUint32(40, pcm.length * 2, true);
+  for (let i = 0; i < pcm.length; i++) b.setInt16(44 + i * 2, Math.max(-1, Math.min(1, pcm[i])) * 32767, true);
+  return new Blob([b], { type: "audio/wav" });
+}
+try {
+  const lines = (await (await fetch("vo-lines.json")).json()).filter((l) => !q.get("only") || q.get("only").split(",").includes(l.id));
+  await log(`loading Kokoro (${dtype}), voice ${voice}`);
+  const tts = await KokoroTTS.from_pretrained("onnx-community/Kokoro-82M-v1.0-ONNX", { dtype, device: "wasm" });
+  await log("model ready");
+  const report = [];
+  for (const l of lines) {
+    // Sentence by sentence (the model takes a limited length at once), joined with a short breath.
+    const parts = l.text.match(/[^.!?:]+[.!?:]+/g) ?? [l.text], speed = Number(q.get("speed") ?? l.speed ?? 1);
+    const chunks = []; let sr = 24000;
+    for (const p of parts) { const a = await tts.generate(p.trim(), { voice, speed }); sr = a.sampling_rate; chunks.push(a.audio, new Float32Array(Math.round(sr * 0.26))); }
+    chunks.pop();
+    const pcm = new Float32Array(chunks.reduce((n, c) => n + c.length, 0)); let off = 0; for (const c of chunks) { pcm.set(c, off); off += c.length; }
+    // Trim leading and trailing near-silence so the clip starts on the first word.
+    let a0 = 0, a1 = pcm.length; while (a0 < a1 && Math.abs(pcm[a0]) < 0.004) a0++; while (a1 > a0 && Math.abs(pcm[a1 - 1]) < 0.004) a1--;
+    const cut = pcm.subarray(Math.max(0, a0 - Math.round(sr * 0.03)), Math.min(pcm.length, a1 + Math.round(sr * 0.08)));
+    let rms = 0, peak = 0; for (const v of cut) { rms += v * v; peak = Math.max(peak, Math.abs(v)); } rms = Math.sqrt(rms / cut.length);
+    const seconds = cut.length / sr, n = String((await (await fetch("vo-lines.json")).json()).findIndex((x) => x.id === l.id) + 1).padStart(2, "0");
+    await fetch(`/upload?to=vo&name=${n}-${l.id}.wav`, { method: "POST", body: wav(cut, sr) });
+    report.push({ id: l.id, seconds: Number(seconds.toFixed(2)), scene: l.end - l.start, speed, rms: Number(rms.toFixed(4)), peak: Number(peak.toFixed(3)), sentences: parts.length });
+    await log(`${l.id}: ${seconds.toFixed(2)}s for a ${(l.end - l.start)}s scene, speed ${speed}, rms ${rms.toFixed(3)}, peak ${peak.toFixed(2)}`);
+  }
+  await fetch(`/upload?to=vo&name=report${q.get("only") ? "-" + q.get("only").replace(/,/g, "-") : ""}.json`, { method: "POST", body: JSON.stringify({ voice, dtype, lines: report }, null, 1) });
+  await log("DONE");
+} catch (e) { await log("ERROR " + (e?.stack ?? e)); }
+</script>

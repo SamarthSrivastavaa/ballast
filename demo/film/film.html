@@ -314,8 +314,13 @@ const SCENES = [
   ["hook", 8, hook], ["title", 8, title], ["teaser", 12, teaser], ["mechanism", 34, mechanism], ["launch", 16, launch], ["dump", 24, dump],
   ["verify", 24, verify], ["page", 15, page], ["build", 15, build], ["status", 13, status], ["close", 9, close],
 ];
-let acc = 0; const TL = SCENES.map(([id, dur, fn]) => { const s = { id, start: acc, end: acc + dur, fn }; acc += dur; return s; });
-const TOTAL = acc;
+// Scene lengths are the defaults above, or (with ?vo=1) long enough for each scene's voice clip.
+let TL = [], TOTAL = 0;
+function retime(dur = {}) { let acc = 0; TL = SCENES.map(([id, d, fn]) => { const len = dur[id] ?? d; const s = { id, start: acc, end: acc + len, fn }; acc += len; return s; }); TOTAL = acc; }
+retime();
+/** The shortest each scene can be and still show what it has to show. */
+const MIN = { hook: 8, title: 8, teaser: 11, mechanism: 30, launch: 13, dump: 20, verify: 21, page: 12, build: 14, status: 12, close: 9 };
+const LEAD = 0.45, TAILPAD = 0.85; // the voice starts this long into a scene and ends this long before the cut
 const at = (id, a, b) => { const s = TL.find((x) => x.id === id); return [s.start + a * (s.end - s.start), s.start + b * (s.end - s.start)]; };
 // The narration, scene by scene (read at an easy pace it fits each scene with a second to spare).
 const VO = [
@@ -332,7 +337,7 @@ const VO = [
   ["close", "A launch whose worst case is a fact, not a promise. Ballast. Launch with a floor."],
 ];
 // Burned-in captions: short, for a viewer with the sound off. The voice-over carries the detail.
-const CAPS = [
+const makeCaps = () => [
   [...at("hook", 0.1, 1), "94 of the last 100 launches locked none of their liquidity."],
   [...at("title", 0.1, 1), "A floor computed before the first public trade, verifiable by anyone."],
   [...at("teaser", 0, 0.6), "We sold every token holders had."],
@@ -352,6 +357,7 @@ const CAPS = [
   [...at("status", 0, 1), "Not on mainnet yet. Not audited. Late buyers can lose about 74%."],
   [...at("close", 0, 1), "Ballast. Launch with a floor."],
 ];
+let CAPS = makeCaps();
 const REPLAY = new Set(["teaser", "mechanism", "launch", "dump"]);
 const PROMPT = q.get("prompter") === "1";
 
@@ -400,6 +406,12 @@ function frame(t) {
   D = await (await fetch("data.json")).json();
   PAGE = await new Promise((res) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = "page.png"; });
   await document.fonts.ready;
+  let clips = null; // ?vo=1: the generated voice-over (demo/film/vo/), one clip per scene; scenes are retimed to it
+  if (q.get("vo") === "1") {
+    const rep_ = await (await fetch("vo/report.json")).json();
+    retime(Object.fromEntries(rep_.lines.map((l) => [l.id, Math.max(MIN[l.id] ?? 0, Math.round((l.seconds + LEAD + TAILPAD) * 10) / 10)])));
+    CAPS = makeCaps(); clips = rep_.lines.map((l, i) => ({ id: l.id, url: `vo/${String(i + 1).padStart(2, "0")}-${l.id}.wav` }));
+  }
   if (q.get("script")) { document.body.innerHTML = `<pre style="color:#fff;font:16px Consolas;white-space:pre-wrap;padding:20px">${JSON.stringify({ total: TOTAL, scenes: TL.map((s) => ({ id: s.id, start: s.start, end: s.end, vo: VO.find((v) => v[0] === s.id)?.[1] })), caps: CAPS })}</pre>`; fetch("/script", { method: "POST", body: JSON.stringify({ total: TOTAL, scenes: TL.map((s) => ({ id: s.id, start: s.start, end: s.end, vo: VO.find((v) => v[0] === s.id)?.[1] })), caps: CAPS }) }); return; }
   if (q.get("at")) { frame(Number(q.get("at"))); document.title = "ready"; return; }
   let t0 = performance.now(), paused = false, held = 0;
@@ -409,7 +421,15 @@ function frame(t) {
     const type = ["video/mp4;codecs=avc1.640028,mp4a.40.2", "video/mp4;codecs=avc1.640028", "video/mp4", "video/webm;codecs=vp9,opus", "video/webm"].find((x) => MediaRecorder.isTypeSupported(x));
     const stream = cv.captureStream(30);
     let startAudio = () => {};
-    if (q.get("audio")) { // the voice-over file, mixed in as the sound track
+    if (clips) { // each clip starts just after its scene does; a compressor and make-up gain level the voice
+      const ac = new AudioContext(), dest = ac.createMediaStreamDestination(), comp = ac.createDynamicsCompressor(), gain = ac.createGain();
+      comp.threshold.value = -16; comp.knee.value = 10; comp.ratio.value = 5; comp.attack.value = 0.004; comp.release.value = 0.12; gain.gain.value = 1.25;
+      comp.connect(gain); gain.connect(dest);
+      const bufs = await Promise.all(clips.map(async (c) => ac.decodeAudioData(await (await fetch(c.url)).arrayBuffer())));
+      stream.addTrack(dest.stream.getAudioTracks()[0]);
+      startAudio = () => { ac.resume(); const t0a = ac.currentTime + 0.05; clips.forEach((c, i) => { const n = ac.createBufferSource(); n.buffer = bufs[i]; n.connect(comp); n.start(t0a + TL.find((x) => x.id === c.id).start + LEAD); }); };
+      await log(`voice-over: ${clips.length} clips, film ${TOTAL.toFixed(1)}s`);
+    } else if (q.get("audio")) { // the voice-over file, mixed in as the sound track
       const ac = new AudioContext(), buf = await ac.decodeAudioData(await (await fetch(q.get("audio"))).arrayBuffer());
       const dest = ac.createMediaStreamDestination(), srcNode = ac.createBufferSource(); srcNode.buffer = buf; srcNode.connect(dest);
       stream.addTrack(dest.stream.getAudioTracks()[0]); startAudio = () => { ac.resume(); srcNode.start(); };

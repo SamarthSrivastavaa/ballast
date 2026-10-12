@@ -1,0 +1,105 @@
+{
+ "voice": "af_heart",
+ "dtype": "fp32",
+ "lines": [
+  {
+   "id": "hook",
+   "seconds": 7.07,
+   "scene": 8,
+   "speed": 1,
+   "rms": 0.0753,
+   "peak": 0.544,
+   "sentences": 1
+  },
+  {
+   "id": "title",
+   "seconds": 7.73,
+   "scene": 8,
+   "speed": 1,
+   "rms": 0.071,
+   "peak": 0.54,
+   "sentences": 2
+  },
+  {
+   "id": "teaser",
+   "seconds": 9.67,
+   "scene": 12,
+   "speed": 1,
+   "rms": 0.0686,
+   "peak": 0.764,
+   "sentences": 3
+  },
+  {
+   "id": "mechanism",
+   "seconds": 35.26,
+   "scene": 34,
+   "speed": 1,
+   "rms": 0.0706,
+   "peak": 0.85,
+   "sentences": 6
+  },
+  {
+   "id": "launch",
+   "seconds": 11.85,
+   "scene": 16,
+   "speed": 1,
+   "rms": 0.0723,
+   "peak": 0.727,
+   "sentences": 2
+  },
+  {
+   "id": "dump",
+   "seconds": 15.79,
+   "scene": 24,
+   "speed": 1,
+   "rms": 0.0696,
+   "peak": 0.534,
+   "sentences": 4
+  },
+  {
+   "id": "verify",
+   "seconds": 18.48,
+   "scene": 24,
+   "speed": 1,
+   "rms": 0.0687,
+   "peak": 0.715,
+   "sentences": 5
+  },
+  {
+   "id": "page",
+   "seconds": 8.89,
+   "scene": 15,
+   "speed": 1,
+   "rms": 0.075,
+   "peak": 0.535,
+   "sentences": 1
+  },
+  {
+   "id": "build",
+   "seconds": 16.26,
+   "scene": 15,
+   "speed": 1,
+   "rms": 0.0727,
+   "peak": 0.718,
+   "sentences": 3
+  },
+  {
+   "id": "status",
+   "seconds": 13.01,
+   "scene": 13,
+   "speed": 1,
+   "rms": 0.0675,
+   "peak": 0.655,
+   "sentences": 4
+  },
+  {
+   "id": "close",
+   "seconds": 6.52,
+   "scene": 9,
+   "speed": 1,
+   "rms": 0.0689,
+   "peak": 0.58,
+   "sentences": 3
+  }
+ ]
+}

@@ -10,14 +10,16 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const out = resolve(here, "../../submission/video");
 const port = Number(process.argv[2] ?? 4174);
-const types = { ".html": "text/html; charset=utf-8", ".json": "application/json", ".png": "image/png", ".js": "text/javascript", ".webm": "video/webm", ".mp4": "video/mp4" };
+const types = { ".html": "text/html; charset=utf-8", ".json": "application/json", ".png": "image/png", ".js": "text/javascript", ".webm": "video/webm", ".mp4": "video/mp4", ".wav": "audio/wav", ".mp3": "audio/mpeg" };
 const held = [];
 createServer((req, res) => {
   const url = new URL(req.url, "http://x");
   if (req.method === "POST" && url.pathname === "/upload") {
-    mkdirSync(out, { recursive: true });
+    // ?to=vo writes into demo/film/vo/ (generated voice-over clips); otherwise submission/video/.
+    const dir = url.searchParams.get("to") === "vo" ? join(here, "vo") : out;
+    mkdirSync(dir, { recursive: true });
     const name = (url.searchParams.get("name") ?? "ballast-demo.webm").replace(/[^A-Za-z0-9._-]/g, "");
-    const file = join(out, name);
+    const file = join(dir, name);
     const w = createWriteStream(file);
     req.pipe(w);
     w.on("finish", () => { console.log(`saved ${file} ${(statSync(file).size / 1e6).toFixed(1)} MB`); writeFileSync(join(here, ".done"), name); res.end("ok"); });

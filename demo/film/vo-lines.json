@@ -1,0 +1,68 @@
+[
+ {
+  "id": "hook",
+  "text": "Ninety-four of the last hundred tokens that graduated from Meteora's bonding curve locked none of their liquidity.",
+  "start": 0,
+  "end": 8
+ },
+ {
+  "id": "title",
+  "text": "Ballast is a Meteora launch with a floor: computed on-chain before the first public trade, and verifiable by anyone.",
+  "start": 8,
+  "end": 16
+ },
+ {
+  "id": "teaser",
+  "text": "We tested it the hard way. We sold every token holders had. The worst fill of the entire sell-out was point nine nine eight of the floor.",
+  "start": 16,
+  "end": 28
+ },
+ {
+  "id": "mechanism",
+  "text": "Here is how. Buyers trade on the Dynamic Bonding Curve. At graduation, eighty-five percent of the raise migrates into Dam V two, as two positions that are permanently locked and owned by the program. The other fifteen percent, the bonding curve's migration fee, goes into a program vault and rests as one D L M M limit order at the floor price, F. F, is the price at which that bid, plus the locked liquidity, absorbs every token in existence. Remove any one of the three, and there is no floor.",
+  "start": 28,
+  "end": 62
+ },
+ {
+  "id": "launch",
+  "text": "The floor is recorded on-chain in the launch transaction itself, before anyone else can trade. So the worst case is a number you know before you buy, instead of unknown, and possibly everything.",
+  "start": 62,
+  "end": 78
+ },
+ {
+  "id": "dump",
+  "text": "Here is the whole sell-out, fill by fill. Each sell goes to whichever venue pays more. The price slides down the pool's curve, lands on the floor, and the bid absorbs the rest. Every fill is burned, so the floor ends higher than it started.",
+  "start": 78,
+  "end": 102
+ },
+ {
+  "id": "verify",
+  "text": "Don't trust our app. One command reads the raw accounts and recomputes everything: sixteen checks, down to a ledger that closes to the lamport. And a second command works on mainnet today. Point it at any Meteora pool, and it tells you whether a floor exists.",
+  "start": 102,
+  "end": 126
+ },
+ {
+  "id": "page",
+  "text": "The page shows your worst case before you buy, verifies the floor in your browser, and lets any holder redeem with the program at F, less half a percent.",
+  "start": 126,
+  "end": 141
+ },
+ {
+  "id": "build",
+  "text": "For a launchpad, it is one config and one instruction. Underneath: one implementation of the floor in exact integers, a hundred-thousand-case property gate, and a hundred and sixty-seven tests against Meteora's own mainnet binaries.",
+  "start": 141,
+  "end": 156
+ },
+ {
+  "id": "status",
+  "text": "Where it stands, honestly. It runs end to end on Meteora's mainnet binaries. It is not on mainnet yet, and it is not audited. Late buyers can still lose about seventy-four percent.",
+  "start": 156,
+  "end": 169
+ },
+ {
+  "id": "close",
+  "text": "A launch whose worst case is a fact, not a promise. Ballast. Launch with a floor.",
+  "start": 169,
+  "end": 178
+ }
+]

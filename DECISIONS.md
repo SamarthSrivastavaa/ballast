@@ -871,6 +871,10 @@ One line per choice, newest last.
   The cut shows the result by 0:24, one scene per criterion, a real mainnet `ballast check`, the
   one-instruction integration, and an honest status. Colosseum's own guidance accepts a voiceover
   over slides for the pitch, so no face is needed. Narration: `submission/video/VOICEOVER.md`.
+- The owner asked for a narration without recording one. Voice: Kokoro (Apache-2.0 neural speech),
+  voice `af_heart`, generated locally in headless Chrome (`demo/film/tts.html`), one clip per scene;
+  the film retimes scenes to the clips (2:52). Levels measured from the finished file; nobody has
+  listened to it yet, so pronunciation is unchecked.
 - The verifier's printed output no longer carries internal references ("§7 rule 3", "D-011", …);
   release `v0.1.2`.
 - Launchpad integration count stated as 1 instruction (`register_launch`) plus the open keeper's 6

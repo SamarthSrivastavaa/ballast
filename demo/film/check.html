@@ -4,5 +4,9 @@ const v=document.getElementById("v"),o=document.getElementById("o"),t=Number(new
 v.src="/video/"+(new URLSearchParams(location.search).get("f")||"ballast-demo.mp4");
 v.addEventListener("loadedmetadata",()=>{v.currentTime=t});
 v.addEventListener("seeked",()=>{o.textContent=`duration ${v.duration.toFixed(1)}s · ${v.videoWidth}×${v.videoHeight} · at ${v.currentTime.toFixed(1)}s`;fetch("/log",{method:"POST",body:o.textContent});requestAnimationFrame(()=>requestAnimationFrame(()=>fetch("/release")))});
+// ?audio=1: decode the file's sound track and report its length and level in each 20-second window.
+if(new URLSearchParams(location.search).get("audio")){(async()=>{try{const ac=new AudioContext(),b=await ac.decodeAudioData(await (await fetch(v.src)).arrayBuffer()),d=b.getChannelData(0),sr=b.sampleRate,out=[];
+for(let t=0;t<b.duration;t+=20){let s=0,n=0;for(let i=Math.floor(t*sr);i<Math.min(d.length,Math.floor((t+20)*sr));i++){s+=d[i]*d[i];n++}out.push(Math.sqrt(s/Math.max(1,n)).toFixed(3))}
+let pk=0;for(const x of d)pk=Math.max(pk,Math.abs(x));await fetch("/log",{method:"POST",body:`audio ${b.duration.toFixed(1)}s ${b.numberOfChannels}ch ${sr}Hz peak ${pk.toFixed(2)} rms per 20s ${out.join(" ")}`})}catch(e){await fetch("/log",{method:"POST",body:"audio ERROR "+e.message})}})()}
 v.addEventListener("error",()=>{o.textContent="ERROR "+(v.error&&v.error.message);fetch("/log",{method:"POST",body:o.textContent})});
 </script></body>
