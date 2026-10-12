@@ -7,7 +7,7 @@
   "scripts": {
     "assets": "node scripts/assets.mjs",
     "dev": "node scripts/assets.mjs && vite",
-    "build": "node scripts/assets.mjs && vite build",
+    "build": "node scripts/assets.mjs && vite build && node scripts/hosted-out.mjs",
     "test": "tsx test/model.test.ts",
     "test:redeem": "tsx test/redeem.e2e.ts",
     "smoke": "node test/smoke.mjs"

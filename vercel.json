@@ -3,6 +3,11 @@
   "framework": null,
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm -F app build",
-  "outputDirectory": "app/dist",
-  "rewrites": [{ "source": "/launch/:mint", "destination": "/index.html" }]
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/launch/:mint",
+      "destination": "/index.html"
+    }
+  ]
 }
