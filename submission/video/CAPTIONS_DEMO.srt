@@ -1,75 +1,71 @@
 1
-00:00:00,400 --> 00:00:08,000
-Every token launch asks you to trust that something is underneath the price. Usually, nothing is.
+00:00:00,800 --> 00:00:08,000
+94 of the last 100 launches locked none of their liquidity.
 
 2
-00:00:08,000 --> 00:00:19,000
-We measured it on mainnet: 94 of the 100 newest tokens that graduated from Meteora's bonding curve had no permanently locked liquidity.
+00:00:08,800 --> 00:00:16,000
+A floor computed before the first public trade, verifiable by anyone.
 
 3
-00:00:19,000 --> 00:00:26,000
-This is Ballast: a Meteora launch with a floor you can see before the first public trade, and verify yourself.
+00:00:16,000 --> 00:00:23,200
+We sold every token holders had.
 
 4
-00:00:26,000 --> 00:00:36,450
-When a creator launches, Ballast computes the floor, F, from the launch parameters alone, and records it on-chain.
+00:00:23,200 --> 00:00:28,000
+The worst fill of the whole sell-out: 0.998 × the floor, fees included.
 
 5
-00:00:36,450 --> 00:00:45,000
-Every buyer sees their worst case up front, before anyone else can trade.
+00:00:28,000 --> 00:00:36,160
+Buyers trade on the Dynamic Bonding Curve.
 
 6
-00:00:45,000 --> 00:00:55,230
-Buyers trade on Meteora's Dynamic Bonding Curve until it graduates.
+00:00:36,160 --> 00:00:42,960
+85% migrates into DAMM v2: two positions, permanently locked, owned by the program.
 
 7
-00:00:55,230 --> 00:01:02,360
-85% of the raise migrates into DAMM v2 as two positions locked for good, owned by the program.
+00:00:42,960 --> 00:00:52,480
+15%, the migration fee, rests as one DLMM limit order at the floor price F.
 
 8
-00:01:02,360 --> 00:01:09,180
-The other 15%, the migration fee, goes into a program vault and becomes one DLMM limit order resting at F.
+00:00:52,480 --> 00:01:02,000
+Three Meteora products. Remove one, and there is no floor.
 
 9
-00:01:09,180 --> 00:01:16,000
-Three Meteora products, one invariant.
+00:01:02,000 --> 00:01:10,000
+The floor is recorded on-chain in the launch transaction, before anyone else can trade.
 
 10
-00:01:16,000 --> 00:01:19,500
-Now let's try to break it.
+00:01:10,000 --> 00:01:18,000
+The worst case becomes a number you know before you buy.
 
 11
-00:01:19,500 --> 00:01:34,700
-Now we sell everything. Every token holders have.
-
-12
-00:01:34,700 --> 00:01:49,140
+00:01:18,000 --> 00:01:35,280
 The price slides down the pool's curve, lands on the floor, and the bid absorbs the rest.
 
+12
+00:01:35,280 --> 00:01:42,000
+Every fill is burned, so the floor ends higher than it started.
+
 13
-00:01:49,140 --> 00:01:57,500
-The worst fill of the whole sell-out was 0.9984 of F, fees included. It's liquidity and a limit order; the program has no instruction that withdraws them.
+00:01:42,000 --> 00:01:54,960
+Don't trust our app: one command recomputes everything from raw accounts. 16 checks.
 
 14
-00:01:57,500 --> 00:02:13,620
-Don't trust our app. One command reads the raw accounts and recomputes F with the same tested library.
+00:01:54,960 --> 00:02:06,000
+And one command works on mainnet today, on any Meteora pool.
 
 15
-00:02:13,620 --> 00:02:18,820
-Sixteen checks. Same answer, for anyone, every time.
+00:02:06,000 --> 00:02:21,000
+The page: your worst case, verified in your browser, with redemption at F less 0.5%.
 
 16
-00:02:18,820 --> 00:02:23,500
-And one command measures the floor under any Meteora pool on mainnet, today.
+00:02:21,000 --> 00:02:36,000
+One config and one instruction for a launchpad. Tested against Meteora's mainnet binaries.
 
 17
-00:02:23,500 --> 00:02:32,500
-The page shows your worst case before you buy, and verifies it in your browser.
+00:02:36,000 --> 00:02:49,000
+Not on mainnet yet. Not audited. Late buyers can lose about 74%.
 
 18
-00:02:32,500 --> 00:02:43,500
-What this is not: late buyers can lose about 74%. F is in SOL. A sale straight into the DAMM v2 pool can execute below F. Not audited, not on mainnet yet.
-
-19
-00:02:43,500 --> 00:02:54,000
-Buyers see their worst case. Creators launch without being called a rug. Launchpads add one instruction. Ballast. Launch with a floor.
+00:02:49,000 --> 00:02:58,000
+Ballast. Launch with a floor.

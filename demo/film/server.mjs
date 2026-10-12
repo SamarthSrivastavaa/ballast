@@ -27,6 +27,7 @@ createServer((req, res) => {
   // screenshot) until its <video> has finished seeking.
   if (url.pathname === "/hold") { held.push(res); setTimeout(() => res.writableEnded || res.end(), 25000); return; }
   if (url.pathname === "/release") { for (const r of held.splice(0)) { r.setHeader("content-type", "image/gif"); r.end(Buffer.from("R0lGODlhAQABAAAAACwAAAAAAQABAAA=", "base64")); } res.end("ok"); return; }
+  if (req.method === "POST" && url.pathname === "/script") { let b = ""; req.on("data", (c) => (b += c)); req.on("end", () => { writeFileSync(join(here, "script.json"), b); writeFileSync(join(here, ".done"), "script"); res.end("ok"); }); return; }
   if (req.method === "POST" && url.pathname === "/log") { let b = ""; req.on("data", (c) => (b += c)); req.on("end", () => { console.log("page:", b.slice(0, 300)); res.end("ok"); }); return; }
   const base = url.pathname.startsWith("/video/") ? out : here;
   const f = join(base, url.pathname.replace(/^\/video\//, "/").replace(/\.\./g, ""));

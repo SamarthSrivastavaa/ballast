@@ -24,16 +24,28 @@ for (const l of lines) {
   if (cur) sections[cur].lines.push(l);
 }
 const scan = JSON.parse(readFileSync(resolve(repo, "evidence/scanner/scan-100-2026-10-08.json"), "utf8"));
-const pools = scan.pools ?? scan;
+const scanPools = scan.pools ?? scan;
 const dump = JSON.parse(read("dump.json"));
+// The real mainnet output of `ballast check` on two pools from the scan. The film calls them pool A
+// and pool B: the addresses are in the evidence file, not on screen.
+const check = readFileSync(resolve(repo, "evidence/scanner/check-mainnet-2026-10-12.txt"), "utf8").split("\n");
+const pick = (from, re) => { const i = check.findIndex((l, k) => k >= from && re.test(l)); return i < 0 ? "" : check[i]; };
+const second = check.findIndex((l, k) => k > 3 && l.startsWith("Meteora DAMM v2 pool"));
+const pools =2;
+const mainnetCheck = [0, second].map((from) => ({ locked: pick(from, /^Permanently locked/).replace(/\s+/g, " "), price: pick(from, /^Pool price/).replace(/\s+/g, " "), result: pick(from, /^RESULT/) }));
+// The one instruction a launchpad adds, as written in docs/INTEGRATE.md.
+const guide = readFileSync(resolve(repo, "docs/INTEGRATE.md"), "utf8").split("\n");
+const gi = guide.findIndex((l) => l.includes("const register = await ballast.methods"));
+const integrate = guide.slice(gi, gi + 9);
 const data = {
+  mainnetCheck, integrate,
   runId: id,
   prediction: JSON.parse(read("prediction.json")),
   dump,
   verify: read("verify.txt").split("\n"),
   signatures: JSON.parse(read("signatures.json")),
   sections,
-  scan: { pools: pools.length, noLockedLiquidity: pools.filter((p) => Number(p.permanent_share_ppm) === 0).length, date: "8 Oct 2026" },
+  scan: { pools: scanPools.length, noLockedLiquidity: scanPools.filter((p) => Number(p.permanent_share_ppm) === 0).length, date: "8 Oct 2026" },
 };
 writeFileSync(resolve(here, "data.json"), JSON.stringify(data));
 copyFileSync(resolve(repo, "evidence/app/token-page-gate9-launch.png"), resolve(here, "page.png"));

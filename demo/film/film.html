@@ -17,6 +17,8 @@
 //   film.html            play (space = pause, ←/→ = seek 5 s, r = restart)
 //   film.html?at=42.5    one still frame at that second (for checking)
 //   film.html?record=1   record the whole film with MediaRecorder and POST it to /upload
+//   film.html?record=1&audio=vo.mp3   the same, with that audio file (in demo/film/) as the sound track
+//   film.html?prompter=1 play with the voice-over lines on screen, to read along while recording your voice
 const q = new URLSearchParams(location.search);
 const cv = document.getElementById("c"), g = cv.getContext("2d");
 const W = 1920, H = 1080;
@@ -90,41 +92,66 @@ const e9 = (v) => (v * 1e9).toFixed(2);
 let A = 1, D = null, PAGE = null;
 
 // ---------------------------------------------------------------------------------------- scenes
-function cold(u) {
-  const pts = [];
-  for (let i = 0; i <= 240; i++) { const t = i / 240; const up = t < 0.42 ? Math.pow(t / 0.42, 1.6) : Math.max(0, 1 - Math.pow((t - 0.42) / 0.5, 0.55)); pts.push([220 + t * 1480, 660 - up * 430 * (1 + 0.05 * Math.sin(i * 1.3))]); }
-  line(220, 660, 1700, 660, RULE, 1);
-  const n = Math.floor(clamp(u / 0.62) * 240);
-  g.globalAlpha = A; g.strokeStyle = INK; g.lineWidth = 3; g.beginPath(); for (let i = 0; i <= n; i++) i ? g.lineTo(...pts[i]) : g.moveTo(...pts[i]); g.stroke();
-  tx("Most launches have no bottom.", 220, 860, 92, INK, { weight: 700, alpha: seg(u, 0.5, 0.7), spacing: "-2px" });
+// Cut 2 (12 Oct): the result inside the first 30 seconds, one scene per judging criterion, paced for
+// a voice-over. VO[] below is the narration; submission/video/VOICEOVER.md is generated from it.
+const P_ = () => D.dump.points;
+/** The sell-out chart: execution price of every sell against the share sold, with the floor. */
+function chart(box, shown, o = {}) {
+  const P = P_(), d = D.dump, fs = o.scale ?? 1;
+  const yMax = Math.max(...P.map((x) => x.price)) * 1.1;
+  const X = (pct) => box.l + (pct / 100) * (box.r - box.l), Y = (v) => box.b - (v / yMax) * (box.b - box.t);
+  for (let v = 0; v <= yMax; v += 5e-9) { line(box.l, Y(v), box.r, Y(v), RULE, 1); tx((v * 1e9).toFixed(0), box.l - 14, Y(v) + 7, 20 * fs, MUTED, { mono: true, align: "right" }); }
+  tx("price, ×10⁻⁹ SOL per token", box.l - 60, box.t - 26, 20 * fs, MUTED, { mono: true });
+  for (let k = 0; k <= 100; k += 25) tx(`${k}%`, X(k), box.b + 36 * fs, 20 * fs, MUTED, { mono: true, align: "center" });
+  tx("share of holders' tokens sold", (box.l + box.r) / 2, box.b + 76 * fs, 20 * fs, MUTED, { mono: true, align: "center" });
+  const fNow = shown ? P[shown - 1].f : d.fAtOpenSolPerToken;
+  g.globalAlpha = A; g.strokeStyle = INK; g.lineWidth = 6; g.beginPath(); g.moveTo(box.l, Y(d.fAtOpenSolPerToken)); for (let i = 0; i < shown; i++) g.lineTo(X(P[i].soldPct), Y(P[i].f)); g.lineTo(box.r, Y(fNow)); g.stroke();
+  tx("FLOOR F", box.r + 18, Y(fNow) - 4, 26 * fs, INK, { weight: 700 }); tx(`${e9(fNow)} ×10⁻⁹`, box.r + 18, Y(fNow) + 24 * fs, 20 * fs, MUTED, { mono: true });
+  g.globalAlpha = A; g.strokeStyle = MUTED; g.lineWidth = 2; g.beginPath(); for (let i = 0; i < shown; i++) { const x = X(P[i].soldPct), y = Y(P[i].price); i ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
+  const r = 7 * fs;
+  for (let i = 0; i < shown; i++) {
+    const q2 = P[i], x = X(q2.soldPct), y = Y(q2.price), isBid = q2.venue === "DLMM bid";
+    g.fillStyle = BG; g.beginPath(); isBid ? g.rect(x - r - 2, y - r - 2, 2 * r + 4, 2 * r + 4) : g.arc(x, y, r + 2, 0, 7); g.fill();
+    g.fillStyle = isBid ? TEAL : BLUE; g.beginPath(); isBid ? g.rect(x - r + 1, y - r + 1, 2 * r - 2, 2 * r - 2) : g.arc(x, y, r, 0, 7); g.fill();
+  }
+  let lx = box.l; const ly = box.b + 126 * fs;
+  g.fillStyle = BLUE; g.beginPath(); g.arc(lx + 7, ly - 7, 7, 0, 7); g.fill(); tx("sold to DAMM v2", lx + 24, ly, 22 * fs, INK); lx += 230 * fs;
+  g.fillStyle = TEAL; g.fillRect(lx, ly - 13, 12, 12); tx("sold to the DLMM bid", lx + 24, ly, 22 * fs, INK); lx += 280 * fs;
+  g.fillStyle = INK; g.fillRect(lx, ly - 10, 36, 6); tx("floor F", lx + 48, ly, 22 * fs, INK);
 }
-function stat(u) {
-  const n = Math.round(ease(seg(u, 0.02, 0.38)) * D.scan.noLockedLiquidity);
-  tx(String(n), 220, 560, 420, INK, { weight: 700, spacing: "-14px" });
+function resultBox(x, y, a) {
+  const d = D.dump;
+  faded(a, () => rect(x, y, 560, 232, "#1a1a18", TEAL, 2));
+  tx("WORST FILL OF THE WHOLE SELL-OUT", x + 28, y + 46, 20, MUTED, { mono: true, spacing: "1.5px", alpha: a });
+  tx(`${d.lowestExecutionOverF.toFixed(4)} × F  ✓`, x + 28, y + 122, 70, INK, { weight: 700, spacing: "-2px", alpha: a });
+  tx("fees included", x + 28, y + 160, 24, MUTED, { alpha: a });
+  tx(`fills on the bid: ${d.lowestBidFillOverF.toFixed(4)} × F or better`, x + 28, y + 200, 21, INK, { mono: true, alpha: a });
+}
+
+function hook(u) {
+  const n = Math.round(ease(seg(u, 0, 0.3)) * D.scan.noLockedLiquidity);
+  tx(String(n), 220, 540, 420, INK, { weight: 700, spacing: "-14px" });
   g.font = `700 420px ${SANS}`; g.letterSpacing = "-14px"; const w = g.measureText(String(D.scan.noLockedLiquidity)).width;
-  tx(`of ${D.scan.pools}`, 220 + w + 50, 560, 120, MUTED, { weight: 600 });
-  wrap("of the newest tokens that graduated from Meteora's bonding curve had no permanently locked liquidity at all.", 220, 690, 54, INK, 1480, 70, { weight: 500, alpha: seg(u, 0.3, 0.5) });
-  tx(`MEASURED ON MAINNET WITH  ballast scan  ·  ${D.scan.date.toUpperCase()}`, 220, 880, 24, MUTED, { mono: true, alpha: seg(u, 0.5, 0.7), spacing: "1.5px" });
+  tx(`of ${D.scan.pools}`, 220 + w + 50, 540, 120, MUTED, { weight: 600 });
+  wrap("of the newest tokens that graduated from Meteora's bonding curve locked none of their liquidity.", 220, 680, 56, INK, 1500, 72, { weight: 500, alpha: seg(u, 0.15, 0.35) });
+  tx(`MEASURED ON MAINNET WITH  ballast scan  ·  ${D.scan.date.toUpperCase()}`, 220, 880, 24, MUTED, { mono: true, alpha: seg(u, 0.4, 0.6), spacing: "1.5px" });
 }
 function title(u) {
-  g.globalAlpha = A * seg(u, 0, 0.2); g.fillStyle = ACCENT; g.fillRect(220, 330, 16, 30); g.fillStyle = INK; g.fillRect(220, 360, 16, 24); g.globalAlpha = A;
-  tx("BALLAST", 262, 384, 60, INK, { weight: 800, spacing: "10px", alpha: seg(u, 0, 0.2) });
-  tx("Launch with a floor.", 214, 600, 168, INK, { weight: 700, spacing: "-6px", alpha: seg(u, 0.1, 0.35) });
-  tx("A Meteora launch whose worst case is computed on-chain before the first public trade,", 220, 720, 40, MUTED, { alpha: seg(u, 0.3, 0.55) });
-  tx("and verifiable by anyone.", 220, 774, 40, MUTED, { alpha: seg(u, 0.3, 0.55) });
+  g.globalAlpha = A * seg(u, 0, 0.15); g.fillStyle = ACCENT; g.fillRect(220, 300, 16, 30); g.fillStyle = INK; g.fillRect(220, 330, 16, 24); g.globalAlpha = A;
+  tx("BALLAST", 262, 354, 60, INK, { weight: 800, spacing: "10px", alpha: seg(u, 0, 0.15) });
+  tx("Launch with a floor.", 214, 570, 168, INK, { weight: 700, spacing: "-6px", alpha: seg(u, 0.05, 0.25) });
+  tx("A Meteora launch whose worst case is computed on-chain", 220, 690, 44, MUTED, { alpha: seg(u, 0.2, 0.4) });
+  tx("before the first public trade, and verifiable by anyone.", 220, 748, 44, MUTED, { alpha: seg(u, 0.2, 0.4) });
+  tx("DBC  +  DAMM v2  +  DLMM", 220, 870, 30, BLUE, { mono: true, spacing: "3px", alpha: seg(u, 0.45, 0.65) });
 }
-function launch(u) {
-  const L = D.sections.launch.lines;
-  terminal(80, 150, 1190, 720, "pnpm demo:launch", L, seg(u, 0.03, 0.5) * L.length, { size: 20 });
-  const p = D.prediction, a = seg(u, 0.42, 0.56), b = seg(u, 0.62, 0.76);
-  tx("PREDICTED FLOOR  F", 1340, 250, 24, MUTED, { mono: true, spacing: "2px", alpha: a });
-  tx(p.predictedFSolPerToken.toExponential(4), 1334, 370, 104, INK, { weight: 700, spacing: "-4px", alpha: a });
-  tx("SOL per token", 1340, 420, 30, MUTED, { alpha: a });
-  wrap(`Recorded on-chain at slot ${p.recordedAtSlot.toLocaleString("en-US")}, in the pool-creation transaction, before the first public trade.`, 1340, 480, 28, INK, 500, 40, { alpha: a });
-  line(1340, 640, 1840, 640, RULE, 1);
-  tx("WORST CASE FROM THE TOP", 1340, 700, 24, MUTED, { mono: true, spacing: "2px", alpha: b });
-  tx(`−${p.worstCaseFromGraduationPct.toFixed(1)}%`, 1334, 820, 124, AMBER, { weight: 700, spacing: "-4px", alpha: b });
-  tx("known before anyone buys", 1340, 868, 30, MUTED, { alpha: b });
+function teaser(u) {
+  const P = P_(), shown = Math.min(P.length, Math.floor(seg(u, 0.04, 0.58) * P.length + 1e-9));
+  tx("We sold every token holders had.", 160, 190, 64, INK, { weight: 700, spacing: "-1.5px" });
+  tx("73 sells · each to the better of the DLMM bid and DAMM v2 · Meteora's mainnet binaries", 160, 244, 26, MUTED);
+  tx("SUPPLY SOLD", 1790, 150, 22, MUTED, { mono: true, align: "right", spacing: "2px" });
+  tx(`${(shown ? P[shown - 1].soldPct : 0).toFixed(0)}%`, 1790, 250, 112, INK, { weight: 700, align: "right", spacing: "-4px" });
+  chart({ l: 250, r: 1560, t: 360, b: 770 }, shown);
+  if (shown === P.length) resultBox(960, 360, seg(u, 0.6, 0.68));
 }
 function card(x, y, w, h, n, name, a) { faded(a, () => rect(x, y, w, h, PANEL, RULE)); tx(n, x + 28, y + 48, 22, BLUE, { mono: true, alpha: a }); tx(name, x + 76, y + 50, 34, INK, { weight: 700, alpha: a }); }
 function mechanism(u) {
@@ -134,173 +161,221 @@ function mechanism(u) {
   const fee = pick(G, /Migration fee → vault\s+([\d.]+) SOL/), vault = pick(G, /Vault\s+\S+\s+holds ([\d.]+) SOL/);
   const p1 = pick(G, /Locked position 1\s+(\S+)/), p2 = pick(G, /Locked position 2\s+(\S+)/);
   const bid = pick(FL, /Bid\s+([\d.]+ SOL resting in bin -?\d+)/), fOpen = pick(FL, /FLOOR OPEN\s+F = (\S+)/), real = pick(FL, /realised: (\S+)/);
-  // 1 · DBC
-  const a1 = seg(u, 0, 0.05);
-  card(100, 170, 560, 520, "01", "Dynamic Bonding Curve", a1);
-  tx("buyers trade on the curve", 128, 266, 26, MUTED, { alpha: a1 });
-  const prog = buys.reduce((acc, b, i) => { const s = seg(u, 0.05 + i * 0.07, 0.11 + i * 0.07); return acc + (b.pct - (i ? buys[i - 1].pct : 0)) * ease(s); }, 0);
-  rect(128, 300, 504, 18, "#26262400"); g.globalAlpha = A * a1; g.fillStyle = "#2b2b29"; g.fillRect(128, 300, 504, 18); g.fillStyle = BLUE; g.fillRect(128, 300, 504 * prog / 100, 18); g.globalAlpha = A;
-  tx(`${prog.toFixed(0)}%`, 632, 290, 24, INK, { mono: true, align: "right", alpha: a1 });
-  buys.forEach((b, i) => { const s = seg(u, 0.07 + i * 0.07, 0.12 + i * 0.07); tx(`buyer ${i + 1}`, 128, 380 + i * 52, 28, MUTED, { alpha: s }); tx(`${b.paid.toFixed(3)} SOL`, 632, 380 + i * 52, 28, INK, { mono: true, align: "right", alpha: s }); });
-  const gr = seg(u, 0.27, 0.33);
-  line(128, 560, 632, 560, RULE, 1); tx("GRADUATED", 128, 620, 40, TEAL, { weight: 700, alpha: gr }); tx("10 SOL raised", 632, 620, 30, INK, { mono: true, align: "right", alpha: gr });
-  // branches
-  const b1 = ease(seg(u, 0.33, 0.42)), b2 = ease(seg(u, 0.5, 0.58)), b3 = ease(seg(u, 0.62, 0.7));
-  if (b1 > 0) { line(660, 300, 660 + 120 * b1, 300, INK, 3); tx("85%", 720, 284, 30, INK, { weight: 700, align: "center", alpha: b1 }); }
+  const a1 = seg(u, 0, 0.04);
+  card(100, 150, 560, 540, "01", "Dynamic Bonding Curve", a1);
+  tx("buyers trade on the curve", 128, 246, 26, MUTED, { alpha: a1 });
+  const prog = buys.reduce((acc, b, i) => acc + (b.pct - (i ? buys[i - 1].pct : 0)) * ease(seg(u, 0.04 + i * 0.045, 0.085 + i * 0.045)), 0);
+  g.globalAlpha = A * a1; g.fillStyle = "#2b2b29"; g.fillRect(128, 280, 504, 18); g.fillStyle = BLUE; g.fillRect(128, 280, 504 * prog / 100, 18); g.globalAlpha = A;
+  tx(`${prog.toFixed(0)}%`, 632, 270, 24, INK, { mono: true, align: "right", alpha: a1 });
+  buys.forEach((b, i) => { const s = seg(u, 0.05 + i * 0.045, 0.09 + i * 0.045); tx(`buyer ${i + 1}`, 128, 356 + i * 50, 28, MUTED, { alpha: s }); tx(`${b.paid.toFixed(3)} SOL`, 632, 356 + i * 50, 28, INK, { mono: true, align: "right", alpha: s }); });
+  const gr = seg(u, 0.18, 0.23);
+  line(128, 520, 632, 520, RULE, 1); tx("GRADUATED", 128, 578, 40, TEAL, { weight: 700, alpha: gr }); tx("10 SOL raised", 632, 578, 30, INK, { mono: true, align: "right", alpha: gr });
+  tx("its 15% migration fee funds the floor", 128, 640, 24, BLUE, { alpha: seg(u, 0.5, 0.56) });
+  const b1 = ease(seg(u, 0.24, 0.3)), b2 = ease(seg(u, 0.44, 0.5)), b3 = ease(seg(u, 0.56, 0.62));
+  if (b1 > 0) { line(660, 280, 660 + 120 * b1, 280, INK, 3); tx("85%", 720, 264, 30, INK, { weight: 700, align: "center", alpha: b1 }); }
   if (b2 > 0) { line(660, 560, 660 + 120 * b2, 560, INK, 3); tx("15%", 720, 544, 30, INK, { weight: 700, align: "center", alpha: b2 }); }
-  // 2 · DAMM v2
-  const a2 = seg(u, 0.4, 0.47);
-  card(780, 170, 1040, 250, "02", "DAMM v2", a2);
-  tx("two positions, permanently locked, owned by the program", 808, 266, 28, INK, { alpha: a2 });
-  tx(`${short(p1, 10)}    ${short(p2, 10)}`, 808, 320, 24, MUTED, { mono: true, alpha: a2 });
-  tx("this liquidity can never be withdrawn: it is L in the equation", 808, 372, 24, MUTED, { alpha: a2 });
-  // vault → DLMM
-  const a3 = seg(u, 0.56, 0.63);
+  const a2 = seg(u, 0.29, 0.35);
+  card(780, 150, 1040, 270, "02", "DAMM v2", a2);
+  tx("two positions, permanently locked, owned by the program", 808, 246, 28, INK, { alpha: a2 });
+  tx(`${short(p1, 10)}    ${short(p2, 10)}`, 808, 300, 24, MUTED, { mono: true, alpha: a2 });
+  tx("the permanent lock means this liquidity can never be withdrawn", 808, 366, 24, BLUE, { alpha: seg(u, 0.36, 0.42) });
+  const a3 = seg(u, 0.49, 0.55);
   card(780, 450, 460, 240, "03", "Program vault", a3);
   tx(`the ${fee} SOL migration fee + fees`, 808, 546, 26, MUTED, { alpha: a3 });
   tx(`${vault} SOL`, 808, 620, 44, INK, { weight: 700, mono: true, alpha: a3 });
   if (b3 > 0) line(1240, 570, 1240 + 80 * b3, 570, INK, 3);
-  const a4 = seg(u, 0.68, 0.75);
+  const a4 = seg(u, 0.6, 0.66);
   card(1320, 450, 500, 240, "04", "DLMM limit order", a4);
   wrap(`${bid},`, 1348, 546, 26, INK, 450, 36, { alpha: a4 });
   tx("the highest bin at or below F", 1348, 620, 26, MUTED, { alpha: a4 });
-  // the equation and the realised floor
-  const e = seg(u, 0.78, 0.86), r = seg(u, 0.86, 0.93);
+  tx("a resting bid that a program can own", 1348, 664, 24, BLUE, { alpha: seg(u, 0.66, 0.72) });
+  const e = seg(u, 0.72, 0.79), r = seg(u, 0.82, 0.88);
   line(100, 740, 1820, 740, RULE, 1);
-  tx("V / F  +  L · (1/√F − 1/√P_max)  =  S", 100, 830, 54, INK, { mono: true, alpha: e });
-  tx("F is the price at which the bid and the locked liquidity absorb every token in existence.", 100, 890, 30, MUTED, { alpha: e });
-  tx(`F at open  ${fOpen}`, 1820, 820, 40, INK, { mono: true, align: "right", weight: 700, alpha: r });
-  tx(`${real} against the prediction  ✓`, 1820, 874, 30, TEAL, { align: "right", alpha: r });
+  tx("V / F  +  L · (1/√F − 1/√P_max)  =  S", 100, 826, 54, INK, { mono: true, alpha: e });
+  tx("F is the price at which the bid and the locked liquidity absorb every token in existence.", 100, 884, 30, MUTED, { alpha: e });
+  tx(`F at open  ${fOpen}`, 1820, 816, 40, INK, { mono: true, align: "right", weight: 700, alpha: r });
+  tx(`${real} against the prediction  ✓`, 1820, 870, 30, TEAL, { align: "right", alpha: r });
 }
-function breakIt(u) {
-  tx("Now let’s try to break it.", 220, 560, 150, INK, { weight: 700, spacing: "-5px", alpha: seg(u, 0, 0.3) });
-  tx("SELL EVERY TOKEN HOLDERS HAVE", 226, 660, 30, MUTED, { mono: true, spacing: "3px", alpha: seg(u, 0.25, 0.5) });
+function launch(u) {
+  const L = D.sections.launch.lines, p = D.prediction;
+  terminal(80, 150, 1100, 720, "pnpm demo:launch", L, seg(u, 0.02, 0.4) * L.length, { size: 19 });
+  const a = seg(u, 0.3, 0.42), b = seg(u, 0.5, 0.62);
+  tx("WITHOUT A FLOOR", 1250, 230, 22, MUTED, { mono: true, spacing: "2px", alpha: a });
+  tx("−100%", 1244, 330, 100, DIM, { weight: 700, spacing: "-3px", alpha: a });
+  tx("is possible, and you find out afterwards", 1250, 376, 28, MUTED, { alpha: a });
+  line(1250, 430, 1840, 430, RULE, 1);
+  tx("WITH BALLAST", 1250, 500, 22, TEAL, { mono: true, spacing: "2px", alpha: b });
+  tx(`−${p.worstCaseFromGraduationPct.toFixed(1)}%`, 1244, 630, 150, INK, { weight: 700, spacing: "-5px", alpha: b });
+  tx("worst case from the very top of the curve,", 1250, 686, 28, INK, { alpha: b });
+  tx("known before anyone buys", 1250, 726, 28, INK, { alpha: b });
+  tx(`F = ${p.predictedFSolPerToken.toExponential(4)} SOL/token`, 1250, 806, 30, INK, { mono: true, weight: 700, alpha: seg(u, 0.62, 0.72) });
+  tx(`recorded on-chain at slot ${p.recordedAtSlot.toLocaleString("en-US")}`, 1250, 848, 24, MUTED, { mono: true, alpha: seg(u, 0.62, 0.72) });
 }
 function dump(u) {
-  const P = D.dump.points, d = D.dump;
-  // The recorded fill lines, without their trailing progress bar (the chart shows it).
+  const P = P_(), d = D.dump;
   const fills = D.sections.dump.lines.filter((l) => /^\s+\d+\s+(DAMM v2|DLMM bid)/.test(strip(l))).map((l) => l.replace(/(%)\s+█*\s*$/, "$1"));
   const head = D.sections.dump.lines.find((l) => /venue/.test(strip(l)));
-  const p = seg(u, 0.03, 0.78), shown = Math.min(P.length, Math.floor(p * P.length + 1e-9)), done = shown === P.length;
+  const shown = Math.min(P.length, Math.floor(seg(u, 0.02, 0.7) * P.length + 1e-9));
   terminal(80, 150, 800, 730, "pnpm demo:dump", [head, ...fills.slice(0, shown)], 1 + shown, { size: 19 });
-  const box = { l: 1030, r: 1700, t: 330, b: 800 };
-  const yMax = Math.max(...P.map((x) => x.price)) * 1.1;
-  const X = (pct) => box.l + (pct / 100) * (box.r - box.l), Y = (v) => box.b - (v / yMax) * (box.b - box.t);
-  const sold = shown ? P[shown - 1].soldPct : 0;
   tx("SUPPLY SOLD", 1840, 190, 22, MUTED, { mono: true, align: "right", spacing: "2px" });
-  tx(`${sold.toFixed(0)}%`, 1840, 290, 112, INK, { weight: 700, align: "right", spacing: "-4px" });
-  tx("Selling every token holders have", 940, 200, 40, INK, { weight: 700 });
+  tx(`${(shown ? P[shown - 1].soldPct : 0).toFixed(0)}%`, 1840, 290, 112, INK, { weight: 700, align: "right", spacing: "-4px" });
+  tx("The whole sell-out, fill by fill", 940, 200, 40, INK, { weight: 700 });
   tx("each sell goes to the better venue", 940, 244, 24, MUTED);
-  for (let v = 0; v <= yMax; v += 5e-9) { line(box.l, Y(v), box.r, Y(v), RULE, 1); tx((v * 1e9).toFixed(0), box.l - 14, Y(v) + 7, 20, MUTED, { mono: true, align: "right" }); }
-  tx("×10⁻⁹ SOL per token", box.l - 60, box.t - 24, 20, MUTED, { mono: true });
-  for (let k = 0; k <= 100; k += 25) tx(`${k}%`, X(k), box.b + 34, 20, MUTED, { mono: true, align: "center" });
-  const fNow = shown ? P[shown - 1].f : d.fAtOpenSolPerToken;
-  g.globalAlpha = A; g.strokeStyle = INK; g.lineWidth = 6; g.beginPath(); g.moveTo(box.l, Y(d.fAtOpenSolPerToken)); for (let i = 0; i < shown; i++) g.lineTo(X(P[i].soldPct), Y(P[i].f)); g.lineTo(box.r, Y(fNow)); g.stroke();
-  tx("FLOOR F", box.r + 18, Y(fNow) - 4, 26, INK, { weight: 700 }); tx(`${e9(fNow)} ×10⁻⁹`, box.r + 18, Y(fNow) + 24, 20, MUTED, { mono: true });
-  g.strokeStyle = MUTED; g.lineWidth = 2; g.beginPath(); for (let i = 0; i < shown; i++) { const x = X(P[i].soldPct), y = Y(P[i].price); i ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
-  for (let i = 0; i < shown; i++) {
-    const q2 = P[i], x = X(q2.soldPct), y = Y(q2.price), isBid = q2.venue === "DLMM bid";
-    g.fillStyle = BG; g.beginPath(); isBid ? g.rect(x - 8, y - 8, 16, 16) : g.arc(x, y, 9, 0, 7); g.fill();
-    g.fillStyle = isBid ? TEAL : BLUE; g.beginPath(); isBid ? g.rect(x - 6, y - 6, 12, 12) : g.arc(x, y, 7, 0, 7); g.fill();
-  }
-  let lx = box.l; const ly = 876;
-  g.fillStyle = BLUE; g.beginPath(); g.arc(lx + 7, ly - 7, 7, 0, 7); g.fill(); tx("sold to DAMM v2", lx + 24, ly, 22, INK); lx += 230;
-  g.fillStyle = TEAL; g.fillRect(lx, ly - 13, 12, 12); tx("sold to the DLMM bid", lx + 24, ly, 22, INK); lx += 280;
-  g.fillStyle = INK; g.fillRect(lx, ly - 10, 36, 6); tx("floor F", lx + 48, ly, 22, INK);
-  if (done) {
-    const a = seg(u, 0.8, 0.86); faded(a, () => rect(1290, 345, 540, 230, "#1a1a18", TEAL, 2));
-    tx("WORST FILL OF THE WHOLE SELL-OUT", 1318, 391, 20, MUTED, { mono: true, spacing: "1.5px", alpha: a });
-    tx(`${d.lowestExecutionOverF.toFixed(4)} × F  ✓`, 1318, 465, 68, INK, { weight: 700, spacing: "-2px", alpha: a });
-    tx("fees included", 1318, 503, 24, MUTED, { alpha: a });
-    tx(`fills on the bid: ${d.lowestBidFillOverF.toFixed(4)} × F or better`, 1318, 543, 21, INK, { mono: true, alpha: a });
+  chart({ l: 1030, r: 1700, t: 350, b: 760 }, shown, { scale: 0.92 });
+  if (shown === P.length) {
+    resultBox(1270, 345, seg(u, 0.72, 0.78));
+    const a = seg(u, 0.82, 0.9);
+    tx(`F at open ${e9(d.fAtOpenSolPerToken)}  →  F after ${e9(d.fAfterSolPerToken)} ×10⁻⁹   ✓ not lower: every fill is burned`, 940, 300, 22, TEAL, { mono: true, alpha: a });
   }
 }
 function verify(u) {
   const V = D.verify, cmd = `$ ballast verify ${D.prediction.mint} --cluster local`;
   const headN = V.findIndex((l) => l.startsWith("PASS")), pass = V.filter((l) => l.startsWith("PASS")), result = V.find((l) => l.startsWith("RESULT")) ?? "";
   const lines = ["\x1b[1m" + cmd + "\x1b[0m", "", ...V.slice(0, headN).filter((l) => l.trim()), "", ...pass.map((l) => "\x1b[32mPASS\x1b[0m" + l.slice(4))];
-  const typed = seg(u, 0.02, 0.1), n = 1 + (typed < 1 ? typed - 1 : 0) + (typed >= 1 ? seg(u, 0.1, 0.16) * (lines.length - pass.length - 1) + seg(u, 0.16, 0.62) * pass.length : 0);
-  terminal(120, 130, 1680, 660, "a fresh shell", lines, typed < 1 ? typed : n, { size: 20, typing: typed < 1 });
-  const a = seg(u, 0.64, 0.7);
-  faded(a, () => rect(120, 810, 1680, 84, "#12241d", TEAL, 2));
-  tx(result, 150, 862, 29, TEAL, { mono: true, weight: 700, alpha: a });
-  const b = seg(u, 0.82, 0.88);
-  if (b > 0) { faded(b, () => rect(100, 110, 1720, 810, BG));
-    tx("WORKS ON MAINNET TODAY, ON ANY METEORA POOL", 220, 330, 26, MUTED, { mono: true, spacing: "2px", alpha: b });
-    tx("$ ballast check <DAMM v2 pool> --cluster mainnet", 220, 440, 52, INK, { mono: true, weight: 700, alpha: b });
-    tx("RESULT: LOCKED-LIQUIDITY FLOOR ✓   or   RESULT: NO FLOOR ✗", 220, 540, 36, TEAL, { mono: true, alpha: b });
-    tx("the price at which permanently locked liquidity alone absorbs every token: two seconds, read-only", 220, 620, 30, MUTED, { alpha: b });
+  const typed = seg(u, 0.01, 0.06), n = 1 + (typed >= 1 ? seg(u, 0.06, 0.1) * (lines.length - pass.length - 1) + seg(u, 0.1, 0.4) * pass.length : 0);
+  const b = seg(u, 0.54, 0.6);
+  if (b < 1) {
+    terminal(120, 130, 1680, 660, "a fresh shell", lines, typed < 1 ? typed : n, { size: 20, typing: typed < 1 });
+    const a = seg(u, 0.41, 0.46);
+    faded(a, () => rect(120, 810, 1680, 84, "#12241d", TEAL, 2));
+    tx(result, 150, 862, 29, TEAL, { mono: true, weight: 700, alpha: a });
+  }
+  if (b > 0) {
+    faded(b, () => rect(100, 110, 1720, 810, BG));
+    tx("LIVE ON MAINNET TODAY  ·  READ-ONLY  ·  ANY METEORA DAMM v2 POOL", 160, 200, 26, TEAL, { mono: true, spacing: "2px", alpha: b });
+    tx("$ ballast check <pool> --cluster mainnet", 160, 290, 54, INK, { mono: true, weight: 700, alpha: b });
+    D.mainnetCheck.forEach((c, i) => {
+      const a = seg(u, 0.62 + i * 0.1, 0.7 + i * 0.1), y = 370 + i * 250, ok = c.result.includes("✓");
+      faded(a, () => rect(160, y, 1600, 210, PANEL, ok ? TEAL : AMBER, 2));
+      tx(`POOL ${"AB"[i]}  ·  a real pool from the mainnet scan`, 190, y + 46, 22, MUTED, { mono: true, spacing: "1.5px", alpha: a });
+      tx(c.locked, 190, y + 96, 30, INK, { mono: true, alpha: a });
+      g.font = `700 27px ${MONO}`; g.letterSpacing = "0px";
+      wrap(c.result, 190, y + 146, 27, ok ? TEAL : AMBER, 1540, 38, { mono: true, weight: 700, alpha: a });
+    });
+    tx("output recorded 12 Oct 2026: evidence/scanner/check-mainnet-2026-10-12.txt", 160, 900, 20, DIM, { mono: true, alpha: b });
   }
 }
+/** A region of the page screenshot (source pixels), framed and scaled to `w` wide. */
+function shot(sy, sh, x, y, w, a) {
+  if (!PAGE) return;
+  const sw = PAGE.width - 18, h = (sh / sw) * w;
+  faded(a, () => { rect(x - 1, y - 1, w + 2, h + 2, "#faf9f5", RULE); g.globalAlpha = A; g.drawImage(PAGE, 0, sy, sw, sh, x, y, w, h); });
+}
 function page(u) {
-  const x = 380, y = 110, w = 1160, h = 790;
-  rect(x, y, w, h, "#fff", RULE); rect(x, y, w, 40, "#1f1f1d");
-  tx("localhost:4173/launch/<mint>", x + w / 2, y + 27, 18, MUTED, { mono: true, align: "center" });
-  if (PAGE) { const s = w / PAGE.width, off = ease(u) * Math.max(0, Math.min(PAGE.height * s - (h - 40), 1500));
-    g.save(); g.beginPath(); g.rect(x, y + 40, w, h - 40); g.clip(); g.globalAlpha = A; g.drawImage(PAGE, 0, 0, PAGE.width - 18, PAGE.height, x, y + 40 - off, w, PAGE.height * s); g.restore(); }
+  const tours = [
+    ["01", "Your worst case, before you buy", "Floor F, the pool price, and the most you can lose from here.", 930, 335],
+    ["02", "Verified in your browser", "Raw accounts from the RPC; F recomputed by the same library, in WebAssembly.", 1255, 430],
+    ["03", "Sell into the bid, or redeem at F less 0.5%", "One atomic transaction: cancel, burn, pay, re-place.", 2240, 500],
+  ];
+  const k = Math.min(tours.length - 1, Math.floor(u * tours.length)), lu = u * tours.length - k, t = tours[k];
+  const a = Math.min(seg(lu, 0, 0.14), 1 - seg(lu, 0.9, 1));
+  tx(t[0], 120, 190, 26, BLUE, { mono: true, alpha: a }); tx(t[1], 180, 194, 46, INK, { weight: 700, alpha: a });
+  tx(t[2], 180, 240, 26, MUTED, { alpha: a });
+  const sw = PAGE ? PAGE.width - 18 : 1082, w = Math.min(1480, (640 * sw) / t[4]), h = (t[4] / sw) * w;
+  shot(t[3], t[4], (W - w) / 2, 290 + Math.max(0, (640 - h) / 2), w, a);
   tx("THE PAGE, AS RENDERED IN CHROME  ·  A SECOND LAUNCH ON THE SAME LEDGER, WITH HOLDERS AND A RESTING BID", 100, 78, 19, DIM, { mono: true, spacing: "1.2px" });
 }
-function limits(u) {
-  tx("What this is not.", 220, 300, 110, INK, { weight: 700, spacing: "-4px", alpha: seg(u, 0, 0.12) });
-  ["Late buyers can lose about 74%. The floor is far below the top.", "F is in SOL, not dollars.", "A sale straight into the DAMM v2 pool can execute below F.", "Not audited. Not on mainnet yet. No real users yet."].forEach((s, i) => {
-    const a = seg(u, 0.12 + i * 0.12, 0.2 + i * 0.12); g.globalAlpha = A * a; g.fillStyle = AMBER; g.fillRect(220, 420 + i * 110, 8, 46); g.globalAlpha = A; tx(s, 256, 458 + i * 110, 50, INK, { weight: 500, alpha: a });
+function build(u) {
+  const a = seg(u, 0, 0.08);
+  tx("FOR A LAUNCHPAD: ONE CONFIG, ONE INSTRUCTION", 100, 190, 24, BLUE, { mono: true, spacing: "2px", alpha: a });
+  faded(a, () => rect(100, 220, 900, 470, PANEL, RULE));
+  D.integrate.forEach((l, i) => { const s = seg(u, 0.05 + i * 0.02, 0.1 + i * 0.02); const c = l.replace(/\s+\/\/.*$/, ""), t = c.length > 70 ? c.slice(0, 69) + "…" : c; tx(t, 130, 280 + i * 44, 20, i === 1 ? TEAL : INK, { mono: true, weight: i === 1 ? 700 : 400, alpha: s }); });
+  tx("in the launch transaction, next to Meteora's own pool creation;", 100, 740, 26, MUTED, { alpha: seg(u, 0.25, 0.35) });
+  tx("everything after it is a permissionless crank", 100, 778, 26, MUTED, { alpha: seg(u, 0.25, 0.35) });
+  tx("UNDERNEATH", 1090, 190, 24, BLUE, { mono: true, spacing: "2px", alpha: seg(u, 0.3, 0.38) });
+  [["1", "implementation of F: exact integers, no floating point"], ["100,000", "case property gate on it, in CI, plus 34 tests"], ["10,014", "vectors: Rust = WebAssembly = Python, bit for bit"], ["167", "program tests on Meteora's own mainnet binaries"], ["10,000,000", "fuzz steps, zero failures"], ["10", "Meteora instructions called by the program, across 3 products"]].forEach(([n, s], i) => {
+    const al = seg(u, 0.34 + i * 0.07, 0.42 + i * 0.07), y = 262 + i * 88;
+    tx(n, 1090, y, 50, INK, { weight: 700, spacing: "-1px", alpha: al }); tx(s, 1090, y + 34, 24, MUTED, { alpha: al });
   });
 }
-function close(u) {
-  [["Buyers", "see their worst case before they buy."], ["Creators", "launch without being called a rug."], ["Launchpads", "add one config and one instruction."]].forEach(([k, v], i) => {
-    const a = seg(u, 0.03 + i * 0.1, 0.12 + i * 0.1); tx(k, 220, 290 + i * 120, 74, INK, { weight: 700, alpha: a, spacing: "-2px" }); tx(v, 700, 290 + i * 120, 50, MUTED, { alpha: a });
+function status(u) {
+  tx("Where it stands.", 160, 230, 96, INK, { weight: 700, spacing: "-3px", alpha: seg(u, 0, 0.1) });
+  [[TEAL, "Meteora's mainnet binaries, local validator", "the whole lifecycle, every test, this film"], [BLUE, "Devnet", "program deployed; no launch there: devnet's DBC is a newer build the program refuses"], [AMBER, "Mainnet", "not deployed yet · ballast check and ballast scan read it today"], [AMBER, "Audit", "none yet; the upgrade authority is one project key"]].forEach(([c, k, v], i) => {
+    const a = seg(u, 0.1 + i * 0.1, 0.18 + i * 0.1), y = 340 + i * 104;
+    g.globalAlpha = A * a; g.fillStyle = c; g.fillRect(160, y - 34, 8, 60); g.globalAlpha = A;
+    tx(k, 196, y, 40, INK, { weight: 700, alpha: a }); tx(v, 196, y + 38, 26, MUTED, { alpha: a });
   });
-  const a = seg(u, 0.4, 0.52); line(220, 640, 1700, 640, RULE, 1);
-  g.globalAlpha = A * a; g.fillStyle = ACCENT; g.fillRect(220, 706, 14, 26); g.fillStyle = INK; g.fillRect(220, 732, 14, 20); g.globalAlpha = A;
-  tx("BALLAST", 256, 752, 50, INK, { weight: 800, spacing: "8px", alpha: a }); tx("Launch with a floor.", 600, 752, 50, INK, { weight: 600, alpha: a });
-  tx("github.com/SamarthSrivastavaa/ballast", 220, 850, 40, BLUE, { mono: true, alpha: seg(u, 0.5, 0.62) });
-  tx("verify it yourself  ·  try to break it  ·  request a launch", 220, 910, 28, MUTED, { alpha: seg(u, 0.56, 0.68) });
+  const a = seg(u, 0.55, 0.68); line(160, 770, 1760, 770, RULE, 1);
+  tx("Late buyers can lose about 74%.   F is in SOL, not dollars.   A sale straight into the DAMM v2 pool can execute below F.", 160, 830, 27, INK, { alpha: a });
+}
+function close(u) {
+  tx("A launch whose worst case", 214, 330, 124, INK, { weight: 700, spacing: "-4px", alpha: seg(u, 0, 0.14) });
+  tx("is a fact, not a promise.", 214, 470, 124, MUTED, { weight: 700, spacing: "-4px", alpha: seg(u, 0.1, 0.26) });
+  const a = seg(u, 0.32, 0.46); line(220, 580, 1700, 580, RULE, 1);
+  g.globalAlpha = A * a; g.fillStyle = ACCENT; g.fillRect(220, 646, 14, 26); g.fillStyle = INK; g.fillRect(220, 672, 14, 20); g.globalAlpha = A;
+  tx("BALLAST", 256, 692, 50, INK, { weight: 800, spacing: "8px", alpha: a }); tx("Launch with a floor.", 600, 692, 50, INK, { weight: 600, alpha: a });
+  tx("github.com/SamarthSrivastavaa/ballast", 220, 790, 40, BLUE, { mono: true, alpha: seg(u, 0.42, 0.56) });
+  tx("verify it yourself  ·  try to break it  ·  request a launch", 220, 846, 28, MUTED, { alpha: seg(u, 0.5, 0.64) });
+  tx("The floor equation uses only V, S and L: nothing in it is specific to SOL or to memes. Today's launch classes are SOL-quoted.", 220, 916, 22, DIM, { alpha: seg(u, 0.6, 0.74) });
 }
 
 // -------------------------------------------------------------------------------------- timeline
 const SCENES = [
-  ["cold", 8, cold], ["stat", 11, stat], ["title", 7, title], ["launch", 19, launch], ["mechanism", 31, mechanism], ["break", 3.5, breakIt],
-  ["dump", 38, dump], ["verify", 26, verify], ["page", 9, page], ["limits", 11, limits], ["close", 10.5, close],
+  ["hook", 8, hook], ["title", 8, title], ["teaser", 12, teaser], ["mechanism", 34, mechanism], ["launch", 16, launch], ["dump", 24, dump],
+  ["verify", 24, verify], ["page", 15, page], ["build", 15, build], ["status", 13, status], ["close", 9, close],
 ];
 let acc = 0; const TL = SCENES.map(([id, dur, fn]) => { const s = { id, start: acc, end: acc + dur, fn }; acc += dur; return s; });
 const TOTAL = acc;
 const at = (id, a, b) => { const s = TL.find((x) => x.id === id); return [s.start + a * (s.end - s.start), s.start + b * (s.end - s.start)]; };
+// The narration, scene by scene (read at an easy pace it fits each scene with a second to spare).
+const VO = [
+  ["hook", "Ninety-four of the last hundred tokens that graduated from Meteora's bonding curve locked none of their liquidity."],
+  ["title", "Ballast is a Meteora launch with a floor: computed on-chain before the first public trade, and verifiable by anyone."],
+  ["teaser", "We tested it the hard way. We sold every token holders had. The worst fill of the entire sell-out was point nine nine eight of the floor."],
+  ["mechanism", "Here is how. Buyers trade on the Dynamic Bonding Curve. At graduation, eighty-five percent of the raise migrates into DAMM v2, as two positions that are permanently locked and owned by the program. The other fifteen percent, the bonding curve's migration fee, goes into a program vault and rests as one DLMM limit order at the floor price, F. F is the price at which that bid, plus the locked liquidity, absorbs every token in existence. Remove any one of the three, and there is no floor."],
+  ["launch", "The floor is recorded on-chain in the launch transaction itself, before anyone else can trade. So the worst case is a number you know before you buy, instead of unknown, and possibly everything."],
+  ["dump", "Here is the whole sell-out, fill by fill. Each sell goes to whichever venue pays more. The price slides down the pool's curve, lands on the floor, and the bid absorbs the rest. Every fill is burned, so the floor ends higher than it started."],
+  ["verify", "Don't trust our app. One command reads the raw accounts and recomputes everything: sixteen checks, down to a ledger that closes to the lamport. And a second command works on mainnet today. Point it at any Meteora pool, and it tells you whether a floor exists."],
+  ["page", "The page shows your worst case before you buy, verifies the floor in your browser, and lets any holder redeem with the program at F, less half a percent."],
+  ["build", "For a launchpad, it is one config and one instruction. Underneath: one implementation of the floor in exact integers, a hundred-thousand-case property gate, and a hundred and sixty-seven tests against Meteora's own mainnet binaries."],
+  ["status", "Where it stands, honestly. It runs end to end on Meteora's mainnet binaries. It is not on mainnet yet, and it is not audited. Late buyers can still lose about seventy-four percent."],
+  ["close", "A launch whose worst case is a fact, not a promise. Ballast. Launch with a floor."],
+];
+// Burned-in captions: short, for a viewer with the sound off. The voice-over carries the detail.
 const CAPS = [
-  [...at("cold", 0.05, 1), "Every token launch asks you to trust that something is underneath the price. Usually, nothing is."],
-  [...at("stat", 0, 1), "We measured it on mainnet."],
-  [...at("title", 0, 1), "This is Ballast: a Meteora launch with a floor you can see before the first public trade, and verify yourself."],
-  [...at("launch", 0, 0.55), "When a creator launches, Ballast computes the floor, F, from the launch parameters alone, and records it on-chain."],
-  [...at("launch", 0.55, 1), "Every buyer sees their worst case up front, before anyone else can trade."],
-  [...at("mechanism", 0, 0.33), "Buyers trade on Meteora's Dynamic Bonding Curve until it graduates."],
-  [...at("mechanism", 0.33, 0.56), "85% of the raise migrates into DAMM v2 as two positions locked for good, owned by the program."],
-  [...at("mechanism", 0.56, 0.78), "The other 15%, the migration fee, goes into a program vault and becomes one DLMM limit order resting at F."],
-  [...at("mechanism", 0.78, 1), "Three Meteora products, one invariant."],
-  [...at("dump", 0, 0.4), "Now we sell everything. Every token holders have."],
-  [...at("dump", 0.4, 0.78), "The price slides down the pool's curve, lands on the floor, and the bid absorbs the rest."],
-  [...at("dump", 0.78, 1), "This isn't a promise from a team. It's liquidity and a limit order; the program has no instruction that withdraws them."],
-  [...at("verify", 0, 0.62), "Don't trust our app. One command reads the raw accounts and recomputes F with the same tested library."],
-  [...at("verify", 0.62, 0.82), "Sixteen checks. Same answer, for anyone, every time."],
-  [...at("verify", 0.82, 1), "And one command measures the floor under any Meteora pool on mainnet, today."],
-  [...at("page", 0, 1), "The page shows your worst case before you buy, and verifies it in your browser."],
-  [...at("limits", 0, 1), "We say what it is not."],
+  [...at("hook", 0.1, 1), "94 of the last 100 launches locked none of their liquidity."],
+  [...at("title", 0.1, 1), "A floor computed before the first public trade, verifiable by anyone."],
+  [...at("teaser", 0, 0.6), "We sold every token holders had."],
+  [...at("teaser", 0.6, 1), "The worst fill of the whole sell-out: 0.998 × the floor, fees included."],
+  [...at("mechanism", 0, 0.24), "Buyers trade on the Dynamic Bonding Curve."],
+  [...at("mechanism", 0.24, 0.44), "85% migrates into DAMM v2: two positions, permanently locked, owned by the program."],
+  [...at("mechanism", 0.44, 0.72), "15%, the migration fee, rests as one DLMM limit order at the floor price F."],
+  [...at("mechanism", 0.72, 1), "Three Meteora products. Remove one, and there is no floor."],
+  [...at("launch", 0, 0.5), "The floor is recorded on-chain in the launch transaction, before anyone else can trade."],
+  [...at("launch", 0.5, 1), "The worst case becomes a number you know before you buy."],
+  [...at("dump", 0, 0.72), "The price slides down the pool's curve, lands on the floor, and the bid absorbs the rest."],
+  [...at("dump", 0.72, 1), "Every fill is burned, so the floor ends higher than it started."],
+  [...at("verify", 0, 0.54), "Don't trust our app: one command recomputes everything from raw accounts. 16 checks."],
+  [...at("verify", 0.54, 1), "And one command works on mainnet today, on any Meteora pool."],
+  [...at("page", 0, 1), "The page: your worst case, verified in your browser, with redemption at F less 0.5%."],
+  [...at("build", 0, 1), "One config and one instruction for a launchpad. Tested against Meteora's mainnet binaries."],
+  [...at("status", 0, 1), "Not on mainnet yet. Not audited. Late buyers can lose about 74%."],
   [...at("close", 0, 1), "Ballast. Launch with a floor."],
 ];
-const REPLAY = new Set(["launch", "mechanism", "dump", "verify"]);
+const REPLAY = new Set(["teaser", "mechanism", "launch", "dump"]);
+const PROMPT = q.get("prompter") === "1";
 
 function frame(t) {
   A = 1; g.globalAlpha = 1; g.fillStyle = BG; g.fillRect(0, 0, W, H);
   const s = TL.find((x) => t >= x.start && t < x.end) ?? TL[TL.length - 1];
   const u = clamp((t - s.start) / (s.end - s.start));
-  A = Math.min(1, (t - s.start) / 0.45, (s.end - t) / 0.35); if (s === TL[TL.length - 1]) A = Math.min(1, (t - s.start) / 0.45); A = clamp(A);
+  A = Math.min(1, (t - s.start) / 0.4, (s.end - t) / 0.3); if (s === TL[TL.length - 1]) A = Math.min(1, (t - s.start) / 0.4); A = clamp(A);
   s.fn(u);
-  if (REPLAY.has(s.id)) tx(`REPLAY OF RUN ${D.runId}  ·  LOCAL VALIDATOR RUNNING METEORA'S MAINNET BINARIES  ·  EVERY LINE AND NUMBER IS RECORDED OUTPUT`, 100, 78, 19, DIM, { mono: true, spacing: "1.2px" });
+  if (REPLAY.has(s.id) || (s.id === "verify" && u < 0.54)) tx(`REPLAY OF RUN ${D.runId}  ·  LOCAL VALIDATOR RUNNING METEORA'S MAINNET BINARIES  ·  EVERY LINE AND NUMBER IS RECORDED OUTPUT`, 100, 78, 19, DIM, { mono: true, spacing: "1.2px" });
   A = 1; g.globalAlpha = 1;
-  const c = CAPS.find((x) => t >= x[0] && t < x[1]);
-  if (c) {
-    const a = clamp(Math.min((t - c[0]) / 0.3, (c[1] - t) / 0.3));
-    g.font = `500 34px ${SANS}`; g.letterSpacing = "0px"; const w = Math.min(1760, g.measureText(c[2]).width + 56);
-    g.globalAlpha = 0.82 * a; g.fillStyle = "#000"; g.fillRect((W - w) / 2, 972, w, 62);
-    g.globalAlpha = a; g.fillStyle = INK; g.textAlign = "center"; g.fillText(c[2], W / 2, 1015, 1700); g.globalAlpha = 1;
+  if (PROMPT) { // the narration for this scene, to read aloud, with the seconds left
+    const line_ = VO.find((v) => v[0] === s.id)?.[1] ?? "";
+    g.globalAlpha = 0.92; g.fillStyle = "#000"; g.fillRect(0, 880, W, 200); g.globalAlpha = 1;
+    wrap(line_, 60, 930, 30, INK, 1640, 40, { weight: 500 });
+    tx(`${Math.max(0, s.end - t).toFixed(0)}s`, 1860, 950, 60, AMBER, { weight: 700, align: "right" });
+  } else {
+    const c = CAPS.find((x) => t >= x[0] && t < x[1]);
+    if (c) {
+      const a = clamp(Math.min((t - c[0]) / 0.3, (c[1] - t) / 0.3));
+      g.font = `500 34px ${SANS}`; g.letterSpacing = "0px"; const w = Math.min(1760, g.measureText(c[2]).width + 56);
+      g.globalAlpha = 0.82 * a; g.fillStyle = "#000"; g.fillRect((W - w) / 2, 972, w, 62);
+      g.globalAlpha = a; g.fillStyle = INK; g.textAlign = "center"; g.fillText(c[2], W / 2, 1015, 1700); g.globalAlpha = 1;
+    }
   }
   g.fillStyle = ACCENT; g.fillRect(0, H - 4, W * (t / TOTAL), 4);
 }
@@ -309,19 +384,28 @@ function frame(t) {
   D = await (await fetch("data.json")).json();
   PAGE = await new Promise((res) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = "page.png"; });
   await document.fonts.ready;
+  if (q.get("script")) { document.body.innerHTML = `<pre style="color:#fff;font:16px Consolas;white-space:pre-wrap;padding:20px">${JSON.stringify({ total: TOTAL, scenes: TL.map((s) => ({ id: s.id, start: s.start, end: s.end, vo: VO.find((v) => v[0] === s.id)?.[1] })), caps: CAPS })}</pre>`; fetch("/script", { method: "POST", body: JSON.stringify({ total: TOTAL, scenes: TL.map((s) => ({ id: s.id, start: s.start, end: s.end, vo: VO.find((v) => v[0] === s.id)?.[1] })), caps: CAPS }) }); return; }
   if (q.get("at")) { frame(Number(q.get("at"))); document.title = "ready"; return; }
   let t0 = performance.now(), paused = false, held = 0;
   const now = () => (paused ? held : (performance.now() - t0) / 1000);
   if (q.get("record")) {
     const log = (m) => fetch("/log", { method: "POST", body: m }).catch(() => {});
-    const type = ["video/mp4;codecs=avc1.640028", "video/mp4", "video/webm;codecs=vp9", "video/webm"].find((x) => MediaRecorder.isTypeSupported(x));
-    const rec = new MediaRecorder(cv.captureStream(30), { mimeType: type, videoBitsPerSecond: 9e6 }), chunks = [];
+    const type = ["video/mp4;codecs=avc1.640028,mp4a.40.2", "video/mp4;codecs=avc1.640028", "video/mp4", "video/webm;codecs=vp9,opus", "video/webm"].find((x) => MediaRecorder.isTypeSupported(x));
+    const stream = cv.captureStream(30);
+    let startAudio = () => {};
+    if (q.get("audio")) { // the voice-over file, mixed in as the sound track
+      const ac = new AudioContext(), buf = await ac.decodeAudioData(await (await fetch(q.get("audio"))).arrayBuffer());
+      const dest = ac.createMediaStreamDestination(), srcNode = ac.createBufferSource(); srcNode.buffer = buf; srcNode.connect(dest);
+      stream.addTrack(dest.stream.getAudioTracks()[0]); startAudio = () => { ac.resume(); srcNode.start(); };
+      await log(`audio ${q.get("audio")} ${buf.duration.toFixed(1)}s`);
+    }
+    const rec = new MediaRecorder(stream, { mimeType: type, videoBitsPerSecond: 9e6, audioBitsPerSecond: 160000 }), chunks = [];
     rec.ondataavailable = (e) => chunks.push(e.data);
-    rec.onstop = async () => { const b = new Blob(chunks, { type }); await log(`recorded ${(b.size / 1e6).toFixed(1)} MB ${type} ${TOTAL}s`); await fetch(`/upload?name=ballast-demo.${type.includes("mp4") ? "mp4" : "webm"}`, { method: "POST", body: b }); };
-    frame(0); rec.start(1000); t0 = performance.now();
+    rec.onstop = async () => { const b = new Blob(chunks, { type }); await log(`recorded ${(b.size / 1e6).toFixed(1)} MB ${type} ${TOTAL}s`); await fetch(`/upload?name=${q.get("name") ?? "ballast-demo"}.${type.includes("mp4") ? "mp4" : "webm"}`, { method: "POST", body: b }); };
+    frame(0); rec.start(1000); startAudio(); t0 = performance.now();
     // A timer, not requestAnimationFrame: a headless or background tab may pause animation frames.
     const tick = setInterval(() => { const t = now(); frame(Math.min(t, TOTAL - 0.001)); if (t >= TOTAL + 0.8) { clearInterval(tick); rec.stop(); } }, 1000 / 30);
-    let said = -1; setInterval(() => { const k = Math.floor(now() / 30); if (k !== said) { said = k; log(`recording ${Math.round(now())}s of ${Math.round(TOTAL)}s`); } }, 1000);
+    let said = -1; setInterval(() => { const k = Math.floor(now() / 30); if (k !== said && now() < TOTAL + 2) { said = k; log(`recording ${Math.round(now())}s of ${Math.round(TOTAL)}s`); } }, 1000);
     return;
   }
   (function loop() { frame(Math.min(now(), TOTAL - 0.001)); requestAnimationFrame(loop); })();

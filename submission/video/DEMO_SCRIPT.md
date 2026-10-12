@@ -1,3 +1,11 @@
+# Demo video script
+
+**Superseded by the rendered film.** The video is `ballast-demo.mp4`; its narration, scene by scene
+with timings, is in `VOICEOVER.md`. The script below was written for a live screen recording and is
+kept for reference.
+
+---
+
 # Demo video script — target 2:50, hard maximum 3:00
 
 Numbers are from the corrected run of 11 Oct on a local validator running Meteora's mainnet binaries.

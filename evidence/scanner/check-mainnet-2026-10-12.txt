@@ -1,0 +1,34 @@
+# ballast check on two mainnet DAMM v2 pools from the 8 Oct scan, run 2026-10-12T13:35Z, read-only
+Meteora DAMM v2 pool:  JBYoG7kgTwSVee1bZjzS1DvWaRy4HvPpccKSQMGgzTN9   cluster: mainnet
+Base token (mint):     DdrEKvyvbPP3gL2HFsfnr942EK4KtGzS6Ea55dGwjXD2
+Quote:                 SOL
+Pool price:            1.1211e-12 per token
+Permanently locked:    100.0% of the pool's liquidity
+Supply:                1000000000 tokens   (mint authority removed)
+
+The locked-liquidity floor is the price at which the permanently locked liquidity alone
+absorbs every token in existence: L·(1/√F − 1/√P_max) = S. Withdrawable liquidity is ignored.
+
+RESULT: LOCKED-LIQUIDITY FLOOR ✓  F = 8.9779e-13 per token = 80.08% of the pool price (worst case from here: −19.92%)
+
+--- paste this into https://github.com/SamarthSrivastavaa/ballast/issues/new?template=i-verified.yml ---
+command: ballast check JBYoG7kgTwSVee1bZjzS1DvWaRy4HvPpccKSQMGgzTN9 --cluster mainnet
+RESULT: LOCKED-LIQUIDITY FLOOR ✓  F = 8.9779e-13 per token = 80.08% of the pool price (worst case from here: −19.92%)
+---
+
+Meteora DAMM v2 pool:  Gj2mvZtA9jEeCVwL1udHH63smjeVgotbeKPo23jLC8Jr   cluster: mainnet
+Base token (mint):     GpW1oScqBnZHKky3WmKBsmTnZDsxGxKbCqDkfQCcw7ia
+Quote:                 SOL
+Pool price:            5.2418e-12 per token
+Permanently locked:    0.0% of the pool's liquidity
+Supply:                903895194 tokens   (mint authority removed)
+
+The locked-liquidity floor is the price at which the permanently locked liquidity alone
+absorbs every token in existence: L·(1/√F − 1/√P_max) = S. Withdrawable liquidity is ignored.
+
+RESULT: NO FLOOR ✗  nothing in this pool is permanently locked; its liquidity can be withdrawn
+
+--- paste this into https://github.com/SamarthSrivastavaa/ballast/issues/new?template=i-verified.yml ---
+command: ballast check Gj2mvZtA9jEeCVwL1udHH63smjeVgotbeKPo23jLC8Jr --cluster mainnet
+RESULT: NO FLOOR ✗  nothing in this pool is permanently locked; its liquidity can be withdrawn
+---

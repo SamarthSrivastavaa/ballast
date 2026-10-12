@@ -864,6 +864,13 @@ One line per choice, newest last.
   a 2:54 film on a canvas from one recorded run (`evidence/demo/20261011-173246/`, incl. its real
   terminal output) and Chrome's MediaRecorder encodes it. It is labelled on screen as a replay of
   recorded output; the page shot is labelled as a second launch on the same ledger. No audio.
+- Film, cut 2: rebuilt after reading the listing itself. Meteora's criteria are depth of integration,
+  technical execution, originality and taste ("a new DBC use case that lasts beyond the current
+  meme-stock trend"), impact potential ("a new class of assets") and traction (mainnet preferred);
+  its idea list names "end-to-end launch flows using DBC, DAMM v2, and DLMM" and developer tooling.
+  The cut shows the result by 0:24, one scene per criterion, a real mainnet `ballast check`, the
+  one-instruction integration, and an honest status. Colosseum's own guidance accepts a voiceover
+  over slides for the pitch, so no face is needed. Narration: `submission/video/VOICEOVER.md`.
 - The verifier's printed output no longer carries internal references ("§7 rule 3", "D-011", …);
   release `v0.1.2`.
 - Launchpad integration count stated as 1 instruction (`register_launch`) plus the open keeper's 6

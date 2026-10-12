@@ -32,7 +32,8 @@ Updated by Claude as work lands. ⟦FILL⟧ items need you.
 - [ ] Confirm the X handles for Meteora and Superteam India before posting `THREAD.md` (written as ⟦FILL⟧ there)
 
 ## Record and submit
-- [x] **Demo video: rendered for you.** `submission/video/ballast-demo.mp4` (also in your Windows `Videos` folder): 2:54, 1080p, captions burned in, no audio. It is a replay of a recorded run and says so on screen
+- [x] **Demo video: rendered for you, second cut.** `submission/video/ballast-demo.mp4` (also in your Windows `Videos` folder): 2:58, 1080p, captions burned in, no audio yet. Built around Meteora's five judging criteria; the result is on screen by 0:24. It is a replay of a recorded run and says so on screen
+- [ ] **Record your voice over it** (optional but worth it): `submission/video/VOICEOVER.md`. Easiest: open `http://localhost:4174/film.html?prompter=1`, read along into your phone, send me the audio file and I put it on the video
 - [ ] **Upload `ballast-demo.mp4` to YouTube as unlisted** (drag and drop; thumbnail: `submission/video/poster.png`; subtitles: `CAPTIONS_DEMO.srt`) and paste the link: ⟦FILL⟧
 - [ ] Pitch video (face to camera, Colosseum reviews it first): `submission/video/PITCH_SCRIPT.md`. Only you can record this one: ⟦FILL: link, or skipped⟧
 - [ ] Before filming scene 7: open `submission/video/cards/traction.html` (live counts) and update `TRACTION.md` with the same numbers
