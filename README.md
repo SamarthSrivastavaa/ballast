@@ -12,6 +12,8 @@ verifiable by anyone.
 
 **This is an executable buyback floor on Meteora, not a promise about prices elsewhere.**
 
+**▶ [Watch the 3-minute demo](submission/video/ballast-demo.mp4)** · [For judges](JUDGES.md) · [Hard questions, answered](submission/JUDGE_FAQ.md)
+
 ![Selling every token holders have: the price falls along the DAMM v2 curve and lands on the floor, where the DLMM bid absorbs the rest](docs/assets/dump.gif)
 
 *Every token holders had, sold on Meteora's mainnet binaries (local validator). The worst fill of
