@@ -360,14 +360,30 @@ function frame(t) {
   const s = TL.find((x) => t >= x.start && t < x.end) ?? TL[TL.length - 1];
   const u = clamp((t - s.start) / (s.end - s.start));
   A = Math.min(1, (t - s.start) / 0.4, (s.end - t) / 0.3); if (s === TL[TL.length - 1]) A = Math.min(1, (t - s.start) / 0.4); A = clamp(A);
+  // Prompter mode is a recording aid, never part of the video: the film plays smaller at the top
+  // and the narration sits in its own panel underneath, so nothing is covered.
+  if (PROMPT) { g.save(); g.translate((W - W * 0.7) / 2, 0); g.scale(0.7, 0.7); g.beginPath(); g.rect(0, 0, W, 960); g.clip(); }
   s.fn(u);
   if (REPLAY.has(s.id) || (s.id === "verify" && u < 0.54)) tx(`REPLAY OF RUN ${D.runId}  ·  LOCAL VALIDATOR RUNNING METEORA'S MAINNET BINARIES  ·  EVERY LINE AND NUMBER IS RECORDED OUTPUT`, 100, 78, 19, DIM, { mono: true, spacing: "1.2px" });
   A = 1; g.globalAlpha = 1;
-  if (PROMPT) { // the narration for this scene, to read aloud, with the seconds left
-    const line_ = VO.find((v) => v[0] === s.id)?.[1] ?? "";
-    g.globalAlpha = 0.92; g.fillStyle = "#000"; g.fillRect(0, 880, W, 200); g.globalAlpha = 1;
-    wrap(line_, 60, 930, 30, INK, 1640, 40, { weight: 500 });
-    tx(`${Math.max(0, s.end - t).toFixed(0)}s`, 1860, 950, 60, AMBER, { weight: 700, align: "right" });
+  if (PROMPT) { // the narration for this scene, to read aloud: words light up at the pace to read them
+    g.restore(); A = 1; g.globalAlpha = 1;
+    const words = (VO.find((v) => v[0] === s.id)?.[1] ?? "").split(" "), panel = { x: 120, y: 700, w: 1680, h: 340 };
+    g.fillStyle = "#000"; g.fillRect(0, 680, W, 400); g.fillStyle = RULE; g.fillRect(0, 680, W, 1);
+    // The largest size at which the whole paragraph fits the panel.
+    let size = 46, lines = [];
+    for (; size >= 26; size -= 2) {
+      g.font = `500 ${size}px ${SANS}`; g.letterSpacing = "0px"; lines = [[]]; let wd = 0;
+      for (const w of words) { const ww = g.measureText(w + " ").width; if (wd + ww > panel.w - 220 && lines[lines.length - 1].length) { lines.push([]); wd = 0; } lines[lines.length - 1].push(w); wd += ww; }
+      if (lines.length * size * 1.4 <= panel.h - 40) break;
+    }
+    // A little ahead of an even pace, so the reader finishes with a second to spare.
+    const due = Math.ceil(clamp((t - s.start) / Math.max(1, s.end - s.start - 1.2)) * words.length);
+    let k = 0;
+    lines.forEach((ln, i) => { let x = panel.x; for (const w of ln) { g.font = `500 ${size}px ${SANS}`; g.fillStyle = k < due ? INK : DIM; g.textAlign = "left"; g.fillText(w, x, panel.y + 50 + i * size * 1.4); x += g.measureText(w + " ").width; k++; } });
+    tx(`${Math.max(0, s.end - t).toFixed(0)}s`, 1800, 770, 84, AMBER, { weight: 700, align: "right" });
+    tx("LEFT IN THIS SCENE", 1800, 806, 18, MUTED, { mono: true, align: "right", spacing: "1.5px" });
+    tx(`READ ALONG  ·  SCENE ${TL.indexOf(s) + 1} OF ${TL.length}  ·  THIS PANEL IS NOT IN THE VIDEO`, 120, 1050, 18, MUTED, { mono: true, spacing: "1.5px" });
   } else {
     const c = CAPS.find((x) => t >= x[0] && t < x[1]);
     if (c) {
